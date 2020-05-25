@@ -1,2 +1,2 @@
 # VirtualLabs
-Progetto Applizaioni Internet a.a 2019/2020
+Progetto Applicazioni Internet a.a 2019/2020

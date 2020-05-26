@@ -2,8 +2,10 @@ package it.polito.ai.virtualalbs.entities;
 
 import com.opencsv.bean.CsvBindByName;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +17,9 @@ public class Student {
     @CsvBindByName
     private String id;
     @CsvBindByName
-    private String name, firstName, email;
+    private String name, firstName;
+    @Email
+    private String email;
 
     @ManyToMany(mappedBy ="members")
     private List<Team> teams = new ArrayList<>();
@@ -37,4 +41,7 @@ public class Student {
 
     @OneToMany(mappedBy = "student")
     private List<Homework> homeworks = new ArrayList<>();
+
+    @OneToOne(mappedBy = "studentEmail")
+    private UserDAO userDAO;
 }

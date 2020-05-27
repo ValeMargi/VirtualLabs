@@ -3,19 +3,25 @@ package it.polito.ai.virtualalbs.services;
 import it.polito.ai.virtualalbs.dtos.ProfessorDTO;
 import it.polito.ai.virtualalbs.dtos.StudentDTO;
 import it.polito.ai.virtualalbs.dtos.UserDTO;
+import it.polito.ai.virtualalbs.entities.PasswordResetToken;
 import it.polito.ai.virtualalbs.entities.Professor;
 import it.polito.ai.virtualalbs.entities.Student;
+import it.polito.ai.virtualalbs.entities.UserDAO;
+import it.polito.ai.virtualalbs.repositories.PasswordResetTokenRepository;
 import it.polito.ai.virtualalbs.repositories.ProfessorRepository;
 import it.polito.ai.virtualalbs.repositories.StudentRepository;
+import it.polito.ai.virtualalbs.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.OneToOne;
 import javax.transaction.Transactional;
+import java.util.Calendar;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,6 +43,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     NotificationService notificationService;
+
+    @Autowired
+    PasswordResetTokenRepository passwordTokenRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public Optional<UserDTO> addStudent(StudentDTO student) {
@@ -83,5 +98,40 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         return null;
     }
+
+    @Override
+    public void createPasswordResetTokenForUser(final UserDAO user, final String token) {
+        final PasswordResetToken myToken = new PasswordResetToken(token, user);
+        passwordTokenRepository.save(myToken);
+    }
+
+    @Override
+    public String validatePasswordResetToken(String token) {
+        final PasswordResetToken passToken = passwordTokenRepository.findByToken(token);
+
+        return !isTokenFound(passToken) ? "invalidToken"
+                : isTokenExpired(passToken) ? "expired"
+                : null;
+    }
+
+    private boolean isTokenFound(PasswordResetToken passToken) {
+        return passToken != null;
+    }
+    private boolean isTokenExpired(PasswordResetToken passToken) {
+        final Calendar cal = Calendar.getInstance();
+        return passToken.getExpiryDate().before(cal.getTime());
+    }
+    @Override
+    public Optional<UserDAO> getUserByPasswordResetToken(final String token) {
+        return Optional.ofNullable(passwordTokenRepository.findByToken(token).getUser());
+    }
+
+    @Override
+    public void changeUserPassword(UserDAO user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
+
+
 }
 

@@ -31,6 +31,7 @@ import { StudentInterceptor } from './services/students.interceptor';
 import { MatCardModule } from '@angular/material/card';
 import { LoginDialogComponent } from './login-dialog.component';
 import { RegisterDialogComponent } from './register-dialog.component';
+import { AddCourseDialogComponent } from './teacher/add-course-dialog.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { RegisterDialogComponent } from './register-dialog.component';
     VmsContComponent,
     PageNotFoundComponent,
     LoginDialogComponent,
-    RegisterDialogComponent
+    RegisterDialogComponent,
+    AddCourseDialogComponent
   ],
   imports: [
     BrowserModule,

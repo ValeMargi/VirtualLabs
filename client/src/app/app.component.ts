@@ -7,6 +7,7 @@ import { AuthService } from './auth/auth.service';
 import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { RegisterDialogComponent } from './register-dialog.component';
+import { AddCourseDialogComponent } from './teacher/add-course-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -97,6 +98,20 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  openDialogCourse() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+        id: 1,
+        title: 'AddCourse'
+    };
+
+    this.matDialog.open(AddCourseDialogComponent, dialogConfig);
   }
 
 }

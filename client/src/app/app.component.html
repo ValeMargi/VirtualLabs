@@ -18,7 +18,7 @@
 
   <mat-toolbar *ngIf="!homeVisibility">  
     <mat-toolbar-row>
-      <span>Applicazioni Internet</span>
+      <span>{{ courseName }}</span>
     </mat-toolbar-row>
   </mat-toolbar>
 
@@ -32,7 +32,7 @@
         <h2>I miei corsi</h2>
 
         <mat-nav-list>
-          <mat-list-item mat-list-item routerLink="teacher/course/applicationi-internet/students">Applicazioni Internet</mat-list-item>
+          <mat-list-item mat-list-item routerLink="teacher/course/applicazioni-internet/students">Applicazioni Internet</mat-list-item>
           <mat-list-item mat-list-item routerLink=".">Programmazione di sistema</mat-list-item>
         </mat-nav-list>
       </div>
@@ -47,11 +47,11 @@
 
     <mat-sidenav-content *ngIf="!homeVisibility">
       <nav mat-tab-nav-bar>
-        <a mat-tab-link routerLink="teacher/course/applicationi-internet/students">Studenti
+        <a mat-tab-link routerLink="teacher/course/applicazioni-internet/students">Studenti
 
         </a>
 
-        <a mat-tab-link routerLink="teacher/course/applicationi-internet/vms">VMs
+        <a mat-tab-link routerLink="teacher/course/applicazioni-internet/vms">VMs
           
         </a>
 

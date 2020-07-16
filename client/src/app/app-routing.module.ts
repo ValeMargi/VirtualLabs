@@ -9,8 +9,8 @@ import { PageNotFoundComponent } from './page-not-found.component';
 const routes: Routes = [
   { path: '', component: PageNotFoundComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'teacher/course/applicationi-internet/students', component: StudentsContComponent },
-  { path: 'teacher/course/applicationi-internet/vms', component: VmsContComponent }
+  { path: 'teacher/course/applicazioni-internet/students', component: StudentsContComponent },
+  { path: 'teacher/course/applicazioni-internet/vms', component: VmsContComponent }
 ];
 
 @NgModule({

@@ -24,6 +24,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   loginVisibility = true;
   homeVisibility = true;
   notFoundVisibility = true;
+  course = ""
   
   constructor(private matDialog: MatDialog, public authService: AuthService, private router: Router) {}
 
@@ -112,6 +113,27 @@ export class AppComponent implements AfterViewInit, OnInit {
     };
 
     this.matDialog.open(AddCourseDialogComponent, dialogConfig);
+  }
+
+  get courseName() {
+    if (this.router.url.length <= 1)
+      return "";
+      
+    let res = this.router.url.split("/");
+
+    if (res[2].match("course")) {
+      let res2 = res[3].split("-");
+      var name = "";
+
+      for (var n of res2) {
+        name += n.charAt(0).toUpperCase() + n.slice(1) + " ";
+      }
+
+      return name;
+    }
+    else {
+      return "";
+    }
   }
 
 }

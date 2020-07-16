@@ -1,0 +1,81 @@
+{
+  "students": [
+    {
+      "id": "s218582",
+      "name": "Baglio",
+      "firstName": "Aldo",
+      "courseId": 1,
+      "groupId": 0
+    },
+    {
+      "id": "s211983",
+      "name": "Di Lernia",
+      "firstName": "Leone",
+      "courseId": 0,
+      "groupId": 0
+    },
+    {
+      "id": "s268877",
+      "name": "Smaila",
+      "firstName": "Umberto",
+      "courseId": 1,
+      "groupId": 0
+    },
+    {
+      "id": "s263280",
+      "name": "Stilton",
+      "firstName": "Geronimo",
+      "courseId": 0,
+      "groupId": 0
+    },
+    {
+      "id": "s260001",
+      "name": "Zalone",
+      "firstName": "Checco",
+      "courseId": 1,
+      "groupId": 0
+    },
+    {
+      "id": "s237782",
+      "name": "Mosconi",
+      "firstName": "Germano",
+      "courseId": 0,
+      "groupId": 0
+    },
+    {
+      "id": "s268882",
+      "name": "Brazorf",
+      "firstName": "Ajeje",
+      "courseId": 0,
+      "groupId": 0
+    },
+    {
+      "id": "s249982",
+      "name": "Esposito",
+      "firstName": "Mohamed",
+      "courseId": 0,
+      "groupId": 0
+    },
+    {
+      "id": "s255482",
+      "name": "La Barca",
+      "firstName": "Remo",
+      "courseId": 1,
+      "groupId": 0
+    },
+    {
+      "id": "s265582",
+      "name": "Saolini",
+      "firstName": "Gianmarco",
+      "courseId": 1,
+      "groupId": 0
+    }
+  ],
+  "users": [
+    {
+      "email": "olivier@mail.com",
+      "password": "$2a$10$9SFIVF0tDrwRoUlZOo9Q0urEs0cnpBXu9RWGf/TxuHjFzDteQhvDW",
+      "id": 1
+    }
+  ]
+}

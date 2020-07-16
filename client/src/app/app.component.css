@@ -1,0 +1,12 @@
+.mat-sidenav-container { 
+    margin: 20px; 
+    height: 100%; 
+}
+
+.sidenav {
+    width: 25%;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}

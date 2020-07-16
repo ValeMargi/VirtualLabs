@@ -1,0 +1,16 @@
+.matTable {
+    width: 100%;
+}
+
+.matForm {
+    width: 40%;
+}
+
+h1 {
+    font-weight: bold; 
+    margin: 1em;
+}
+
+.tableContainer {
+    margin: 2em;
+}

@@ -1,25 +1,27 @@
 <h2 mat-dialog-title>Crea corso</h2>
 <mat-dialog-content>
+Nome del corso &nbsp;&nbsp;&nbsp;&nbsp;
 <mat-form-field>
-  <input #courseName type="text" placeholder="Nome del corso" matInput required>
+  <input #courseName class="input" type="text" placeholder="Nome del corso" matInput required>
 </mat-form-field>
 <br>
+Massimo iscrizioni &nbsp;&nbsp;&nbsp;&nbsp;
 <mat-form-field>
-  <input #min type="number" placeholder="Minimo iscrizioni" matInput min="10" max="250" value="10" required>
+  <input #min class="input" type="number" placeholder="Minimo iscrizioni" matInput min="10" max="250" value="10" required>
   <mat-error *ngIf="min.value < 10 || min.value > 250">Gli iscritti devono essere compresi tra 10 e 250</mat-error>
 </mat-form-field>
 <br>
+Minimo iscrizioni &nbsp;&nbsp;&nbsp;&nbsp;
 <mat-form-field>
-  <input #max type="number" placeholder="Massimo iscrizioni" matInput min="10" max="250" value="250" required>
+  <input #max class="input" type="number" placeholder="Massimo iscrizioni" matInput min="10" max="250" value="250" required>
   <mat-error *ngIf="min.value < 10 || min.value > 250">Gli iscritti devono essere compresi tra 10 e 250</mat-error>
 </mat-form-field>
 <br>
-<mat-form-field>
+
 <button mat-button>
     <mat-icon>add_circle</mat-icon>
     Aggiungi docente
   </button>
-</mat-form-field>
 </mat-dialog-content>
 
 <h3 id="error" style="color: red; visibility: hidden;">Corso già esistente</h3>

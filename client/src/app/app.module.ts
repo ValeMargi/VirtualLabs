@@ -32,6 +32,7 @@ import { MatCardModule } from '@angular/material/card';
 import { LoginDialogComponent } from './login-dialog.component';
 import { RegisterDialogComponent } from './register-dialog.component';
 import { AddCourseDialogComponent } from './teacher/add-course-dialog.component';
+import { VmsComponent } from './teacher/vms.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { AddCourseDialogComponent } from './teacher/add-course-dialog.component'
     PageNotFoundComponent,
     LoginDialogComponent,
     RegisterDialogComponent,
-    AddCourseDialogComponent
+    AddCourseDialogComponent,
+    VmsComponent
   ],
   imports: [
     BrowserModule,

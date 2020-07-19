@@ -71,6 +71,25 @@
       "groupId": 0
     }
   ],
+
+  "VMs": [
+    {
+      "id": "VM001",
+      "name": "Ubuntu",
+      "team": "",
+      "on": "false",
+      "owner": "",
+      "students": ""
+    }
+  ],
+
+  "teams": [
+    {
+      "id": "T01",
+      "name": ""
+    }
+  ],
+
   "users": [
     {
       "email": "olivier@mail.com",

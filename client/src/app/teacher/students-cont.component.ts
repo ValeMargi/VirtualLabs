@@ -66,13 +66,6 @@ ALL_STUDENTS: Student[] = [new Student('s218582', 'Baglio', 'Aldo', 0, 0),
   }
 
   enrollStudent(student: Student) {
-    //console.log(student.name);
-    //console.log("---------");
-    //this.STUDENTS_ENROLLED.forEach(s => console.log(s.name));
-    //console.log("---------");
-    //this.STUDENTS_ENROLLED.push(student);
-    //this.STUDENTS_ENROLLED.forEach(s => console.log(s.name));
-
     this.studentService.enroll([student], 1).subscribe(
       (data) => {
         console.log(data);
@@ -84,14 +77,8 @@ ALL_STUDENTS: Student[] = [new Student('s218582', 'Baglio', 'Aldo', 0, 0),
   }
 
   removeStudents(students: Student[]) {
-    //this.STUDENTS_ENROLLED.forEach(s => console.log(s.name));
-    //console.log("---------");
-    //students.forEach(s => this.STUDENTS_ENROLLED.splice(this.STUDENTS_ENROLLED.indexOf(s), 1));
-    //this.STUDENTS_ENROLLED.forEach(s => console.log(s.name));
-
     this.studentService.unenroll(students).subscribe(
       (data) => {
-        //console.log(data);
         data.forEach(student => {
           this.STUDENTS_ENROLLED.forEach(s => {
             if (s.id == student.id) {

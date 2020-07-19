@@ -10,7 +10,7 @@ import { AuthService } from '../auth/auth.service';
 })
 export class StudentService {
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient) {}
 
   MY_PAHT = "http://localhost:3000/students";
 

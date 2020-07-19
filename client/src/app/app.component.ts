@@ -121,7 +121,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       
     let res = this.router.url.split("/");
 
-    if (res[2].match("course")) {
+    if (res[2] != null && res[2].match("course")) {
       let res2 = res[3].split("-");
       var name = "";
 

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7ed07955-a639-419d-b16c-eac7f12e2dfe" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/controllers/ImageUploadController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/dtos/PasswordDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/entities/PasswordResetToken.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/repositories/PasswordResetTokenRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/controllers/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/dtos/ImageDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/dtos/ImageDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/entities/Image.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/entities/Image.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/repositories/ImageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/repositories/ImageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/services/AuthenticationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/services/AuthenticationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/services/AuthenticationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/polito/ai/virtualalbs/services/AuthenticationServiceImpl.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="1cPhtO5n4W2FDRyisM0sJ6ZjL08" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Drive/Magistrale/II/Applicazioni Internet/Malnati/Laboratori/2" />
+  </component>
+  <component name="RunManager">
+    <configuration name="VirtualLabsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="VirtualLabs" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="it.polito.ai.virtualalbs.VirtualLabsApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7ed07955-a639-419d-b16c-eac7f12e2dfe" name="Default Changelist" comment="" />
+      <created>1590436349877</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1590436349877</updated>
+      <workItem from="1590436354585" duration="6736000" />
+      <workItem from="1590520053274" duration="551000" />
+      <workItem from="1590520662256" duration="8091000" />
+      <workItem from="1590605551375" duration="10847000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="3112" y="274" key="#com.intellij.ide.util.MemberChooser" timestamp="1590615103608">
+      <screen x="1920" y="0" width="1920" height="1050" />
+    </state>
+    <state x="3112" y="274" key="#com.intellij.ide.util.MemberChooser/0.0.1536.834/1920.0.1920.1050@1920.0.1920.1050" timestamp="1590615103608" />
+    <state x="2560" y="261" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1590520461307">
+      <screen x="1920" y="0" width="1920" height="1050" />
+    </state>
+    <state x="2560" y="261" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1536.834/1920.0.1920.1050@1920.0.1920.1050" timestamp="1590520461307" />
+    <state x="2660" y="280" key="FileChooserDialogImpl" timestamp="1590436415399">
+      <screen x="1920" y="0" width="1920" height="1050" />
+    </state>
+    <state x="2660" y="280" key="FileChooserDialogImpl/0.0.1536.834/1920.0.1920.1050@1920.0.1920.1050" timestamp="1590436415399" />
+    <state x="2410" y="180" key="Maven.ArtifactSearchDialog" timestamp="1590614537336">
+      <screen x="1920" y="0" width="1920" height="1050" />
+    </state>
+    <state x="2410" y="180" key="Maven.ArtifactSearchDialog/0.0.1536.834/1920.0.1920.1050@1920.0.1920.1050" timestamp="1590614537336" />
+  </component>
+</project>

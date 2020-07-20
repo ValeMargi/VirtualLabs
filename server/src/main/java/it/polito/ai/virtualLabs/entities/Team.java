@@ -26,7 +26,19 @@ public class Team {
     @JoinColumn(name="course_id")
     Course course;
 
-    @OneToOne //(fetch = FetchType.EAGER) default
-    @JoinColumn(name="vm_id")
-    VM vm;
+
+    public void addStudentIntoTeam(Student s) {
+        if (!members.contains(s)) {
+            members.add(s);
+            s.getTeams().add(this);
+        }
+
+    }
+    public void removeStudentFromTeam(Student s){
+        if( members.contains(s)){
+            members.remove(s);
+            s.getTeams().remove(this);
+        }
+    }
+
 }

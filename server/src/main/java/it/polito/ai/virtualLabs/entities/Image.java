@@ -25,6 +25,8 @@ public class Image {
     @OneToMany(mappedBy = "photoHomework")
     private List<Homework> homeworks = new ArrayList<>();
 
+    @OneToOne(mappedBy = "screenshotModelVM")
+    private ModelVM modelVM;
 
     private String name;
     private String type;

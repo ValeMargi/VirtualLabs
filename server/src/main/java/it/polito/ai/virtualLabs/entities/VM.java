@@ -1,6 +1,7 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
+import org.springframework.ui.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
 public class VM {
     @Id
     private String id;
-    private int  maxVpcu, diskSpace, ram;
+    private int  numVcpu, diskSpace, ram;
     private String status;
 
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
@@ -26,6 +27,8 @@ public class VM {
             inverseJoinColumns = @JoinColumn(name="student_id"))
     List<Student> ownersVM = new ArrayList<>();
 
-    @OneToOne(mappedBy = "vm")
-    private Team team;
+    @ManyToOne //(fetch = FetchType.EAGER) default
+    @JoinColumn(name="modelVm_id")
+    ModelVM modelVM;
+
 }

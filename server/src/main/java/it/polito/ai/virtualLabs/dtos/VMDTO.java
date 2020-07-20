@@ -8,6 +8,6 @@ import org.springframework.hateoas.RepresentationModel;
 @EqualsAndHashCode(callSuper = true)
 public class VMDTO extends RepresentationModel<VMDTO> {
     private String id;
-    private int  maxVpcu, diskSpace, ram;
+    private int  numVcpu, diskSpace, ram;
     private String status;
 }

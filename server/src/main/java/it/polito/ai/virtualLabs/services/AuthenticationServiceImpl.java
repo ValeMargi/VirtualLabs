@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Optional;
@@ -95,6 +96,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return null;
     }
 
+    /*If the User database is empty, the admin user
+    with the "admin" role/authority is inserted*/
+    @PostConstruct()
+    public void insertAdmin(){
+        if(!this.userRepository.existsById("admin")){
+            UserDTO admin= new UserDTO();
+            admin.setPassword("admin");
+            admin.setRole("admin");
+            admin.setEmail("admin"); //??
+            jwtUserDetailsService.save(admin);
+        }
+    }
+
     @Override
     public void createPasswordResetTokenForUser(final UserDAO user, final String token) {
         final PasswordResetToken myToken = new PasswordResetToken(token, user);
@@ -127,6 +141,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
+
+
+
 
 
 }

@@ -10,7 +10,6 @@ import java.util.Date;
 public class Assignment {
     @Id
     private  String id;
-    private String content;
     private Date release, expiration;
 
     @ManyToOne //(fetch = FetchType.EAGER) default

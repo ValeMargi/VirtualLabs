@@ -14,4 +14,6 @@ public interface AuthenticationService {
     String validatePasswordResetToken(String token);
     Optional<UserDAO> getUserByPasswordResetToken(final String token);
     void changeUserPassword(UserDAO user, String password);
+    void insertAdmin();
+
     }

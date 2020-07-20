@@ -9,8 +9,9 @@ import java.util.List;
 @Entity
 @Data
 public class Course {
-    @Id
+
     private String acronym;
+    @Id
     private String name;
     private int min, max;
     private boolean enabled;
@@ -27,4 +28,32 @@ public class Course {
 
     @OneToMany(mappedBy = "courseAssignment")
     private List<Assignment> assignments = new ArrayList<>();
+
+    @OneToOne //(fetch = FetchType.EAGER) default
+    @JoinColumn(name="modelVm_id")
+    ModelVM modelVM;
+
+
+    public boolean addStudent(Student s) {
+        if (!students.contains(s)) {
+            students.add(s);
+            s.getCourses().add(this);
+            return true;
+        }
+        return false;
+    }
+
+    /*Gestire rimozione professore dal corso*/
+    public void setProfessor(Professor  p){
+       /* if( p == null){
+            if(!professors.isEmpty())
+                professor.getCourses().remove(this);
+            professor = null;
+        }else{*/
+            professors.add(p);
+            p.getCourses().add(this);
+        }
+
+
+
 }

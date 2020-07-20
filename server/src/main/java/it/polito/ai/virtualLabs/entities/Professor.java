@@ -12,7 +12,7 @@ import javax.validation.constraints.Email;
 public class Professor {
     @Id
     private String id;
-    private String name, firstName, photoId;
+    private String name, firstName;
     @Email
     private String email;
 

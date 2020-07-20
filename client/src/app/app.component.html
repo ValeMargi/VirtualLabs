@@ -47,15 +47,15 @@
 
     <mat-sidenav-content *ngIf="!homeVisibility">
       <nav mat-tab-nav-bar>
-        <a mat-tab-link routerLink="teacher/course/applicazioni-internet/students">Studenti
+        <a mat-tab-link [active]="activeTab == 0" (click)="activateTab(0)" routerLink="teacher/course/applicazioni-internet/students">Studenti
 
         </a>
 
-        <a mat-tab-link routerLink="teacher/course/applicazioni-internet/vms">VMs
+        <a mat-tab-link [active]="activeTab == 1" (click)="activateTab(1)" routerLink="teacher/course/applicazioni-internet/vms">VMs
           
         </a>
 
-        <a mat-tab-link routerLink=".">Elaborati
+        <a mat-tab-link [active]="activeTab == 2" (click)="activateTab(2)" routerLink="teacher/course/applicazioni-internet/assignments">Elaborati
 
         </a>
       </nav>

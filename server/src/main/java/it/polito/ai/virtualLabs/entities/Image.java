@@ -14,6 +14,8 @@ public class Image {
     @Id
     private String id;
     private Timestamp timestamp;
+    private String name;
+    private String type;
 
     @OneToOne(mappedBy = "photoStudent")
     private Student student;
@@ -28,8 +30,7 @@ public class Image {
     @OneToOne(mappedBy = "screenshotModelVM")
     private ModelVM modelVM;
 
-    private String name;
-    private String type;
+
 
     @Column(name = "picByte", length = 1000)
     private byte[] picByte;

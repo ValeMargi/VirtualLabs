@@ -43,6 +43,16 @@ public class Course {
         return false;
     }
 
+    public boolean removeStudent(Student s) {
+        if (students.contains(s)) {
+            students.remove(s);
+            s.getCourses().remove(this);
+            return true;
+        }
+        return false;
+    }
+
+
     /*Gestire rimozione professore dal corso*/
     public void setProfessor(Professor  p){
        /* if( p == null){
@@ -50,9 +60,28 @@ public class Course {
                 professor.getCourses().remove(this);
             professor = null;
         }else{*/
+        if(!professors.contains(p)) {
             professors.add(p);
             p.getCourses().add(this);
         }
+    }
+
+    public void removeProfessor(Professor p){
+        if(p!=null && professors.contains(p)){
+            professors.remove(p);
+            p.getCourses().remove(this);
+        }
+    }
+
+    public void addAssigment(Assignment a){
+        if(a!=null && !assignments.contains(a))
+        {
+            assignments.add(a);
+            a.setCourseAssignment(this);
+        }
+    }
+
+
 
 
 

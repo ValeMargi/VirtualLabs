@@ -29,4 +29,10 @@ public class ModelVM {
        c.modelVM=this;
     }
 
+    public  void removeVM(VM vm){
+        if(vm!=null && vms.contains(vm)){
+            vms.remove(vm);
+        }
+    }
+
 }

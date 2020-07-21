@@ -19,4 +19,12 @@ public class Assignment {
     @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
     Image photoAssignment;
+
+
+    public void setCourseAssigment(Course c){
+        if(c!=null) {
+            courseAssignment = c;
+            c.getAssignments().add(this);
+        }
+    }
 }

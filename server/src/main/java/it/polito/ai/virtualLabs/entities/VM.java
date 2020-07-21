@@ -31,4 +31,8 @@ public class VM {
     @JoinColumn(name="modelVm_id")
     ModelVM modelVM;
 
+    @ManyToOne
+    @JoinColumn(name="team_id")
+    Team team;
+
 }

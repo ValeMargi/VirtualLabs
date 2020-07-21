@@ -26,6 +26,8 @@ public class Team {
     @JoinColumn(name="course_id")
     Course course;
 
+    @OneToMany(mappedBy = "vm")
+    private List<VM> vms = new ArrayList<>();
 
     public void addStudentIntoTeam(Student s) {
         if (!members.contains(s)) {
@@ -38,6 +40,12 @@ public class Team {
         if( members.contains(s)){
             members.remove(s);
             s.getTeams().remove(this);
+        }
+    }
+
+    public void removeVM(VM vm){
+        if(vm!=null && vms.contains(vm)){
+            vms.remove(vm);
         }
     }
 

@@ -21,6 +21,8 @@ import java.io.Reader;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
+
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -49,6 +51,12 @@ public class VLServiceImpl implements VLService{
     ModelVMRepository modelVMRepository;
     @Autowired
     VMRepository VMRepository;
+    @Autowired
+    AssignmentRepository assignmentRepository;
+    @Autowired
+    ImageRepository imageRepository;
+    @Autowired
+    HomeworkRepository homeworkRepository;
 
     /*SERVICE STUDENTE*/
     @Override
@@ -96,6 +104,27 @@ public class VLServiceImpl implements VLService{
             throw new PermissionDeniedException();
         else
             return courseRepository.getOne(courseName).addStudent(studentRepository.getOne(studentId));
+    }
+
+
+    /*Metodo per eliminare studente da un corso deleteStudentFromCourse*/
+    @PreAuthorize("hasAuthority('docente')")  //hasROLE????
+    @Override
+    public boolean deleteStudentFromCourse(String studentId, String courseName) {
+        Optional<Student> student = studentRepository.findById(studentId);
+        Optional<Course> course = courseRepository.findById(courseName);
+
+
+        if( ! student.isPresent()){
+            throw new StudentNotFoundException();
+        }else if(!course.isPresent() || !course.get().isEnabled() ){
+            throw new CourseNotFoundException();
+        }else if(!getProfessorsForCourse(courseName).stream()
+                .anyMatch(p ->p.getId()
+                        .equals(SecurityContextHolder.getContext().getAuthentication().getName())))
+            throw new PermissionDeniedException();
+        else
+            return courseRepository.getOne(courseName).removeStudent(studentRepository.getOne(studentId));
     }
 
 
@@ -240,6 +269,49 @@ public class VLServiceImpl implements VLService{
         }
     }
 
+    /*Metodo per cancellare corso*/
+    @PreAuthorize("hasAuthority('docente')")
+    @Override
+    public boolean removeCourse(CourseDTO course) {
+        if ( courseRepository.findById(course.getName()).isPresent())  {
+            Course c = modelMapper.map( course, Course.class);
+            String idProfessor= (SecurityContextHolder.getContext().getAuthentication().getName());
+            if(!getProfessorsForCourse(c.getName()).stream()
+                    .anyMatch(pf ->pf.getId().equals(idProfessor)))
+                throw new PermissionDeniedException();
+            Professor p = professorRepository.findById(idProfessor).get();
+            p.removeCourse(c);
+            courseRepository.delete(c);
+            courseRepository.flush();
+            return true;
+        }
+        return false;
+    }
+
+    /*Metodo per modificare corso (modificare min,max,acronimo)*/
+    @PreAuthorize("hasAuthority('docente')")
+    @Override
+    public boolean modifyCourse(CourseDTO course) {
+        Optional<Course> oc=courseRepository.findById(course.getName());
+        if ( oc.isPresent())  {
+            Course c = oc.get();
+            String idProfessor= (SecurityContextHolder.getContext().getAuthentication().getName());
+            if(!getProfessorsForCourse(c.getName()).stream()
+                    .anyMatch(pf ->pf.getId().equals(idProfessor)))
+                throw new PermissionDeniedException();
+            c.setAcronym(course.getAcronym());
+            if(course.getMax() > course.getMin()) {
+                c.setMax(course.getMax());
+                c.setMin(course.getMin());
+            }else throw  new CardinalityNotAccetableException();
+            c.setEnabled(course.isEnabled());
+            courseRepository.saveAndFlush(c);
+            return true;
+        }
+        return false;
+    }
+
+
     /*---> SERVICE GRUPPO*/
     @PreAuthorize("hasAuthority('studente')")
     @Override
@@ -252,7 +324,8 @@ public class VLServiceImpl implements VLService{
         }
     }
 
-    /*@PreAuthorize("hasAuthority('studente')")
+    /*NON SERVE PIU'
+    @PreAuthorize("hasAuthority('studente')")
     @Override
     public List<Team> getTeamsForStudentBis(String studentId){
         try {
@@ -416,32 +489,185 @@ public class VLServiceImpl implements VLService{
     }
 
 
-   /*
-   DA COMPLETARE
-   @PreAuthorize("hasAuthority('studente')")
+
+    /*Ogni gruppo può avere più VM e ogni VM ha l'identificativo del team e tutti i membri
+    * del team possono accederci ma solo chi ha creato la VM è owner*/
+
+   //DA COMPLETARE
+   /*Metodo per aggiungere VM, prima della creazione verificare
+    che tali risorse siano disponibili altrimenti errore
+    Controllare se lo studente fa parte di un Team prima di creare VM*/
+
+  /*  @PreAuthorize("hasAuthority('studente')")
     @Override
     public boolean addVM(VMDTO vmdto, String courseId) { //CourseId preso dal pathVariable
         if ( !VMRepository.findById(vmdto.getId()).isPresent())  {
-            VM vm = modelMapper.map(vmdto, VM.class);
-            Course c = courseRepository.getOne(courseId);
-            if(c==null || !c.isEnabled())
-                throw new CourseNotFoundException();
-            if( c.getModelVM()==null)
-                throw new ModelVMNotSetted();
-            vm.setModelVM(c.getModelVM());
-            //setModelVM in VM implementazione DA FAREEE
+            String studentAuth= SecurityContextHolder.getContext().getAuthentication().getName();
+            if( getStudentsInTeams(courseId).stream().anyMatch(s-> s.getId().equals(studentAuth))){
+                Course c = courseRepository.getOne(courseId);
+                if(c==null || !c.isEnabled())
+                    throw new CourseNotFoundException();
+                ModelVM modelVM = c.getModelVM();
+                if( modelVM==null)
+                    throw new ModelVMNotSetted();
+               if( vmdto.getDiskSpace() <= modelVM.getDiskSpace() ||
+                VM vm = modelMapper.map(vmdto, VM.class);
 
-            modelVM.setCourse(c);
-            modelVMRepository.save(modelVM);
-            modelVMRepository.flush();
-            return true;
+                vm.setModelVM(c.getModelVM());
+                //setModelVM in VM implementazione DA FAREEE
+
+                modelVM.setCourse(c);
+                modelVMRepository.save(modelVM);
+                modelVMRepository.flush();
+                return true;
+            }
+
+
         }
         return false;
     }
 */
 
+    /*Metodo per rendere determinati membri del team owner di una data VM*/
+   /* @PreAuthorize("hasAuthority('studente')")
+    @Override
+    public boolean addOwner(VMDTO vmdto, String courseId, String studentId) { //CourseId preso dal pathVariable
+        if ( VMRepository.findById(vmdto.getId()).isPresent())  {
+            String studentAuth= SecurityContextHolder.getContext().getAuthentication().getName();
+            if( getStudentsInTeams(courseId).stream().anyMatch(s-> s.getId().equals(studentAuth))){
+                Course c = courseRepository.getOne(courseId);
+                if(c==null || !c.isEnabled())
+                    throw new CourseNotFoundException();
+                ModelVM modelVM = c.getModelVM();
+                if( modelVM==null)
+                    throw new ModelVMNotSetted();
+                if( vmdto.getDiskSpace() <= modelVM.getDiskSpace() )
+                        VM vm = modelMapper.map(vmdto, VM.class);
+
+                vm.setModelVM(c.getModelVM());
+                //setModelVM in VM implementazione DA FAREEE
+
+                modelVM.setCourse(c);
+                modelVMRepository.save(modelVM);
+                modelVMRepository.flush();
+                return true;
+            }
 
 
+        }
+        return false;
+        */
+
+
+     /*Metodo per attivare VM, controllo se l'utente autenticato è un owner della VM*/
+        @PreAuthorize("hasAuthority('studente')")
+        @Override
+        public boolean activateVM(VMDTO vmdto){ //CourseId preso dal pathVariable
+            Optional<VM> vm = VMRepository.findById(vmdto.getId());
+            if (vm.isPresent()) {
+                if (vm.get().getOwnersVM().contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                    vm.get().setStatus("enable");
+                    VMRepository.save(vm.get());
+                } else throw new PermissionDeniedException();
+            } else throw new VMNotFound();
+            return true;
+        }
+
+    /*Metodo per spegnere VM, controllo se l'utente autenticato è un owner della VM*/
+    @PreAuthorize("hasAuthority('studente')")
+    @Override
+    public boolean disableVM(VMDTO vmdto){ //CourseId preso dal pathVariable
+        Optional<VM> vm = VMRepository.findById(vmdto.getId());
+        if (vm.isPresent()) {
+            if (vm.get().getOwnersVM().contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                vm.get().setStatus("disable");
+                VMRepository.save(vm.get());
+            } else throw new PermissionDeniedException();
+        } else throw new VMNotFound();
+        return true;
+    }
+    /*Metodo per cancellare VM, controllo se l'utente autenticato è un owner della VM*/
+    @PreAuthorize("hasAuthority('studente')")
+    @Override
+    public boolean removeVM(VMDTO vmdto){ //CourseId preso dal pathVariable
+        Optional<VM> ovm = VMRepository.findById(vmdto.getId());
+        if (ovm.isPresent()) {
+            VM vm= ovm.get();
+            if (vm.getOwnersVM().contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
+               vm.getModelVM().removeVM(vm);
+               vm.getTeam().removeVM(vm);
+               VMRepository.delete(vm);
+               /*Aggiungere eventualemnte gestione risorse*/
+
+            } else throw new PermissionDeniedException();
+        } else throw new VMNotFound();
+        return true;
+    }
+    /*Visualizzare VM accessibili allo studente in tab corso*/
+    @PreAuthorize("hasAuthority('studente')")
+    @Override
+    public List<VM> allVMforStudent( String courseId) { //CourseId preso dal pathVariable
+        String student =SecurityContextHolder.getContext().getAuthentication().getName();
+        Student s = studentRepository.getOne(student);
+        List<Team> teams = s.getTeams().stream().filter(c->c.getCourse().equals(courseId)).collect(Collectors.toList());
+        if(!teams.isEmpty()){
+            return  teams.get(0).getVms();
+        }else throw new TeamNotFoundException();
+
+    }
+
+    /*Visualizzare VM accessibili al docente in tab corso*/
+    @PreAuthorize("hasAuthority('docente')")
+    @Override
+    public List<VM> allVMforCourse( String courseId) { //CourseId preso dal pathVariable
+        Optional<Course> oc= courseRepository.findById(courseId);
+        if( oc.isPresent()){
+            Course c= oc.get();
+            if(c.getProfessors().contains(SecurityContextHolder.getContext().getAuthentication().getName())){
+                return c.getModelVM().getVms();
+            }else throw new PermissionDeniedException();
+        }else throw new CourseNotFoundException();
+    }
+
+
+    /*Studente owner modifia risorse associate a VM se è spenta e se non superano i limiti imposti dal gruppo*/
+
+
+    /*Per vedere chi è owner*/
+    @PreAuthorize("hasAuthority('studente')")
+    @Override
+    public boolean isOwner( String courseId, String VMid) { //CourseId preso dal pathVariable
+        String student =SecurityContextHolder.getContext().getAuthentication().getName();
+        Student s = studentRepository.getOne(student);
+        Optional<VM> ovm= VMRepository.findById(VMid);
+        if(ovm.isPresent()){
+            VM vm= ovm.get();
+            if(vm.getOwnersVM().contains(student))
+                return true;
+        }else throw new VMNotFound();
+        return  false;
+
+
+    }
+
+    /*SERVICE CONSEGNA*/
+    @PreAuthorize("hasAuthority('docente')")
+    @Override
+    public boolean addAssignment( AssignmentDTO assignmentDTO, ImageDTO imageDTO, String courseId) { //CourseId preso dal pathVariable
+        String professor =SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Professor> op = professorRepository.findById(professor);
+        if(op.isPresent()){
+            Professor p= op.get();
+            if(p.getCourses().contains(courseId)){
+                Assignment assignment= modelMapper.map(assignmentDTO, Assignment.class);
+                assignment.setCourseAssignment(courseRepository.getOne(courseId));
+                /*gestire photo*/
+                assignmentRepository.saveAndFlush(assignment);
+                return true;
+            }throw new PermissionDeniedException();
+        }else throw new ProfessorNotFoundException();
+      
+    }
 
 
 

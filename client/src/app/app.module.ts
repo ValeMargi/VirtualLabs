@@ -35,6 +35,8 @@ import { AddCourseDialogComponent } from './teacher/add-course-dialog.component'
 import { VmsComponent } from './teacher/vms.component';
 import { AssignmentsComponent } from './teacher/assignments.component';
 import { AssignmentsContComponent } from './teacher/assignments-cont.component';
+import { TeamsContComponent } from './student/teams-cont.component';
+import { TeamsComponent } from './student/teams.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { AssignmentsContComponent } from './teacher/assignments-cont.component';
     AddCourseDialogComponent,
     VmsComponent,
     AssignmentsComponent,
-    AssignmentsContComponent
+    AssignmentsContComponent,
+    TeamsContComponent,
+    TeamsComponent
   ],
   imports: [
     BrowserModule,

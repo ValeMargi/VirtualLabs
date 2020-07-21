@@ -26,7 +26,7 @@ import { PageNotFoundComponent } from './page-not-found.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { AuthInterceptor } from './services/auth.interceptor';
+import { AuthInterceptor } from './auth/auth.interceptor';
 import { StudentInterceptor } from './services/students.interceptor';
 import { MatCardModule } from '@angular/material/card';
 import { LoginDialogComponent } from './login-dialog.component';

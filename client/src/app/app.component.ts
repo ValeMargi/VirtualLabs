@@ -8,6 +8,7 @@ import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { RegisterDialogComponent } from './register-dialog.component';
 import { AddCourseDialogComponent } from './teacher/add-course-dialog.component';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,8 @@ export class AppComponent implements AfterViewInit, OnInit {
   loginVisibility = true;
   homeVisibility = true;
   notFoundVisibility = true;
-  course = ""
+  course = "";
+  activeTab = 0;
   
   constructor(private matDialog: MatDialog, public authService: AuthService, private router: Router) {}
 
@@ -54,7 +56,15 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    
+    /*if (this.router.url.indexOf("students") > 0) {
+      this.activateTab(0);
+    }
+    else if (this.router.url.indexOf("vms") > 0) {
+      this.activateTab(1);
+    }
+    else if (this.router.url.indexOf("assignments") > 0) {
+      this.activateTab(2);
+    }*/
   }
 
   open() {
@@ -134,6 +144,10 @@ export class AppComponent implements AfterViewInit, OnInit {
     else {
       return "";
     }
+  }
+
+  activateTab(position: number) {
+    this.activeTab = position;
   }
 
 }

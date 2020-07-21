@@ -58,4 +58,13 @@ export class VmsComponent implements AfterViewInit, OnInit {
 
   }
 
+  getStatus(on: boolean) {
+    if (on) {
+      return "Accesa";
+    }
+    else {
+      return "Spenta";
+    }
+  }
+
 }

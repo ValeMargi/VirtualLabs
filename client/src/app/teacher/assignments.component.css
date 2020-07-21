@@ -1,0 +1,28 @@
+.assContainer {
+    width: 100%;
+    overflow: hidden; 
+}
+
+.delContainer {
+    width: 30%;
+    float:left;
+    border: 1px solid gray;
+    border-radius: 8px;
+    margin-top: 1%;
+    margin-left: 2%;
+    margin-right: 5%;
+}
+
+.tableContainer {
+    overflow: hidden; 
+    margin-right: 2%;
+}
+
+h1 {
+    font-weight: bold; 
+    margin: 1em;
+}
+
+.matTable {
+    width: 100%;
+}

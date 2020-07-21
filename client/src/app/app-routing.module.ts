@@ -4,13 +4,15 @@ import { StudentsContComponent } from './teacher/students-cont.component';
 import { VmsContComponent } from './teacher/vms-cont.component';
 import { HomeComponent } from './home.component';
 import { PageNotFoundComponent } from './page-not-found.component';
+import { AssignmentsContComponent } from './teacher/assignments-cont.component';
 
 
 const routes: Routes = [
   { path: '', component: PageNotFoundComponent },
   { path: 'home', component: HomeComponent },
   { path: 'teacher/course/applicazioni-internet/students', component: StudentsContComponent },
-  { path: 'teacher/course/applicazioni-internet/vms', component: VmsContComponent }
+  { path: 'teacher/course/applicazioni-internet/vms', component: VmsContComponent },
+  { path: 'teacher/course/applicazioni-internet/assignments', component: AssignmentsContComponent}
 ];
 
 @NgModule({

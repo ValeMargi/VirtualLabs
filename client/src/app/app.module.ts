@@ -33,6 +33,8 @@ import { LoginDialogComponent } from './login-dialog.component';
 import { RegisterDialogComponent } from './register-dialog.component';
 import { AddCourseDialogComponent } from './teacher/add-course-dialog.component';
 import { VmsComponent } from './teacher/vms.component';
+import { AssignmentsComponent } from './teacher/assignments.component';
+import { AssignmentsContComponent } from './teacher/assignments-cont.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { VmsComponent } from './teacher/vms.component';
     LoginDialogComponent,
     RegisterDialogComponent,
     AddCourseDialogComponent,
-    VmsComponent
+    VmsComponent,
+    AssignmentsComponent,
+    AssignmentsContComponent
   ],
   imports: [
     BrowserModule,

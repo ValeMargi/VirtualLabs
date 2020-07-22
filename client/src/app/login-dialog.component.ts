@@ -19,7 +19,7 @@ export class LoginDialogComponent implements OnInit {
 
       authService.userLogged.subscribe(ok => {
         if (ok && authService.isLoggedIn()) {
-          window.location.reload();
+          this.dialogRef.close();
           
           if (router.url == "/")
             router.navigateByUrl("home");

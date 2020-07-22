@@ -17,7 +17,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['vmName', 'owner', 'status', 'link', 'edit'];
+  displayedColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
   dataSource = new MatTableDataSource<VM>();
   @Input() public deliveries: Delivery[] = [];
   @Input() public assignments: Assignment[] = [];

@@ -5,8 +5,10 @@ import { User } from '../user.model';
 
 import * as moment from 'moment';
 import { shareReplay } from 'rxjs/operators';
+import { Student } from '../student.model';
 
-const API_URL_LOGIN = 'http://localhost:3000/login';    
+const API_URL_LOGIN = 'http://localhost:3000/login';
+const API_URL_USERS = 'http://localhost:3000/users';    
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +50,8 @@ export class AuthService {
   }
 
   private setSession(authResult, email, password) {
+    console.log("Loggato")
+    console.log(JSON.stringify(authResult));
     const tkn = JSON.parse(atob(authResult.accessToken.split('.')[1]));
     console.log(atob(authResult.accessToken.split('.')[1]));
     console.log(authResult.accessToken);
@@ -55,18 +59,39 @@ export class AuthService {
     localStorage.setItem('token', authResult.accessToken);
     localStorage.setItem('expires_at', tkn.exp);
     localStorage.setItem('email', email);
-    let user : User = new User();
-    user.email = email;
+    
+    this.getUser(email).subscribe(
+      (data) => {
+        //console.log(data);
+        //let user: User = new User();
+        let userJson = JSON.stringify(data);
+        JSON.parse(userJson, (key, value) => {
+          if (key == "role") {
+            if (value == "student") {
+              console.log("student")
+            }
+            else if (value == "teacher") {
+              console.log("teacher")
+            }
+
+            localStorage.setItem("role", value);
+            this.userLogged.emit(true);
+          }
+        })
+      },
+      (error: any) => {
+        this.userLogged.emit(false);
+      }
+    );
     //user.password = password;
-    this.userSubject.next(user);
-    this.userLogged.emit(true);
+    //this.userSubject.next(user);
   }
 
   logout() {
     localStorage.removeItem('expires_at');
     localStorage.removeItem('token');
     this.userSubject.next(null);    
-    window.location.reload(); 
+    this.userLogged.emit(false);
   }
 
   getToken(){
@@ -82,5 +107,9 @@ export class AuthService {
   }
 
   public isLoggedOut() { return !this.isLoggedIn(); }
+
+  getUser(email: string) {
+    return this.http.get<User>(`${API_URL_USERS}?email=${email}`);
+  }
 
 }

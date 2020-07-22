@@ -6,7 +6,7 @@
 <body>
 
   <mat-toolbar color="primary">
-    <button mat-button (click)=toggleForMenuClick()>
+    <button mat-button *ngIf="!loginVisibility" (click)=toggleForMenuClick()>
       <mat-icon>menu</mat-icon>
     </button>
     <span routerLink="/home">VirtualLabs</span>
@@ -16,16 +16,17 @@
     <button #btRegister mat-button *ngIf="loginVisibility" (click)="openDialogRegister()">Registrati</button>
   </mat-toolbar>
 
-  <mat-toolbar *ngIf="!homeVisibility">  
+  <mat-toolbar *ngIf="!homeVisibility && !notFoundVisibility">  
     <mat-toolbar-row>
       <span>{{ courseName }}</span>
     </mat-toolbar-row>
   </mat-toolbar>
 
-  <mat-sidenav-container class="mat-sidenav-container">
+  <app-page-not-found *ngIf="notFoundVisibility"></app-page-not-found>
+
+  <mat-sidenav-container class="mat-sidenav-container" *ngIf="!notFoundVisibility">
 
     <app-home *ngIf="homeVisibility"></app-home>
-    <app-page-not-found *ngIf="notFoundVisibility"></app-page-not-found>
 
     <mat-sidenav #sidenav mode="side" closed class="sidenav">
       <div class="sidenavContainer">
@@ -38,7 +39,7 @@
       </div>
 
       <br>
-      <button mat-button (click)="openDialogCourse()">
+      <button mat-button *ngIf="teacherVisibility" (click)="openDialogCourse()">
         <mat-icon>add_circle</mat-icon>
         Crea corso
       </button>
@@ -46,16 +47,30 @@
     </mat-sidenav>
 
     <mat-sidenav-content *ngIf="!homeVisibility">
-      <nav mat-tab-nav-bar>
-        <a mat-tab-link [active]="activeTab == 0" (click)="activateTab(0)" routerLink="teacher/course/applicazioni-internet/students">Studenti
+      <nav mat-tab-nav-bar *ngIf="teacherVisibility">
+        <a mat-tab-link [active]="activeTab == 0" routerLink="teacher/course/applicazioni-internet/students">Studenti
 
         </a>
 
-        <a mat-tab-link [active]="activeTab == 1" (click)="activateTab(1)" routerLink="teacher/course/applicazioni-internet/vms">VMs
+        <a mat-tab-link [active]="activeTab == 1" routerLink="teacher/course/applicazioni-internet/vms">VMs
           
         </a>
 
-        <a mat-tab-link [active]="activeTab == 2" (click)="activateTab(2)" routerLink="teacher/course/applicazioni-internet/assignments">Elaborati
+        <a mat-tab-link [active]="activeTab == 2" routerLink="teacher/course/applicazioni-internet/assignments">Elaborati
+
+        </a>
+      </nav>
+
+      <nav mat-tab-nav-bar *ngIf="!teacherVisibility">
+        <a mat-tab-link [active]="activeTab == 0" routerLink="student/course/applicazioni-internet/teams">Gruppi
+
+        </a>
+
+        <a mat-tab-link [active]="activeTab == 1" routerLink="student/course/applicazioni-internet/vms">VMs
+          
+        </a>
+
+        <a mat-tab-link [active]="activeTab == 2" routerLink="student/course/applicazioni-internet/assignments">Elaborati
 
         </a>
       </nav>

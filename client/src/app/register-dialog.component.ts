@@ -19,7 +19,6 @@ export class RegisterDialogComponent implements OnInit {
 
     authService.userLogged.subscribe(ok => {
       if (ok && authService.isLoggedIn()) {
-        window.location.reload();
         
         if (router.url == "/")
           router.navigateByUrl("home");

@@ -5,10 +5,9 @@ import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { LoginDialogComponent } from './login-dialog.component';
 import { AuthService } from './auth/auth.service';
 import { MatButton } from '@angular/material/button';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { RegisterDialogComponent } from './register-dialog.component';
 import { AddCourseDialogComponent } from './teacher/add-course-dialog.component';
-import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'app-root',
@@ -21,50 +20,71 @@ export class AppComponent implements AfterViewInit, OnInit {
   @ViewChild('btLogin') btLogin: MatButton;
   @ViewChild('btLogout') btLogout: MatButton;
 
-  title = 'ai20-lab05';
-  loginVisibility = true;
-  homeVisibility = true;
-  notFoundVisibility = true;
+  title = 'VirtualLabs';
+  loginVisibility: boolean = true;
+  homeVisibility: boolean = true;
+  teacherVisibility: boolean = true;
+  notFoundVisibility: boolean = true;
   course = "";
-  activeTab = 0;
   
-  constructor(private matDialog: MatDialog, public authService: AuthService, private router: Router) {}
+  constructor(private matDialog: MatDialog, public authService: AuthService, private router: Router) {
+    
+  }
 
   ngAfterViewInit(): void {
+    this.authService.userLogged.subscribe(ok => {
+      if (ok && this.authService.isLoggedIn()) {
+        this.loginVisibility = false;
+
+        let role = localStorage.getItem("role");
+        
+        if (role == "student") {
+          this.teacherVisibility = false;
+        }
+        else {
+          this.teacherVisibility = true;
+        }
+      }
+      else {
+        this.loginVisibility = true;
+        this.homeVisibility = true;
+        this.router.navigateByUrl("home");
+      }
+    });
+  }
+
+  ngOnInit() {
+    if (this.authService.isLoggedIn()) {
+      this.loginVisibility = false;
+    }
+    else {
+      this.loginVisibility = true;
+    }
+
     if (this.router.url == "") {
       this.notFoundVisibility = true;
-      this.homeVisibility = false;
     }
     else {
       this.notFoundVisibility = false;
 
-      if (this.authService.isLoggedIn()) {
-        this.loginVisibility = false;
+      if (this.router.url == "/home") {
+        this.homeVisibility = true;
+      }
+      else {
+        this.homeVisibility = false;
+      }
+    }
 
-        if (this.router.url == "home") {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) { 
+        if (event.urlAfterRedirects == "/home") {
           this.homeVisibility = true;
         }
         else {
           this.homeVisibility = false;
         }
       }
-      else {
-        this.loginVisibility = true;
-        this.homeVisibility = true;
-      }
-    }
-  }
-
-  ngOnInit() {
-    /*if (this.router.url.indexOf("students") > 0) {
-      this.activateTab(0);
-    }
-    else if (this.router.url.indexOf("vms") > 0) {
-      this.activateTab(1);
-    }
-    else if (this.router.url.indexOf("assignments") > 0) {
-      this.activateTab(2);
-    }*/
+    });
   }
 
   open() {
@@ -146,8 +166,27 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
   }
 
-  activateTab(position: number) {
-    this.activeTab = position;
+  get activeTab() {
+    if (this.router.url.length <= 1)
+      return "";
+      
+    let res = this.router.url.split("/");
+
+    if (res[4] == null)
+      return 0;
+
+    if (res[4].match("students") || res[4].match("teams")) {
+      return 0; 
+    }
+    else if (res[4].match("vms")) {
+      return 1;
+    }
+    else if (res[4].match("assignments")) {
+      return 2;
+    }
+    else {
+      return 0;
+    }
   }
 
 }

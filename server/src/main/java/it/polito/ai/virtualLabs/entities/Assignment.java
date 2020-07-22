@@ -3,7 +3,9 @@ package it.polito.ai.virtualLabs.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,10 +23,22 @@ public class Assignment {
     Image photoAssignment;
 
 
+    @OneToMany(mappedBy = "homeworks")
+    private List<Homework> homeworks= new ArrayList<>();
+
     public void setCourseAssigment(Course c){
         if(c!=null) {
             courseAssignment = c;
             c.getAssignments().add(this);
         }
     }
+
+    public void addHomework(Homework h){
+        if(h!=null && !homeworks.contains(h))
+        {
+            homeworks.add(h);
+            h.setAssignment(this);
+        }
+    }
+
 }

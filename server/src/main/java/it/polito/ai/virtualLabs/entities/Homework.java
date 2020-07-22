@@ -14,7 +14,7 @@ public class Homework {
     @Id
     private String id;
     private  String status;
-    private boolean permanent;
+    private Boolean permanent; //false può essere  ancora modificato
     private String grade;
 
     @ManyToOne //(fetch = FetchType.EAGER) default
@@ -24,4 +24,15 @@ public class Homework {
     @ManyToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
     Image  photoHomework;
+
+    @ManyToOne
+    @JoinColumn(name="assignment_id")
+    Assignment assignment;
+
+    public void setAssignment(Assignment a){
+        if(a!=null) {
+            assignment = a;
+            a.addHomework(this);
+        }
+    }
 }

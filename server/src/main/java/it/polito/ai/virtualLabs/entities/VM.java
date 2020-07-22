@@ -35,4 +35,41 @@ public class VM {
     @JoinColumn(name="team_id")
     Team team;
 
+    public boolean addStudentToOwnerList(Student s){
+        if(s!=null && !ownersVM.contains(s)){
+            ownersVM.add(s);
+            s.getOwnersVM().add(this);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean addStudentToMemberList(Student s){
+        if(s!=null && !membersVM.contains(s)){
+            membersVM.add(s);
+            s.getStudentsVM().add(this);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeStudentToOwnerList(Student s){
+        if(s!=null && ownersVM.contains(s)){
+            ownersVM.remove(s);
+            s.getOwnersVM().remove(this);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeStudentToMemberList(Student s){
+        if(s!=null && membersVM.contains(s)){
+            membersVM.remove(s);
+            s.getStudentsVM().remove(this);
+            return true;
+        }
+        return false;
+    }
+
+
 }

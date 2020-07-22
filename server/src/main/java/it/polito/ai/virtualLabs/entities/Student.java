@@ -42,4 +42,32 @@ public class Student {
 
     @OneToOne(mappedBy = "studentEmail")
     private UserDAO userDAO;
+
+    public void addOwnerToVM(VM vm){
+        if(vm!=null && !ownersVM.contains(vm)){
+            ownersVM.add(vm);
+            vm.getOwnersVM().add(this);
+        }
+    }
+
+    public void addMemberToVM(VM vm){
+        if(vm!=null && !studentsVM.contains(vm)){
+            studentsVM.add(vm);
+            vm.getMembersVM().add(this);
+        }
+    }
+
+    public void removeOwnerToVM(VM vm){
+        if(vm!=null && ownersVM.contains(vm)){
+            ownersVM.remove(vm);
+            vm.getOwnersVM().remove(this);
+        }
+    }
+
+    public void removeMemberToVM(VM vm){
+        if(vm!=null && studentsVM.contains(vm)){
+            studentsVM.remove(vm);
+            vm.getMembersVM().remove(this);
+        }
+    }
 }

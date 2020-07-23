@@ -35,7 +35,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   homeVisibility: boolean = true;
   teacherVisibility: boolean = true;
   notFoundVisibility: boolean = true;
-  course: string = "";
+  courseSelected: string = "";
   role: string = "";
 
   courses = ["Applicazioni internet", "Programmazione di sistema"];
@@ -71,13 +71,13 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.role = localStorage.getItem("role");
 
     for (let c of this.courses) {
-      this.setCourseForRoute(c);
-      let path: string = "teacher/course/" + this.course;
+      this.courseSelected = this.setCourseForRoute(c);
+      let path: string = "teacher/course/" + this.courseSelected;
       this.router.config.push({ path: path + "/students", component: StudentsContComponent });
       this.router.config.push({ path: path + "/vms", component: VmsContComponentTeacher });
       this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentTeacher });
 
-      path = "student/course/" + this.course;
+      path = "student/course/" + this.courseSelected;
       this.router.config.push({ path: path + "/teams", component: TeamsContComponent });
       this.router.config.push({ path: path + "/vms", component: VmsContComponentStudent });
       this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentStudent });
@@ -226,8 +226,8 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   getRouteWithCourse(course: string) {
-    this.setCourseForRoute(course);
-    let res: string = this.role + "/course/" + this.course;
+    this.courseSelected = this.setCourseForRoute(course);
+    let res: string = this.role + "/course/" + this.courseSelected;
 
     if (this.role.match("student"))
       return res + "/teams";
@@ -235,17 +235,24 @@ export class AppComponent implements AfterViewInit, OnInit {
       return res + "/students";
   }
 
-  getRoute() {
-    let res: string = this.role + "/course/" + this.course;
-    console.log(res)
+  getRoute(position: number) {
+    let res: string = this.role + "/course/" + this.router.url.split("/")[3];
 
-    if (this.role.match("student"))
-      return res + "/teams";
-    else
-      return res + "/students";
+    if (position == 0) {
+      if (this.role.match("student"))
+        return res + "/teams";
+      else
+        return res + "/students";
+    }
+    else if (position == 1) {
+      return res + "/vms";
+    }
+    else if (position == 2) {
+      return res + "/assignments";
+    }
   }
 
-  setCourseForRoute(course: string) {
-    this.course = course.toLowerCase().replace(" ", "-");
+  setCourseForRoute(course: string): string {
+    return course.toLowerCase().split(' ').join('-');
   }
 }

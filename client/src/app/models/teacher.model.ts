@@ -2,14 +2,14 @@ import { Course } from './course.model';
 
 export class Teacher {
     public id: string;
-    public name: string;
     public fistName: string;
-    public courses: Course[];
+    public name: string;
+    public email: string;
 
-    constructor(id: string, name: string, firstName: string, courses: Course[]) {
+    constructor(id: string, firstName: string, name: string, email: string) {
         this.id = id;
-        this.name = name;
         this.fistName = firstName;
-        this.courses = courses;
+        this.name = name;
+        this.email = email;
     }
 }

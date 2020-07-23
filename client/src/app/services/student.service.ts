@@ -38,7 +38,7 @@ export class StudentService {
   enroll(students: Student[], courseId: number) {
     return from(students).pipe(
       concatMap(student => {
-        student.courseId = courseId;
+        //student.courseId = courseId;
 
         return this.http.put<Student>(`${this.MY_PAHT}/${student.id}`, student);
       }),
@@ -49,7 +49,7 @@ export class StudentService {
   unenroll(students: Student[]) {
     return from(students).pipe(
       concatMap(student => {
-        student.courseId = 0;
+        //student.courseId = 0;
 
         return this.http.put<Student>(`${this.MY_PAHT}/${student.id}`, student);
       }),

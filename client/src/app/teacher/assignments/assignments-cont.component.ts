@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Assignment } from '../assignment.model';
-import { Delivery } from '../delivery.model';
-import { AssignmentsService } from '../services/assignments.service';
-import { AuthService } from '../auth/auth.service';
+import { Assignment } from '../../models/assignment.model';
+import { Delivery } from '../../models/delivery.model';
+import { AssignmentsService } from '../../services/assignments.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-assignments-cont',

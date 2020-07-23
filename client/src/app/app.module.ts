@@ -18,10 +18,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { StudentsComponent } from './teacher/students.component';
-import { StudentsContComponent } from './teacher/students-cont.component';
+import { StudentsComponent } from './teacher/students/students.component';
+import { StudentsContComponent } from './teacher/students/students-cont.component';
 import { HomeComponent } from './home.component';
-import { VmsContComponent } from './teacher/vms-cont.component';
+import { VmsContComponent } from './teacher/vms/vms-cont.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -31,12 +31,12 @@ import { StudentInterceptor } from './services/students.interceptor';
 import { MatCardModule } from '@angular/material/card';
 import { LoginDialogComponent } from './login-dialog.component';
 import { RegisterDialogComponent } from './register-dialog.component';
-import { AddCourseDialogComponent } from './teacher/add-course-dialog.component';
-import { VmsComponent } from './teacher/vms.component';
-import { AssignmentsComponent } from './teacher/assignments.component';
-import { AssignmentsContComponent } from './teacher/assignments-cont.component';
-import { TeamsContComponent } from './student/teams-cont.component';
-import { TeamsComponent } from './student/teams.component';
+import { AddCourseDialogComponent } from './teacher/add-course/add-course-dialog.component';
+import { VmsComponent } from './teacher/vms/vms.component';
+import { AssignmentsComponent } from './teacher/assignments/assignments.component';
+import { AssignmentsContComponent } from './teacher/assignments/assignments-cont.component';
+import { TeamsContComponent } from './student/teams/teams-cont.component';
+import { TeamsComponent } from './student/teams/teams.component';
 
 @NgModule({
   declarations: [

@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { StudentsContComponent } from './teacher/students-cont.component';
-import { VmsContComponent as VmsContComponentTeacher } from './teacher/vms-cont.component';
-import { VmsContComponent as VmsContComponentStudent } from './student/vms-cont.component';
+import { StudentsContComponent } from './teacher/students/students-cont.component';
+import { VmsContComponent as VmsContComponentTeacher } from './teacher/vms/vms-cont.component';
+import { VmsContComponent as VmsContComponentStudent } from './student/vms/vms-cont.component';
 import { HomeComponent } from './home.component';
 import { PageNotFoundComponent } from './page-not-found.component';
-import { AssignmentsContComponent as AssignmentsContComponentTeacher } from './teacher/assignments-cont.component';
-import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments-cont.component';
-import { TeamsContComponent } from './student/teams-cont.component';
+import { AssignmentsContComponent as AssignmentsContComponentTeacher } from './teacher/assignments/assignments-cont.component';
+import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont.component';
+import { TeamsContComponent } from './student/teams/teams-cont.component';
 
 
 const routes: Routes = [

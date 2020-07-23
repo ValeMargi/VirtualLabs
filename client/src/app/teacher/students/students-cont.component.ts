@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output, Inject, AfterViewInit } from '@angular/core';
-import { Student } from '../student.model';
-import { StudentService } from '../services/student.service';
-import { AuthService } from '../auth/auth.service';
+import { Student } from '../../models/student.model';
+import { StudentService } from '../../services/student.service';
+import { AuthService } from '../../auth/auth.service';
 
 
 @Component({

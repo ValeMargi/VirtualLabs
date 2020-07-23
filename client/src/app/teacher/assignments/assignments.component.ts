@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
-import { Assignment } from '../assignment.model';
-import { Delivery } from '../delivery.model';
+import { Assignment } from '../../models/assignment.model';
+import { Delivery } from '../../models/delivery.model';
 import { AssignmentsContComponent } from './assignments-cont.component';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { VM } from '../vm.model';
+import { VM } from '../../models/vm.model';
 
 @Component({
   selector: 'app-assignments',

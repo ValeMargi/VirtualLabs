@@ -13,7 +13,7 @@ import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatInput } from '@angular/material/input';
-import { Student } from '../student.model';
+import { Student } from '../../models/student.model';
 import { StudentsContComponent } from './students-cont.component';
 
 

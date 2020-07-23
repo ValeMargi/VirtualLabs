@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Student } from '../student.model';
+import { Student } from '../models/student.model';
 import { of, Observable, from } from 'rxjs';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { map, switchMap, concatMap, toArray } from 'rxjs/operators';

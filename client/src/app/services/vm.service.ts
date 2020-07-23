@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
 import { Observable, from } from 'rxjs';
-import { VM } from '../vm.model';
+import { VM } from '../models/vm.model';
 import { map, concatMap, toArray } from 'rxjs/operators';
-import { Student } from '../student.model';
+import { Student } from '../models/student.model';
 
 @Injectable({
   providedIn: 'root'

@@ -7,7 +7,7 @@ import { AuthService } from './auth/auth.service';
 import { MatButton } from '@angular/material/button';
 import { Router, NavigationEnd } from '@angular/router';
 import { RegisterDialogComponent } from './register-dialog.component';
-import { AddCourseDialogComponent } from './teacher/add-course-dialog.component';
+import { AddCourseDialogComponent } from './teacher/add-course/add-course-dialog.component';
 
 @Component({
   selector: 'app-root',

@@ -1,16 +1,16 @@
 import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
-import { VM } from '../vm.model';
+import { VM } from '../../models/vm.model';
 import { VmsContComponent } from './vms-cont.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { Team } from '../team.model';
+import { Team } from '../../models/team.model';
 
 @Component({
-  selector: 'app-vms',
+  selector: 'app-vms-teacher',
   templateUrl: './vms.component.html',
   styleUrls: ['./vms.component.css']
 })

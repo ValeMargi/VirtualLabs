@@ -1,11 +1,11 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, Observable} from "rxjs";
-import { User } from '../user.model';
+import { User } from '../models/user.model';
 
 import * as moment from 'moment';
 import { shareReplay } from 'rxjs/operators';
-import { Student } from '../student.model';
+import { Student } from '../models/student.model';
 
 const API_URL_LOGIN = 'http://localhost:3000/login';
 const API_URL_USERS = 'http://localhost:3000/users';    

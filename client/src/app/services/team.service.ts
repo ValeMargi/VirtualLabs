@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Team } from '../team.model';
+import { Team } from '../models/team.model';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
 import { map } from 'rxjs/operators';
-import { Student } from '../student.model';
+import { Student } from '../models/student.model';
 
 @Injectable({
   providedIn: 'root'

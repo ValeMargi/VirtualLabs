@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { Team } from '../../models/team.model';
 
 @Component({
   selector: 'app-teams-cont',
-  templateUrl: './teams-cont.component.html',
-  styleUrls: ['./teams-cont.component.css']
+  templateUrl: '../teams/teams-cont.component.html',
+  styleUrls: ['../teams/teams-cont.component.css']
 })
 export class TeamsContComponent implements OnInit {
 
   constructor() { }
+  
+  public TEAMS: Team[] = []
 
   ngOnInit(): void {
   }

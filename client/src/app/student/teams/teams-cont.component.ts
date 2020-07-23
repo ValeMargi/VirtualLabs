@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Team } from '../../models/team.model';
 
 @Component({
   selector: 'app-teams-cont',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class TeamsContComponent implements OnInit {
 
   constructor() { }
+  
+  public TEAMS: Team[] = []
 
   ngOnInit(): void {
   }

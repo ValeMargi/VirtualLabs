@@ -7,8 +7,10 @@ import java.sql.Timestamp;
 
 @Data
 public class ImageDTO extends RepresentationModel<ImageDTO> {
-    private String id,name,type;
+    private Long id;
+    private String name,type;
     private Timestamp timestamp;
+    private byte[] picByte;
 
 
 }

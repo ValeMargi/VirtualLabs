@@ -2,6 +2,7 @@ package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.entities.Assignment;
+import it.polito.ai.virtualLabs.entities.Image;
 import it.polito.ai.virtualLabs.entities.VM;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
@@ -14,10 +15,15 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/API/courses")
@@ -213,7 +219,32 @@ public class CourseController {
         }
     }
 
-//    addAssignment
+    // addAssignment ->inserimento consegna Prof
+    /*
+    * Ass: id, release, expiration
+    * Im: id, times, name, type*/
+    @PostMapping("/{courseId}/addAssignment")
+    public void addAssignment(@PathVariable String courseId, @RequestPart("file") @Valid @NotNull MultipartFile file, @RequestPart("assignment")  Map<String, Object> input ) throws IOException {
+        if (!input.containsKey("assignmentId") || !input.containsKey("expirationDate") || !input.containsKey("image"))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+        try {
+            AssignmentDTO assignmentDTO = new AssignmentDTO();
+            assignmentDTO.setId(input.get("assignmentId").toString());
+            Date date= new Date(System.currentTimeMillis());
+            assignmentDTO.setRelease(date);
+            assignmentDTO.setExpiration((Date)input.get("expirationDate"));
+
+
+            Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
+            image.setTimestamp((Timestamp) date);
+            vlService.addAssignment(assignmentDTO,image, courseId);
+
+
+        }catch (PermissionDeniedException | CourseNotFoundException | AssignmentAlreadyExist e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
 
     @GetMapping("/{courseId}/assignment")
     public List<Assignment> allAssignment(@PathVariable String courseId) {
@@ -225,6 +256,42 @@ public class CourseController {
     }
 
     //addHomework
+    @PostMapping("/{courseId}/{assignmentId}/addHomework")
+    public void addHomework(@PathVariable String courseId, @PathVariable String assignmentId, @RequestParam Map<String, Object> input ) throws IOException {
+        if (!input.containsKey("homeworkId") || !input.containsKey("expirationDate") || !input.containsKey("image"))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+        try {
+            HomeworkDTO homeworkDTO = new HomeworkDTO();
+            homeworkDTO.setId(input.get("homeworkId").toString());
+            homeworkDTO.setStatus("NULL");
+            homeworkDTO.setPermanent(false);
+            vlService.addHomework(homeworkDTO, courseId, assignmentId);
+
+        }catch (PermissionDeniedException | ProfessorNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+
+    //addHomework
+    @PostMapping("/{courseId}/{assignmentId}/addHomework")
+    public void update(@PathVariable String courseId, @PathVariable String assignmentId, @RequestPart("file") @Valid @NotNull MultipartFile file, @RequestPart("homework")  Map<String, Object> input ) throws IOException {
+        if (!input.containsKey("homeworkId") || !input.containsKey("expirationDate") || !input.containsKey("image"))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+        try {
+            HomeworkDTO homeworkDTO = new HomeworkDTO();
+            homeworkDTO.setId(input.get("homeworkId").toString());
+            homeworkDTO.setStatus("NULL");
+            homeworkDTO.setPermanent(false);
+            Timestamp timestamp= new Timestamp(System.currentTimeMillis());
+            Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
+            image.setTimestamp(timestamp);
+            vlService.addHomework(homeworkDTO,image, courseId, assignmentId);
+
+        }catch (PermissionDeniedException | ProfessorNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 
 
     @PostMapping("/{courseId}/{homeworkId}")

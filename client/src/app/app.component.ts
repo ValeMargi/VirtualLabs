@@ -26,6 +26,9 @@ export class AppComponent implements AfterViewInit, OnInit {
   teacherVisibility: boolean = true;
   notFoundVisibility: boolean = true;
   course = "";
+  role: string = "";
+
+  courses = ["Applicazioni internet", "Programmazione di sistema"];
   
   constructor(private matDialog: MatDialog, public authService: AuthService, private router: Router) {
     
@@ -36,9 +39,9 @@ export class AppComponent implements AfterViewInit, OnInit {
       if (ok && this.authService.isLoggedIn()) {
         this.loginVisibility = false;
 
-        let role = localStorage.getItem("role");
+        this.role = localStorage.getItem("role");
         
-        if (role == "student") {
+        if (this.role == "student") {
           this.teacherVisibility = false;
         }
         else {
@@ -74,6 +77,8 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.homeVisibility = false;
       }
     }
+
+    this.role = localStorage.getItem("role");
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) { 
@@ -189,4 +194,16 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
   }
 
+  get route() {
+    let res: string = this.role + "/course/" + this.course;
+
+    if (this.role.match("student"))
+      return res + "/teams";
+    else
+      return res + "/students";
+  }
+
+  setCourseForRoute(course: string) {
+    this.course = course.toLowerCase().replace(" ", "-");
+  }
 }

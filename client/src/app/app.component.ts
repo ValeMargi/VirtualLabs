@@ -8,6 +8,16 @@ import { MatButton } from '@angular/material/button';
 import { Router, NavigationEnd } from '@angular/router';
 import { RegisterDialogComponent } from './register-dialog.component';
 import { AddCourseDialogComponent } from './teacher/add-course/add-course-dialog.component';
+import { StudentsContComponent } from './teacher/students/students-cont.component';
+import { TeamsContComponent } from './student/teams/teams-cont.component';
+import { VmsComponent as VmsComponentTeacher } from './teacher/vms/vms.component';
+import { VmsContComponent as VmsContComponentTeacher } from './teacher/vms/vms-cont.component';
+import { VmsComponent as VmsComponentStudent } from './student/vms/vms.component';
+import { VmsContComponent as VmsContComponentStudent } from './student/vms/vms-cont.component';
+import { AssignmentsComponent as AssignmentsComponentTeacher } from './teacher/assignments/assignments.component';
+import { AssignmentsContComponent as AssignmentsContComponentTeacher } from './teacher/assignments/assignments-cont.component';
+import { AssignmentsComponent as AssignmentsComponentStudent } from './student/assignments/assignments.component';
+import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont.component';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +35,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   homeVisibility: boolean = true;
   teacherVisibility: boolean = true;
   notFoundVisibility: boolean = true;
-  course = "";
+  course: string = "";
   role: string = "";
 
   courses = ["Applicazioni internet", "Programmazione di sistema"];
@@ -51,12 +61,28 @@ export class AppComponent implements AfterViewInit, OnInit {
       else {
         this.loginVisibility = true;
         this.homeVisibility = true;
+        this.sidenav.close();
         this.router.navigateByUrl("home");
       }
     });
   }
 
   ngOnInit() {
+    this.role = localStorage.getItem("role");
+
+    for (let c of this.courses) {
+      this.setCourseForRoute(c);
+      let path: string = "teacher/course/" + this.course;
+      this.router.config.push({ path: path + "/students", component: StudentsContComponent });
+      this.router.config.push({ path: path + "/vms", component: VmsContComponentTeacher });
+      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentTeacher });
+
+      path = "student/course/" + this.course;
+      this.router.config.push({ path: path + "/teams", component: TeamsContComponent });
+      this.router.config.push({ path: path + "/vms", component: VmsContComponentStudent });
+      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentStudent });
+    }
+
     if (this.authService.isLoggedIn()) {
       this.loginVisibility = false;
     }
@@ -78,7 +104,12 @@ export class AppComponent implements AfterViewInit, OnInit {
       }
     }
 
-    this.role = localStorage.getItem("role");
+    if (this.role.match("student")) {
+      this.teacherVisibility = false;
+    }
+    else {
+      this.teacherVisibility = true;
+    }
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) { 
@@ -194,8 +225,19 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
   }
 
-  get route() {
+  getRouteWithCourse(course: string) {
+    this.setCourseForRoute(course);
     let res: string = this.role + "/course/" + this.course;
+
+    if (this.role.match("student"))
+      return res + "/teams";
+    else
+      return res + "/students";
+  }
+
+  getRoute() {
+    let res: string = this.role + "/course/" + this.course;
+    console.log(res)
 
     if (this.role.match("student"))
       return res + "/teams";

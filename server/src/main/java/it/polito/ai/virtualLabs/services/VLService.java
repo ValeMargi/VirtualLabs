@@ -2,6 +2,7 @@ package it.polito.ai.virtualLabs.services;
 
 import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.entities.Assignment;
+import it.polito.ai.virtualLabs.entities.Image;
 import it.polito.ai.virtualLabs.entities.Student;
 import it.polito.ai.virtualLabs.entities.VM;
 
@@ -46,10 +47,13 @@ public interface VLService {
     List<VM> allVMforStudent(String courseId);
     List<VM> allVMforCourse( String courseId);
     boolean isOwner(  String VMid);
-    boolean addAssignment( AssignmentDTO assignmentDTO, ImageDTO imageDTO, String courseId);
+    boolean addAssignment(AssignmentDTO assignmentDTO, Image image, String courseId);
     List<Assignment> allAssignment(String courseId);
-    boolean addHomework( HomeworkDTO homeworkDTO, ImageDTO imageDTO, String courseId, String assignmentId);
+    boolean addHomework( HomeworkDTO homeworkDTO, Image image, String courseId, String assignmentId);
     boolean updateStatusHomework( String homeworkId, String status);
     boolean uploadHomework( ImageDTO imageDTO,  String homeworkId, String courseId);
     boolean uploadCorrection( ImageDTO imageDTO,  String homeworkId, String courseId, Boolean permanent);
+     byte[] compressZLib(byte[] data);
+     byte[] decompressZLib(byte[] data);
+
 }

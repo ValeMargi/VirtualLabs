@@ -3,16 +3,22 @@ package it.polito.ai.virtualLabs.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 @Data
 @Entity
 @Table(name = "image_table")
 public class Image {
     @Id
-    private String id;
+    @GeneratedValue
+    private Long id;
     private Timestamp timestamp;
     private String name;
     private String type;
@@ -24,8 +30,9 @@ public class Image {
     @OneToOne(mappedBy = "photoAssignment")
     private Assignment assignment;
 
-    @OneToMany(mappedBy = "photoHomework")
-    private List<Homework> homeworks = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name="homework_id")
+    private Homework homework;
 
     @OneToOne(mappedBy = "screenshotModelVM")
     private ModelVM modelVM;
@@ -40,4 +47,22 @@ public class Image {
         this.type = contentType;
         this.picByte = compressZLib;
     }
+
+    public void setAssignment(Assignment a){
+        if( a!=null && assignment != a){
+            assignment =a;
+            a.setImageAssignment(this);
+        }
+    }
+
+    public void setHomework(Homework h){
+        if( h!=null && homework!=h){
+            homework=h;
+            h.getImages().add(this);
+        }
+    }
+
+
+
+
 }

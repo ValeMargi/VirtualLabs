@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,6 +27,8 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Autowired
     VLService VLService;
+
+
     @Override
     public void sendMessage(String address, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -35,6 +38,32 @@ public class NotificationServiceImpl implements NotificationService{
         emailSender.send(message);
     }
 
+    @Override
+    public boolean confirm(String token) {
+        Optional<Token> t = checkTokenValidity(token);
+        if(t.isPresent()){
+            if( tokenRepository.findAllByTeamId(t.get().getTeamId()).size()==0) {
+                VLService.activateTeam(t.get().getTeamId());
+                return true;
+            }else
+                return false;
+        }else
+            return false;
+    }
+
+    @Override
+    public boolean reject(String token) {
+        Optional<Token> t = checkTokenValidity(token);
+        if( t.isPresent()){
+            if( tokenRepository.findAllByTeamId(t.get().getTeamId()).size()>=0) {
+                tokenRepository.findAllByTeamId(t.get().getTeamId()).forEach(tk-> tokenRepository.delete(tk));
+                VLService.evictTeam(t.get().getTeamId());
+                return  true;
+            }else
+                return  false;
+        }else
+            return false;
+    }
     @Override
     public void notifyTeam(TeamDTO dto, List<String> memberIds) {
         for (int i = 0; i < memberIds.size(); i++) {
@@ -52,4 +81,18 @@ public class NotificationServiceImpl implements NotificationService{
                             "or refuse registration at the following link:\n\n http://localhost:8080/API/notification/reject/"+t.getId());
         }
     }
+    @Override
+    public Optional<Token> checkTokenValidity(String token){
+        Optional<Token> t= tokenRepository.findById(token);
+        if(t.isPresent()){
+            if( tokenRepository.existsById(token) && tokenRepository.findById(token)
+                    .get().getExpiryDate()
+                    .compareTo(Timestamp.from(Instant.now()))>0){
+                tokenRepository.deleteById(token);
+                return t;
+            }
+        }
+        return t;
+    }
+
 }

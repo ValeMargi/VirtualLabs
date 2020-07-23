@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 public class AssignmentDTO  extends RepresentationModel<AssignmentDTO> {
-    private  String id, content;
+    private  String id;
     private Date release, expiration;
 
 }

@@ -20,14 +20,14 @@ public class Assignment {
 
     @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
-    Image photoAssignment;
+    Image imageAssignment;
 
 
     @OneToMany(mappedBy = "homeworks")
     private List<Homework> homeworks= new ArrayList<>();
 
     public void setCourseAssigment(Course c){
-        if(c!=null) {
+        if(c!=null && courseAssignment!=c ) {
             courseAssignment = c;
             c.getAssignments().add(this);
         }
@@ -38,6 +38,13 @@ public class Assignment {
         {
             homeworks.add(h);
             h.setAssignment(this);
+        }
+    }
+
+    public void setImageAssignment(Image i){
+        if(i != null && imageAssignment!=i){
+            imageAssignment = i;
+            i.setAssignment(this);
         }
     }
 

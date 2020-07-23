@@ -2,10 +2,9 @@ package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -21,9 +20,9 @@ public class Homework {
     @JoinColumn(name="student_id")
     Student  student;
 
-    @ManyToOne //(fetch = FetchType.EAGER) default
-    @JoinColumn(name="image_id")
-    Image  photoHomework;
+    @OneToMany(mappedBy = "homeworks")
+    private List<Image> images = new ArrayList<>();
+
 
     @ManyToOne
     @JoinColumn(name="assignment_id")
@@ -33,6 +32,14 @@ public class Homework {
         if(a!=null) {
             assignment = a;
             a.addHomework(this);
+        }
+    }
+
+    public void setImageHomework(Image i){
+        if( i!=null && !images.contains(i))
+        {
+            images.add(i);
+            i.setHomework(this);
         }
     }
 }

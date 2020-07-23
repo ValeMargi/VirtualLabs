@@ -8,7 +8,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { VM } from '../../models/vm.model';
 
 @Component({
-  selector: 'app-assignments',
+  selector: 'app-assignments-teacher',
   templateUrl: './assignments.component.html',
   styleUrls: ['./assignments.component.css']
 })

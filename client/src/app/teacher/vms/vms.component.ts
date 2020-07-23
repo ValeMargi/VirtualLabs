@@ -10,7 +10,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { Team } from '../../models/team.model';
 
 @Component({
-  selector: 'app-vms',
+  selector: 'app-vms-teacher',
   templateUrl: './vms.component.html',
   styleUrls: ['./vms.component.css']
 })

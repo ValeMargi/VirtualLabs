@@ -21,7 +21,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StudentsComponent } from './teacher/students/students.component';
 import { StudentsContComponent } from './teacher/students/students-cont.component';
 import { HomeComponent } from './home.component';
-import { VmsContComponent } from './teacher/vms/vms-cont.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -32,9 +31,14 @@ import { MatCardModule } from '@angular/material/card';
 import { LoginDialogComponent } from './login-dialog.component';
 import { RegisterDialogComponent } from './register-dialog.component';
 import { AddCourseDialogComponent } from './teacher/add-course/add-course-dialog.component';
-import { VmsComponent } from './teacher/vms/vms.component';
-import { AssignmentsComponent } from './teacher/assignments/assignments.component';
-import { AssignmentsContComponent } from './teacher/assignments/assignments-cont.component';
+import { VmsComponent as VmsComponentTeacher } from './teacher/vms/vms.component';
+import { VmsContComponent as VmsContComponentTeacher } from './teacher/vms/vms-cont.component';
+import { VmsComponent as VmsComponentStudent } from './student/vms/vms.component';
+import { VmsContComponent as VmsContComponentStudent } from './student/vms/vms-cont.component';
+import { AssignmentsComponent as AssignmentsComponentTeacher } from './teacher/assignments/assignments.component';
+import { AssignmentsContComponent as AssignmentsContComponentTeacher } from './teacher/assignments/assignments-cont.component';
+import { AssignmentsComponent as AssignmentsComponentStudent } from './student/assignments/assignments.component';
+import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont.component';
 import { TeamsContComponent } from './student/teams/teams-cont.component';
 import { TeamsComponent } from './student/teams/teams.component';
 
@@ -44,14 +48,18 @@ import { TeamsComponent } from './student/teams/teams.component';
     StudentsComponent,
     StudentsContComponent,
     HomeComponent,
-    VmsContComponent,
     PageNotFoundComponent,
     LoginDialogComponent,
     RegisterDialogComponent,
     AddCourseDialogComponent,
-    VmsComponent,
-    AssignmentsComponent,
-    AssignmentsContComponent,
+    VmsComponentTeacher,
+    VmsContComponentTeacher,
+    VmsComponentStudent,
+    VmsContComponentStudent,
+    AssignmentsComponentTeacher,
+    AssignmentsContComponentTeacher,
+    AssignmentsComponentStudent, 
+    AssignmentsContComponentStudent,
     TeamsContComponent,
     TeamsComponent
   ],

@@ -33,8 +33,8 @@
         <h2>I miei corsi</h2>
 
         <mat-nav-list>
-          <mat-list-item mat-list-item routerLink="teacher/course/applicazioni-internet/students">Applicazioni Internet</mat-list-item>
-          <mat-list-item mat-list-item routerLink=".">Programmazione di sistema</mat-list-item>
+          <mat-list-item mat-list-item *ngFor="let course of courses" [routerLink]="[getRouteWithCourse(course)]"> 
+            {{ course }} </mat-list-item>
         </mat-nav-list>
       </div>
 
@@ -48,29 +48,29 @@
 
     <mat-sidenav-content *ngIf="!homeVisibility">
       <nav mat-tab-nav-bar *ngIf="teacherVisibility">
-        <a mat-tab-link [active]="activeTab == 0" routerLink="teacher/course/applicazioni-internet/students">Studenti
+        <a mat-tab-link [active]="activeTab == 0" [routerLink]="[getRoute(0)]">Studenti
 
         </a>
 
-        <a mat-tab-link [active]="activeTab == 1" routerLink="teacher/course/applicazioni-internet/vms">VMs
+        <a mat-tab-link [active]="activeTab == 1" [routerLink]="[getRoute(1)]">VMs
           
         </a>
 
-        <a mat-tab-link [active]="activeTab == 2" routerLink="teacher/course/applicazioni-internet/assignments">Elaborati
+        <a mat-tab-link [active]="activeTab == 2" [routerLink]="[getRoute(2)]">Elaborati
 
         </a>
       </nav>
 
       <nav mat-tab-nav-bar *ngIf="!teacherVisibility">
-        <a mat-tab-link [active]="activeTab == 0" routerLink="student/course/applicazioni-internet/teams">Gruppi
+        <a mat-tab-link [active]="activeTab == 0" [routerLink]="[getRoute(0)]">Gruppi
 
         </a>
 
-        <a mat-tab-link [active]="activeTab == 1" routerLink="student/course/applicazioni-internet/vms">VMs
+        <a mat-tab-link [active]="activeTab == 1" [routerLink]="[getRoute(1)]">VMs
           
         </a>
 
-        <a mat-tab-link [active]="activeTab == 2" routerLink="student/course/applicazioni-internet/assignments">Elaborati
+        <a mat-tab-link [active]="activeTab == 2" [routerLink]="[getRoute(2)]">Elaborati
 
         </a>
       </nav>

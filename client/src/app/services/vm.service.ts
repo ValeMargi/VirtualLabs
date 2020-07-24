@@ -38,7 +38,7 @@ export class VmService {
 
   addStudents(vm: VM, students: Student[]) {
     students.forEach(student => {
-      vm.studentIds.push(student.id);
+      //vm.studentIds.push(student.id);
     });
 
     return this.http.put<VM>(`${this.MY_PAHT}/${vm.id}`, vm);
@@ -46,7 +46,7 @@ export class VmService {
 
   removeStudents(vm: VM, students: Student[]) {
     students.forEach(student => {
-      vm.studentIds.splice(vm.studentIds.indexOf(student.id), 1);
+      //vm.studentIds.splice(vm.studentIds.indexOf(student.id), 1);
     });
 
     return this.http.put<VM>(`${this.MY_PAHT}/${vm.id}`, vm);

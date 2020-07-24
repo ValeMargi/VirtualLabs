@@ -8,6 +8,16 @@ import { MatButton } from '@angular/material/button';
 import { Router, NavigationEnd } from '@angular/router';
 import { RegisterDialogComponent } from './register-dialog.component';
 import { AddCourseDialogComponent } from './teacher/add-course/add-course-dialog.component';
+import { StudentsContComponent } from './teacher/students/students-cont.component';
+import { TeamsContComponent } from './student/teams/teams-cont.component';
+import { VmsComponent as VmsComponentTeacher } from './teacher/vms/vms.component';
+import { VmsContComponent as VmsContComponentTeacher } from './teacher/vms/vms-cont.component';
+import { VmsComponent as VmsComponentStudent } from './student/vms/vms.component';
+import { VmsContComponent as VmsContComponentStudent } from './student/vms/vms-cont.component';
+import { AssignmentsComponent as AssignmentsComponentTeacher } from './teacher/assignments/assignments.component';
+import { AssignmentsContComponent as AssignmentsContComponentTeacher } from './teacher/assignments/assignments-cont.component';
+import { AssignmentsComponent as AssignmentsComponentStudent } from './student/assignments/assignments.component';
+import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont.component';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +35,10 @@ export class AppComponent implements AfterViewInit, OnInit {
   homeVisibility: boolean = true;
   teacherVisibility: boolean = true;
   notFoundVisibility: boolean = true;
-  course = "";
+  courseSelected: string = "";
+  role: string = "";
+
+  courses = ["Applicazioni internet", "Programmazione di sistema"];
   
   constructor(private matDialog: MatDialog, public authService: AuthService, private router: Router) {
     
@@ -36,9 +49,9 @@ export class AppComponent implements AfterViewInit, OnInit {
       if (ok && this.authService.isLoggedIn()) {
         this.loginVisibility = false;
 
-        let role = localStorage.getItem("role");
+        this.role = localStorage.getItem("role");
         
-        if (role == "student") {
+        if (this.role == "student") {
           this.teacherVisibility = false;
         }
         else {
@@ -48,12 +61,28 @@ export class AppComponent implements AfterViewInit, OnInit {
       else {
         this.loginVisibility = true;
         this.homeVisibility = true;
+        this.sidenav.close();
         this.router.navigateByUrl("home");
       }
     });
   }
 
   ngOnInit() {
+    this.role = localStorage.getItem("role");
+
+    for (let c of this.courses) {
+      this.courseSelected = this.setCourseForRoute(c);
+      let path: string = "teacher/course/" + this.courseSelected;
+      this.router.config.push({ path: path + "/students", component: StudentsContComponent });
+      this.router.config.push({ path: path + "/vms", component: VmsContComponentTeacher });
+      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentTeacher });
+
+      path = "student/course/" + this.courseSelected;
+      this.router.config.push({ path: path + "/teams", component: TeamsContComponent });
+      this.router.config.push({ path: path + "/vms", component: VmsContComponentStudent });
+      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentStudent });
+    }
+
     if (this.authService.isLoggedIn()) {
       this.loginVisibility = false;
     }
@@ -73,6 +102,13 @@ export class AppComponent implements AfterViewInit, OnInit {
       else {
         this.homeVisibility = false;
       }
+    }
+
+    if (this.role.match("student")) {
+      this.teacherVisibility = false;
+    }
+    else {
+      this.teacherVisibility = true;
     }
 
     this.router.events.subscribe((event) => {
@@ -189,4 +225,34 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
   }
 
+  getRouteWithCourse(course: string) {
+    this.courseSelected = this.setCourseForRoute(course);
+    let res: string = this.role + "/course/" + this.courseSelected;
+
+    if (this.role.match("student"))
+      return res + "/teams";
+    else
+      return res + "/students";
+  }
+
+  getRoute(position: number) {
+    let res: string = this.role + "/course/" + this.router.url.split("/")[3];
+
+    if (position == 0) {
+      if (this.role.match("student"))
+        return res + "/teams";
+      else
+        return res + "/students";
+    }
+    else if (position == 1) {
+      return res + "/vms";
+    }
+    else if (position == 2) {
+      return res + "/assignments";
+    }
+  }
+
+  setCourseForRoute(course: string): string {
+    return course.toLowerCase().split(' ').join('-');
+  }
 }

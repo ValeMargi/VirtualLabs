@@ -13,12 +13,12 @@ import { TeamsContComponent } from './student/teams/teams-cont.component';
 const routes: Routes = [
   { path: '', component: PageNotFoundComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'teacher/course/applicazioni-internet/students', component: StudentsContComponent },
+  /*{ path: 'teacher/course/applicazioni-internet/students', component: StudentsContComponent },
   { path: 'teacher/course/applicazioni-internet/vms', component: VmsContComponentTeacher },
   { path: 'teacher/course/applicazioni-internet/assignments', component: AssignmentsContComponentTeacher },
   { path: 'student/course/applicazioni-internet/teams', component: TeamsContComponent },
   { path: 'student/course/applicazioni-internet/vms', component: VmsContComponentStudent },
-  { path: 'student/course/applicazioni-internet/assignments', component: AssignmentsContComponentStudent }
+  { path: 'student/course/applicazioni-internet/assignments', component: AssignmentsContComponentStudent }*/
 ];
 
 @NgModule({

@@ -1,20 +1,15 @@
-import { Student } from './student.model';
-import { Team } from './team.model';
-
 export class VM {
     public id: string;
-    public name: string;
-    public teamId: string;
-    public on: boolean;
-    public ownerId: string;
-    public studentIds: string[];
+    public numVcpu: number;
+    public diskSpace: number;
+    public ram: number;
+    private status: string;
 
-    constructor (id:string, name:string, teamId: string, on:boolean, ownerId: string, studentIds: string[]) {
+    constructor (id:string, numVcpu: number, diskSpace: number, ram: number, status: string) {
         this.id = id;
-        this.name = name;
-        this.teamId = teamId;
-        this.on = on;
-        this.ownerId = ownerId;
-        this.studentIds = studentIds;
+        this.numVcpu = numVcpu;
+        this.diskSpace = diskSpace;
+        this.ram = ram;
+        this.status = status;
     }
 }

@@ -17,9 +17,10 @@ public interface VLService {
     boolean addStudentToCourse(String studentId, String courseName);
     boolean deleteStudentFromCourse(String studentId, String courseName);
     List<ProfessorDTO> getProfessorsForCourse(String courseName);
-    List<Boolean> addAll(List<StudentDTO> student);
+    //List<Boolean> addAll(List<StudentDTO> student);
     List<Boolean> enrollAll(List<String> studentsIds, String courseName);
-    List<Boolean> addAndEnroll(Reader r, String courseName);
+   // List<Boolean> addAndEnroll(Reader r, String courseName);
+   List<Boolean> EnrollAllFromCSV(Reader r, String courseName);
     boolean addCourse(CourseDTO course);
     boolean removeCourse(String courseId);
     boolean modifyCourse(CourseDTO course);
@@ -38,8 +39,8 @@ public interface VLService {
     List<StudentDTO>  getAvailableStudents(String courseName);
     void activateTeam(Long id);
     void evictTeam(Long id);
-    boolean addModelVM(ModelVMDTO modelVMdto, String courseId);
-    boolean addVM(VMDTO vmdto, String courseId);
+    boolean addModelVM(ModelVMDTO modelVMdto, String courseI, Image image);
+    boolean addVM(VMDTO vmdto, String courseId, Image image);
     boolean addOwner(String VMid, String courseId, List<String> students);
     boolean activateVM(String VMid);
     boolean disableVM(String VMid);
@@ -49,7 +50,7 @@ public interface VLService {
     boolean isOwner(  String VMid);
     boolean addAssignment(AssignmentDTO assignmentDTO, Image image, String courseId);
     List<Assignment> allAssignment(String courseId);
-    boolean addHomework( HomeworkDTO homeworkDTO, Image image, String courseId, String assignmentId);
+    boolean addHomework( String homeworkId, Image image);
     boolean updateStatusHomework( String homeworkId, String status);
     boolean uploadHomework( ImageDTO imageDTO,  String homeworkId, String courseId);
     boolean uploadCorrection( ImageDTO imageDTO,  String homeworkId, String courseId, Boolean permanent);

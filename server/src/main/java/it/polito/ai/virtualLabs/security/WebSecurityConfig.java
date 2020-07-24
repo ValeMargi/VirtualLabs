@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.www.DigestAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -53,11 +55,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // We don't need CSRF for this example
         httpSecurity.csrf().disable()
                 // dont authenticate this particular request
-                .authorizeRequests().antMatchers("/authenticate").permitAll()
+                .authorizeRequests().antMatchers("/login").permitAll()
                 // .antMatchers("/register").per()
                 .antMatchers("/API/notification/**").permitAll()
-                .antMatchers("/API/addStudent").hasAuthority("admin")
-                .antMatchers("/API/addProfessor").hasAuthority("admin")
+                .antMatchers("/API/addUser").hasAuthority("admin")
 
                 // all other requests need to be authenticated
                 .anyRequest().authenticated().and().
@@ -69,4 +70,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
+
+   /* @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.addFilter(digestAuthenticationFilter())              // register digest entry point
+                .exceptionHandling().authenticationEntryPoint(digestEntryPoint())       // on exception ask for digest authentication
+                .and()
+                .httpBasic()                      // it indicate basic authentication is requires
+                .and()
+                .authorizeRequests()
+                .antMatchers( "/home").permitAll() // /home will be accessible directly, no need of any authentication
+                .anyRequest().authenticated();
+    }
+
+    DigestAuthenticationFilter digestAuthenticationFilter() throws Exception {
+        DigestAuthenticationFilter digestAuthenticationFilter = new DigestAuthenticationFilter();
+        digestAuthenticationFilter.setUserDetailsService(userDetailsServiceBean());
+        digestAuthenticationFilter.setAuthenticationEntryPoint(digestEntryPoint());
+        return digestAuthenticationFilter;
+    }
+
+    @Bean
+    DigestAuthenticationEntryPoint digestEntryPoint() {
+        DigestAuthenticationEntryPoint bauth = new DigestAuthenticationEntryPoint();
+        bauth.setRealmName("Digest WF Realm");
+        bauth.setKey("MySecureKey");
+        return bauth;
+    }*/
+
 }

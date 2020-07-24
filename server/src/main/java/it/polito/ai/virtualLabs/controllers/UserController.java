@@ -1,11 +1,13 @@
 package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.*;
+import it.polito.ai.virtualLabs.entities.Image;
 import it.polito.ai.virtualLabs.entities.UserDAO;
 import it.polito.ai.virtualLabs.dtos.ProfessorDTO;
 import it.polito.ai.virtualLabs.repositories.UserRepository;
 import it.polito.ai.virtualLabs.services.AuthenticationService;
 import it.polito.ai.virtualLabs.services.JwtUserDetailsService;
+import it.polito.ai.virtualLabs.services.VLService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -14,16 +16,22 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
+@RequestMapping("/API")
 @RestController
 public class UserController {
 
@@ -37,6 +45,9 @@ public class UserController {
     AuthenticationService authenticationService;
 
     @Autowired
+    VLService vlService;
+
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
@@ -46,25 +57,29 @@ public class UserController {
     private MessageSource messages;
 
 
-    //TO DO image student upload
-    public Optional<UserDTO> registerUser(@RequestBody String firstName,  String name, String id, String password, String email){
+    //TO DO image student upload ------->
+    @PostMapping("/addUser")
+    //public Optional<UserDTO> registerUser(@RequestBody String firstName,  String name, String id, String password, String email){
+    public Optional<UserDTO> registerUser(@RequestPart("file") @Valid @NotNull MultipartFile file, @RequestPart Map<String, String> inputLogin) throws IOException {
 
-        if( !email.matches("^[A-z0-9\\.\\+_-]+@polito.it") || !email.matches("^[A-z0-9\\.\\+_-]+@studenti.polito.it")) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Email " + email + " not supported");
+        if(!inputLogin.containsKey("firstName") || !inputLogin.containsKey("name") || !inputLogin.containsKey("id")
+          || !inputLogin.containsKey("email") || !inputLogin.containsKey("password")){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters for login not found");
         }
-        else if( !jwtUserDetailsService.checkUsernameInUserRepo(email)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"User with email"+ email+"  already present");
-        }else{
-
-            if( email.matches("^[A-z0-9\\.\\+_-]+@polito.it")){ //Professor
-                StudentDTO studentDTO = new StudentDTO(id,firstName, name,email);
-                return authenticationService.addStudent(studentDTO);
-            }else {
-                ProfessorDTO professorDTO = new ProfessorDTO(id, firstName, name, email);
-                return authenticationService.addProfessor(professorDTO);
+        if (!inputLogin.get("email").matches("^[A-z0-9\\.\\+_-]+@polito.it") || !inputLogin.get("email").matches("^[A-z0-9\\.\\+_-]+@studenti.polito.it")) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email " + inputLogin.get("email") + " not supported");
+        } else if (!jwtUserDetailsService.checkUsernameInUserRepo(inputLogin.get("email"))) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with email" + inputLogin.get("email") + "  already present");
+        } else {
+            Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
+            if (inputLogin.get("email").matches("^[A-z0-9\\.\\+_-]+@polito.it")) { //Professor
+                ProfessorDTO professorDTO = new ProfessorDTO(inputLogin.get("id"), inputLogin.get("firstName"), inputLogin.get("name"), inputLogin.get("email"));
+                return authenticationService.addProfessor(professorDTO, inputLogin.get("password"), image);
+            } else {
+                StudentDTO studentDTO = new StudentDTO(inputLogin.get("id"), inputLogin.get("firstName"), inputLogin.get("firstName"), inputLogin.get("email"));
+                return authenticationService.addStudent(studentDTO, inputLogin.get("password"), image);
             }
         }
-
     }
 
     private SimpleMailMessage constructEmail(String subject, String body, UserDAO user) {
@@ -115,6 +130,7 @@ public class UserController {
 
     @PostMapping("/user/savePassword")
     @ResponseStatus(HttpStatus.OK)
+    /*FINIREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE --> */
     public void savePassword(final Locale locale, @Valid PasswordDTO passwordDto) {
 
         String result = authenticationService.validatePasswordResetToken(passwordDto.getToken());

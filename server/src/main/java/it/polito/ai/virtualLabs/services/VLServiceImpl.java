@@ -106,8 +106,18 @@ public class VLServiceImpl implements VLService{
                                                     .anyMatch(p ->p.getId()
                                                     .equals(SecurityContextHolder.getContext().getAuthentication().getName())))
             throw new PermissionDeniedException();
-        else
-            return courseRepository.getOne(courseName).addStudent(studentRepository.getOne(studentId));
+        else {
+            Course c = course.get();
+            Student s = student.get();
+            for( Assignment a: c.getAssignments()){
+                Homework h = new Homework();
+                h.setAssignment(a);
+                h.setStatus("NULL");
+                h.setStudent(s);
+                homeworkRepository.saveAndFlush(h);
+            }
+            return c.addStudent(s);
+        }
     }
 
 
@@ -146,17 +156,20 @@ public class VLServiceImpl implements VLService{
     }
 
 
+    /*
+    DOVREBBE ESSERE INUTILE, RICHIESTO NEL LAB MA NON NEL PROGETTO
     @Override
     public List<Boolean> addAll(List<StudentDTO> student){
         return  student.stream().map(s -> authenticationService.addStudent(s).isPresent()).collect(Collectors.toList());
     }
+    */
 
     @Override
     public List<Boolean> enrollAll(List<String> studentsIds, String courseName){
         return  studentsIds.stream().map( s -> addStudentToCourse(s, courseName)).collect(Collectors.toList());
     }
 
-    @PreAuthorize("hasAuthority('docente')")
+    /*@PreAuthorize("hasAuthority('docente')") serviva per lab, add and roll
     @Override
     public  List<Boolean> addAndEnroll(Reader r, String courseName){
         try {
@@ -171,6 +184,25 @@ public class VLServiceImpl implements VLService{
             throw  new FormatFileNotValidException();
         }
     }
+
+     */
+
+
+    @PreAuthorize("hasAuthority('docente')")
+    @Override
+    public  List<Boolean> EnrollAllFromCSV(Reader r, String courseName){
+        try {
+            CsvToBean<String> csvToBean = new CsvToBeanBuilder(r)
+                    .withType(StudentDTO.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+            List<String> studentsIds = csvToBean.parse();
+           return enrollAll(studentsIds,  courseName);
+        }catch (RuntimeException exception){
+            throw  new FormatFileNotValidException();
+        }
+    }
+
 
     /*SERVICE CORSO*/
     @PreAuthorize("hasAuthority('docente')")
@@ -487,15 +519,16 @@ public class VLServiceImpl implements VLService{
     /*SERVICE MODELLO VM*/
     @PreAuthorize("hasAuthority('docente')")
     @Override
-    public boolean addModelVM(ModelVMDTO modelVMdto, String courseId) { //CourseId preso dal pathVariable
+    public boolean addModelVM(ModelVMDTO modelVMdto, String courseId, Image image) { //CourseId preso dal pathVariable
         if ( !modelVMRepository.findById(modelVMdto.getId()).isPresent())  {
             ModelVM modelVM = modelMapper.map(modelVMdto, ModelVM.class);
            Course c = courseRepository.getOne(courseId);
            if(c==null)
                throw new CourseNotFoundException();
+            modelVM.setScreenshot(image);
             modelVM.setCourse(c);
-            modelVMRepository.save(modelVM);
-            modelVMRepository.flush();
+            modelVMRepository.saveAndFlush(modelVM);
+            imageRepository.saveAndFlush(image);
             return true;
         }else throw new ModelVMAlreadytPresent();
     }
@@ -510,9 +543,9 @@ public class VLServiceImpl implements VLService{
     che tali risorse siano disponibili altrimenti errore
     Controllare se lo studente fa parte di un Team prima di creare VM*/
 
-  /*  @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('studente')")
     @Override
-    public boolean addVM(VMDTO vmdto, String courseId) { //CourseId preso dal pathVariable
+    public boolean addVM(VMDTO vmdto, String courseId, Image image) { //CourseId preso dal pathVariable
         if ( !VMRepository.findById(vmdto.getId()).isPresent())  {
             String studentAuth= SecurityContextHolder.getContext().getAuthentication().getName();
             if( getStudentsInTeams(courseId).stream().anyMatch(s-> s.getId().equals(studentAuth))){
@@ -522,23 +555,27 @@ public class VLServiceImpl implements VLService{
                 ModelVM modelVM = c.getModelVM();
                 if( modelVM==null)
                     throw new ModelVMNotSetted();
-               if( vmdto.getDiskSpace() <= modelVM.getDiskSpace() ||
-                VM vm = modelMapper.map(vmdto, VM.class);
+               if( vmdto.getDiskSpace() < modelVM.getDiskSpace() && vmdto.getNumVcpu()< modelVM.getMaxVcpu()
+                    && vmdto.getRam()<modelVM.getRam()){
+                   VM vm = modelMapper.map(vmdto, VM.class);
+                   vm.setModelVM(c.getModelVM());
+                   vm.setScreenshot(image);
+                   Student s = studentRepository.getOne(studentAuth);
+                   vm.getOwnersVM().add(s);
+                   Team t = s.getTeams().stream().filter(te->te.getCourse().equals(c)).findFirst().get();
+                   vm.setMembersVM(t.getMembers());
+                   vm.setTeam(t);
+                   modelVM.setCourse(c);
+                   modelVMRepository.saveAndFlush(modelVM);
+                   VMRepository.saveAndFlush(vm);
+                   imageRepository.saveAndFlush(image);
+                   return true;
+               }else throw new ResourcesVMNotRespected();
 
-                vm.setModelVM(c.getModelVM());
-                //setModelVM in VM implementazione DA FAREEE
-
-                modelVM.setCourse(c);
-                modelVMRepository.save(modelVM);
-                modelVMRepository.flush();
-                return true;
-            }
-
-
-        }
-        return false;
+            }else throw new TeamNotFoundException();
+        }else throw  new VMduplicated();
     }
-*/
+
 
     /*Metodo per rendere determinati membri del team owner di una data VM*/
     @PreAuthorize("hasAuthority('studente')")
@@ -675,7 +712,13 @@ public class VLServiceImpl implements VLService{
                     Assignment assignment= modelMapper.map(assignmentDTO, Assignment.class);
                     assignment.setCourseAssignment(c);
                     assignment.setImageAssignment(image);
-
+                    for(Student s: c.getStudents()){
+                        Homework h=new Homework();
+                        h.setStatus("NULL");
+                        h.setAssignment(assignment);
+                        h.setStudentForHomework(s);
+                        homeworkRepository.saveAndFlush(h);
+                    }
                     assignmentRepository.saveAndFlush(assignment);
                     imageRepository.saveAndFlush(image);
                 }else throw new AssignmentAlreadyExist();
@@ -703,25 +746,25 @@ public class VLServiceImpl implements VLService{
     /*SERVICE ELABORATI*/
     @PreAuthorize("hasAuthority('studente')")
     @Override
-    public boolean addHomework( HomeworkDTO homeworkDTO, Image image, String courseId, String assignmentId) { //CourseId preso dal pathVariable
-        String student =SecurityContextHolder.getContext().getAuthentication().getName();
+    public boolean addHomework (String homeworkId, Image image) { //CourseId preso dal pathVariable
+        String student = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Student> os = studentRepository.findById(student);
-        if(os.isPresent()){
-            Student s= os.get();
-            if(s.getCourses().contains(courseId)){
-                Optional<Assignment> oa = assignmentRepository.findById(assignmentId);
-                if(oa.isPresent()){
-                    Assignment a=oa.get();
-                    Homework homework= modelMapper.map(homeworkDTO, Homework.class);
-                    homework.setImageHomework(image);
-                    homework.setAssignment(a);
-                    homework.setStudent(s);
-                    homeworkRepository.saveAndFlush(homework);
-                    imageRepository.saveAndFlush(image);
-                    return true;
-                }else throw new AssignmentNotFound();
-            }throw new CourseNotFoundException();
-        }else throw new StudentNotFoundException();
+        if (os.isPresent()) {
+            Student s = os.get();
+            Optional<Homework> oh = homeworkRepository.findById(homeworkId);
+            if (oh.isPresent()) {
+                Homework h = oh.get();
+                if (h.getStudent().getId().equals(student)) {
+                    if (h.getPermanent().equals(false)) {
+                        h.setStatus("CONSEGNATO");
+                        h.setImageHomework(image);
+                        homeworkRepository.saveAndFlush(h);
+                        imageRepository.saveAndFlush(image);
+                        return true;
+                    } else throw new HomeworkIsPermanent();
+                } else throw new PermissionDeniedException();
+            } else throw new HomeworkNotFound();
+        } else throw new PermissionDeniedException();
     }
 
     //@PreAuthorize("hasAuthority('studente')")
@@ -760,7 +803,7 @@ public class VLServiceImpl implements VLService{
                         //imageRep
                         homeworkRepository.saveAndFlush(h);
                         return true;
-                    } else throw new MofificationDenied();
+                    } else throw new ModificationDenied();
                 } else throw new StudentNotFoundException();
             } else throw new HomeworkNotFound();
         }else throw new StudentNotFoundException();
@@ -780,7 +823,7 @@ public class VLServiceImpl implements VLService{
                     {
                         Image image = modelMapper.map(imageDTO, Image.class);
                         h.setStatus("RIVISTO");
-                        h.setPhotoHomework(image);
+                        h.setImageHomework(image);
                         h.setPermanent(permanent);
                         //gestire immagi
                         homeworkRepository.saveAndFlush(h);

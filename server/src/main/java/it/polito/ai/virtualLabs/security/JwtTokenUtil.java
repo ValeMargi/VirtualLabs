@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import it.polito.ai.virtualLabs.entities.UserDAO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -18,11 +20,18 @@ public class JwtTokenUtil implements Serializable {
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
     @Value("${jwt.secret}")
     private String secret;
+    static final String CLAIM_KEY_FIRSTNAME = "firstname";
+    static final String CLAIM_KEY_NAME = "name";
+    static final String CLAIM_KEY_ID = "id";
+    static final String CLAIM_KEY_PHOTO = "photo";
+
+
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
     //retrieve expiration date from jwt token
+
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
@@ -30,20 +39,36 @@ public class JwtTokenUtil implements Serializable {
         final Claims claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }
+
     //for retrieveing any information from token we will need the secret key
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
+
     //check if the token has expired getAuthentication
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
+
     //generate token for user
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, UserDAO userDAO) {
         Map<String, Object> claims = new HashMap<>();
+        if(userDAO.getRole().equals("docente")){
+            claims.put(CLAIM_KEY_FIRSTNAME, userDAO.getProfessor().getFirstName());
+            claims.put(CLAIM_KEY_NAME, userDAO.getProfessor().getName());
+            claims.put(CLAIM_KEY_ID, userDAO.getProfessor().getId());
+            claims.put(CLAIM_KEY_PHOTO, userDAO.getProfessor().getPhotoProfessor());
+        }else if(userDAO.getRole().equals("studente")){
+            claims.put(CLAIM_KEY_FIRSTNAME, userDAO.getStudent().getFirstName());
+            claims.put(CLAIM_KEY_NAME, userDAO.getStudent().getName());
+            claims.put(CLAIM_KEY_ID, userDAO.getStudent().getId());
+            claims.put(CLAIM_KEY_PHOTO, userDAO.getStudent().getPhotoStudent());
+        }
+
         return doGenerateToken(claims, userDetails.getUsername());
     }
+
     //while creating the token -
 //1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
 //2. Sign the JWT using the HS512 algorithm and secret key.

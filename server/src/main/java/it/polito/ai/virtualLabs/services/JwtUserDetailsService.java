@@ -52,4 +52,11 @@ public class JwtUserDetailsService implements UserDetailsService {
         else return  true;
 
     }
+
+    public UserDAO userDAOfromUserDetails(UserDetails userDetails){
+        UserDAO userDAO = userRepository.findByEmail(userDetails.getUsername());
+        if( userDAO!=null)
+            return  userDAO;
+        else throw new UsernameNotFoundException(userDetails.getUsername());
+    }
 }

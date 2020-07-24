@@ -42,4 +42,11 @@ public class Homework {
             i.setHomework(this);
         }
     }
+
+    public void setStudentForHomework(Student s){
+        if(s!=null && student!=s){
+            student=s;
+            s.getHomeworks().add(this);
+        }
+    }
 }

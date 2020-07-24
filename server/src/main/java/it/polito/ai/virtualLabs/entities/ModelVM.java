@@ -35,4 +35,11 @@ public class ModelVM {
         }
     }
 
+    public void setScreenshot(Image i){
+        if(i!=null && screenshot!=i){
+            screenshot=i;
+            i.setModelVM(this);
+        }
+    }
+
 }

@@ -33,4 +33,11 @@ public class Professor {
             c.getProfessors().remove(this);
         }
     }
+
+    public  void setPhotoProfessor(Image i){
+        if( i!= null){
+            photoProfessor = i;
+            i.setProfessor(this);
+        }
+    }
 }

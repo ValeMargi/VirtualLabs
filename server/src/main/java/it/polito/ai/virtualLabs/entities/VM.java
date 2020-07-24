@@ -35,6 +35,9 @@ public class VM {
     @JoinColumn(name="team_id")
     Team team;
 
+    @OneToOne(mappedBy = "VMscreenshot")
+    Image screenshot;
+
     public boolean addStudentToOwnerList(Student s){
         if(s!=null && !ownersVM.contains(s)){
             ownersVM.add(s);
@@ -69,6 +72,13 @@ public class VM {
             return true;
         }
         return false;
+    }
+
+    public void setScreenshot(Image i){
+        if(i!=null && screenshot!=i){
+            screenshot=i;
+            i.setM(this);
+        }
     }
 
 

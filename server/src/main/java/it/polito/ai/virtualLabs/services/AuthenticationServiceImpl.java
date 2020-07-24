@@ -3,14 +3,8 @@ package it.polito.ai.virtualLabs.services;
 import it.polito.ai.virtualLabs.dtos.ProfessorDTO;
 import it.polito.ai.virtualLabs.dtos.StudentDTO;
 import it.polito.ai.virtualLabs.dtos.UserDTO;
-import it.polito.ai.virtualLabs.entities.PasswordResetToken;
-import it.polito.ai.virtualLabs.entities.Professor;
-import it.polito.ai.virtualLabs.entities.Student;
-import it.polito.ai.virtualLabs.entities.UserDAO;
-import it.polito.ai.virtualLabs.repositories.PasswordResetTokenRepository;
-import it.polito.ai.virtualLabs.repositories.ProfessorRepository;
-import it.polito.ai.virtualLabs.repositories.StudentRepository;
-import it.polito.ai.virtualLabs.repositories.UserRepository;
+import it.polito.ai.virtualLabs.entities.*;
+import it.polito.ai.virtualLabs.repositories.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,15 +44,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ImageRepository imageRepository;
+
     @Override
-    public Optional<UserDTO> addStudent(StudentDTO student) {
+    public Optional<UserDTO> addStudent(StudentDTO student, String password,  Image photoStudent) {
         if (  !studentRepository.findById(student.getId()).isPresent() )  {
             Student s = modelMapper.map( student, Student.class);
+            s.setPhotoStudent(photoStudent);
             studentRepository.save(s);
             studentRepository.flush();
-
             UserDTO user = new UserDTO();
-            user.setPassword(UUID.randomUUID().toString());
+            //user.setPassword(UUID.randomUUID().toString());
+            user.setPassword(password); //passwordEncoder.encode(password));
             user.setRole("student");
             user.setEmail(student.getId());
             notificationService.sendMessage(user.getEmail(),
@@ -68,20 +66,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             "Username:  " + user.getEmail() +"\n"+
                             "Password:   " + user.getPassword());
             jwtUserDetailsService.save(user);
+            imageRepository.saveAndFlush(photoStudent);
             return Optional.ofNullable(user);
         }
         return null;
     }
 
     @Override
-    public Optional<UserDTO> addProfessor(ProfessorDTO professor) {
+    public Optional<UserDTO> addProfessor(ProfessorDTO professor, String password,  Image photoProfessor) {
         if ( !professorRepository.findById(professor.getId()).isPresent() )  {
             Professor p = modelMapper.map( professor, Professor.class);
+            p.setPhotoProfessor(photoProfessor);
             professorRepository.save(p);
             professorRepository.flush();
-
             UserDTO user = new UserDTO();
-            user.setPassword(UUID.randomUUID().toString());
+           // user.setPassword(UUID.randomUUID().toString());
+            user.setPassword(password); //passwordEncoder.encode(password));
             user.setRole("professor");
             user.setEmail(professor.getId());
             notificationService.sendMessage( user.getEmail(),
@@ -91,6 +91,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             "Username:  " + user.getEmail() + "\n"+
                             "Password:   " + user.getPassword());
             jwtUserDetailsService.save(user);
+            imageRepository.saveAndFlush(photoProfessor);
             return Optional.ofNullable(user);
         }
         return null;

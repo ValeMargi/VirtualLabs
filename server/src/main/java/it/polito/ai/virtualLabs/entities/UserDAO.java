@@ -25,12 +25,13 @@ public class UserDAO {
     private  String role;
 
     @OneToOne
-    @JoinColumn(name="student_email")
-    Student studentEmail;
+    @JoinColumn(name="student")
+    Student student;
 
     @OneToOne
-    @JoinColumn(name="professor_email")
-    Professor professorEmail;
+    @JoinColumn(name="professor")
+    Professor professor;
+
 
 
 

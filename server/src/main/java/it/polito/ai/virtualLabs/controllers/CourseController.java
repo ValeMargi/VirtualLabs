@@ -167,17 +167,58 @@ public class CourseController {
     }
 
     @PostMapping("/{courseId}/addModel")
-    public ModelVMDTO addModelVM(  @RequestBody ModelVMDTO modelVMDTO, @PathVariable String courseId) {
+    public ModelVMDTO addModelVM( @PathVariable String courseId,  @RequestPart("file") @Valid @NotNull MultipartFile file,
+                                  @RequestPart("modelVM")  Map<String, Object> input) {
+        if (!input.containsKey("modelVMid") || !input.containsKey("maxVcpu") || !input.containsKey("diskSpace")
+           || !input.containsKey("ram") )
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+
         try{
-            vlService.addModelVM(modelVMDTO, courseId);
+            Date date= new Date(System.currentTimeMillis());
+            ModelVMDTO modelVMDTO = new ModelVMDTO();
+            modelVMDTO.setDiskSpace((int)input.get("dispSpace"));
+            modelVMDTO.setMaxVcpu((int)input.get("maxVcpu"));
+            modelVMDTO.setId(input.get("modelVMid").toString());
+            modelVMDTO.setRam((int)input.get("ram"));
+            modelVMDTO.setRunningInstances(0);
+            modelVMDTO.setTotInstances(0);
+
+            Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
+            image.setTimestamp((Timestamp) date);
+            vlService.addModelVM(modelVMDTO, courseId, image);
             return modelVMDTO;
-        }catch (CourseNotFoundException | ModelVMAlreadytPresent e){
+        }catch (CourseNotFoundException | ModelVMAlreadytPresent | IOException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
     }
 
     /*ADDvm*/
+    @PostMapping("/{courseId}/addVM")
+    public VMDTO addVM( @PathVariable String courseId,  @RequestPart("file") @Valid @NotNull MultipartFile file,
+                                  @RequestPart("VM")  Map<String, Object> input) {
+        if (!input.containsKey("VMid") || !input.containsKey("numVcpu") || !input.containsKey("diskSpace")
+                || !input.containsKey("ram") )
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+
+        try{
+            Date date= new Date(System.currentTimeMillis());
+            VMDTO vmdto = new VMDTO();
+            vmdto.setDiskSpace((int)input.get("dispSpace"));
+            vmdto.setNumVcpu((int)input.get("numVcpu"));
+            vmdto.setId(input.get("VMid").toString());
+            vmdto.setRam((int)input.get("ram"));
+            vmdto.setStatus("off");
+
+            Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
+            image.setTimestamp((Timestamp) date);
+            vlService.addVM(vmdto, courseId, image);
+            return vmdto;
+        }catch (CourseNotFoundException | ModelVMAlreadytPresent | IOException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
+    }
 
 
     @PostMapping("/{courseId}/{VMid}/addOwner")
@@ -224,7 +265,8 @@ public class CourseController {
     * Ass: id, release, expiration
     * Im: id, times, name, type*/
     @PostMapping("/{courseId}/addAssignment")
-    public void addAssignment(@PathVariable String courseId, @RequestPart("file") @Valid @NotNull MultipartFile file, @RequestPart("assignment")  Map<String, Object> input ) throws IOException {
+    public void addAssignment(@PathVariable String courseId, @RequestPart("file") @Valid @NotNull MultipartFile file,
+                              @RequestPart("assignment")  Map<String, Object> input ) throws IOException {
         if (!input.containsKey("assignmentId") || !input.containsKey("expirationDate") || !input.containsKey("image"))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
         try {
@@ -233,7 +275,6 @@ public class CourseController {
             Date date= new Date(System.currentTimeMillis());
             assignmentDTO.setRelease(date);
             assignmentDTO.setExpiration((Date)input.get("expirationDate"));
-
 
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
             image.setTimestamp((Timestamp) date);
@@ -255,8 +296,8 @@ public class CourseController {
         }
     }
 
-    //addHomework
-    @PostMapping("/{courseId}/{assignmentId}/addHomework")
+    //addHomework  DOVREBBE NON SERVIRE
+  /*  @PostMapping("/{courseId}/{assignmentId}/addHomework")
     public void addHomework(@PathVariable String courseId, @PathVariable String assignmentId, @RequestParam Map<String, Object> input ) throws IOException {
         if (!input.containsKey("homeworkId") || !input.containsKey("expirationDate") || !input.containsKey("image"))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
@@ -271,24 +312,19 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-
+*/
 
     //addHomework
-    @PostMapping("/{courseId}/{assignmentId}/addHomework")
-    public void update(@PathVariable String courseId, @PathVariable String assignmentId, @RequestPart("file") @Valid @NotNull MultipartFile file, @RequestPart("homework")  Map<String, Object> input ) throws IOException {
-        if (!input.containsKey("homeworkId") || !input.containsKey("expirationDate") || !input.containsKey("image"))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+    @PostMapping("/{courseId}/{assignmentId}/{homeworkId}/uploadHomework")
+    public void uploadHomework(@PathVariable String courseId, @PathVariable String assignmentId,
+                               @PathVariable String homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file ) throws IOException {
         try {
-            HomeworkDTO homeworkDTO = new HomeworkDTO();
-            homeworkDTO.setId(input.get("homeworkId").toString());
-            homeworkDTO.setStatus("NULL");
-            homeworkDTO.setPermanent(false);
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
             image.setTimestamp(timestamp);
-            vlService.addHomework(homeworkDTO,image, courseId, assignmentId);
+            vlService.addHomework(homeworkId,image);
 
-        }catch (PermissionDeniedException | ProfessorNotFoundException e){
+        }catch (HomeworkIsPermanent | PermissionDeniedException | HomeworkNotFound e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -303,7 +339,20 @@ public class CourseController {
         }
     }
 
-    //uploadHomework
 
     //uploadCorrection
+    @PostMapping("/{courseId}/{assignmentId}/{homeworkId}/uploadHomework")
+    public void uploadCorrection(@PathVariable String courseId, @PathVariable String assignmentId,
+                               @PathVariable String homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file ) throws IOException {
+        try {
+            Timestamp timestamp= new Timestamp(System.currentTimeMillis());
+            Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
+            image.setTimestamp(timestamp);
+            vlService.addHomework(homeworkId,image);
+
+        }catch (HomeworkIsPermanent | PermissionDeniedException | HomeworkNotFound e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+    /*allHomework  per professore e GetHomework per stude*/
 }

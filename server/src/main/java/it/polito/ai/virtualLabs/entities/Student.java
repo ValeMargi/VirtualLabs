@@ -2,6 +2,7 @@ package it.polito.ai.virtualLabs.entities;
 
 import com.opencsv.bean.CsvBindByName;
 import lombok.Data;
+import org.apache.commons.beanutils.PropertyUtilsBean;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -42,6 +43,22 @@ public class Student {
 
     @OneToOne(mappedBy = "studentEmail")
     private UserDAO userDAO;
+
+
+    public void setPhotoStudent(Image i){
+        if(i!=null){
+            photoStudent = i;
+            i.setStudent(this);
+        }
+    }
+
+    public void setHomeworkForStudent(Homework h){
+        if(h!=null && !homeworks.contains(h))
+        {
+            homeworks.add(h);
+            h.setStudent(this);
+        }
+    }
 
     public void addOwnerToVM(VM vm){
         if(vm!=null && !ownersVM.contains(vm)){

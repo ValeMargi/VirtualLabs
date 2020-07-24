@@ -1,6 +1,7 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
+import org.springframework.ui.Model;
 
 import javax.persistence.*;
 import java.io.ByteArrayOutputStream;
@@ -37,6 +38,9 @@ public class Image {
     @OneToOne(mappedBy = "screenshotModelVM")
     private ModelVM modelVM;
 
+    @OneToOne(mappedBy = "screenshotVM")
+    private VM vm;
+
 
 
     @Column(name = "picByte", length = 1000)
@@ -62,6 +66,33 @@ public class Image {
         }
     }
 
+    public  void setStudent(Student s){
+        if(s!=null){
+            student = s;
+            s.setPhotoStudent(this);
+        }
+    }
+
+    public  void setProfessor(Professor p){
+        if(p!=null){
+            professor = p;
+            p.setPhotoProfessor(this);
+        }
+    }
+
+    public  void setModelVM(ModelVM m){
+        if(m!=null && modelVM!=m){
+            modelVM=m;
+            m.setScreenshot(this);
+        }
+    }
+
+    public  void setVM(VM v){
+        if(v!=null && vm!=v){
+            vm=v;
+            v.setScreenshot(this);
+        }
+    }
 
 
 

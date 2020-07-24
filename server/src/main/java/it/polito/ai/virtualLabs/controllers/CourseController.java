@@ -157,8 +157,8 @@ public class CourseController {
     }
 
     /*POST mapping request to see the list of students enrolled in a team with id=teamId*/
-    @PostMapping("/membersTeam")
-    public List<StudentDTO> getMembersTeam(  @RequestBody Long teamdId) {
+    @GetMapping("/{teamId}/membersTeam")
+    public List<StudentDTO> getMembersTeam(@PathVariable Long teamdId) {
         try{
             return vlService.getMembers(teamdId).stream().map(s -> ModelHelper.enrich(s)).collect(Collectors.toList());
         }catch (TeamNotFoundException tnfe){

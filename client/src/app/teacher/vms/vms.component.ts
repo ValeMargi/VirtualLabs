@@ -40,10 +40,10 @@ export class VmsComponent implements AfterViewInit, OnInit {
     });*/
 
     //provvisorio
-    this.teams.push(new Team("T01", "Gruppo 1", 1, 1, null));
-    this.teams.push(new Team("T02", "Gruppo 2", 1, 1, null));
+    this.teams.push(new Team("T01", "Gruppo 1", 1));
+    this.teams.push(new Team("T02", "Gruppo 2", 1));
 
-    this.vms.push(new VM("VM01", "Ubuntu", "T01", false, "s267782", null));
+    this.vms.push(new VM("VM01", 2, 100, 2, "spenta"));
     this.dataSource = new MatTableDataSource<VM>(this.vms);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

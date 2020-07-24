@@ -37,7 +37,7 @@ export class TeamService {
 
   addStudents(team: Team, students: Student[]) {
     students.forEach(student => {
-      team.members.push(student);
+      //team.members.push(student);
     });
 
     return this.http.put<Team>(`${this.MY_PAHT}/${team.id}`, team);
@@ -45,7 +45,7 @@ export class TeamService {
 
   removeStudents(team: Team, students: Student[]) {
     students.forEach(student => {
-      team.members.splice(team.members.indexOf(student), 1);
+      //team.members.splice(team.members.indexOf(student), 1);
     });
 
     return this.http.put<Team>(`${this.MY_PAHT}/${team.id}`, team);

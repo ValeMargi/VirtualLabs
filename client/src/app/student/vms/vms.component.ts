@@ -19,7 +19,7 @@ export class VmsComponent implements AfterViewInit, OnInit {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['vmName', 'owner', 'status', 'link', 'edit'];
+  displayedColumns: string[] = ['vmName', 'status', 'link', 'swithOn','edit','swithOff'];
   dataSource = new MatTableDataSource<VM>();
   @Input() public vms: VM[];
   @Input() public teams: Team[];

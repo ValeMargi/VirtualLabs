@@ -41,6 +41,8 @@ import { AssignmentsComponent as AssignmentsComponentStudent } from './student/a
 import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont.component';
 import { TeamsContComponent } from './student/teams/teams-cont.component';
 import { TeamsComponent } from './student/teams/teams.component';
+import { RequestTeamDialogComponent } from './student/teams/request-team-dialog/request-team-dialog.component';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,8 @@ import { TeamsComponent } from './student/teams/teams.component';
     AssignmentsComponentStudent, 
     AssignmentsContComponentStudent,
     TeamsContComponent,
-    TeamsComponent
+    TeamsComponent,
+    RequestTeamDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -79,6 +82,7 @@ import { TeamsComponent } from './student/teams/teams.component';
     MatInputModule,
     MatAutocompleteModule,
     MatButtonModule,
+    MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,

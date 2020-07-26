@@ -1,0 +1,63 @@
+<h2 mat-dialog-title> Richiesta composizione gruppo</h2>
+<mat-dialog-content class="mat-typography">
+
+  <mat-form-field>
+        <mat-label>Gruppo</mat-label>
+        <mat-icon matSuffix>group</mat-icon>
+        <input matInput required placeholder="Nome gruppo">
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+    <mat-select required placeholder="Durata richieste">
+        <mat-option value="1-sett">1 settimana</mat-option>
+        <mat-option value="2-sett">2 settimana</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef><mat-checkbox></mat-checkbox></th>
+        <td mat-cell><mat-checkbox ></mat-checkbox></td>
+    </ng-container>
+
+        <!-- Matricola Column -->
+        <ng-container matColumnDef="Matricola">
+          <th mat-header-cell *matHeaderCellDef> Matricola </th>
+          <td mat-cell *matCellDef="let element"> {{element.Matricola}} </td>
+        </ng-container>
+      
+        <!-- Cognome Column -->
+        <ng-container matColumnDef="Cognome">
+          <th mat-header-cell *matHeaderCellDef> Cognome </th>
+          <td mat-cell *matCellDef="let element"> {{element.Cognome}} </td>
+        </ng-container>
+      
+        <!-- Nome Column -->
+        <ng-container matColumnDef="Nome">
+          <th mat-header-cell *matHeaderCellDef> Nome </th>
+          <td mat-cell *matCellDef="let element"> {{element.Nome}} </td>
+        </ng-container>
+      
+        <!-- Stato Column -->
+        <ng-container matColumnDef="Stato">
+          <th mat-header-cell *matHeaderCellDef> Stato </th>
+          <td mat-cell *matCellDef="let element"> {{element.Stato}} </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Anulla</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Salva</button>
+</mat-dialog-actions>
+
+<div class="Elenco Studenti">
+            
+
+</div>

@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TextFieldModule } from '@angular/cdk/text-field';
 import { StudentsComponent } from './teacher/students/students.component';
 import { StudentsContComponent } from './teacher/students/students-cont.component';
 import { HomeComponent } from './home.component';
@@ -45,6 +46,8 @@ import { RequestTeamDialogComponent } from './student/teams/request-team-dialog/
 import {MatSelectModule} from '@angular/material/select';
 import { ManageModelComponent } from './teacher/vms/manage-model.component';
 import { ManageModelContComponent } from './teacher/vms/manage-model-cont.component';
+import { EditProfileContComponent } from './edit-profile/edit-profile-cont.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +71,9 @@ import { ManageModelContComponent } from './teacher/vms/manage-model-cont.compon
     TeamsComponent,
     RequestTeamDialogComponent,
     ManageModelComponent,
-    ManageModelContComponent
+    ManageModelContComponent,
+    EditProfileContComponent,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -92,7 +97,8 @@ import { ManageModelContComponent } from './teacher/vms/manage-model-cont.compon
     HttpClientModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatCardModule
+    MatCardModule, 
+    TextFieldModule
   ],
   entryComponents: [MatDialogModule, MatFormFieldModule],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }/*,

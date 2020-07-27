@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Profilo</h2><br>
+<mat-dialog-content>
+    <div class="rounded-box">
+        <div class="outer">
+          <div class="inner">
+            <input class="inputfile" type="file" name="pic" accept="image/*">
+            <label><mat-icon>camera_alt</mat-icon></label>
+          </div>
+        </div>
+      </div>
+    
+    <h2 id="name">Mario Rossi</h2>
+    <h3 id="enrollN">t123456</h3>
+    <h3 id="email">rossi@polito.it</h3><br>
+
+    <button mat-button (click)="toggleChangePass()">
+        Cambia password &nbsp;&nbsp;
+        <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <br>
+    <div *ngIf="changePassVisibility">
+        <mat-form-field>
+            <mat-label>Nuova password</mat-label>
+            <input #password type="password" matInput required minlength="8">
+            <mat-error>Password non valida</mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <mat-label>Ripeti password</mat-label>
+            <input #passwordRepeat type="password" matInput required minlength="8">
+            <mat-error>Password non valida</mat-error>
+        </mat-form-field>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="close()">Annulla</button>
+  <button mat-button mat-raised-button color="primary">Salva</button>
+</mat-dialog-actions>

@@ -1,0 +1,68 @@
+h2 {
+    text-align: center;
+    white-space: pre-line;
+}
+
+h3 {
+    text-align: center;
+    white-space: pre-line;
+}
+
+.rounded-box {
+    width: 150px;
+    height: 150px;
+    display: block;
+    margin: 0 auto;
+}
+
+.outer {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 150px !important; /* any size */
+    max-height: 150px !important; /* any size */
+    margin: auto;
+    background-color: #6eafd4;
+    border-radius: 100%;
+    position: relative;
+}
+
+.inner {
+    background-color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: block;
+    margin: 0 auto;
+}
+
+.inner:hover {
+    background-color: wheat;
+}
+
+.inputfile {
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: 1;
+    width: 50px;
+    height: 50px;
+    border: 3px;
+}
+
+.inputfile + label {
+    font-size: 1.25rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    align-self: center;
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+    pointer-events: none;
+    cursor: pointer;
+    line-height: 50px;
+    text-align: center;
+}

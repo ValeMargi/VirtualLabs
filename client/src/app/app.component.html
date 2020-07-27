@@ -12,6 +12,7 @@
     <span routerLink="/home">VirtualLabs</span>
     <span class="example-spacer"></span>
     <button #btLogin mat-button *ngIf="loginVisibility" (click)="openDialogLogin()">Login</button>
+    <button #btLogout mat-button *ngIf="!loginVisibility" (click)="openDialogProfile()">Profilo</button>
     <button #btLogout mat-button *ngIf="!loginVisibility" (click)="logout()">Logout</button>
     <button #btRegister mat-button *ngIf="loginVisibility" (click)="openDialogRegister()">Registrati</button>
   </mat-toolbar>

@@ -18,6 +18,7 @@ import { AssignmentsComponent as AssignmentsComponentTeacher } from './teacher/a
 import { AssignmentsContComponent as AssignmentsContComponentTeacher } from './teacher/assignments/assignments-cont.component';
 import { AssignmentsComponent as AssignmentsComponentStudent } from './student/assignments/assignments.component';
 import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont.component';
+import { EditProfileContComponent } from './edit-profile/edit-profile-cont.component';
 
 @Component({
   selector: 'app-root',
@@ -181,6 +182,20 @@ export class AppComponent implements AfterViewInit, OnInit {
     };
 
     this.matDialog.open(AddCourseDialogComponent, dialogConfig);
+  }
+
+  openDialogProfile() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+        id: 1,
+        title: 'Profile'
+    };
+
+    this.matDialog.open(EditProfileContComponent, dialogConfig);
   }
 
   get courseName() {

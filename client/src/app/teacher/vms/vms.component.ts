@@ -8,6 +8,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { Team } from '../../models/team.model';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ManageModelContComponent } from './manage-model-cont.component';
 
 @Component({
   selector: 'app-vms-teacher',
@@ -28,7 +30,7 @@ export class VmsComponent implements AfterViewInit, OnInit {
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  constructor(private cont: VmsContComponent) { }
+  constructor(private cont: VmsContComponent, private matDialog: MatDialog) { }
 
   ngAfterViewInit(): void {
     /*this.cont.vms.subscribe(vv => {
@@ -65,6 +67,20 @@ export class VmsComponent implements AfterViewInit, OnInit {
     else {
       return "Spenta";
     }
+  }
+
+  openDialogModel() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+        id: 1,
+        title: 'Model'
+    };
+
+    this.matDialog.open(ManageModelContComponent, dialogConfig);
   }
 
 }

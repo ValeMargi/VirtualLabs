@@ -43,6 +43,8 @@ import { TeamsContComponent } from './student/teams/teams-cont.component';
 import { TeamsComponent } from './student/teams/teams.component';
 import { RequestTeamDialogComponent } from './student/teams/request-team-dialog/request-team-dialog.component';
 import {MatSelectModule} from '@angular/material/select';
+import { ManageModelComponent } from './teacher/vms/manage-model.component';
+import { ManageModelContComponent } from './teacher/vms/manage-model-cont.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +66,9 @@ import {MatSelectModule} from '@angular/material/select';
     AssignmentsContComponentStudent,
     TeamsContComponent,
     TeamsComponent,
-    RequestTeamDialogComponent
+    RequestTeamDialogComponent,
+    ManageModelComponent,
+    ManageModelContComponent
   ],
   imports: [
     BrowserModule,

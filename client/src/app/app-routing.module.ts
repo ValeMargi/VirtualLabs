@@ -11,8 +11,9 @@ import { TeamsContComponent } from './student/teams/teams-cont.component';
 
 
 const routes: Routes = [
-  { path: '', component: PageNotFoundComponent },
   { path: 'home', component: HomeComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'page-not-found', component: PageNotFoundComponent }
   /*{ path: 'teacher/course/applicazioni-internet/students', component: StudentsContComponent },
   { path: 'teacher/course/applicazioni-internet/vms', component: VmsContComponentTeacher },
   { path: 'teacher/course/applicazioni-internet/assignments', component: AssignmentsContComponentTeacher },

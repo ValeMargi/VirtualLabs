@@ -83,6 +83,8 @@ export class AppComponent implements AfterViewInit, OnInit {
       this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentStudent });
     }
 
+    this.router.config.push({ path: '**', redirectTo: 'page-not-found' });
+
     if (this.authService.isLoggedIn()) {
       this.loginVisibility = false;
     }

@@ -1,21 +1,20 @@
 <h2 mat-dialog-title>Login</h2>
 <mat-dialog-content>
-<mat-form-field>
-  <input #email type="email" placeholder="email" matInput required>
-  <mat-error *ngIf="email.invalid">Email non valida</mat-error>
-</mat-form-field>
-<br>
-<mat-form-field>
-  <input #password type="password" placeholder="password" matInput required minlength="8">
-  <mat-error>Password non valida</mat-error>
-</mat-form-field>
-</mat-dialog-content>
-
-<br>
-<mat-dialog-content>
-  <a>Non sei registrato?</a>
+  <mat-form-field>
+    <input #email type="email" placeholder="email" matInput required>
+    <mat-error *ngIf="email.invalid">Email non valida</mat-error>
+  </mat-form-field>
   <br>
-  <button mat-button (click)="openDialogRegister()">Registrati</button>
+  <mat-form-field>
+    <input #password type="password" placeholder="password" matInput required minlength="8">
+    <mat-error>Password non valida</mat-error>
+  </mat-form-field>
+
+  <br>
+  <div class="register">
+    Non sei registrato?
+    <button mat-button (click)="openDialogRegister()">Registrati</button>
+  </div>
 </mat-dialog-content>
 
 <h3 id="error" style="color: red; visibility: hidden;">Username o password errati</h3>

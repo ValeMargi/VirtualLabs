@@ -1,0 +1,17 @@
+h2 {
+    text-align: center;
+}
+
+div {
+  display: flex;
+  width: 100%;
+  padding: 10px;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 1em;
+}
+
+mat-dialog-actions {
+    float: right;
+}

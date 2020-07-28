@@ -1,34 +1,46 @@
 <h2 mat-dialog-title>Crea/modifica modello</h2>
 <mat-dialog-content>
-    Nome del modello &nbsp;&nbsp;&nbsp;&nbsp;
-    <mat-form-field>
-    <input #courseName class="input" type="text" placeholder="Nome del modello" matInput required>
-    </mat-form-field>
+    <div>
+        <p>Nome del modello</p>
+        <mat-form-field>
+        <input #courseName class="input" type="text" placeholder="Nome del modello" matInput required>
+        </mat-form-field>
+    </div>
     <br>
-    Massimo VCPU &nbsp;&nbsp;&nbsp;&nbsp;
-    <mat-form-field>
-    <input #min class="input" type="number" placeholder="Massimo VCPU" matInput min="1" max="24" value="4" required>
-    </mat-form-field>
+    <div>
+        <p>Massimo VCPU</p>
+        <mat-form-field>
+        <input #min class="input" type="number" placeholder="Massimo VCPU" matInput min="1" max="24" value="4" required>
+        </mat-form-field>
+    </div>
     <br>
-    Massima RAM &nbsp;&nbsp;&nbsp;&nbsp;
-    <mat-form-field>
-    <input #max class="input" type="number" placeholder="Massima RAM" matInput min="1" max="250" value="8" required>
-    </mat-form-field>
+    <div>
+        <p>Massima RAM</p>
+        <mat-form-field>
+        <input #max class="input" type="number" placeholder="Massima RAM" matInput min="1" max="250" value="8" required>
+        </mat-form-field>
+    </div>
     <br>
-    Massimo disco &nbsp;&nbsp;&nbsp;&nbsp;
-    <mat-form-field>
-    <input #min class="input" type="number" placeholder="Massimo disco" matInput min="10" max="500" value="100" required>
-    </mat-form-field>
+    <div>
+        <p>Massimo disco</p>
+        <mat-form-field>
+        <input #min class="input" type="number" placeholder="Massimo disco" matInput min="10" max="500" value="100" required>
+        </mat-form-field>
+    </div>
     <br>
-    Massimo VM &nbsp;&nbsp;&nbsp;&nbsp;
-    <mat-form-field>
-    <input #min class="input" type="number" placeholder="Massimo VM" matInput min="1" max="10" value="5" required>
-    </mat-form-field>
+    <div>
+        <p>Massimo VM</p>>
+        <mat-form-field>
+        <input #min class="input" type="number" placeholder="Massimo VM" matInput min="1" max="10" value="5" required>
+        </mat-form-field>
+    </div>
     <br>
-    Massimo VM attive &nbsp;&nbsp;&nbsp;&nbsp;
-    <mat-form-field>
-    <input #min class="input" type="number" placeholder="Massimo VM attive" matInput min="1" max="10" value="5" required>
-    </mat-form-field>
+    <div>
+    <p>Massimo VM attive</p>
+        <mat-form-field>
+        <input #min class="input" type="number" placeholder="Massimo VM attive" matInput min="1" max="10" value="5" required>
+        </mat-form-field>
+    </div>
     <br>
 </mat-dialog-content>
 <mat-dialog-actions>

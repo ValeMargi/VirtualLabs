@@ -36,6 +36,13 @@ public class CourseController {
         return vlService.getAllCourses().stream().map(c-> ModelHelper.enrich(c)).collect(Collectors.toList());
     }
 
+    /**
+     * Metodo: GET
+     * @param name: riceve dal path il nome di un Corso
+     * @return: ritorna il DTO (String name, acronym;
+     *                          int min, max; boolean enabled;)
+     *          del corso associato (tramite link cliccabile)
+     */
     @GetMapping("/{name}")
     public CourseDTO getOne(@PathVariable String name){
         Optional<CourseDTO > courseDTO= vlService.getCourse(name);
@@ -45,25 +52,44 @@ public class CourseController {
             return  ModelHelper.enrich(courseDTO.get());
     }
 
+    /**
+     * Metodo: GET
+     * @param courseName: riceve dal path il nome di un Corso
+     * @return: ritorna la lista di StudentDTO degli studenti iscritti al dato Corso
+     */
     /*GET mapping request to see the list of students enrolled in the course "name"*/
-    @GetMapping("/{name}/enrolled")
-    public List<StudentDTO> enrolledStudents(@PathVariable  String name){
+    @GetMapping("/{courseName}/enrolled")
+    public List<StudentDTO> enrolledStudents(@PathVariable  String courseName){
         try {
-            return vlService.getEnrolledStudents(name).stream().map(s -> ModelHelper.enrich(s)).collect(Collectors.toList());
+            return vlService.getEnrolledStudents(courseName).stream().map(s -> ModelHelper.enrich(s)).collect(Collectors.toList());
         }catch(CourseNotFoundException cnfe) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+name+" not present");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+courseName+" not present");
         }
     }
 
+    /**
+     * Metodo: POST
+     * Authority: Docente
+     * @param courseDTO: parametro acquisito dal corpo della richiesta
+     *                 (String name, acronym;  int min, max; boolean enabled;)
+     * @return: ritorna il DTO del corso
+     */
     @PostMapping({"", "/"})
-    public CourseDTO addCourse(@RequestBody CourseDTO dto){
-        if(vlService.addCourse(dto)){
-            return ModelHelper.enrich(dto);
+    public CourseDTO addCourse(@RequestBody CourseDTO courseDTO){
+        if(vlService.addCourse(courseDTO)){
+            return ModelHelper.enrich(courseDTO);
         }else
-            throw new ResponseStatusException(HttpStatus.CONFLICT, dto.getName());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getName());
     }
 
-    @PostMapping({"/{name}/addProfessor"})
+    /**
+     * Metodo: POST
+     * Authority: Docente
+     * @param professorDTO: parametro acquisito dal corspo della richiesta (String id, name, firstName, email;)
+     * @param courseName:  riceve dal path il nome di un Corso
+     * @return: ritorna il DTO del professore aggiunto al corso con CourseName indicato
+     */
+    @PostMapping({"/{courseName}/addProfessor"})
     public ProfessorDTO addProfessorToCourse(@RequestBody ProfessorDTO professorDTO, @PathVariable String courseName){
         if(vlService.addProfessorToCourse(courseName, professorDTO)){
             return ModelHelper.enrich(professorDTO);
@@ -72,39 +98,60 @@ public class CourseController {
     }
 
 
-    @PostMapping("/{name}/enrollOne")
+    /**
+     * Metodo: POST
+     * Authority: Docente
+     * @param input: Nel corpo della richiesta vengono passati gli id degli studenti da iscrivere al corso con nome courseName."
+     *               Esempio Body: {"id": "s1", "id": "s2"}
+     * @param courseName: riceve dal path il nome di un Corso
+     */
+    @PostMapping("/{courseName}/enrollOne")
     @ResponseStatus(HttpStatus.CREATED)
-    public void enrollOne(@RequestBody Map<String, String> input, @PathVariable String name){
+    public void enrollOne(@RequestBody Map<String, String> input, @PathVariable String courseName){
         if( !input.containsKey("id"))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, input.get("id"));
         try {
-            if (!vlService.addStudentToCourse(input.get("id"), name))
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+name+" not present");
+            if (!vlService.addStudentToCourse(input.get("id"), courseName))
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+courseName+" not present");
         }catch (PermissionDeniedException permissionException){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, permissionException.getMessage());
         }
     }
 
-    @PostMapping("/{name}/enrollMany")
-    public List<Boolean> enrollStudents(@PathVariable String name, @RequestParam("file") MultipartFile file){
+    /**
+     * Metodo: POST
+     * Authority: Docente
+     * @param courseName: riceve dal path il nome di un Corso
+     * @param file
+     * @return: ritorna una lista di boolean per tener traccia se l'aggiunta di ogni studente al dato corso ha avuto successo o meno
+     */
+    @PostMapping("/{courseName}/enrollMany")
+    public List<Boolean> enrollStudents(@PathVariable String courseName, @RequestParam("file") MultipartFile file){
         if( !file.getContentType().equals("text/csv") && !file.getContentType().equals("application/vnd.ms-excel"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not text/csv");
         else
             try {
-                return vlService.addAndEnroll(new BufferedReader(new InputStreamReader(file.getInputStream())), name);
+                return vlService.addAndEnroll(new BufferedReader(new InputStreamReader(file.getInputStream())), courseName);
             }catch(FormatFileNotValidException | IOException e){
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
     }
 
     /*POST mapping request to enable / disable course "name"*/
-    @PostMapping("/{name}/enable")
-    public void enableCourse(@PathVariable String name, @RequestBody Boolean enabled){
+
+    /**
+     * Metodo: POST
+     * Authority: Docente
+     * @param courseName: riceve dal path il nome di un Corso
+     * @param enabled: flag (true/false) che indica se il Professore deve abilitare/disabilitare il dato corso
+     */
+    @PostMapping("/{courseName}/enable")
+    public void enableCourse(@PathVariable String courseName, @RequestBody Boolean enabled){
         try {
             if(enabled)
-                vlService.enableCourse(name);
+                vlService.enableCourse(courseName);
             else
-                vlService.disableCourse(name);
+                vlService.disableCourse(courseName);
         }catch(CourseNotFoundException cntfe ){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, cntfe.getMessage());
         }catch (PermissionDeniedException permissionException){
@@ -114,41 +161,81 @@ public class CourseController {
         }
     }
 
+    /**
+     * Metodo: GET
+     * Authority: Studente
+     * @param studentId: riceve dal path l'id di uno studente
+     * @return: ritorna una lista di DTO dei corsi a cui lo studente con studentId indicato è iscritto
+     */
     @GetMapping("/{studentId}")
     public List<CourseDTO>  getCoursesForStudent(@PathVariable String studentId){
             return vlService.getCoursesForStudent(studentId).stream().map(c-> ModelHelper.enrich(c)).collect(Collectors.toList());
     }
 
+    /**
+     * Metodo: GET
+     * Authority: Docente
+     * @param professorId: riceve dal path l'id di un professore
+     * @return: ritorna una lista di DTO dei corsi di cui il professore con professorId indicato è titolare
+     */
     @GetMapping("/{professorId}")
     public List<CourseDTO>  getCoursesForProfessor(@PathVariable String professorId){
         return vlService.getCoursesForProfessor(professorId).stream().map(c-> ModelHelper.enrich(c)).collect(Collectors.toList());
     }
 
 
-    @PostMapping("/{courseId}/remove")
-    public boolean removeCourse(@PathVariable String courseId){
+    /**
+     * Metodo: POST
+     * Authority: Docente
+     * @param courseName:riceve dal path il nome di un Corso da rimuovere
+     * @return: ritorna l'esito della rimozione del corso indicato
+     */
+    @PostMapping("/{courseName}/remove")
+    public boolean removeCourse(@PathVariable String courseName){
         try{
-            return vlService.removeCourse(courseId);
+            return vlService.removeCourse(courseName);
         }catch(PermissionDeniedException |CourseNotFoundException |ProfessorNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
-    @PostMapping("/{courseId}/modify")
-    public boolean modifyCourse(@PathVariable String courseId, @RequestBody CourseDTO dto){
+    /**
+     * Metodo: POST
+     * Authority: Docente
+     * @param courseName:riceve dal path il nome di un Corso da modificare
+     * @param courseDTO:  Nel corpo della richiesta viene passato il DTO del corso modificato"
+     *      *               Esempio Body: {"name": "...",
+     *                                     "acronym": "...",
+     *                                     "min":"...",
+     *                                     "max":"...",
+     *                                     "enabled":"...."}
+     * @return: ritorna l'esito della modifica del corso indicato
+     */
+    @PostMapping("/{courseName}/modify")
+    public boolean modifyCourse(@PathVariable String courseName, @RequestBody CourseDTO courseDTO){
         try{
-            return vlService.modifyCourse(dto);
+            return vlService.modifyCourse(courseDTO);
         }catch(PermissionDeniedException |CourseNotFoundException |CardinalityNotAccetableException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
-    @PostMapping("/{courseId}/proposeTeam")
-    public TeamDTO proposeTeam(@PathVariable String courseId, @RequestBody Map<String, Object> object) {
+    /**
+     * Metodo: POST
+     * Authority: Studente
+     * @param courseName: riceve dal path il nome di un Corso a cui lo studente autenticato è iscritto
+     * @param object: Nel corso della richiesta viene passato il nome del Team proposto dallo studente e la lista degli id degli studenti che formeranno il gruppo
+     *              Esempio Body: {"nameTeam": "Team1",
+     *                             "membersId": {"s1", "s2", "s2"}
+     *                            }
+     * @return: ritorna il DTO del Team appena creato (Long id;String name;int status;)
+     */
+    @PostMapping("/{courseName}/proposeTeam")
+    public TeamDTO proposeTeam(@PathVariable String courseName, @RequestBody Map<String, Object> object) {
         try {
             String nameTeam = object.get("nameTeam").toString();
             List<String> membersId= (List<String>)object.get("membersId");
-            return vlService.proposeTeam(courseId, nameTeam, membersId);
+            return vlService.proposeTeam(courseName, nameTeam, membersId);
         } catch (StudentNotEnrolledToCourseExcpetion | CourseNotFoundException
                 | StudentAlreadyInTeamExcpetion | CardinalityNotAccetableException
                 | StudentDuplicateException | PermissionDeniedException exception) {
@@ -157,6 +244,12 @@ public class CourseController {
     }
 
     /*POST mapping request to see the list of students enrolled in a team with id=teamId*/
+
+    /**
+     * Metodo: GET
+     * @param teamdId: riceve dal path L'ID di un determinato Team
+     * @return: ritorna la lista di DTO degli studenti iscritti a team con id pari a teamId
+     */
     @GetMapping("/{teamId}/membersTeam")
     public List<StudentDTO> getMembersTeam(@PathVariable Long teamdId) {
         try{
@@ -166,8 +259,16 @@ public class CourseController {
         }
     }
 
-    @PostMapping("/{courseId}/addModel")
-    public ModelVMDTO addModelVM( @PathVariable String courseId,  @RequestPart("file") @Valid @NotNull MultipartFile file,
+    /**
+     * Metodo: POST
+     * Authority: Docente
+     * @param courseName: riceve dal path il nome del corso
+     * @param file: nella richiesta viene inviata l'immagine associata al modello creato dal docente
+     * @param input: nella richiesta vengono inviati tutti i parametri associati al nuovo modello di VM creato
+     * @return: ritorna il DTO del modello VM appena creato
+     */
+    @PostMapping("/{courseName}/addModel")
+    public ModelVMDTO addModelVM( @PathVariable String courseName,  @RequestPart("file") @Valid @NotNull MultipartFile file,
                                   @RequestPart("modelVM")  Map<String, Object> input) {
         if (!input.containsKey("modelVMid") || !input.containsKey("maxVcpu") || !input.containsKey("diskSpace")
            || !input.containsKey("ram") )
@@ -185,7 +286,7 @@ public class CourseController {
 
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
             image.setTimestamp((Timestamp) date);
-            vlService.addModelVM(modelVMDTO, courseId, image);
+            vlService.addModelVM(modelVMDTO, courseName, image);
             return modelVMDTO;
         }catch (CourseNotFoundException | ModelVMAlreadytPresent | IOException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -194,8 +295,18 @@ public class CourseController {
     }
 
     /*ADDvm*/
-    @PostMapping("/{courseId}/addVM")
-    public VMDTO addVM( @PathVariable String courseId,  @RequestPart("file") @Valid @NotNull MultipartFile file,
+
+    /**
+     * Metodo: POST
+     * Authority: Studente
+     * @param courseName:courseName: riceve dal path il nome del corso
+     * @param file:nella richiesta viene inviata l'immagine associata alla VM creata dallo studente
+     * @param input: nella richiesta vengono inviati tutti i parametri associati alla VM creata
+     * @return: ritorna il DTO della VM appena creata
+     */
+
+    @PostMapping("/{courseName}/addVM")
+    public VMDTO addVM( @PathVariable String courseName,  @RequestPart("file") @Valid @NotNull MultipartFile file,
                                   @RequestPart("VM")  Map<String, Object> input) {
         if (!input.containsKey("VMid") || !input.containsKey("numVcpu") || !input.containsKey("diskSpace")
                 || !input.containsKey("ram") )
@@ -212,7 +323,7 @@ public class CourseController {
 
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
             image.setTimestamp((Timestamp) date);
-            vlService.addVM(vmdto, courseId, image);
+            vlService.addVM(vmdto, courseName, image);
             return vmdto;
         }catch (CourseNotFoundException | ModelVMAlreadytPresent | IOException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -221,20 +332,33 @@ public class CourseController {
     }
 
 
-    @PostMapping("/{courseId}/{VMid}/addOwner")
-    public void addOwner(  @PathVariable String courseId, @PathVariable String VMid,@RequestBody Map<String, Object> input) {
+    /**
+     * Metodo: POST
+     * Authority: Studente
+     * @param courseName: riceve dal path il nome del corso
+     * @param VMid: riceve dal path l'id della VM
+     * @param input: nel body della richiesta vengono inviati gli id dei membri del team che divenntano owner della VM
+     */
+    @PostMapping("/{courseName}/{VMid}/addOwner")
+    public void addOwner(  @PathVariable String courseName, @PathVariable String VMid,@RequestBody Map<String, Object> input) {
         if (!input.containsKey("id"))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, input.get("id").toString());
         try {
             List<String> membersId = (List<String>) input.get("id");
-            vlService.addOwner(VMid, courseId, membersId);
+            vlService.addOwner(VMid, courseName, membersId);
         } catch (VMNotFound | CourseNotFoundException | StudentNotFoundException | PermissionDeniedException | ModelVMNotSetted e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
-    @GetMapping("/{courseId}/{VMid}/activateVM")
-    public void activateVM(  @PathVariable String courseId, @PathVariable String VMid) {
+    /**
+     * Metodo: GET
+     * Authority: Studente
+     * @param courseName: riceve dal path il nome del corso
+     * @param VMid: riceve dal path l'id della VM da attiavare
+     */
+    @GetMapping("/{courseName}/{VMid}/activateVM")
+    public void activateVM(  @PathVariable String courseName, @PathVariable String VMid) {
      try{
             vlService.activateVM(VMid);
         } catch (VMNotFound  | PermissionDeniedException  e) {
@@ -242,8 +366,14 @@ public class CourseController {
         }
     }
 
-    @GetMapping("/{courseId}/{VMid}/activateVM")
-    public void disableVM(  @PathVariable String courseId, @PathVariable String VMid) {
+    /**
+     * Metodo: GET
+     * Authority: Studente
+     * @param courseName: riceve dal path il nome del corso
+     * @param VMid: riceve dal path l'id della VM da disattiavare
+     */
+    @GetMapping("/{courseName}/{VMid}/activateVM")
+    public void disableVM(  @PathVariable String courseName, @PathVariable String VMid) {
         try{
             vlService.disableVM(VMid);
         } catch (VMNotFound  | PermissionDeniedException  e) {
@@ -251,8 +381,14 @@ public class CourseController {
         }
     }
 
-    @GetMapping("/{courseId}/{VMid}/removeVM")
-    public void removeVM(  @PathVariable String courseId, @PathVariable String VMid) {
+    /**
+     * Metodo: GET
+     * Authority: Studente
+     * @param courseName: riceve dal path il nome del corso
+     * @param VMid: riceve dal path l'id della VM da rimuovere
+     */
+    @GetMapping("/{courseName}/{VMid}/removeVM")
+    public void removeVM(  @PathVariable String courseName, @PathVariable String VMid) {
         try{
             vlService.removeVM(VMid);
         } catch (VMNotFound  | PermissionDeniedException  e) {
@@ -264,8 +400,17 @@ public class CourseController {
     /*
     * Ass: id, release, expiration
     * Im: id, times, name, type*/
-    @PostMapping("/{courseId}/addAssignment")
-    public void addAssignment(@PathVariable String courseId, @RequestPart("file") @Valid @NotNull MultipartFile file,
+
+    /**
+     * Metodo: POST
+     * Authority: Docente
+     * @param courseName: riceve dal path il nome del corso
+     * @param file: nella richiesta viene inviata l'immagine associata alla consegna inserita dal professore per il corso con nome pari a courseName
+     * @param input: nella richiesta vengono inviati tutti i parametri associati ad una nuova consegna (assignmentId, expirationDate)
+     * @throws IOException
+     */
+    @PostMapping("/{courseName}/addAssignment")
+    public void addAssignment(@PathVariable String courseName, @RequestPart("file") @Valid @NotNull MultipartFile file,
                               @RequestPart("assignment")  Map<String, Object> input ) throws IOException {
         if (!input.containsKey("assignmentId") || !input.containsKey("expirationDate") || !input.containsKey("image"))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
@@ -278,7 +423,7 @@ public class CourseController {
 
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
             image.setTimestamp((Timestamp) date);
-            vlService.addAssignment(assignmentDTO,image, courseId);
+            vlService.addAssignment(assignmentDTO,image, courseName);
 
 
         }catch (PermissionDeniedException | CourseNotFoundException | AssignmentAlreadyExist e){
@@ -287,10 +432,16 @@ public class CourseController {
     }
 
 
-    @GetMapping("/{courseId}/assignment")
-    public List<Assignment> allAssignment(@PathVariable String courseId) {
+    /**
+     * Metodo: GET
+     * Authority: Docente
+     * @param courseName: riceve dal path il nome del corso di cui si vuole elencare le consegne associate
+     * @return: ritorna la lista di consegne associate al corso con nome pari a CourseName
+     */
+    @GetMapping("/{courseName}/assignment")
+    public List<Assignment> allAssignment(@PathVariable String courseName) {
         try{
-            return  vlService.allAssignment(courseId);
+            return  vlService.allAssignment(courseName);
         } catch (CourseNotFoundException  | ProfessorNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -315,8 +466,18 @@ public class CourseController {
 */
 
     //addHomework
-    @PostMapping("/{courseId}/{assignmentId}/{homeworkId}/uploadHomework")
-    public void uploadHomework(@PathVariable String courseId, @PathVariable String assignmentId,
+
+    /**
+     * Metodo: POST
+     * Authority: Studente
+     * @param courseName: riceve dal path il nome del corso
+     * @param assignmentId: riceve dal path l'id della consegna per cui lo studente vuole aggiungere un elaborato
+     * @param homeworkId: riceve dal path l'id dell'eleborato a cui lo studente vuole caricare un'immagine
+     * @param file: nella richiesta viene inviata l'immagine caricata dallo studente
+     * @throws IOException
+     */
+    @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/uploadHomework")
+    public void uploadHomework(@PathVariable String courseName, @PathVariable String assignmentId,
                                @PathVariable String homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file ) throws IOException {
         try {
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
@@ -330,8 +491,14 @@ public class CourseController {
     }
 
 
-    @PostMapping("/{courseId}/{homeworkId}")
-    public void updateStatusHomework(@PathVariable String courseId,@PathVariable String homeworkId, @RequestParam String status) {
+    /**
+     * Metodo: POST
+     * @param courseName: riceve dal path il nome del corso
+     * @param homeworkId: riceve dal path l'id dell'elaborata di cui si vuole modificare lo stato
+     * @param status: valore che può essere LETTO, CONSEGNATO, RIVISTO
+     */
+    @PostMapping("/{courseName}/{homeworkId}")
+    public void updateStatusHomework(@PathVariable String courseName,@PathVariable String homeworkId, @RequestParam String status) {
         try{
             vlService.updateStatusHomework(homeworkId, status );
         } catch (HomeworkNotFound  | PermissionDeniedException  e) {
@@ -341,8 +508,18 @@ public class CourseController {
 
 
     //uploadCorrection
-    @PostMapping("/{courseId}/{assignmentId}/{homeworkId}/uploadHomework")
-    public void uploadCorrection(@PathVariable String courseId, @PathVariable String assignmentId,
+
+    /**
+     * Metodo: POST
+     * Authority: Docente
+     * @param courseName: riceve dal path il nome del corso
+     * @param assignmentId: riceve dal path l'id della consegna
+     * @param homeworkId: riceve dal path l'id dell'alaborato di uno studente che il docente vuole corregere
+     * @param file: nella richiesta viene inviata l'immagine della correzione
+     * @throws IOException
+     */
+    @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/uploadHomework")
+    public void uploadCorrection(@PathVariable String courseName, @PathVariable String assignmentId,
                                @PathVariable String homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file ) throws IOException {
         try {
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
@@ -354,5 +531,8 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-    /*allHomework  per professore e GetHomework per stude*/
+
+
+
+    /*allHomework  per professore e GetHomework per studente*/
 }

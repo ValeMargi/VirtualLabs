@@ -811,6 +811,24 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('docente')")
     @Override
+    public  List<Homework> allHomework(String courseName, String assignmentId){ //AGGIUNTA 28/07
+        Optional<Course> oc= courseRepository.findById(courseName);
+        if(oc.isPresent()){
+            Course c = oc.get();
+            if(c.getProfessors().stream().anyMatch(p->p.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))) {
+               Assignment assignment = c.getAssignments().stream().filter(a->a.getId().equals(assignmentId)).findFirst().get();
+                if(assignment!=null ) {
+                    return assignment.getHomeworks();
+                }else throw new AssignmentNotFound();
+            }else throw new PermissionDeniedException();
+
+
+        }else throw new CourseNotFoundException();
+
+    }
+
+    @PreAuthorize("hasAuthority('docente')")
+    @Override
     public boolean uploadCorrection( ImageDTO imageDTO,  String homeworkId, String courseId, Boolean permanent) {
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Professor> op = professorRepository.findById(professor);

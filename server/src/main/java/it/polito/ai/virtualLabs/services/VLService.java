@@ -1,10 +1,7 @@
 package it.polito.ai.virtualLabs.services;
 
 import it.polito.ai.virtualLabs.dtos.*;
-import it.polito.ai.virtualLabs.entities.Assignment;
-import it.polito.ai.virtualLabs.entities.Image;
-import it.polito.ai.virtualLabs.entities.Student;
-import it.polito.ai.virtualLabs.entities.VM;
+import it.polito.ai.virtualLabs.entities.*;
 
 import java.io.Reader;
 import java.util.List;
@@ -53,6 +50,7 @@ public interface VLService {
     boolean addHomework( String homeworkId, Image image);
     boolean updateStatusHomework( String homeworkId, String status);
     boolean uploadHomework( ImageDTO imageDTO,  String homeworkId, String courseId);
+    List<Homework> allHomework(String courseName, String assignmentId);
     boolean uploadCorrection( ImageDTO imageDTO,  String homeworkId, String courseId, Boolean permanent);
      byte[] compressZLib(byte[] data);
      byte[] decompressZLib(byte[] data);

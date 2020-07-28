@@ -2,6 +2,7 @@ package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.entities.Assignment;
+import it.polito.ai.virtualLabs.entities.Homework;
 import it.polito.ai.virtualLabs.entities.Image;
 import it.polito.ai.virtualLabs.entities.VM;
 import it.polito.ai.virtualLabs.exceptions.*;
@@ -122,7 +123,7 @@ public class CourseController {
      * Metodo: POST
      * Authority: Docente
      * @param courseName: riceve dal path il nome di un Corso
-     * @param file
+     * @param file: riceve un file in cui sono presenti gli id degli studenti da iscrivere al corso con nome pari a courseName
      * @return: ritorna una lista di boolean per tener traccia se l'aggiunta di ogni studente al dato corso ha avuto successo o meno
      */
     @PostMapping("/{courseName}/enrollMany")
@@ -131,7 +132,7 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not text/csv");
         else
             try {
-                return vlService.addAndEnroll(new BufferedReader(new InputStreamReader(file.getInputStream())), courseName);
+                return vlService.EnrollAllFromCSV(new BufferedReader(new InputStreamReader(file.getInputStream())), courseName);
             }catch(FormatFileNotValidException | IOException e){
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -534,5 +535,25 @@ public class CourseController {
 
 
 
-    /*allHomework  per professore e GetHomework per studente*/
+    /*allHomework  per professore */
+    /**
+     * Metodo: GET
+     * Authority: Docente
+     * @param courseName: riceve dal path il nome del corso di cui si vuole elencare gli elaborati per una certa consegna con id pari a assignmentId
+     * @param assignmentId: riceve dal path l'id della consegna
+     * @return: ritorna la lista di elaborati svolti dagli studenti per la consegna indicata
+     */
+    @GetMapping("/{courseName}/{assignmentId}/allHomework")
+    public List<Homework> allHomework(@PathVariable String courseName, @PathVariable String assignmentId) {
+        try{
+            return  vlService.allHomework(courseName, assignmentId);
+        } catch (CourseNotFoundException  | ProfessorNotFoundException  e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+
+    //e GetHomework per studente
+
+
 }

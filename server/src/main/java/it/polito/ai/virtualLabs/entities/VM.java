@@ -28,8 +28,8 @@ public class VM {
     List<Student> ownersVM = new ArrayList<>();
 
     @ManyToOne //(fetch = FetchType.EAGER) default
-    @JoinColumn(name="modelVm_id")
-    ModelVM modelVM;
+    @JoinColumn(name="course_id")
+    Course course;
 
     @ManyToOne
     @JoinColumn(name="team_id")
@@ -77,9 +77,17 @@ public class VM {
     public void setScreenshot(Image i){
         if(i!=null && screenshot!=i){
             screenshot=i;
-            i.setM(this);
+            i.setVM(this);
         }
     }
+
+    public void setCourse(Course c){
+        if(c!=null && c!=course){
+            course = c;
+            c.addVM(this);
+        }
+    }
+
 
 
 }

@@ -36,7 +36,7 @@ public class Image {
     private Homework homework;
 
     @OneToOne(mappedBy = "screenshotModelVM")
-    private ModelVM modelVM;
+    private Course course;
 
     @OneToOne(mappedBy = "screenshotVM")
     private VM vm;
@@ -80,10 +80,10 @@ public class Image {
         }
     }
 
-    public  void setModelVM(ModelVM m){
-        if(m!=null && modelVM!=m){
-            modelVM=m;
-            m.setScreenshot(this);
+    public  void setScreenshotModelVM(Course c){
+        if(c!=null && course!=c){
+            course=c;
+            c.setScreenshotModelVM(this);
         }
     }
 

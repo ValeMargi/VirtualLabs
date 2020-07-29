@@ -16,6 +16,9 @@ public class Course {
     private int min, max;
     private boolean enabled;
 
+    //ModelVM
+    private int maxVcpu, diskSpace, ram, runningInstances, totInstances;
+
     @ManyToMany(mappedBy = "courses")
     List<Student> students = new ArrayList<>();
 
@@ -29,10 +32,17 @@ public class Course {
     @OneToMany(mappedBy = "courseAssignment")
     private List<Assignment> assignments = new ArrayList<>();
 
-    @OneToOne //(fetch = FetchType.EAGER) default
+   /* @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="modelVm_id")
     ModelVM modelVM;
 
+    */
+   @OneToMany(mappedBy = "vm")
+   private List<VM> vms = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name="image_id")
+    Image screenshotModelVM;
 
     public boolean addStudent(Student s) {
         if (!students.contains(s)) {
@@ -78,6 +88,24 @@ public class Course {
         {
             assignments.add(a);
             a.setCourseAssignment(this);
+        }
+    }
+
+    public void setScreenshotModelVM(Image i){
+        if(i!=null && screenshotModelVM!=i){
+            screenshotModelVM=i;
+            i.setScreenshotModelVM(this);
+        }
+    }
+    public  void removeVM(VM vm){
+        if(vm!=null && vms.contains(vm)){
+            vms.remove(vm);
+        }
+    }
+
+    public  void addVM(VM vm){
+        if(vm!=null && !vms.contains(vm)){
+            vms.add(vm);
         }
     }
 

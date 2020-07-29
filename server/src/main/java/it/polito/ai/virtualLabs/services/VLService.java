@@ -36,7 +36,7 @@ public interface VLService {
     List<StudentDTO>  getAvailableStudents(String courseName);
     void activateTeam(Long id);
     void evictTeam(Long id);
-    boolean addModelVM(ModelVMDTO modelVMdto, String courseI, Image image);
+    boolean addModelVM(CourseDTO courseDTO, String courseI, Image image);
     boolean addVM(VMDTO vmdto, String courseId, Image image);
     boolean addOwner(String VMid, String courseId, List<String> students);
     boolean activateVM(String VMid);
@@ -51,6 +51,7 @@ public interface VLService {
     boolean updateStatusHomework( String homeworkId, String status);
     boolean uploadHomework( ImageDTO imageDTO,  String homeworkId, String courseId);
     List<Homework> allHomework(String courseName, String assignmentId);
+    List<Image> getVersionHomework( String homeworkId);
     boolean uploadCorrection( ImageDTO imageDTO,  String homeworkId, String courseId, Boolean permanent);
      byte[] compressZLib(byte[] data);
      byte[] decompressZLib(byte[] data);

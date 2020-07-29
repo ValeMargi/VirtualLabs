@@ -13,7 +13,7 @@ public class Team {
     @GeneratedValue
     private Long id;
     private  String name;
-    private int status, maxVpcu, diskSpace, ram, runningInstances, totInstances;
+    private int status, maxVpcuLeft, diskSpaceLeft, ramLeft, runningInstances, totInstances;
 
 
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})

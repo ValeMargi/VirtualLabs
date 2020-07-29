@@ -9,6 +9,7 @@ import java.util.List;
 @Entity
 @Data
 public class ModelVM {
+    /*
     @Id
     private String id;
 
@@ -41,5 +42,6 @@ public class ModelVM {
             i.setModelVM(this);
         }
     }
-
+*/
 }
+

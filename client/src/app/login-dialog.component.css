@@ -1,0 +1,17 @@
+h2 {
+    text-align: center;
+}
+
+mat-form-field {
+    display: table;
+    margin: 0 auto;
+}
+
+mat-dialog-actions {
+    float: right;
+}
+
+.register {
+    display: table;
+    margin: 0 auto;
+}

@@ -20,7 +20,7 @@ public class Assignment {
 
     @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
-    Image imageAssignment;
+    PhotoAssignment photoAssignment;
 
 
     @OneToMany(mappedBy = "homeworks")
@@ -41,10 +41,10 @@ public class Assignment {
         }
     }
 
-    public void setImageAssignment(Image i){
-        if(i != null && imageAssignment!=i){
-            imageAssignment = i;
-            i.setAssignment(this);
+    public void setPhotoAssignment(PhotoAssignment p){
+        if(p != null && photoAssignment!=p){
+            photoAssignment = p;
+            p.setAssignment(this);
         }
     }
 

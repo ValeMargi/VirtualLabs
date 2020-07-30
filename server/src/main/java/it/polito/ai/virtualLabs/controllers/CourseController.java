@@ -1,10 +1,7 @@
 package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.*;
-import it.polito.ai.virtualLabs.entities.Assignment;
-import it.polito.ai.virtualLabs.entities.Homework;
-import it.polito.ai.virtualLabs.entities.Image;
-import it.polito.ai.virtualLabs.entities.VM;
+import it.polito.ai.virtualLabs.entities.*;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,11 +73,15 @@ public class CourseController {
      * @return: ritorna il DTO del corso
      */
     @PostMapping({"", "/"})
-    public CourseDTO addCourse(@RequestBody CourseDTO courseDTO){
-        if(vlService.addCourse(courseDTO)){
-            return ModelHelper.enrich(courseDTO);
-        }else
-            throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getName());
+    public CourseDTO addCourse(@RequestBody CourseDTO courseDTO) {
+        try {
+            if (vlService.addCourse(courseDTO)) {
+                return ModelHelper.enrich(courseDTO);
+            } else
+                throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getName());
+        }catch (ProfessorNotFoundException p){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Professor not found");
+        }
     }
 
     /**
@@ -269,7 +270,7 @@ public class CourseController {
      * @return: ritorna il DTO del modello VM appena creato
      */
     @PostMapping("/{courseName}/addModel")
-    public ModelVMDTO addModelVM( @PathVariable String courseName,  @RequestPart("file") @Valid @NotNull MultipartFile file,
+    public CourseDTO addModelVM( @PathVariable String courseName,  @RequestPart("file") @Valid @NotNull MultipartFile file,
                                   @RequestPart("modelVM")  Map<String, Object> input) {
         if (!input.containsKey("modelVMid") || !input.containsKey("maxVcpu") || !input.containsKey("diskSpace")
            || !input.containsKey("ram") )
@@ -277,18 +278,19 @@ public class CourseController {
 
         try{
             Date date= new Date(System.currentTimeMillis());
-            ModelVMDTO modelVMDTO = new ModelVMDTO();
-            modelVMDTO.setDiskSpace((int)input.get("dispSpace"));
-            modelVMDTO.setMaxVcpu((int)input.get("maxVcpu"));
-            modelVMDTO.setId(input.get("modelVMid").toString());
-            modelVMDTO.setRam((int)input.get("ram"));
-            modelVMDTO.setRunningInstances(0);
-            modelVMDTO.setTotInstances(0);
+
+            CourseDTO courseDTO = new CourseDTO();
+            courseDTO.setMaxVcpu((int)input.get("maxVcpu"));
+            courseDTO.setDiskSpace((int)input.get("dispSpace"));
+            courseDTO.setRam((int)input.get("ram"));
+            courseDTO.setRunningInstances(0);
+            courseDTO.setTotInstances(0);
 
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
-            image.setTimestamp((Timestamp) date);
-            vlService.addModelVM(modelVMDTO, courseName, image);
-            return modelVMDTO;
+            PhotoModelVM photoModelVM = new PhotoModelVM(image);
+           // photoModelVM.setTimestamp((Timestamp) date);
+            vlService.addModelVM(courseDTO, courseName, photoModelVM);
+            return courseDTO;
         }catch (CourseNotFoundException | ModelVMAlreadytPresent | IOException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -323,8 +325,9 @@ public class CourseController {
             vmdto.setStatus("off");
 
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
-            image.setTimestamp((Timestamp) date);
-            vlService.addVM(vmdto, courseName, image);
+            PhotoVM photoVM = new PhotoVM(image);
+            photoVM.setTimestamp((Timestamp)date);
+            vlService.addVM(vmdto, courseName, photoVM);
             return vmdto;
         }catch (CourseNotFoundException | ModelVMAlreadytPresent | IOException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -423,8 +426,9 @@ public class CourseController {
             assignmentDTO.setExpiration((Date)input.get("expirationDate"));
 
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
-            image.setTimestamp((Timestamp) date);
-            vlService.addAssignment(assignmentDTO,image, courseName);
+            PhotoAssignment photoAssignment = new PhotoAssignment(image);
+            photoAssignment.setTimestamp((Timestamp) date);
+            vlService.addAssignment(assignmentDTO, photoAssignment, courseName);
 
 
         }catch (PermissionDeniedException | CourseNotFoundException | AssignmentAlreadyExist e){
@@ -448,27 +452,7 @@ public class CourseController {
         }
     }
 
-    //addHomework  DOVREBBE NON SERVIRE
-  /*  @PostMapping("/{courseId}/{assignmentId}/addHomework")
-    public void addHomework(@PathVariable String courseId, @PathVariable String assignmentId, @RequestParam Map<String, Object> input ) throws IOException {
-        if (!input.containsKey("homeworkId") || !input.containsKey("expirationDate") || !input.containsKey("image"))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
-        try {
-            HomeworkDTO homeworkDTO = new HomeworkDTO();
-            homeworkDTO.setId(input.get("homeworkId").toString());
-            homeworkDTO.setStatus("NULL");
-            homeworkDTO.setPermanent(false);
-            vlService.addHomework(homeworkDTO, courseId, assignmentId);
-
-        }catch (PermissionDeniedException | ProfessorNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
-*/
-
-    //addHomework
-
-    /**
+     /**
      * Metodo: POST
      * Authority: Studente
      * @param courseName: riceve dal path il nome del corso
@@ -478,13 +462,14 @@ public class CourseController {
      * @throws IOException
      */
     @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/uploadHomework")
-    public void uploadHomework(@PathVariable String courseName, @PathVariable String assignmentId,
+    public void uploadVersionHomework(@PathVariable String courseName, @PathVariable String assignmentId,
                                @PathVariable String homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file ) throws IOException {
         try {
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
-            image.setTimestamp(timestamp);
-            vlService.addHomework(homeworkId,image);
+           PhotoVersionHomework photoVersionHomework = new PhotoVersionHomework(image);
+           photoVersionHomework.setTimestamp(timestamp);
+            vlService.uploadVersionHomework(homeworkId,photoVersionHomework);
 
         }catch (HomeworkIsPermanent | PermissionDeniedException | HomeworkNotFound e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -521,12 +506,14 @@ public class CourseController {
      */
     @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/uploadHomework")
     public void uploadCorrection(@PathVariable String courseName, @PathVariable String assignmentId,
-                               @PathVariable String homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file ) throws IOException {
+                               @PathVariable String homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file,
+                                @RequestPart("permanent") @NotNull Boolean permanent) throws IOException {
         try {
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
-            image.setTimestamp(timestamp);
-            vlService.addHomework(homeworkId,image);
+            PhotoCorrection photoCorrection= new PhotoCorrection(image);
+            photoCorrection.setTimestamp(timestamp);
+            vlService.uploadCorrection(homeworkId,photoCorrection,permanent );
 
         }catch (HomeworkIsPermanent | PermissionDeniedException | HomeworkNotFound e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -552,9 +539,75 @@ public class CourseController {
         }
     }
 
+    /**
+     * Metodo: GET
+     * Authority: Docente
+     * @param courseName
+     * @param assignmentId
+     * @param homeworkId
+     * @return : ritorna la lista di versioni di Homerwork per la consegna con assignmentId indicato e per il courso con courseName indicato
+     */
+    @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/getVersions")
+    public List<PhotoVersionHomework> getVersionsHomework(@PathVariable String courseName, @PathVariable String assignmentId, @PathVariable String homeworkId) {
+        try{
+            return  vlService.getVersionsHomework(homeworkId);
+        } catch ( PermissionDeniedException |  HomeworkNotFound e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    /**
+     * Metodo: GET
+     * Authority: Studente
+     * @param courseName
+     * @param assignmentId
+     * @param homeworkId
+     * @return ritorna la lista di versioni di Homerwork per la consegna con assignmentId indicato e per il courso con courseName indicato
+     */
+    @GetMapping("/{courseName}/{assignmentId}/getVersions")
+    public List<PhotoVersionHomework> getHomeworkForAssignment(@PathVariable String courseName, @PathVariable String assignmentId, @PathVariable String homeworkId) {
+        try{
+            return  vlService.getHomeworkForAssignment(homeworkId);
+        } catch ( PermissionDeniedException |  HomeworkNotFound e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    /**
+     * Metodo: GET
+     * Authority: Docente
+     * @param courseName
+     * @param assignmentId
+     * @param homeworkId
+     * @return : ritorna la lista di correzioni di Homerwork per la consegna con assignmentId indicato e per il courso con courseName indicato
+     */
+    @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/getCorrections")
+    public List<PhotoCorrection> getCorrectionsHomework(@PathVariable String courseName, @PathVariable String assignmentId, @PathVariable String homeworkId) {
+        try{
+            return  vlService.getCorrectionsHomework(homeworkId);
+        } catch ( PermissionDeniedException |  HomeworkNotFound e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    /**
+     * Metodo: GET
+     * Authority: Studente
+     * @param courseName
+     * @param assignmentId
+     * @param homeworkId
+     * @return ritorna la lista di correzioni di Homerwork per la consegna con assignmentId indicato e per il courso con courseName indicato
+     */
+    @GetMapping("/{courseName}/{assignmentId}/getCorrections")
+    public List<PhotoCorrection> getCorrectionsForAssignment(@PathVariable String courseName, @PathVariable String assignmentId, @PathVariable String homeworkId) {
+        try{
+            return  vlService.getCorrectionsForAssignment(homeworkId);
+        } catch ( PermissionDeniedException |  HomeworkNotFound e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 
 
-    //e GetHomework per studente
 
 
 }

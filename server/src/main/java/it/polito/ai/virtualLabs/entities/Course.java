@@ -42,7 +42,7 @@ public class Course {
 
     @OneToOne
     @JoinColumn(name="image_id")
-    Image screenshotModelVM;
+    PhotoModelVM photoModelVM;
 
     public boolean addStudent(Student s) {
         if (!students.contains(s)) {
@@ -91,10 +91,10 @@ public class Course {
         }
     }
 
-    public void setScreenshotModelVM(Image i){
-        if(i!=null && screenshotModelVM!=i){
-            screenshotModelVM=i;
-            i.setScreenshotModelVM(this);
+    public void setPhotoModelVM(PhotoModelVM p){
+        if(p!=null && photoModelVM!=p){
+            photoModelVM=p;
+            p.setPhotoModelVM(this);
         }
     }
     public  void removeVM(VM vm){

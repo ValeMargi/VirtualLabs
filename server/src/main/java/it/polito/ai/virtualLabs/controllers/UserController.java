@@ -1,6 +1,7 @@
 package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.*;
+import it.polito.ai.virtualLabs.entities.AvatarStudent;
 import it.polito.ai.virtualLabs.entities.Image;
 import it.polito.ai.virtualLabs.entities.UserDAO;
 import it.polito.ai.virtualLabs.dtos.ProfessorDTO;

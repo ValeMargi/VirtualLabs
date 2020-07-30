@@ -21,8 +21,10 @@ public class Homework {
     Student  student;
 
     @OneToMany(mappedBy = "homeworks")
-    private List<Image> images = new ArrayList<>();
+    private List<PhotoVersionHomework> versions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "corrections")
+    private List<PhotoCorrection> corrections = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name="assignment_id")
@@ -35,11 +37,18 @@ public class Homework {
         }
     }
 
-    public void setImageHomework(Image i){
-        if( i!=null && !images.contains(i))
+    public void setPhotoVersionHomework(PhotoVersionHomework p){
+        if( p!=null && !versions.contains(p))
         {
-            images.add(i);
-            i.setHomework(this);
+            versions.add(p);
+            p.setPhotoVersionHomework(this);
+        }
+    }
+
+    public void setPhotoCorrection(PhotoCorrection p){
+        if(p!=null && !corrections.contains(p)){
+            corrections.add(p);
+            p.setHomework(this);
         }
     }
 

@@ -36,7 +36,7 @@ public class Student {
 
     @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
-    Image photoStudent;
+    AvatarStudent photoStudent;
 
     @OneToMany(mappedBy = "student")
     private List<Homework> homeworks = new ArrayList<>();
@@ -45,10 +45,10 @@ public class Student {
     private UserDAO userDAO;
 
 
-    public void setPhotoStudent(Image i){
-        if(i!=null){
-            photoStudent = i;
-            i.setStudent(this);
+    public void setPhotoStudent(AvatarStudent avatarStudent){
+        if(avatarStudent!=null){
+            photoStudent = avatarStudent;
+            avatarStudent.setStudent(this);
         }
     }
 

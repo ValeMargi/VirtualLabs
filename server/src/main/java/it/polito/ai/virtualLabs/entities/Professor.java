@@ -21,7 +21,7 @@ public class Professor {
 
     @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
-    Image photoProfessor;
+    AvatarProfessor photoProfessor;
 
     @OneToOne(mappedBy = "professorEmail")
     private UserDAO userDAO;
@@ -34,10 +34,10 @@ public class Professor {
         }
     }
 
-    public  void setPhotoProfessor(Image i){
-        if( i!= null){
-            photoProfessor = i;
-            i.setProfessor(this);
+    public  void setPhotoProfessor(AvatarProfessor a){
+        if( a!= null){
+            photoProfessor = a;
+            a.setProfessor(this);
         }
     }
 }

@@ -14,37 +14,20 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 @Data
-@Entity
-@Table(name = "image_table")
-public class Image {
+//@Entity
+//@Table(name = "image_table")
+@MappedSuperclass
+public  class Image {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+   // @Column(name = “id”, updatable = false, nullable = false)
     private Long id;
-    private Timestamp timestamp;
     private String name;
     private String type;
-
-    @OneToOne(mappedBy = "photoStudent")
-    private Student student;
-    @OneToOne(mappedBy = "photoProfessor")
-    private  Professor professor;
-    @OneToOne(mappedBy = "photoAssignment")
-    private Assignment assignment;
-
-    @ManyToOne
-    @JoinColumn(name="homework_id")
-    private Homework homework;
-
-    @OneToOne(mappedBy = "screenshotModelVM")
-    private Course course;
-
-    @OneToOne(mappedBy = "screenshotVM")
-    private VM vm;
-
-
-
     @Column(name = "picByte", length = 1000)
     private byte[] picByte;
+
 
     public Image( String originalFilename, String contentType, byte[] compressZLib) {
         this.name = originalFilename;
@@ -52,47 +35,14 @@ public class Image {
         this.picByte = compressZLib;
     }
 
-    public void setAssignment(Assignment a){
-        if( a!=null && assignment != a){
-            assignment =a;
-            a.setImageAssignment(this);
-        }
+    public Image(Image image) {
+        this.name = image.name;
+        this.type = image.type;
+        this.picByte = image.picByte;
+
     }
 
-    public void setHomework(Homework h){
-        if( h!=null && homework!=h){
-            homework=h;
-            h.getImages().add(this);
-        }
-    }
 
-    public  void setStudent(Student s){
-        if(s!=null){
-            student = s;
-            s.setPhotoStudent(this);
-        }
-    }
-
-    public  void setProfessor(Professor p){
-        if(p!=null){
-            professor = p;
-            p.setPhotoProfessor(this);
-        }
-    }
-
-    public  void setScreenshotModelVM(Course c){
-        if(c!=null && course!=c){
-            course=c;
-            c.setScreenshotModelVM(this);
-        }
-    }
-
-    public  void setVM(VM v){
-        if(v!=null && vm!=v){
-            vm=v;
-            v.setScreenshot(this);
-        }
-    }
 
 
 

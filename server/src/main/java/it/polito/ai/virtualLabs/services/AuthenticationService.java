@@ -3,6 +3,7 @@ package it.polito.ai.virtualLabs.services;
 import it.polito.ai.virtualLabs.dtos.ProfessorDTO;
 import it.polito.ai.virtualLabs.dtos.StudentDTO;
 import it.polito.ai.virtualLabs.dtos.UserDTO;
+import it.polito.ai.virtualLabs.entities.AvatarStudent;
 import it.polito.ai.virtualLabs.entities.Image;
 import it.polito.ai.virtualLabs.entities.UserDAO;
 

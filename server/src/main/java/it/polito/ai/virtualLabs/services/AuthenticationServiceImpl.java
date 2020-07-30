@@ -45,13 +45,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     UserRepository userRepository;
 
     @Autowired
-    ImageRepository imageRepository;
+    AvatarStudentRepository avatarStudentRepository;
+
+    @Autowired
+    AvatarProfessorRepository avatarProfessorRepository;
 
     @Override
     public Optional<UserDTO> addStudent(StudentDTO student, String password,  Image photoStudent) {
         if (  !studentRepository.findById(student.getId()).isPresent() )  {
             Student s = modelMapper.map( student, Student.class);
-            s.setPhotoStudent(photoStudent);
+            AvatarStudent avatarStudent = new AvatarStudent(photoStudent);
+            s.setPhotoStudent(avatarStudent);
             studentRepository.save(s);
             studentRepository.flush();
             UserDTO user = new UserDTO();
@@ -66,7 +70,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             "Username:  " + user.getEmail() +"\n"+
                             "Password:   " + user.getPassword());
             jwtUserDetailsService.save(user);
-            imageRepository.saveAndFlush(photoStudent);
+            avatarStudentRepository.saveAndFlush(avatarStudent);
             return Optional.ofNullable(user);
         }
         return null;
@@ -76,7 +80,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public Optional<UserDTO> addProfessor(ProfessorDTO professor, String password,  Image photoProfessor) {
         if ( !professorRepository.findById(professor.getId()).isPresent() )  {
             Professor p = modelMapper.map( professor, Professor.class);
-            p.setPhotoProfessor(photoProfessor);
+            AvatarProfessor avatarProfessor = new AvatarProfessor(photoProfessor);
+            p.setPhotoProfessor(avatarProfessor);
             professorRepository.save(p);
             professorRepository.flush();
             UserDTO user = new UserDTO();
@@ -91,7 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             "Username:  " + user.getEmail() + "\n"+
                             "Password:   " + user.getPassword());
             jwtUserDetailsService.save(user);
-            imageRepository.saveAndFlush(photoProfessor);
+            avatarProfessorRepository.saveAndFlush(avatarProfessor);
             return Optional.ofNullable(user);
         }
         return null;

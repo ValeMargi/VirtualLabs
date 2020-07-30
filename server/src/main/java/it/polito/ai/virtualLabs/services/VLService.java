@@ -36,8 +36,8 @@ public interface VLService {
     List<StudentDTO>  getAvailableStudents(String courseName);
     void activateTeam(Long id);
     void evictTeam(Long id);
-    boolean addModelVM(CourseDTO courseDTO, String courseI, Image image);
-    boolean addVM(VMDTO vmdto, String courseId, Image image);
+    boolean addModelVM(CourseDTO courseDTO, String courseI, PhotoModelVM photoModelVM);
+    boolean addVM(VMDTO vmdto, String courseId, PhotoVM photoVM);
     boolean addOwner(String VMid, String courseId, List<String> students);
     boolean activateVM(String VMid);
     boolean disableVM(String VMid);
@@ -45,14 +45,16 @@ public interface VLService {
     List<VM> allVMforStudent(String courseId);
     List<VM> allVMforCourse( String courseId);
     boolean isOwner(  String VMid);
-    boolean addAssignment(AssignmentDTO assignmentDTO, Image image, String courseId);
+    boolean addAssignment(AssignmentDTO assignmentDTO, PhotoAssignment photoAssignment, String courseId);
     List<Assignment> allAssignment(String courseId);
-    boolean addHomework( String homeworkId, Image image);
+    boolean uploadVersionHomework( String homeworkId, PhotoVersionHomework photoVersionHomework);
     boolean updateStatusHomework( String homeworkId, String status);
-    boolean uploadHomework( ImageDTO imageDTO,  String homeworkId, String courseId);
+    boolean uploadCorrection(String homeworkId, PhotoCorrection photoCorrection,Boolean permanent);
     List<Homework> allHomework(String courseName, String assignmentId);
-    List<Image> getVersionHomework( String homeworkId);
-    boolean uploadCorrection( ImageDTO imageDTO,  String homeworkId, String courseId, Boolean permanent);
+    List<PhotoVersionHomework> getHomeworkForAssignment(String assignmentId);
+    List<PhotoVersionHomework> getVersionsHomework( String homeworkId);
+    List<PhotoCorrection> getCorrectionsHomework( String homeworkId);
+    List<PhotoCorrection> getCorrectionsForAssignment(String assignmentId);
      byte[] compressZLib(byte[] data);
      byte[] decompressZLib(byte[] data);
 

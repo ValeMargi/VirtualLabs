@@ -3,8 +3,8 @@
 <div class="assContainer">
     <div class="delContainer">
         <mat-selection-list [multiple]="false">
-            <mat-list-option *ngFor="let del of deliveries" [value]="del" (click)="showAssignments(del)"> 
-                {{ del.name }}    
+            <mat-list-option *ngFor="let ass of assignments" [value]="ass" (click)="showAssignments(ass)"> 
+                {{ ass.name }}    
             </mat-list-option>
         </mat-selection-list>
     </div>

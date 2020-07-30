@@ -3,9 +3,18 @@
     overflow: hidden; 
 }
 
-.delContainer {
+.container1 {
+    float: left;
     width: 30%;
-    float:left;
+}
+
+.container2 {
+    float: right;
+    width: 60%;
+    margin-right: 2%;
+}
+
+.assignments {
     border: 1px solid gray;
     border-radius: 8px;
     margin-top: 1%;
@@ -13,16 +22,47 @@
     margin-right: 5%;
 }
 
-.tableContainer {
-    overflow: hidden; 
-    margin-right: 2%;
-}
-
 h1 {
     font-weight: bold; 
     margin: 1em;
 }
 
+h3 {
+    text-align: center;
+}
+
+.create {
+    margin: 1em;
+}
+
 .matTable {
     width: 100%;
+}
+
+.versions-reviews {
+    display: flex;
+    justify-content: center;
+}
+
+.vr-container {
+    text-align: center;
+}
+
+.versions {
+    margin-right: 10%;
+}
+
+.reviews {
+    margin-left: 10%;
+}
+
+.separator { 
+    border-left: 3px solid black; 
+    height: 10em; 
+    left: 50%; 
+} 
+
+.upload {
+    display: inline-block;
+    margin-top: 1em;
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Assignment } from '../../models/assignment.model';
-import { Delivery } from '../../models/delivery.model';
 import { AssignmentsService } from '../../services/assignments.service';
 import { AuthService } from '../../auth/auth.service';
+import { Homework } from 'src/app/models/homework.model';
+import { Assignment } from 'src/app/models/assignment.model';
 
 @Component({
   selector: 'app-assignments-cont',
@@ -11,7 +11,7 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class AssignmentsContComponent implements OnInit {
 
-  public DELIVERIES: Delivery[] = []
+  public HOMEWORKS: Homework[] = []
   public ASSIGNMENTS: Assignment[] = []
 
   constructor(public assService: AssignmentsService, public authService: AuthService) { 

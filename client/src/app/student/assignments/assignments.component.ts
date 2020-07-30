@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
-import { Assignment } from '../../models/assignment.model';
-import { Delivery } from '../../models/delivery.model';
 import { AssignmentsContComponent } from './assignments-cont.component';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { VM } from '../../models/vm.model';
+import { Homework } from 'src/app/models/homework.model';
+import { Assignment } from 'src/app/models/assignment.model';
 
 @Component({
   selector: 'app-assignments-student',
@@ -19,7 +19,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
   dataSource = new MatTableDataSource<VM>();
-  @Input() public deliveries: Delivery[] = [];
+  @Input() public homeworks: Homework[] = [];
   @Input() public assignments: Assignment[] = [];
 
   length = 5;
@@ -31,14 +31,14 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
 
     //provvisorio
-    this.deliveries.push(new Delivery("D01", "Laboratorio 1", "T01", "C01", "01/01/2020", "31/07/2020"));
+    this.assignments.push(new Assignment("D01", "Laboratorio 1", "T01", "C01", "01/01/2020", "31/07/2020"));
   }
 
   ngOnInit(): void {
 
   }
 
-  showAssignments(delivery: Delivery) {
+  showAssignments(assignment: Assignment) {
     
   }
 

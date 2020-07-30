@@ -48,6 +48,8 @@ import { ManageModelComponent } from './teacher/vms/manage-model.component';
 import { ManageModelContComponent } from './teacher/vms/manage-model-cont.component';
 import { EditProfileContComponent } from './edit-profile/edit-profile-cont.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
+import { CreateAssignmentContComponent } from './teacher/assignments/create-assignment-cont.component';
+import { CreateAssignmentComponent } from './teacher/assignments/create-assignment.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +75,9 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
     ManageModelComponent,
     ManageModelContComponent,
     EditProfileContComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    CreateAssignmentContComponent,
+    CreateAssignmentComponent
   ],
   imports: [
     BrowserModule,

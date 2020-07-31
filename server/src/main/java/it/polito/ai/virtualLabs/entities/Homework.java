@@ -53,9 +53,9 @@ public class Homework {
     }
 
     public void setStudentForHomework(Student s){
-        if(s!=null && student!=s){
-            student=s;
-            s.getHomeworks().add(this);
+        if(s!=null && student!=s) {
+            student = s;
+            s.setHomeworkForStudent(this);
         }
     }
 }

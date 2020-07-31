@@ -21,7 +21,7 @@ public class PhotoVersionHomework extends Image{
     public void setPhotoVersionHomework(Homework h){
         if( h!=null && homework!=h){
             homework=h;
-            h.getVersions().add(this);
+            h.setPhotoVersionHomework(this);
         }
     }
 

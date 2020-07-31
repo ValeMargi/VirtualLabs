@@ -26,10 +26,10 @@ public class Assignment {
     @OneToMany(mappedBy = "homeworks")
     private List<Homework> homeworks= new ArrayList<>();
 
-    public void setCourseAssigment(Course c){
+    public void setCourseAssignment(Course c){
         if(c!=null && courseAssignment!=c ) {
             courseAssignment = c;
-            c.getAssignments().add(this);
+            c.addAssigment(this);
         }
     }
 

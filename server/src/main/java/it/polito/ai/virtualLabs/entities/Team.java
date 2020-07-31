@@ -32,14 +32,14 @@ public class Team {
     public void addStudentIntoTeam(Student s) {
         if (!members.contains(s)) {
             members.add(s);
-            s.getTeams().add(this);
+            s.setTeamForStudent(this);
         }
 
     }
     public void removeStudentFromTeam(Student s){
         if( members.contains(s)){
             members.remove(s);
-            s.getTeams().remove(this);
+            s.removeTeamForStudent(this);
         }
     }
 

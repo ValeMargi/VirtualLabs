@@ -40,4 +40,18 @@ public class Professor {
             a.setProfessor(this);
         }
     }
+
+    public void setCourses(Course c){
+        if(c!=null && !courses.contains(c)){
+            courses.add(c);
+            c.setProfessor(this);
+        }
+    }
+
+    public void removeCourses(Course c){
+        if(c!=null && courses.contains(c)){
+            courses.remove(c);
+            c.removeProfessor(this);
+        }
+    }
 }

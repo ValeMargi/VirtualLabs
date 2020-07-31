@@ -21,7 +21,7 @@ public class PhotoCorrection extends  Image{
     public void setHomework(Homework h){
         if( h!=null && homework!=h){
             homework=h;
-            h.getCorrections().add(this);
+           h.setPhotoCorrection(this);
         }
     }
 

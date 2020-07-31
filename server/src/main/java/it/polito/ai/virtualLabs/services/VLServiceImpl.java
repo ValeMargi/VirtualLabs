@@ -52,8 +52,6 @@ public class VLServiceImpl implements VLService{
     @Autowired
     TokenRepository tokenRepository;
     @Autowired
-    ModelVMRepository modelVMRepository;
-    @Autowired
     VMRepository VMRepository;
     @Autowired
     AssignmentRepository assignmentRepository;

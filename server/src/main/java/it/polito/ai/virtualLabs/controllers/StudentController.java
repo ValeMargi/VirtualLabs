@@ -62,47 +62,47 @@ public class StudentController {
     }
 
     /*GET mapping request to see the list of groups of a given course*/
-    @GetMapping("/teams/{courseId}")
-    public List<TeamDTO> getTeamsForCourse(@PathVariable String courseId) {
+    @GetMapping("/teams/{courseName}")
+    public List<TeamDTO> getTeamsForCourse(@PathVariable String courseName) {
         try {
-            return vlService.getTeamForCourse(courseId);
+            return vlService.getTeamForCourse(courseName);
 
         }catch(CourseNotFoundException cnfe){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+courseId+" not present");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+courseName+" not present");
         }
     }
 
     /* GET mapping request to see the list of students who are part of a team in a given course*/
-    @GetMapping("/inTeam/{courseId}")
-    public List<StudentDTO> getStudentsInTeams(@PathVariable String courseId) {
+    @GetMapping("/inTeam/{courseName}")
+    public List<StudentDTO> getStudentsInTeams(@PathVariable String courseName) {
         try {
-            return vlService.getStudentsInTeams(courseId).stream().map(s-> ModelHelper.enrich(s)).collect(Collectors.toList());
+            return vlService.getStudentsInTeams(courseName).stream().map(s-> ModelHelper.enrich(s)).collect(Collectors.toList());
         } catch (CourseNotFoundException cnfe) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+courseId+" not present");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+courseName+" not present");
         }
     }
 
     /* GET mapping request to see the list of students who are not yet part of a team in a given course*/
-    @GetMapping("/notInTeam/{courseId}")
-    public List<StudentDTO> getAvailableStudents(@PathVariable String courseId) {
+    @GetMapping("/notInTeam/{courseName}")
+    public List<StudentDTO> getAvailableStudents(@PathVariable String courseName) {
         try {
-            return vlService.getAvailableStudents(courseId).stream().map(s-> ModelHelper.enrich(s)).collect(Collectors.toList());
+            return vlService.getAvailableStudents(courseName).stream().map(s-> ModelHelper.enrich(s)).collect(Collectors.toList());
         } catch (CourseNotFoundException cnfe) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+courseId+" not present");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+courseName+" not present");
         }
     }
 
-    @GetMapping("/VM/{courseId}")
-    public void allVMforCourse(  @PathVariable String courseId) {
+    @GetMapping("/VM/{courseName}")
+    public void allVMforCourse(  @PathVariable String courseName) {
         try{
-            vlService.allVMforCourse(courseId);
+            vlService.allVMforCourse(courseName);
         } catch (PermissionDeniedException| CourseNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
-    @GetMapping("/VM/{courseId}/{VMid}/")
-    public void isOwner(  @PathVariable String courseId, @PathVariable String VMid) {
+    @GetMapping("/VM/{courseName}/{VMid}/")
+    public void isOwner(  @PathVariable String courseName, @PathVariable String VMid) {
         try{
             vlService.isOwner( VMid);
         } catch (PermissionDeniedException | VMNotFound| StudentNotFoundException e) {

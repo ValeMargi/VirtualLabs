@@ -45,10 +45,38 @@ public class Student {
     private UserDAO userDAO;
 
 
+    public  void setCourses(Course c){
+        if(c!=null && !courses.contains(c)){
+            courses.add(c);
+            c.addStudent(this);
+        }
+    }
+
+    public  void removeCourses(Course c){
+        if(c!=null && courses.contains(c)){
+            courses.add(c);
+            c.removeStudent(this);
+        }
+    }
+
     public void setPhotoStudent(AvatarStudent avatarStudent){
         if(avatarStudent!=null){
             photoStudent = avatarStudent;
             avatarStudent.setStudent(this);
+        }
+    }
+
+    public  void setTeamForStudent(Team t){
+        if(t!=null && !teams.contains(t)){
+            teams.add(t);
+            t.addStudentIntoTeam(this);
+        }
+    }
+
+    public  void removeTeamForStudent(Team t){
+        if(t!=null && teams.contains(t)){
+            teams.remove(t);
+            t.removeStudentFromTeam(this);
         }
     }
 
@@ -63,28 +91,28 @@ public class Student {
     public void addOwnerToVM(VM vm){
         if(vm!=null && !ownersVM.contains(vm)){
             ownersVM.add(vm);
-            vm.getOwnersVM().add(this);
+            vm.addStudentToOwnerList(this);
         }
     }
 
     public void addMemberToVM(VM vm){
         if(vm!=null && !studentsVM.contains(vm)){
             studentsVM.add(vm);
-            vm.getMembersVM().add(this);
+            vm.addStudentToMemberList(this);
         }
     }
 
     public void removeOwnerToVM(VM vm){
         if(vm!=null && ownersVM.contains(vm)){
             ownersVM.remove(vm);
-            vm.getOwnersVM().remove(this);
+            vm.removeStudentToOwnerList(this);
         }
     }
 
     public void removeMemberToVM(VM vm){
         if(vm!=null && studentsVM.contains(vm)){
             studentsVM.remove(vm);
-            vm.getMembersVM().remove(this);
+            vm.removeStudentToMemberList(this);
         }
     }
 }

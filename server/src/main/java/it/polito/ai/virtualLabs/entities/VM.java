@@ -41,7 +41,7 @@ public class VM {
     public boolean addStudentToOwnerList(Student s){
         if(s!=null && !ownersVM.contains(s)){
             ownersVM.add(s);
-            s.getOwnersVM().add(this);
+            s.addOwnerToVM(this);
             return true;
         }
         return false;
@@ -50,7 +50,7 @@ public class VM {
     public boolean addStudentToMemberList(Student s){
         if(s!=null && !membersVM.contains(s)){
             membersVM.add(s);
-            s.getStudentsVM().add(this);
+            s.addMemberToVM(this);
             return true;
         }
         return false;
@@ -59,7 +59,7 @@ public class VM {
     public boolean removeStudentToOwnerList(Student s){
         if(s!=null && ownersVM.contains(s)){
             ownersVM.remove(s);
-            s.getOwnersVM().remove(this);
+            s.removeOwnerToVM(this);
             return true;
         }
         return false;
@@ -68,7 +68,7 @@ public class VM {
     public boolean removeStudentToMemberList(Student s){
         if(s!=null && membersVM.contains(s)){
             membersVM.remove(s);
-            s.getStudentsVM().remove(this);
+            s.removeMemberToVM(this);
             return true;
         }
         return false;

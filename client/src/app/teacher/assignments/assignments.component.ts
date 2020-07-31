@@ -8,7 +8,7 @@ import { Homework } from 'src/app/models/homework.model';
 import { Assignment } from 'src/app/models/assignment.model';
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
 import { Student } from 'src/app/models/student.model';
-import { CreateAssignmentContComponent } from './create-assignment-cont.component';
+import { CreateAssignmentContComponent } from '../assignments/create-assignment/create-assignment-cont.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 @Component({

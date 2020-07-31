@@ -1,11 +1,15 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
-import { AssignmentsContComponent } from './assignments-cont.component';
+import { AssignmentsContComponent } from './assignments-cont/assignments-cont.component';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { VM } from '../../models/vm.model';
 import { Homework } from 'src/app/models/homework.model';
 import { Assignment } from 'src/app/models/assignment.model';
+import { HomeworkVersion } from 'src/app/models/homework-version.model';
+import { Student } from 'src/app/models/student.model';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-assignments-student',

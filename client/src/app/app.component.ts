@@ -2,22 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { ViewChild, AfterViewInit } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { LoginDialogComponent } from './login-dialog.component';
+import { LoginDialogComponent } from './login/login-dialog.component';
 import { AuthService } from './auth/auth.service';
 import { MatButton } from '@angular/material/button';
 import { Router, NavigationEnd } from '@angular/router';
-import { RegisterDialogComponent } from './register-dialog.component';
+import { RegisterDialogComponent } from './register/register-dialog.component';
 import { AddCourseDialogComponent } from './teacher/add-course/add-course-dialog.component';
 import { StudentsContComponent } from './teacher/students/students-cont.component';
-import { TeamsContComponent } from './student/teams/teams-cont.component';
+import { TeamsContComponent } from './student/teams/teams-cont/teams-cont.component';
 import { VmsComponent as VmsComponentTeacher } from './teacher/vms/vms.component';
 import { VmsContComponent as VmsContComponentTeacher } from './teacher/vms/vms-cont.component';
 import { VmsComponent as VmsComponentStudent } from './student/vms/vms.component';
-import { VmsContComponent as VmsContComponentStudent } from './student/vms/vms-cont.component';
+import { VmsContComponent as VmsContComponentStudent } from './student/vms/vms-cont/vms-cont.component';
 import { AssignmentsComponent as AssignmentsComponentTeacher } from './teacher/assignments/assignments.component';
 import { AssignmentsContComponent as AssignmentsContComponentTeacher } from './teacher/assignments/assignments-cont.component';
 import { AssignmentsComponent as AssignmentsComponentStudent } from './student/assignments/assignments.component';
-import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont.component';
+import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont/assignments-cont.component';
 import { EditProfileContComponent } from './edit-profile/edit-profile-cont.component';
 
 @Component({

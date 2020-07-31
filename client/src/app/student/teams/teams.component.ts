@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild} from '@angular/core';
 import { MatTable, MatTableDataSource } from '@angular/material/table'
 import{ Team } from '../../models/team.model';
-import{ TeamsContComponent } from './teams-cont.component'
+import{ TeamsContComponent } from './teams-cont/teams-cont.component'
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { VM } from '../../models/vm.model';

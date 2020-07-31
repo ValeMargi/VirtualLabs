@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MatDialogConfig } from '@angular/material/dialog';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
-import { LoginDialogComponent } from './login-dialog.component';
+import { LoginDialogComponent } from '../login/login-dialog.component';
 
 @Component({
   selector: 'app-register-dialog',

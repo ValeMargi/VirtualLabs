@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AssignmentsService } from '../../services/assignments.service';
-import { AuthService } from '../../auth/auth.service';
+import { AssignmentsService } from '../../../services/assignments.service';
+import { AuthService } from '../../../auth/auth.service';
 import { Homework } from 'src/app/models/homework.model';
 import { Assignment } from 'src/app/models/assignment.model';
 @Component({

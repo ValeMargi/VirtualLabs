@@ -21,26 +21,26 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { StudentsComponent } from './teacher/students/students.component';
 import { StudentsContComponent } from './teacher/students/students-cont.component';
-import { HomeComponent } from './home.component';
-import { PageNotFoundComponent } from './page-not-found.component';
+import { HomeComponent } from './home/home.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { StudentInterceptor } from './services/students.interceptor';
 import { MatCardModule } from '@angular/material/card';
-import { LoginDialogComponent } from './login-dialog.component';
-import { RegisterDialogComponent } from './register-dialog.component';
+import { LoginDialogComponent } from './login/login-dialog.component';
+import { RegisterDialogComponent } from './register/register-dialog.component';
 import { AddCourseDialogComponent } from './teacher/add-course/add-course-dialog.component';
 import { VmsComponent as VmsComponentTeacher } from './teacher/vms/vms.component';
 import { VmsContComponent as VmsContComponentTeacher } from './teacher/vms/vms-cont.component';
 import { VmsComponent as VmsComponentStudent } from './student/vms/vms.component';
-import { VmsContComponent as VmsContComponentStudent } from './student/vms/vms-cont.component';
+import { VmsContComponent as VmsContComponentStudent } from './student/vms/vms-cont/vms-cont.component';
 import { AssignmentsComponent as AssignmentsComponentTeacher } from './teacher/assignments/assignments.component';
 import { AssignmentsContComponent as AssignmentsContComponentTeacher } from './teacher/assignments/assignments-cont.component';
 import { AssignmentsComponent as AssignmentsComponentStudent } from './student/assignments/assignments.component';
-import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont.component';
-import { TeamsContComponent } from './student/teams/teams-cont.component';
+import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont/assignments-cont.component';
+import { TeamsContComponent } from './student/teams/teams-cont/teams-cont.component';
 import { TeamsComponent } from './student/teams/teams.component';
 import { RequestTeamDialogComponent } from './student/teams/request-team-dialog/request-team-dialog.component';
 import {MatSelectModule} from '@angular/material/select';
@@ -48,8 +48,11 @@ import { ManageModelComponent } from './teacher/vms/manage-model.component';
 import { ManageModelContComponent } from './teacher/vms/manage-model-cont.component';
 import { EditProfileContComponent } from './edit-profile/edit-profile-cont.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
-import { CreateAssignmentContComponent } from './teacher/assignments/create-assignment-cont.component';
-import { CreateAssignmentComponent } from './teacher/assignments/create-assignment.component';
+import { CreateAssignmentContComponent } from './teacher/assignments/create-assignment/create-assignment-cont.component';
+import { CreateAssignmentComponent } from './teacher/assignments/create-assignment/create-assignment.component';
+import { RequestTeamDialogContComponent } from './student/teams/request-team-dialog/request-team-dialog-cont/request-team-dialog-cont.component';
+import { AddHomeworkComponent } from './student/assignments/add-homework/add-homework.component';
+import { AddHomeworkContComponent } from './student/assignments/add-homework/add-homework-cont/add-homework-cont.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +80,10 @@ import { CreateAssignmentComponent } from './teacher/assignments/create-assignme
     EditProfileContComponent,
     EditProfileComponent,
     CreateAssignmentContComponent,
-    CreateAssignmentComponent
+    CreateAssignmentComponent,
+    RequestTeamDialogContComponent,
+    AddHomeworkComponent,
+    AddHomeworkContComponent
   ],
   imports: [
     BrowserModule,

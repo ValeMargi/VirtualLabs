@@ -19,6 +19,9 @@ public class PhotoCorrection extends  Image{
 
     private Timestamp timestamp;
 
+    Long idVersionHomework;
+    String idProfessor;
+
 
     public void setHomework(Homework h){
         if( h!=null && homework!=h){

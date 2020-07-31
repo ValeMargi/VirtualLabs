@@ -1,12 +1,10 @@
 package it.polito.ai.virtualLabs.controllers;
 
+import it.polito.ai.virtualLabs.dtos.AssignmentDTO;
 import it.polito.ai.virtualLabs.dtos.CourseDTO;
 import it.polito.ai.virtualLabs.dtos.StudentDTO;
 import it.polito.ai.virtualLabs.dtos.TeamDTO;
-import it.polito.ai.virtualLabs.exceptions.CourseNotFoundException;
-import it.polito.ai.virtualLabs.exceptions.PermissionDeniedException;
-import it.polito.ai.virtualLabs.exceptions.StudentNotFoundException;
-import it.polito.ai.virtualLabs.exceptions.VMNotFound;
+import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -106,6 +104,23 @@ public class StudentController {
         try{
             vlService.isOwner( VMid);
         } catch (PermissionDeniedException | VMNotFound| StudentNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+
+
+    /**
+     * Metodo: GET
+     * Authority: Studente
+     * @param courseName: riceve dal path il nome del corso di cui si vuole elencare le consegne associate
+     * @return: ritorna la lista di consegne associate al corso con nome pari a CourseName
+     */
+    @GetMapping("/{courseName}/assignment")
+    public List<AssignmentDTO> allAssignment(@PathVariable String courseName) {
+        try{
+            return  vlService.allAssignmentStudent(courseName);
+        } catch (CourseNotFoundException  | StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }

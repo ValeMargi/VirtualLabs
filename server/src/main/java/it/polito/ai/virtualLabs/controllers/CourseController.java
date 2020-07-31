@@ -90,6 +90,7 @@ public class CourseController {
      * @param professorDTO: parametro acquisito dal corspo della richiesta (String id, name, firstName, email;)
      * @param courseName:  riceve dal path il nome di un Corso
      * @return: ritorna il DTO del professore aggiunto al corso con CourseName indicato
+     * @return: ritorna il DTO del professore aggiaddAssunto al corso con CourseName indicato
      */
     @PostMapping({"/{courseName}/addProfessor"})
     public ProfessorDTO addProfessorToCourse(@RequestBody ProfessorDTO professorDTO, @PathVariable String courseName){
@@ -420,15 +421,22 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
         try {
             AssignmentDTO assignmentDTO = new AssignmentDTO();
-            assignmentDTO.setId(input.get("assignmentId").toString());
+            assignmentDTO.setId((Long)input.get("assignmentId"));
             Date date= new Date(System.currentTimeMillis());
             assignmentDTO.setReleaseDate(date);
             assignmentDTO.setExpiration((Date)input.get("expirationDate"));
 
-            Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
-            PhotoAssignment photoAssignment = new PhotoAssignment(image);
-            photoAssignment.setTimestamp((Timestamp) date);
-            vlService.addAssignment(assignmentDTO, photoAssignment, courseName);
+            assignmentDTO.setName(file.getOriginalFilename());
+            assignmentDTO.setType(file.getContentType());
+            assignmentDTO.setPicByte(vlService.compressZLib(file.getBytes()));
+            assignmentDTO.setTimestamp((Timestamp) date);
+
+           // Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
+
+
+
+
+            vlService.addAssignment(assignmentDTO, courseName);
 
 
         }catch (PermissionDeniedException | CourseNotFoundException | AssignmentAlreadyExist e){
@@ -443,8 +451,8 @@ public class CourseController {
      * @param courseName: riceve dal path il nome del corso di cui si vuole elencare le consegne associate
      * @return: ritorna la lista di consegne associate al corso con nome pari a CourseName
      */
-    @GetMapping("/{courseName}/assignment")
-    public List<Assignment> allAssignment(@PathVariable String courseName) {
+    @GetMapping("/{courseName}/assignments")
+    public List<AssignmentDTO> allAssignment(@PathVariable String courseName) {
         try{
             return  vlService.allAssignment(courseName);
         } catch (CourseNotFoundException  | ProfessorNotFoundException  e) {
@@ -565,9 +573,9 @@ public class CourseController {
      * @return ritorna la lista di versioni di Homerwork per la consegna con assignmentId indicato e per il courso con courseName indicato
      */
     @GetMapping("/{courseName}/{assignmentId}/getVersions")
-    public List<PhotoVersionHomework> getHomeworkForAssignment(@PathVariable String courseName, @PathVariable String assignmentId, @PathVariable String homeworkId) {
+    public List<PhotoVersionHomework> getHomeworkForAssignment(@PathVariable String courseName, @PathVariable Long assignmentId, @PathVariable String homeworkId) {
         try{
-            return  vlService.getHomeworkForAssignment(homeworkId);
+            return  vlService.getHomeworkForAssignment(assignmentId);
         } catch ( PermissionDeniedException |  HomeworkNotFound e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -599,10 +607,20 @@ public class CourseController {
      * @return ritorna la lista di correzioni di Homerwork per la consegna con assignmentId indicato e per il courso con courseName indicato
      */
     @GetMapping("/{courseName}/{assignmentId}/getCorrections")
-    public List<PhotoCorrection> getCorrectionsForAssignment(@PathVariable String courseName, @PathVariable String assignmentId, @PathVariable String homeworkId) {
+    public List<PhotoCorrection> getCorrectionsForAssignment(@PathVariable String courseName, @PathVariable Long assignmentId, @PathVariable String homeworkId) {
         try{
-            return  vlService.getCorrectionsForAssignment(homeworkId);
+            return  vlService.getCorrectionsForAssignment(assignmentId);
         } catch ( PermissionDeniedException |  HomeworkNotFound e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @GetMapping("/{courseName}/{assignmentId}/getAssignment")
+/*Fare GetAssign per studente*/
+    public AssignmentDTO getAssignment(@PathVariable String courseName, @PathVariable Long assignmentId) {
+        try{
+            return  vlService.getAssignment(courseName, assignmentId);
+        } catch (CourseNotFoundException  | StudentNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }

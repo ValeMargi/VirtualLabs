@@ -9,6 +9,7 @@ import it.polito.ai.virtualLabs.repositories.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.expression.spel.ast.Assign;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -744,7 +745,7 @@ public class VLServiceImpl implements VLService{
     /*SERVICE CONSEGNA*/
     @PreAuthorize("hasAuthority('docente')")
     @Override
-    public boolean addAssignment( AssignmentDTO assignmentDTO, PhotoAssignment photoAssignment, String courseId) { //CourseId preso dal pathVariable
+    public boolean addAssignment( AssignmentDTO assignmentDTO,  String courseId) { //CourseId preso dal pathVariable
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Course> oc = courseRepository.findById(courseId);
         if(oc.isPresent()){
@@ -753,7 +754,7 @@ public class VLServiceImpl implements VLService{
                 if( !c.getAssignments().stream().anyMatch(a->a.getId().equals(assignmentDTO.getId()))) {
                     Assignment assignment= modelMapper.map(assignmentDTO, Assignment.class);
                     assignment.setCourseAssignment(c);
-                    assignment.setPhotoAssignment(photoAssignment);
+                    //assignment.setPhotoAssignment(photoAssignment);
                     for(Student s: c.getStudents()){
                         Homework h=new Homework();
                         h.setStatus("NULL");
@@ -762,7 +763,7 @@ public class VLServiceImpl implements VLService{
                         homeworkRepository.saveAndFlush(h);
                     }
                     assignmentRepository.saveAndFlush(assignment);
-                    photoAssignmentRepository.saveAndFlush(photoAssignment);
+                    //photoAssignmentRepository.saveAndFlush(photoAssignment);
                 }else throw new AssignmentAlreadyExist();
             }else throw new PermissionDeniedException();
         }else throw new CourseNotFoundException();
@@ -772,16 +773,50 @@ public class VLServiceImpl implements VLService{
     /*Metodo per ritornare le consegne di un dato corso*/
     @PreAuthorize("hasAuthority('docente')")
     @Override
-    public List<Assignment> allAssignment(  String courseId) { //CourseId preso dal pathVariable
+    public List<AssignmentDTO> allAssignment(  String courseId) { //CourseId preso dal pathVariable
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Professor> op = professorRepository.findById(professor);
         if(op.isPresent()){
             Professor p= op.get();
             Optional<Course> c = p.getCourses().stream().filter(co->co.getName().equals(courseId)).findFirst();
             if(c.isPresent()){
-                return c.get().getAssignments();
+                return c.get().getAssignments().stream().map( a -> modelMapper.map(a, AssignmentDTO.class)).collect(Collectors.toList());
             }throw new CourseNotFoundException();
         }else throw new ProfessorNotFoundException();
+    }
+
+
+
+    /*Metodo per ritornare le consegne di un dato corso*/
+    @PreAuthorize("hasAuthority('studente')")
+    @Override
+    public List<AssignmentDTO> allAssignmentStudent(  String courseId) { //CourseId preso dal pathVariable
+        String student = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Student> os = studentRepository.findById(student);
+        if (os.isPresent()) {
+            Student s = os.get();
+            Optional<Course> c = s.getCourses().stream().filter(co->co.getName().equals(courseId)).findFirst();
+            if(c.isPresent()){
+                return c.get().getAssignments().stream().map( a -> modelMapper.map(a, AssignmentDTO.class)).collect(Collectors.toList());
+            }throw new CourseNotFoundException();
+        }else throw new StudentNotFoundException();
+    }
+    /*Metodo per ritornare la consegna di un dato corso*/
+    @PreAuthorize("hasAuthority('studente')")
+    @Override
+    public AssignmentDTO getAssignment(  String courseId, Long assignmentId) { //CourseId preso dal pathVariable
+        String student = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Student> os = studentRepository.findById(student);
+        if (os.isPresent()) {
+            Student s = os.get();
+            Optional<Assignment> oa = assignmentRepository.findById(assignmentId);
+            if (oa.isPresent()) {
+                Assignment a = oa.get();
+                if (a.getCourseAssignment().getStudents().contains(s)) {
+                    return modelMapper.map(a, AssignmentDTO.class);
+                } else throw new PermissionDeniedException();
+            } else throw new AssignmentNotFound();
+        }else throw new StudentNotFoundException();
     }
 
 
@@ -851,6 +886,8 @@ public class VLServiceImpl implements VLService{
             Homework h = oh.get();
             if( h.getAssignment().getCourseAssignment().getProfessors().stream()
                     .anyMatch(p->p.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))){
+                List<PhotoVersionHomework> versions = h.getVersions();
+                versions.forEach(p->p.setPicByte(decompressZLib(p.getPicByte())));
                 return  h.getVersions();
             }else throw  new PermissionDeniedException();
         }else throw new HomeworkNotFound();
@@ -859,13 +896,16 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('studente')")
     @Override
-    public  List<PhotoVersionHomework> getHomeworkForAssignment(String assignmentId){
+    public  List<PhotoVersionHomework> getHomeworkForAssignment(Long assignmentId){
         Optional<Assignment> oa = assignmentRepository.findById(assignmentId);
         if(oa.isPresent()){
             Assignment a = oa.get();
             String studentAuth =SecurityContextHolder.getContext().getAuthentication().getName();
             if(a.getCourseAssignment().getStudents().stream().anyMatch(s->s.getId().equals(studentAuth))){
-                return  a.getHomeworks().stream().filter(h->h.getStudent().getId().equals(studentAuth)).findFirst().get().getVersions();
+                 List<PhotoVersionHomework> versionsList = a.getHomeworks().stream().filter(h->h.getStudent().getId().equals(studentAuth)).
+                        findFirst().get().getVersions();
+                 versionsList.stream().forEach(p->p.setPicByte(decompressZLib(p.getPicByte())));
+                 return versionsList;
             }else throw new PermissionDeniedException();
         }else throw new AssignmentNotFound();
     }
@@ -896,20 +936,24 @@ public class VLServiceImpl implements VLService{
             Homework h = oh.get();
             if( h.getAssignment().getCourseAssignment().getProfessors().stream()
                     .anyMatch(p->p.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))){
-                return  h.getCorrections();
+                List<PhotoCorrection> correctionsList = h.getCorrections();
+                correctionsList.stream().forEach(p->p.setPicByte(decompressZLib(p.getPicByte())));
+                return correctionsList;
             }else throw  new PermissionDeniedException();
         }else throw new HomeworkNotFound();
     }
 
     @PreAuthorize("hasAuthority('studente')")
     @Override
-    public  List<PhotoCorrection> getCorrectionsForAssignment(String assignmentId){
+    public  List<PhotoCorrection> getCorrectionsForAssignment(Long assignmentId){
         Optional<Assignment> oa = assignmentRepository.findById(assignmentId);
         if(oa.isPresent()){
             Assignment a = oa.get();
             String studentAuth =SecurityContextHolder.getContext().getAuthentication().getName();
             if(a.getCourseAssignment().getStudents().stream().anyMatch(s->s.getId().equals(studentAuth))){
-                return  a.getHomeworks().stream().filter(h->h.getStudent().getId().equals(studentAuth)).findFirst().get().getCorrections();
+                List<PhotoCorrection> correctionsList =  a.getHomeworks().stream().filter(h->h.getStudent().getId().equals(studentAuth)).findFirst().get().getCorrections();
+                correctionsList.stream().forEach(p->p.setPicByte(decompressZLib(p.getPicByte())));
+                return correctionsList;
             }else throw new PermissionDeniedException();
         }else throw new AssignmentNotFound();
     }

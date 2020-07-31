@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Entity(name = "PhotoAssignment")
 public class PhotoAssignment extends  Image {
 
-    @OneToOne(mappedBy = "photoAssignment")
+    /*@OneToOne(mappedBy = "photoAssignment")
     private Assignment assignment;
 
     private Timestamp timestamp;
@@ -23,7 +23,7 @@ public class PhotoAssignment extends  Image {
             a.setPhotoAssignment(this);
         }
     }
-
+*/
     public  PhotoAssignment( Image image){
         super(image);
     }

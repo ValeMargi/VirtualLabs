@@ -45,16 +45,18 @@ public interface VLService {
     List<VM> allVMforStudent(String courseId);
     List<VM> allVMforCourse( String courseId);
     boolean isOwner(  String VMid);
-    boolean addAssignment(AssignmentDTO assignmentDTO, PhotoAssignment photoAssignment, String courseId);
-    List<Assignment> allAssignment(String courseId);
+    boolean addAssignment(AssignmentDTO assignmentDTO, String courseId);
+    AssignmentDTO getAssignment(  String courseId, Long assignmentId);
+    List<AssignmentDTO> allAssignmentStudent(  String courseId);
+    List<AssignmentDTO> allAssignment(String courseId);
     boolean uploadVersionHomework( String homeworkId, PhotoVersionHomework photoVersionHomework);
     boolean updateStatusHomework( String homeworkId, String status);
     boolean uploadCorrection(String homeworkId, PhotoCorrection photoCorrection,Boolean permanent);
     List<Homework> allHomework(String courseName, String assignmentId);
-    List<PhotoVersionHomework> getHomeworkForAssignment(String assignmentId);
+    List<PhotoVersionHomework> getHomeworkForAssignment(Long assignmentId);
     List<PhotoVersionHomework> getVersionsHomework( String homeworkId);
     List<PhotoCorrection> getCorrectionsHomework( String homeworkId);
-    List<PhotoCorrection> getCorrectionsForAssignment(String assignmentId);
+    List<PhotoCorrection> getCorrectionsForAssignment(Long assignmentId);
      byte[] compressZLib(byte[] data);
      byte[] decompressZLib(byte[] data);
 

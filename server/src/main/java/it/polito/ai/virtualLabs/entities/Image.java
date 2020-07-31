@@ -19,10 +19,10 @@ import java.util.zip.Inflater;
 @MappedSuperclass
 public  class Image {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+   // @Id
+   // @GeneratedValue(strategy = GenerationType.AUTO)
    // @Column(name = “id”, updatable = false, nullable = false)
-    private Long id;
+   // private Long id;
     private String name;
     private String type;
     @Column(name = "picByte", length = 1000)

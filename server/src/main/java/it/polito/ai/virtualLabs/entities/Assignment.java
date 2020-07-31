@@ -12,7 +12,7 @@ import java.util.List;
 public class Assignment {
     @Id
     private  String id;
-    private Date release, expiration;
+    private Date releaseDate, expiration;
 
     @ManyToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="course_id")

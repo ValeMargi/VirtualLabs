@@ -8,7 +8,6 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 import it.polito.ai.virtualLabs.entities.Image;
-import it.polito.ai.virtualLabs.repositories.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(path = "image")
 public class ImageUploadController {
 
-    @Autowired
-    ImageRepository imageRepository;
+   /*
 
     @PostMapping("/upload")
     public BodyBuilder uplaodImage(@RequestParam("imageFile") MultipartFile file) throws IOException {
@@ -48,7 +46,7 @@ public class ImageUploadController {
                 decompressZLib(retrievedImage.get().getPicByte()));
         return img;
     }
-
+*/
     // compress the image bytes before storing it in the database
     public static byte[] compressZLib(byte[] data) {
         Deflater deflater = new Deflater();

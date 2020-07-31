@@ -376,7 +376,7 @@ public class CourseController {
      * @param courseName: riceve dal path il nome del corso
      * @param VMid: riceve dal path l'id della VM da disattiavare
      */
-    @GetMapping("/{courseName}/{VMid}/activateVM")
+    @GetMapping("/{courseName}/{VMid}/disableVM")
     public void disableVM(  @PathVariable String courseName, @PathVariable String VMid) {
         try{
             vlService.disableVM(VMid);
@@ -422,7 +422,7 @@ public class CourseController {
             AssignmentDTO assignmentDTO = new AssignmentDTO();
             assignmentDTO.setId(input.get("assignmentId").toString());
             Date date= new Date(System.currentTimeMillis());
-            assignmentDTO.setRelease(date);
+            assignmentDTO.setReleaseDate(date);
             assignmentDTO.setExpiration((Date)input.get("expirationDate"));
 
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
@@ -504,7 +504,7 @@ public class CourseController {
      * @param file: nella richiesta viene inviata l'immagine della correzione
      * @throws IOException
      */
-    @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/uploadHomework")
+    @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/uploadCorrection")
     public void uploadCorrection(@PathVariable String courseName, @PathVariable String assignmentId,
                                @PathVariable String homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file,
                                 @RequestPart("permanent") @NotNull Boolean permanent) throws IOException {

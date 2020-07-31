@@ -23,7 +23,7 @@ public class Assignment {
     PhotoAssignment photoAssignment;
 
 
-    @OneToMany(mappedBy = "homeworks")
+    @OneToMany(mappedBy = "assignment")
     private List<Homework> homeworks= new ArrayList<>();
 
     public void setCourseAssignment(Course c){

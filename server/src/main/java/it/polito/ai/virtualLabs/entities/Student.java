@@ -41,7 +41,7 @@ public class Student {
     @OneToMany(mappedBy = "student")
     private List<Homework> homeworks = new ArrayList<>();
 
-    @OneToOne(mappedBy = "studentEmail")
+    @OneToOne(mappedBy = "student")
     private UserDAO userDAO;
 
 

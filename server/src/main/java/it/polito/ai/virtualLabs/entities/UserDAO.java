@@ -16,7 +16,7 @@ import javax.validation.constraints.Email;
 public class UserDAO {
     @Id
     @Column
-    @Email
+    //@Email
     private String email;
     @Column
     @JsonIgnore

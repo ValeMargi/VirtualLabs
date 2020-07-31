@@ -23,7 +23,7 @@ public class Professor {
     @JoinColumn(name="image_id")
     AvatarProfessor photoProfessor;
 
-    @OneToOne(mappedBy = "professorEmail")
+    @OneToOne(mappedBy = "professor")
     private UserDAO userDAO;
 
 

@@ -1,6 +1,7 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -8,6 +9,7 @@ import java.util.Date;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class PasswordResetToken {
     private static final int EXPIRATION = 60 * 24;
 

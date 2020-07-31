@@ -20,10 +20,10 @@ public class Homework {
     @JoinColumn(name="student_id")
     Student  student;
 
-    @OneToMany(mappedBy = "homeworks")
+    @OneToMany(mappedBy = "homework")
     private List<PhotoVersionHomework> versions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "corrections")
+    @OneToMany(mappedBy = "homework")
     private List<PhotoCorrection> corrections = new ArrayList<>();
 
     @ManyToOne

@@ -26,7 +26,7 @@ public class Team {
     @JoinColumn(name="course_id")
     Course course;
 
-    @OneToMany(mappedBy = "vm")
+    @OneToMany(mappedBy = "team")
     private List<VM> vms = new ArrayList<>();
 
     public void addStudentIntoTeam(Student s) {

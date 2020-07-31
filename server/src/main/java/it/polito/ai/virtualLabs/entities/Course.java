@@ -37,7 +37,7 @@ public class Course {
     ModelVM modelVM;
 
     */
-   @OneToMany(mappedBy = "vm")
+   @OneToMany(mappedBy = "course")
    private List<VM> vms = new ArrayList<>();
 
     @OneToOne

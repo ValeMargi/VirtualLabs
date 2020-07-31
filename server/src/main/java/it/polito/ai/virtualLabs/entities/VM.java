@@ -35,7 +35,8 @@ public class VM {
     @JoinColumn(name="team_id")
     Team team;
 
-    @OneToOne(mappedBy = "photoVM")
+    @OneToOne
+    @JoinColumn(name="photo_id")
     PhotoVM photoVM;
 
     public boolean addStudentToOwnerList(Student s){

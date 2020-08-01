@@ -11,36 +11,17 @@ import { Team } from '../../models/team.model';
   styleUrls: ['./vms-cont.component.css']
 })
 export class VmsContComponent implements OnInit {
-
-  public VMs: VM[] = []
+  
   public COURSE_TEAMS: Team[] = []
 
   constructor(public vmService: VmService, public teamService: TeamService, public authService: AuthService) { 
     
   }
 
-  @Output() vms = new EventEmitter<VM[]>()
-  @Output() teams = new EventEmitter<Team>()
-
   ngOnInit(): void {
-
-    
-    /*this.vmService.query().subscribe(
-      (data) => {
-        this.VMs = data;
-        this.vms.emit(this.VMs);
-      },
-      (error) => {  } 
-      );
-
-      this.vmService.vms("1").subscribe(
-        (data) => {
-          console.log(data);
-          this.VMs = data;
-          this.vms.emit(this.VMs);
-        },
-        (error) => {  } 
-        );*/
+    //provvisorio
+    this.COURSE_TEAMS.push(new Team("T01", "Gruppo 1", 1));
+    this.COURSE_TEAMS.push(new Team("T02", "Gruppo 2", 1));
   }
 
 }

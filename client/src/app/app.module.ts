@@ -57,6 +57,8 @@ import { HomeworksContComponent } from './teacher/assignments/homeworks-cont.com
 import { HomeworksComponent } from './teacher/assignments/homeworks.component';
 import { VersionsContComponent } from './teacher/assignments/versions-cont.component';
 import { VersionsComponent } from './teacher/assignments/versions.component';
+import { TeamVmsContComponent } from './teacher/vms/team-vms-cont.component';
+import { TeamVmsComponent } from './teacher/vms/team-vms.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +93,9 @@ import { VersionsComponent } from './teacher/assignments/versions.component';
     HomeworksContComponent,
     HomeworksComponent,
     VersionsContComponent,
-    VersionsComponent
+    VersionsComponent,
+    TeamVmsContComponent,
+    TeamVmsComponent
   ],
   imports: [
     BrowserModule,

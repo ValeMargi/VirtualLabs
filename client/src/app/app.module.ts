@@ -53,6 +53,12 @@ import { CreateAssignmentComponent } from './teacher/assignments/create-assignme
 import { RequestTeamDialogContComponent } from './student/teams/request-team-dialog/request-team-dialog-cont/request-team-dialog-cont.component';
 import { AddHomeworkComponent } from './student/assignments/add-homework/add-homework.component';
 import { AddHomeworkContComponent } from './student/assignments/add-homework/add-homework-cont/add-homework-cont.component';
+import { CreateAssignmentContComponent } from './teacher/assignments/create-assignment-cont.component';
+import { CreateAssignmentComponent } from './teacher/assignments/create-assignment.component';
+import { HomeworksContComponent } from './teacher/assignments/homeworks-cont.component';
+import { HomeworksComponent } from './teacher/assignments/homeworks.component';
+import { VersionsContComponent } from './teacher/assignments/versions-cont.component';
+import { VersionsComponent } from './teacher/assignments/versions.component';
 
 @NgModule({
   declarations: [
@@ -84,6 +90,10 @@ import { AddHomeworkContComponent } from './student/assignments/add-homework/add
     RequestTeamDialogContComponent,
     AddHomeworkComponent,
     AddHomeworkContComponent
+    HomeworksContComponent,
+    HomeworksComponent,
+    VersionsContComponent,
+    VersionsComponent
   ],
   imports: [
     BrowserModule,

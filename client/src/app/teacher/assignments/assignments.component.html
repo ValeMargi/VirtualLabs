@@ -16,67 +16,8 @@
     </div>
 
     <div class="container2">
-        <div class="tableContainer" *ngIf="tableVisibility"> 
-            <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
-                <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Matricola </th>
-                    <td mat-cell *matCellDef="let row">  </td>
-                </ng-container>
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cognome </th>
-                    <td mat-cell *matCellDef="let row">  </td>
-                </ng-container>
-                <ng-container matColumnDef="firstName">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
-                    <td mat-cell *matCellDef="let row">  </td>
-                </ng-container>
-                <ng-container matColumnDef="status">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato </th>
-                    <td mat-cell *matCellDef="let row">  </td>
-                </ng-container>
-                <ng-container matColumnDef="timestamp">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Timestamp </th>
-                    <td mat-cell *matCellDef="let row">  </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="showHistory(row)"></tr>
-            </table>
-
-            <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
-                        
-            </mat-paginator>
-        </div>
-
-        <div class="versionsContainer" *ngIf="versionsVisibility">
-            <button mat-button (click)="back()">
-                <mat-icon>arrow_back</mat-icon>
-            </button>
-            <div class="vr-container"> 
-                <div class="versions-reviews">
-                    <div class="versions">
-                        <h3>Versioni elaborato</h3>
-                        <mat-selection-list [multiple]="false">
-                            <mat-list-option *ngFor="let ver of versions" [value]="ver"> 
-                                {{ ver.timestamp }}    
-                            </mat-list-option>
-                        </mat-selection-list>
-                    </div>
-                    <div class="separator"></div> 
-                    <div class="reviews">
-                        <h3>Revisioni</h3>
-                        <mat-selection-list [multiple]="false">
-                            <mat-list-option *ngFor="let rev of reviews" [value]="rev"> 
-                                {{ rev.timestamp }}    
-                            </mat-list-option>
-                        </mat-selection-list>
-                    </div>
-                </div>
-
-
-                <button mat-button class="upload">
-                    <mat-icon>cloud_upload</mat-icon>Carica revisione
-                </button>
-            </div>
-        </div>
+        <app-homeworks-cont class="tableContainer" *ngIf="tableVisibility" [assignment]="ASSIGNMENT"> 
+            
+        </app-homeworks-cont>
     </div>
 </div>

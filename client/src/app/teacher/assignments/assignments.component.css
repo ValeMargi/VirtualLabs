@@ -34,35 +34,3 @@ h3 {
 .create {
     margin: 1em;
 }
-
-.matTable {
-    width: 100%;
-}
-
-.versions-reviews {
-    display: flex;
-    justify-content: center;
-}
-
-.vr-container {
-    text-align: center;
-}
-
-.versions {
-    margin-right: 10%;
-}
-
-.reviews {
-    margin-left: 10%;
-}
-
-.separator { 
-    border-left: 3px solid black; 
-    height: 10em; 
-    left: 50%; 
-} 
-
-.upload {
-    display: inline-block;
-    margin-top: 1em;
-}

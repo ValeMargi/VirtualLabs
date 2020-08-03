@@ -1,8 +1,7 @@
 package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.*;
-import it.polito.ai.virtualLabs.entities.AvatarStudent;
-import it.polito.ai.virtualLabs.entities.Image;
+
 import it.polito.ai.virtualLabs.entities.UserDAO;
 import it.polito.ai.virtualLabs.dtos.ProfessorDTO;
 import it.polito.ai.virtualLabs.repositories.UserRepository;
@@ -11,6 +10,7 @@ import it.polito.ai.virtualLabs.services.JwtUserDetailsService;
 import it.polito.ai.virtualLabs.services.VLService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
@@ -55,7 +55,7 @@ public class UserController {
     private JavaMailSender mailSender;
 
     @Autowired
-    private MessageSource messages;
+    private MessageSource messageSource;
 
 
     //TO DO image student upload ------->
@@ -72,13 +72,25 @@ public class UserController {
         } else if (!jwtUserDetailsService.checkUsernameInUserRepo(inputLogin.get("email"))) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with email" + inputLogin.get("email") + "  already present");
         } else {
-            Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
+           // Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
             if (inputLogin.get("email").matches("^[A-z0-9\\.\\+_-]+@polito.it")) { //Professor
-                ProfessorDTO professorDTO = new ProfessorDTO(inputLogin.get("id"), inputLogin.get("firstName"), inputLogin.get("name"), inputLogin.get("email"));
-                return authenticationService.addProfessor(professorDTO, inputLogin.get("password"), image);
+                ProfessorDTO professorDTO = new ProfessorDTO(inputLogin.get("id"),
+                                                             inputLogin.get("firstName"),
+                                                             inputLogin.get("name"),
+                                                             inputLogin.get("email"),
+                                                             file.getOriginalFilename(),
+                                                             file.getContentType(),
+                                                             vlService.compressZLib(file.getBytes()));
+                return authenticationService.addProfessor(professorDTO, inputLogin.get("password"));
             } else {
-                StudentDTO studentDTO = new StudentDTO(inputLogin.get("id"), inputLogin.get("firstName"), inputLogin.get("firstName"), inputLogin.get("email"));
-                return authenticationService.addStudent(studentDTO, inputLogin.get("password"), image);
+                StudentDTO studentDTO = new StudentDTO(inputLogin.get("id"),
+                                                       inputLogin.get("firstName"),
+                                                       inputLogin.get("firstName"),
+                                                       inputLogin.get("email"),
+                                                       file.getOriginalFilename(),
+                                                       file.getContentType(),
+                                                       vlService.compressZLib(file.getBytes()));
+                return authenticationService.addStudent(studentDTO, inputLogin.get("password"));
             }
         }
     }
@@ -112,7 +124,7 @@ public class UserController {
 
     private SimpleMailMessage constructResetTokenEmail(final String contextPath, final Locale locale, final String token, final UserDAO user) {
         final String url = contextPath + "/user/changePassword?token=" + token;
-        final String message = messages.getMessage("message.resetPassword", null, locale);
+        final String message = messageSource.getMessage("message.resetPassword", null, locale);
         return constructEmail("Reset Password", message + " \r\n" + url, user);
     }
 
@@ -121,7 +133,7 @@ public class UserController {
                                          @RequestParam("token") String token) {
         String result = authenticationService.validatePasswordResetToken(token);
         if(result != null) {
-            String message = messages.getMessage("auth.message." + result, null, locale);
+            String message = messageSource.getMessage("auth.message." + result, null, locale);
             return "redirect:/login.html?message=" + message;
         } else {
             model.addAttribute("token", token);
@@ -137,7 +149,7 @@ public class UserController {
         String result = authenticationService.validatePasswordResetToken(passwordDto.getToken());
 
         if(result != null) {
-           // return new GenericResponse(messages.getMessage("auth.message." + result, null, locale));
+           // return new GenericResponse(messageSource.getMessage("auth.message." + result, null, locale));
             //
             // RITORNARE MESSAGGIO DI ERRORE
             }
@@ -145,10 +157,10 @@ public class UserController {
         Optional<UserDAO> user = authenticationService.getUserByPasswordResetToken(passwordDto.getToken());
         if(user.isPresent()) {
             authenticationService.changeUserPassword(user.get(), passwordDto.getNewPassword());
-            //return new GenericResponse(messages.getMessage("message.resetPasswordSuc", null, locale));
+            //return new GenericResponse(messageSource.getMessage("message.resetPasswordSuc", null, locale));
             // RITORNARE MESS SUCC
         } else {
-            //return new GenericResponse(messages.getMessage("auth.message.invalid", null, locale));
+            //return new GenericResponse(messageSource.getMessage("auth.message.invalid", null, locale));
             // RITORNARE ERRORE
         }
     }
@@ -162,7 +174,7 @@ public class UserController {
             throw new InvalidOldPasswordException();
         }
         userService.changeUserPassword(user, passwordDto.getNewPassword());
-        return new GenericResponse(messages.getMessage("message.updatePasswordSuc", null, locale));
+        return new GenericResponse(messageSource.getMessage("message.updatePasswordSuc", null, locale));
     }
 */
 

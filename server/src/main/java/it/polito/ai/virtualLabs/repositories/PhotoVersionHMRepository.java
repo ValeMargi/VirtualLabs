@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PhotoVersionHMRepository  extends JpaRepository<PhotoVersionHomework, String> {
+public interface PhotoVersionHMRepository  extends JpaRepository<PhotoVersionHomework, Long> {
 }
 

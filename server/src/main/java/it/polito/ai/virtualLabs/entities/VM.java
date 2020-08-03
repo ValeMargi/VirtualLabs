@@ -1,19 +1,25 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.ui.Model;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
-public class VM {
+@NoArgsConstructor
+public class VM extends Image{
     @Id
     private String id;
     private int  numVcpu, diskSpace, ram;
     private String status;
+
+    //AGGIUNTI
+    private Timestamp timestamp;
 
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "vm_student",
@@ -35,9 +41,9 @@ public class VM {
     @JoinColumn(name="team_id")
     Team team;
 
-    @OneToOne
+    /*@OneToOne
     @JoinColumn(name="photo_id")
-    PhotoVM photoVM;
+    PhotoVM photoVM;*/
 
     public boolean addStudentToOwnerList(Student s){
         if(s!=null && !ownersVM.contains(s)){
@@ -75,12 +81,13 @@ public class VM {
         return false;
     }
 
-    public void photoVM(PhotoVM p){
+   /* public void photoVM(PhotoVM p){
         if(p!=null && photoVM!=p){
             photoVM=p;
             p.setVM(this);
         }
     }
+    */
 
     public void setCourse(Course c){
         if(c!=null && c!=course){

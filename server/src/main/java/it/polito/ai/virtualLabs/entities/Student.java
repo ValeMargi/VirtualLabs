@@ -2,6 +2,7 @@ package it.polito.ai.virtualLabs.entities;
 
 import com.opencsv.bean.CsvBindByName;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.beanutils.PropertyUtilsBean;
 
 import javax.persistence.*;
@@ -11,7 +12,8 @@ import java.util.List;
 
 @Entity
 @Data
-public class Student {
+@NoArgsConstructor
+public class Student extends Image{
     @Id
     @CsvBindByName
     private String id;
@@ -34,9 +36,10 @@ public class Student {
     @ManyToMany(mappedBy ="ownersVM")
     private List<VM> ownersVM = new ArrayList<>();
 
-    @OneToOne //(fetch = FetchType.EAGER) default
+   /* @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
     AvatarStudent photoStudent;
+    */
 
     @OneToMany(mappedBy = "student")
     private List<Homework> homeworks = new ArrayList<>();
@@ -59,12 +62,13 @@ public class Student {
         }
     }
 
-    public void setPhotoStudent(AvatarStudent avatarStudent){
+   /* public void setPhotoStudent(AvatarStudent avatarStudent){
         if(avatarStudent!=null){
             photoStudent = avatarStudent;
             avatarStudent.setStudent(this);
         }
     }
+    */
 
     public  void setTeamForStudent(Team t){
         if(t!=null && !teams.contains(t)){

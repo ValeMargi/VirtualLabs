@@ -23,20 +23,20 @@ public  class Image {
    // @GeneratedValue(strategy = GenerationType.AUTO)
    // @Column(name = “id”, updatable = false, nullable = false)
    // private Long id;
-    private String name;
+    private String nameFile;
     private String type;
     @Column(name = "picByte", length = 1000)
     private byte[] picByte;
 
 
     public Image( String originalFilename, String contentType, byte[] compressZLib) {
-        this.name = originalFilename;
+        this.nameFile = originalFilename;
         this.type = contentType;
         this.picByte = compressZLib;
     }
 
     public Image(Image image) {
-        this.name = image.name;
+        this.nameFile = image.nameFile;
         this.type = image.type;
         this.picByte = image.picByte;
 

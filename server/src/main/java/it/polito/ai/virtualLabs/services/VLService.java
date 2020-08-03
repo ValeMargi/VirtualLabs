@@ -37,26 +37,28 @@ public interface VLService {
     void activateTeam(Long id);
     void evictTeam(Long id);
     boolean addModelVM(CourseDTO courseDTO, String courseI, PhotoModelVM photoModelVM);
-    boolean addVM(VMDTO vmdto, String courseId, PhotoVM photoVM);
+    boolean addVM(VMDTO vmdto, String courseId);
     boolean addOwner(String VMid, String courseId, List<String> students);
     boolean activateVM(String VMid);
     boolean disableVM(String VMid);
     boolean removeVM(String VMid);
-    List<VM> allVMforStudent(String courseId);
-    List<VM> allVMforCourse( String courseId);
+    List<VMDTO> allVMforStudent(String courseId);
+    List<VMDTO> allVMforCourse( String courseId);
+    VMDTO getVMforStudent( String courseId, String VMid);
     boolean isOwner(  String VMid);
     boolean addAssignment(AssignmentDTO assignmentDTO, String courseId);
-    AssignmentDTO getAssignment(  String courseId, Long assignmentId);
+    AssignmentDTO getAssignmentStudent( Long assignmentId);
+    AssignmentDTO getAssignmentProfessor( Long assignmentId);
     List<AssignmentDTO> allAssignmentStudent(  String courseId);
     List<AssignmentDTO> allAssignment(String courseId);
     boolean uploadVersionHomework( String homeworkId, PhotoVersionHomework photoVersionHomework);
     boolean updateStatusHomework( String homeworkId, String status);
-    boolean uploadCorrection(String homeworkId, PhotoCorrection photoCorrection,Boolean permanent);
+    boolean uploadCorrection(String homeworkId, Long versionHMid, PhotoCorrectionDTO photoCorrectionDTO,Boolean permanent)
     List<Homework> allHomework(String courseName, String assignmentId);
     List<PhotoVersionHomework> getHomeworkForAssignment(Long assignmentId);
     List<PhotoVersionHomework> getVersionsHomework( String homeworkId);
-    List<PhotoCorrection> getCorrectionsHomework( String homeworkId);
-    List<PhotoCorrection> getCorrectionsForAssignment(Long assignmentId);
+    List<PhotoCorrectionDTO> getCorrectionsHomework( String homeworkId);
+    List<PhotoCorrectionDTO> getCorrectionsForAssignment(Long assignmentId);
      byte[] compressZLib(byte[] data);
      byte[] decompressZLib(byte[] data);
 

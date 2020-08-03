@@ -1,9 +1,6 @@
 package it.polito.ai.virtualLabs.controllers;
 
-import it.polito.ai.virtualLabs.dtos.AssignmentDTO;
-import it.polito.ai.virtualLabs.dtos.CourseDTO;
-import it.polito.ai.virtualLabs.dtos.StudentDTO;
-import it.polito.ai.virtualLabs.dtos.TeamDTO;
+import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,14 +87,37 @@ public class StudentController {
         }
     }
 
+    /**
+     * Authrority: Studente
+     * @param courseName
+     * @return: ritrona lista di VM dto con le informazioni
+     *          di tutte le VM del team di cui lo studente autenticato è membro
+     */
     @GetMapping("/VM/{courseName}")
-    public void allVMforCourse(  @PathVariable String courseName) {
+    public List<VMDTO> allVMforStudent(@PathVariable String courseName) {
         try{
-            vlService.allVMforCourse(courseName);
-        } catch (PermissionDeniedException| CourseNotFoundException e) {
+            return vlService.allVMforStudent(courseName);
+        } catch (TeamNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+    /**
+     * Authrority: Studente
+     * @param courseName
+     * @param VMid
+     * @return: ritrona  VM dto con le informazioni della VM con id pari a VMid
+     */
+    @GetMapping("/VM/{courseName}/{VMid}")
+    public VMDTO getVMforStudent(@PathVariable String courseName, @PathVariable String VMid) {
+        try{
+            return vlService.getVMforStudent(courseName, VMid);
+        } catch (TeamNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+
 
     @GetMapping("/VM/{courseName}/{VMid}/")
     public void isOwner(  @PathVariable String courseName, @PathVariable String VMid) {
@@ -121,6 +141,22 @@ public class StudentController {
         try{
             return  vlService.allAssignmentStudent(courseName);
         } catch (CourseNotFoundException  | StudentNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    /**
+     * Metodo: Get
+     * Authority: Studente
+     * @param courseName
+     * @param assignmentId
+     * @return informazioni assignment dello studente
+     */
+    @GetMapping("/{courseName}/{assignmentId}/getAssignment")
+    public AssignmentDTO getAssignment(@PathVariable String courseName, @PathVariable Long assignmentId) {
+        try{
+            return  vlService.getAssignmentStudent(assignmentId);
+        } catch (CourseNotFoundException  | StudentNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }

@@ -25,8 +25,6 @@ public class JwtAuthenticationController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
     @Autowired
-    StudentRepository studentRepository;
-    @Autowired
     JwtUserDetailsService jwtUserDetailsService;
 
 

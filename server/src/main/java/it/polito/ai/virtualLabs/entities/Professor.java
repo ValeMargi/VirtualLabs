@@ -1,6 +1,7 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,7 +10,8 @@ import javax.validation.constraints.Email;
 
 @Data
 @Entity
-public class Professor {
+@NoArgsConstructor
+public class Professor extends Image{
     @Id
     private String id;
     private String name, firstName;
@@ -19,10 +21,10 @@ public class Professor {
     @ManyToMany(mappedBy = "professors")
     private List<Course> courses = new ArrayList<>();
 
-    @OneToOne //(fetch = FetchType.EAGER) default
+   /* @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
     AvatarProfessor photoProfessor;
-
+*/
     @OneToOne(mappedBy = "professor")
     private UserDAO userDAO;
 
@@ -34,13 +36,13 @@ public class Professor {
         }
     }
 
-    public  void setPhotoProfessor(AvatarProfessor a){
+   /* public  void setPhotoProfessor(AvatarProfessor a){
         if( a!= null){
             photoProfessor = a;
             a.setProfessor(this);
         }
     }
-
+*/
     public void setCourses(Course c){
         if(c!=null && !courses.contains(c)){
             courses.add(c);

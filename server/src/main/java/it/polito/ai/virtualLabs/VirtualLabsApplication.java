@@ -2,7 +2,6 @@ package it.polito.ai.virtualLabs;
 
 import it.polito.ai.virtualLabs.dtos.PhotoCorrectionDTO;
 import it.polito.ai.virtualLabs.dtos.PhotoVersionHomeworkDTO;
-import it.polito.ai.virtualLabs.entities.PhotoAssignment;
 import it.polito.ai.virtualLabs.entities.PhotoCorrection;
 import it.polito.ai.virtualLabs.entities.PhotoVersionHomework;
 import it.polito.ai.virtualLabs.repositories.HomeworkRepository;

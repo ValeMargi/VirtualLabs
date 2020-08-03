@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 import it.polito.ai.virtualLabs.entities.UserDAO;
+import it.polito.ai.virtualLabs.services.VLService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -23,7 +25,12 @@ public class JwtTokenUtil implements Serializable {
     static final String CLAIM_KEY_FIRSTNAME = "firstname";
     static final String CLAIM_KEY_NAME = "name";
     static final String CLAIM_KEY_ID = "id";
-    static final String CLAIM_KEY_PHOTO = "photo";
+    static final String CLAIM_KEY_PHOTO_NAME = "photoName";
+    static final String CLAIM_KEY_PHOTO_TYPE = "photoType";
+    static final String CLAIM_KEY_PHOTO_BYTE = "photoPicByte";
+
+    @Autowired
+    VLService vlService;
 
 
     //retrieve username from jwt token
@@ -58,12 +65,16 @@ public class JwtTokenUtil implements Serializable {
             claims.put(CLAIM_KEY_FIRSTNAME, userDAO.getProfessor().getFirstName());
             claims.put(CLAIM_KEY_NAME, userDAO.getProfessor().getName());
             claims.put(CLAIM_KEY_ID, userDAO.getProfessor().getId());
-            claims.put(CLAIM_KEY_PHOTO, userDAO.getProfessor().getPhotoProfessor());
+            claims.put(CLAIM_KEY_PHOTO_NAME, userDAO.getProfessor().getNameFile());
+            claims.put(CLAIM_KEY_PHOTO_TYPE, userDAO.getProfessor().getType());
+            claims.put(CLAIM_KEY_PHOTO_BYTE, vlService.decompressZLib(userDAO.getProfessor().getPicByte()));
         }else if(userDAO.getRole().equals("studente")){
             claims.put(CLAIM_KEY_FIRSTNAME, userDAO.getStudent().getFirstName());
             claims.put(CLAIM_KEY_NAME, userDAO.getStudent().getName());
             claims.put(CLAIM_KEY_ID, userDAO.getStudent().getId());
-            claims.put(CLAIM_KEY_PHOTO, userDAO.getStudent().getPhotoStudent());
+            claims.put(CLAIM_KEY_PHOTO_NAME, userDAO.getStudent().getNameFile());
+            claims.put(CLAIM_KEY_PHOTO_TYPE, userDAO.getStudent().getType());
+            claims.put(CLAIM_KEY_PHOTO_BYTE, vlService.decompressZLib(userDAO.getStudent().getPicByte()));
         }
 
         return doGenerateToken(claims, userDetails.getUsername());

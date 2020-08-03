@@ -17,12 +17,12 @@ public class PhotoVM extends Image{
 
     private Timestamp timestamp;
 
-    public  void setVM(VM v){
+    /*public  void setVM(VM v){
         if(v!=null && vm!=v){
             vm=v;
             v.photoVM(this);
         }
-    }
+    }*/
     public  PhotoVM( Image image){
         super(image);
     }

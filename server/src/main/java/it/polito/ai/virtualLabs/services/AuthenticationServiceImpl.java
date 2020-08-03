@@ -44,18 +44,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    AvatarStudentRepository avatarStudentRepository;
-
-    @Autowired
-    AvatarProfessorRepository avatarProfessorRepository;
 
     @Override
-    public Optional<UserDTO> addStudent(StudentDTO student, String password,  Image photoStudent) {
+    public Optional<UserDTO> addStudent(StudentDTO student, String password) {
         if (  !studentRepository.findById(student.getId()).isPresent() )  {
             Student s = modelMapper.map( student, Student.class);
-            AvatarStudent avatarStudent = new AvatarStudent(photoStudent);
-            s.setPhotoStudent(avatarStudent);
+           // AvatarStudent avatarStudent = new AvatarStudent(photoStudent);
+           // s.setPhotoStudent(avatarStudent);
             studentRepository.save(s);
             studentRepository.flush();
             UserDTO user = new UserDTO();
@@ -70,18 +65,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             "Username:  " + user.getEmail() +"\n"+
                             "Password:   " + user.getPassword());
             jwtUserDetailsService.save(user);
-            avatarStudentRepository.saveAndFlush(avatarStudent);
+            //avatarStudentRepository.saveAndFlush(avatarStudent);
             return Optional.ofNullable(user);
         }
         return null;
     }
 
     @Override
-    public Optional<UserDTO> addProfessor(ProfessorDTO professor, String password,  Image photoProfessor) {
+    public Optional<UserDTO> addProfessor(ProfessorDTO professor, String password) {
         if ( !professorRepository.findById(professor.getId()).isPresent() )  {
             Professor p = modelMapper.map( professor, Professor.class);
-            AvatarProfessor avatarProfessor = new AvatarProfessor(photoProfessor);
-            p.setPhotoProfessor(avatarProfessor);
+          //  AvatarProfessor avatarProfessor = new AvatarProfessor(photoProfessor);
+           // p.setPhotoProfessor(avatarProfessor);
             professorRepository.save(p);
             professorRepository.flush();
             UserDTO user = new UserDTO();
@@ -96,7 +91,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             "Username:  " + user.getEmail() + "\n"+
                             "Password:   " + user.getPassword());
             jwtUserDetailsService.save(user);
-            avatarProfessorRepository.saveAndFlush(avatarProfessor);
+            //avatarProfessorRepository.saveAndFlush(avatarProfessor);
             return Optional.ofNullable(user);
         }
         return null;

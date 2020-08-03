@@ -10,33 +10,30 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @Entity
-public class Assignment extends Image {
+public class Assignment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
+    private  String nameAssignment;
     private Date releaseDate, expiration;
 
-    private Timestamp timestamp;
+
 
 
     @ManyToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="course_id")
     Course courseAssignment;
 
-    /*@OneToOne //(fetch = FetchType.EAGER) default
+    @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
     PhotoAssignment photoAssignment;
-    */
+
 
     @OneToMany(mappedBy = "assignment")
     private List<Homework> homeworks= new ArrayList<>();
 
-    public  Assignment( Image image){
-        super(image);
-    }
 
     public void setCourseAssignment(Course c){
         if(c!=null && courseAssignment!=c ) {
@@ -53,12 +50,12 @@ public class Assignment extends Image {
         }
     }
 
-   /* public void setPhotoAssignment(PhotoAssignment p){
+    public void setPhotoAssignment(PhotoAssignment p){
         if(p != null && photoAssignment!=p){
             photoAssignment = p;
             p.setAssignment(this);
         }
-    }*/
+    }
 
 
 

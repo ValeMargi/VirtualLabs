@@ -12,10 +12,7 @@ public class VMDTO extends RepresentationModel<VMDTO> {
     private String id;
     private int  numVcpu, diskSpace, ram;
     private String status;
+    private String nameVM;
+    private String timestamp;
 
-    //AGGIUNTI
-    private Timestamp timestamp;
-    private String name;
-    private String type;
-    private byte[] picByte;
 }

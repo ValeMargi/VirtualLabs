@@ -1,15 +1,14 @@
 package it.polito.ai.virtualLabs.services;
 
-import it.polito.ai.virtualLabs.dtos.ProfessorDTO;
-import it.polito.ai.virtualLabs.dtos.StudentDTO;
-import it.polito.ai.virtualLabs.dtos.UserDTO;
+import it.polito.ai.virtualLabs.dtos.*;
+import it.polito.ai.virtualLabs.entities.Image;
 import it.polito.ai.virtualLabs.entities.UserDAO;
 
 import java.util.Optional;
 
 public interface AuthenticationService {
-    Optional<UserDTO> addStudent(StudentDTO student, String password);
-    Optional<UserDTO> addProfessor(ProfessorDTO professorDTO, String password);
+    Optional<UserDTO> addStudent(StudentDTO student, String password, AvatarStudentDTO avatarStudentDTO);
+    Optional<UserDTO> addProfessor(ProfessorDTO professor, String password,  AvatarProfessorDTO avatarProfessorDTO);
     void createPasswordResetTokenForUser(final UserDAO user, final String token);
     String validatePasswordResetToken(String token);
     Optional<UserDAO> getUserByPasswordResetToken(final String token);

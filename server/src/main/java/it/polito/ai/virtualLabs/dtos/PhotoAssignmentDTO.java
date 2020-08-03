@@ -6,12 +6,11 @@ import org.springframework.hateoas.RepresentationModel;
 import java.sql.Timestamp;
 
 @Data
-public class PhotoCorrectionDTO extends RepresentationModel<PhotoCorrectionDTO> {
-
-    Long id, idVersionHomework;
-    String idProfessor;
-    String timestamp;
-    private String nameFile;
+public class PhotoAssignmentDTO extends RepresentationModel<PhotoAssignmentDTO> {
+    private Long id;
+    private String name;
     private String type;
     private byte[] picByte;
+    private String timestamp;
+
 }

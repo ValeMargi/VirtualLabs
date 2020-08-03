@@ -19,7 +19,7 @@ public class PhotoCorrection extends  Image{
     @JoinColumn(name="homework_id")
     private Homework homework;
 
-    private Timestamp timestamp;
+    private String timestamp;
 
     Long idVersionHomework;
     String idProfessor;

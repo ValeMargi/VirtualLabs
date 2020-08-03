@@ -11,7 +11,8 @@ import java.util.List;
 @Entity
 public class Homework {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private  Long id;
     private  String status;
     private Boolean permanent; //false può essere  ancora modificato
     private String grade;

@@ -15,11 +15,12 @@ public class PhotoVersionHomework extends Image{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
 
+
     @ManyToOne
     @JoinColumn(name="homework_id")
     private Homework homework;
 
-    private Timestamp timestamp;
+    private String timestamp;
 
 
     public void setPhotoVersionHomework(Homework h){

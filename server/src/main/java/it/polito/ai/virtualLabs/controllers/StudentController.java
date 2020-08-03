@@ -109,7 +109,7 @@ public class StudentController {
      * @return: ritrona  VM dto con le informazioni della VM con id pari a VMid
      */
     @GetMapping("/VM/{courseName}/{VMid}")
-    public VMDTO getVMforStudent(@PathVariable String courseName, @PathVariable String VMid) {
+    public PhotoVMDTO getVMforStudent(@PathVariable String courseName, @PathVariable String VMid) {
         try{
             return vlService.getVMforStudent(courseName, VMid);
         } catch (TeamNotFoundException e) {
@@ -153,9 +153,9 @@ public class StudentController {
      * @return informazioni assignment dello studente
      */
     @GetMapping("/{courseName}/{assignmentId}/getAssignment")
-    public AssignmentDTO getAssignment(@PathVariable String courseName, @PathVariable Long assignmentId) {
+    public PhotoAssignmentDTO getAssignment(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
-            return  vlService.getAssignmentStudent(assignmentId);
+            return  vlService.getAssignmentStudent( assignmentId);
         } catch (CourseNotFoundException  | StudentNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

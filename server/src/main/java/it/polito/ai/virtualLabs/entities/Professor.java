@@ -10,8 +10,8 @@ import javax.validation.constraints.Email;
 
 @Data
 @Entity
-@NoArgsConstructor
-public class Professor extends Image{
+
+public class Professor {
     @Id
     private String id;
     private String name, firstName;
@@ -21,10 +21,10 @@ public class Professor extends Image{
     @ManyToMany(mappedBy = "professors")
     private List<Course> courses = new ArrayList<>();
 
-   /* @OneToOne //(fetch = FetchType.EAGER) default
+    @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
     AvatarProfessor photoProfessor;
-*/
+
     @OneToOne(mappedBy = "professor")
     private UserDAO userDAO;
 
@@ -36,13 +36,13 @@ public class Professor extends Image{
         }
     }
 
-   /* public  void setPhotoProfessor(AvatarProfessor a){
+    public  void setPhotoProfessor(AvatarProfessor a){
         if( a!= null){
             photoProfessor = a;
             a.setProfessor(this);
         }
     }
-*/
+
     public void setCourses(Course c){
         if(c!=null && !courses.contains(c)){
             courses.add(c);

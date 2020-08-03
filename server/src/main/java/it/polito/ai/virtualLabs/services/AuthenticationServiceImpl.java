@@ -1,8 +1,6 @@
 package it.polito.ai.virtualLabs.services;
 
-import it.polito.ai.virtualLabs.dtos.ProfessorDTO;
-import it.polito.ai.virtualLabs.dtos.StudentDTO;
-import it.polito.ai.virtualLabs.dtos.UserDTO;
+import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.entities.*;
 import it.polito.ai.virtualLabs.repositories.*;
 import org.modelmapper.ModelMapper;
@@ -44,43 +42,47 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    AvatarStudentRepository avatarStudentRepository;
 
-    @Override
-    public Optional<UserDTO> addStudent(StudentDTO student, String password) {
-        if (  !studentRepository.findById(student.getId()).isPresent() )  {
-            Student s = modelMapper.map( student, Student.class);
-           // AvatarStudent avatarStudent = new AvatarStudent(photoStudent);
-           // s.setPhotoStudent(avatarStudent);
-            studentRepository.save(s);
-            studentRepository.flush();
-            UserDTO user = new UserDTO();
-            //user.setPassword(UUID.randomUUID().toString());
-            user.setPassword(password); //passwordEncoder.encode(password));
-            user.setRole("student");
-            user.setEmail(student.getId());
-            notificationService.sendMessage(user.getEmail(),
-                    "Enrollment to the VirtualLabs app",
-                    "You have been subscribed to the application.\n" +
-                            "Your data to access are as follows::\n\n" +
-                            "Username:  " + user.getEmail() +"\n"+
-                            "Password:   " + user.getPassword());
+    @Autowired
+    AvatarProfessorRepository avatarProfessorRepository;
+
+
+   @Override
+   public Optional<UserDTO> addStudent(StudentDTO student, String password,  AvatarStudentDTO avatarStudentDTO) {
+           if (  !studentRepository.findById(student.getId()).isPresent() )  {
+               Student s = modelMapper.map( student, Student.class);
+               AvatarStudent avatarStudent =modelMapper.map(avatarStudentDTO,AvatarStudent.class);
+               s.setPhotoStudent(avatarStudent);
+               studentRepository.saveAndFlush(s);
+               UserDTO user = new UserDTO();
+               //user.setPassword(UUID.randomUUID().toString());
+               user.setPassword(password); //passwordEncoder.encode(password));
+               user.setRole("student");
+               user.setEmail(student.getId());
+               notificationService.sendMessage(user.getEmail(),
+                       "Enrollment to the VirtualLabs app",
+                       "You have been subscribed to the application.\n" +
+                               "Your data to access are as follows::\n\n" +
+                               "Username:  " + user.getEmail() +"\n"+
+                               "Password:   " + user.getPassword());
             jwtUserDetailsService.save(user);
-            //avatarStudentRepository.saveAndFlush(avatarStudent);
+            avatarStudentRepository.saveAndFlush(avatarStudent);
             return Optional.ofNullable(user);
-        }
-        return null;
-    }
+               }
+               return null;
+           }
 
     @Override
-    public Optional<UserDTO> addProfessor(ProfessorDTO professor, String password) {
+    public Optional<UserDTO> addProfessor(ProfessorDTO professor, String password,  AvatarProfessorDTO avatarProfessorDTO) {
         if ( !professorRepository.findById(professor.getId()).isPresent() )  {
             Professor p = modelMapper.map( professor, Professor.class);
-          //  AvatarProfessor avatarProfessor = new AvatarProfessor(photoProfessor);
-           // p.setPhotoProfessor(avatarProfessor);
-            professorRepository.save(p);
-            professorRepository.flush();
+            AvatarProfessor avatarProfessor = modelMapper.map(avatarProfessorDTO, AvatarProfessor.class);
+            p.setPhotoProfessor(avatarProfessor);
+            professorRepository.saveAndFlush(p);
             UserDTO user = new UserDTO();
-           // user.setPassword(UUID.randomUUID().toString());
+            // user.setPassword(UUID.randomUUID().toString());
             user.setPassword(password); //passwordEncoder.encode(password));
             user.setRole("professor");
             user.setEmail(professor.getId());
@@ -91,11 +93,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             "Username:  " + user.getEmail() + "\n"+
                             "Password:   " + user.getPassword());
             jwtUserDetailsService.save(user);
-            //avatarProfessorRepository.saveAndFlush(avatarProfessor);
+            avatarProfessorRepository.saveAndFlush(avatarProfessor);
             return Optional.ofNullable(user);
+            }
+            return null;
         }
-        return null;
-    }
 
     /*If the User database is empty, the admin user
     with the "admin" role/authority is inserted*/

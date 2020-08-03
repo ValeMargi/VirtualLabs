@@ -10,9 +10,7 @@ import java.util.Date;
 @Data
 public class AssignmentDTO  extends RepresentationModel<AssignmentDTO> {
     private  Long id;
+    private String assignmentName;
     private Date releaseDate, expiration;
-    private String name;
-    private String type;
-    private byte[] picByte;
-    private Timestamp timestamp;
+
 }

@@ -25,6 +25,8 @@ public class JwtTokenUtil implements Serializable {
     static final String CLAIM_KEY_FIRSTNAME = "firstname";
     static final String CLAIM_KEY_NAME = "name";
     static final String CLAIM_KEY_ID = "id";
+  //  static final String CLAIM_KEY_PHOTO = "photo";
+
     static final String CLAIM_KEY_PHOTO_NAME = "photoName";
     static final String CLAIM_KEY_PHOTO_TYPE = "photoType";
     static final String CLAIM_KEY_PHOTO_BYTE = "photoPicByte";
@@ -65,16 +67,18 @@ public class JwtTokenUtil implements Serializable {
             claims.put(CLAIM_KEY_FIRSTNAME, userDAO.getProfessor().getFirstName());
             claims.put(CLAIM_KEY_NAME, userDAO.getProfessor().getName());
             claims.put(CLAIM_KEY_ID, userDAO.getProfessor().getId());
-            claims.put(CLAIM_KEY_PHOTO_NAME, userDAO.getProfessor().getNameFile());
-            claims.put(CLAIM_KEY_PHOTO_TYPE, userDAO.getProfessor().getType());
-            claims.put(CLAIM_KEY_PHOTO_BYTE, vlService.decompressZLib(userDAO.getProfessor().getPicByte()));
+           // claims.put(CLAIM_KEY_PHOTO, userDAO.getProfessor().getPhotoProfessor());
+            claims.put(CLAIM_KEY_PHOTO_NAME, userDAO.getProfessor().getPhotoProfessor().getNameFile());
+            claims.put(CLAIM_KEY_PHOTO_TYPE, userDAO.getProfessor().getPhotoProfessor().getType());
+            claims.put(CLAIM_KEY_PHOTO_BYTE, vlService.decompressZLib(userDAO.getProfessor().getPhotoProfessor().getPicByte()));
         }else if(userDAO.getRole().equals("studente")){
             claims.put(CLAIM_KEY_FIRSTNAME, userDAO.getStudent().getFirstName());
             claims.put(CLAIM_KEY_NAME, userDAO.getStudent().getName());
             claims.put(CLAIM_KEY_ID, userDAO.getStudent().getId());
-            claims.put(CLAIM_KEY_PHOTO_NAME, userDAO.getStudent().getNameFile());
-            claims.put(CLAIM_KEY_PHOTO_TYPE, userDAO.getStudent().getType());
-            claims.put(CLAIM_KEY_PHOTO_BYTE, vlService.decompressZLib(userDAO.getStudent().getPicByte()));
+           // claims.put(CLAIM_KEY_PHOTO, userDAO.getStudent().getPhotoStudent());
+            claims.put(CLAIM_KEY_PHOTO_NAME, userDAO.getStudent().getPhotoStudent().getNameFile());
+            claims.put(CLAIM_KEY_PHOTO_TYPE, userDAO.getStudent().getPhotoStudent().getType());
+            claims.put(CLAIM_KEY_PHOTO_BYTE, vlService.decompressZLib(userDAO.getStudent().getPhotoStudent().getPicByte()));
         }
 
         return doGenerateToken(claims, userDetails.getUsername());

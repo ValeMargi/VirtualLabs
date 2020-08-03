@@ -5,7 +5,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 @Data
 public class HomeworkDTO extends RepresentationModel<HomeworkDTO> {
-    private String id;
+    private Long id;
     private  String status;
     private boolean permanent;
     private String grade;

@@ -2,6 +2,7 @@ package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.*;
 
+import it.polito.ai.virtualLabs.entities.AvatarStudent;
 import it.polito.ai.virtualLabs.entities.UserDAO;
 import it.polito.ai.virtualLabs.dtos.ProfessorDTO;
 import it.polito.ai.virtualLabs.repositories.UserRepository;
@@ -77,20 +78,22 @@ public class UserController {
                 ProfessorDTO professorDTO = new ProfessorDTO(inputLogin.get("id"),
                                                              inputLogin.get("firstName"),
                                                              inputLogin.get("name"),
-                                                             inputLogin.get("email"),
-                                                             file.getOriginalFilename(),
-                                                             file.getContentType(),
-                                                             vlService.compressZLib(file.getBytes()));
-                return authenticationService.addProfessor(professorDTO, inputLogin.get("password"));
+                                                             inputLogin.get("email"));
+                AvatarProfessorDTO avatarProfessorDTO = new AvatarProfessorDTO();
+                avatarProfessorDTO.setName( file.getOriginalFilename());
+                avatarProfessorDTO.setType(file.getContentType());
+                avatarProfessorDTO.setPicByte(vlService.compressZLib(file.getBytes()));
+                return authenticationService.addProfessor(professorDTO, inputLogin.get("password"), avatarProfessorDTO);
             } else {
                 StudentDTO studentDTO = new StudentDTO(inputLogin.get("id"),
                                                        inputLogin.get("firstName"),
                                                        inputLogin.get("firstName"),
-                                                       inputLogin.get("email"),
-                                                       file.getOriginalFilename(),
-                                                       file.getContentType(),
-                                                       vlService.compressZLib(file.getBytes()));
-                return authenticationService.addStudent(studentDTO, inputLogin.get("password"));
+                                                       inputLogin.get("email"));
+                AvatarStudentDTO avatarStudentDTO = new AvatarStudentDTO();
+                avatarStudentDTO.setName( file.getOriginalFilename());
+                avatarStudentDTO.setType(file.getContentType());
+                avatarStudentDTO.setPicByte(vlService.compressZLib(file.getBytes()));
+                return authenticationService.addStudent(studentDTO, inputLogin.get("password"),avatarStudentDTO);
             }
         }
     }

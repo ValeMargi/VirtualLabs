@@ -11,15 +11,15 @@ import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor
-public class VM extends Image{
+public class VM{
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private  Long id;
+    private String nameVM;
     private int  numVcpu, diskSpace, ram;
     private String status;
 
-    //AGGIUNTI
-    private Timestamp timestamp;
+    private String timestamp;
 
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "vm_student",
@@ -41,9 +41,9 @@ public class VM extends Image{
     @JoinColumn(name="team_id")
     Team team;
 
-    /*@OneToOne
+    @OneToOne
     @JoinColumn(name="photo_id")
-    PhotoVM photoVM;*/
+    PhotoVM photoVM;
 
     public boolean addStudentToOwnerList(Student s){
         if(s!=null && !ownersVM.contains(s)){
@@ -81,13 +81,13 @@ public class VM extends Image{
         return false;
     }
 
-   /* public void photoVM(PhotoVM p){
+    public void photoVM(PhotoVM p){
         if(p!=null && photoVM!=p){
             photoVM=p;
             p.setVM(this);
         }
     }
-    */
+
 
     public void setCourse(Course c){
         if(c!=null && c!=course){

@@ -12,8 +12,7 @@ import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor
-public class Student extends Image{
+public class Student{
     @Id
     @CsvBindByName
     private String id;
@@ -36,10 +35,10 @@ public class Student extends Image{
     @ManyToMany(mappedBy ="ownersVM")
     private List<VM> ownersVM = new ArrayList<>();
 
-   /* @OneToOne //(fetch = FetchType.EAGER) default
+   @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
     AvatarStudent photoStudent;
-    */
+
 
     @OneToMany(mappedBy = "student")
     private List<Homework> homeworks = new ArrayList<>();
@@ -62,13 +61,13 @@ public class Student extends Image{
         }
     }
 
-   /* public void setPhotoStudent(AvatarStudent avatarStudent){
+    public void setPhotoStudent(AvatarStudent avatarStudent){
         if(avatarStudent!=null){
             photoStudent = avatarStudent;
             avatarStudent.setStudent(this);
         }
     }
-    */
+
 
     public  void setTeamForStudent(Team t){
         if(t!=null && !teams.contains(t)){

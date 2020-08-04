@@ -9,7 +9,8 @@ import java.util.List;
 @Entity
 @Data
 public class Team {
-    @Id @GeneratedValue(generator="optimized-sequence")
+    //@Id @GeneratedValue(generator="optimized-sequence")
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private  String name;
     private int status, maxVpcuLeft, diskSpaceLeft, ramLeft, runningInstances, totInstances;

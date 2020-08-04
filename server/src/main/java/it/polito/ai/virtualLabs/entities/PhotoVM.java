@@ -10,7 +10,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Entity(name = "PhotoVM")
 public class PhotoVM extends Image{
-    @Id @GeneratedValue(generator="optimized-sequence")
+   // @Id @GeneratedValue(generator="optimized-sequence")
+   @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
     @OneToOne(mappedBy = "photoVM")
     private VM vm;

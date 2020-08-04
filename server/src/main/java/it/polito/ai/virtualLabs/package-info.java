@@ -1,4 +1,4 @@
-@GenericGenerator(
+/*@GenericGenerator(
         name = "optimized-sequence",
         strategy = "enhanced-sequence",
         parameters = {
@@ -11,3 +11,4 @@ package it.polito.ai.virtualLabs;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+*/

@@ -13,7 +13,8 @@ import java.util.Date;
 public class PasswordResetToken {
     private static final int EXPIRATION = 60 * 24;
 
-    @Id @GeneratedValue(generator="optimized-sequence")
+    //@Id @GeneratedValue(generator="optimized-sequence")
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String token;

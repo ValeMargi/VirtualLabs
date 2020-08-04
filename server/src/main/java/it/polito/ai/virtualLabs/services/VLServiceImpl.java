@@ -231,22 +231,27 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public boolean addProfessorToCourse(String courseId, ProfessorDTO professor) {
+    public ProfessorDTO addProfessorToCourse(String courseId, String professorId) {
         Optional<Course> oc= courseRepository.findById(courseId);
         if ( !oc.isPresent())  {
            throw new CourseNotFoundException();
         }
         Course c = oc.get();
-        Optional<Professor> p =professorRepository.findById(professor.getId());
-        if(!p.isPresent()){
+        Optional<Professor> op =professorRepository.findById(professorId);
+        if(!op.isPresent()){
             throw new ProfessorNotFoundException();
         }else if(getProfessorsForCourse(courseId).stream()
-                .noneMatch(pf ->pf.getId()
-                        .equals(SecurityContextHolder.getContext().getAuthentication().getName()))){
+                                                  .noneMatch(pf ->pf.getId()
+                                                  .equals(SecurityContextHolder.getContext().getAuthentication().getName()))){
             throw new PermissionDeniedException();
         }else{
-            c.setProfessor(p.get());
-            return  true;
+            Professor p = op.get();
+            if( !c.getProfessors().contains(p))
+            {
+                c.setProfessor(p);
+                return modelMapper.map(p, ProfessorDTO.class);
+            }else throw new ProfessorAlreadyPresentInCourse();
+
     }
     }
 

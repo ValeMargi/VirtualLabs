@@ -24,7 +24,7 @@ public interface VLService {
     boolean modifyCourse(CourseDTO course);
     Optional<CourseDTO> getCourse(String name);
     List<CourseDTO> getAllCourses();
-    boolean addProfessorToCourse(String courseId, ProfessorDTO professor);
+    ProfessorDTO addProfessorToCourse(String courseId, String professorId);
     void enableCourse(String courseName);
     void disableCourse(String courseName);
     List<CourseDTO> getCoursesForStudent(String studentId);

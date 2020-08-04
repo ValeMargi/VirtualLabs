@@ -93,37 +93,44 @@ public class CourseController {
     /**
      * Metodo: POST
      * Authority: Docente
-     * @param professorDTO: parametro acquisito dal corspo della richiesta (String id, name, firstName, email;)
+     * @param professorId: parametro acquisito dal corspo della richiesta (String idProfessor MATRICOLA es p1;)
      * @param courseName:  riceve dal path il nome di un Corso
      * @return: ritorna il DTO del professore aggiunto al corso con CourseName indicato
      * @return: ritorna il DTO del professore aggiaddAssunto al corso con CourseName indicato
      */
     @PostMapping({"/{courseName}/addProfessor"})
-    public ProfessorDTO addProfessorToCourse(@RequestBody ProfessorDTO professorDTO, @PathVariable String courseName){
-        if(vlService.addProfessorToCourse(courseName, professorDTO)){
-            return ModelHelper.enrich(professorDTO);
-        }else
-            throw new ResponseStatusException(HttpStatus.CONFLICT, professorDTO.getName());
+    public ProfessorDTO addProfessorToCourse(@RequestBody String professorId, @PathVariable String courseName){
+        try{
+            return ModelHelper.enrich(vlService.addProfessorToCourse(courseName, professorId));
+        }catch(CourseNotFoundException | ProfessorNotFoundException  | ProfessorAlreadyPresentInCourse e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch(PermissionDeniedException e){
+            throw  new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+
     }
 
 
     /**
      * Metodo: POST
      * Authority: Docente
-     * @param input: Nel corpo della richiesta vengono passati gli id degli studenti da iscrivere al corso con nome courseName."
-     *               Esempio Body: {"id": "s1", "id": "s2"}
+     * @param input: Nel corpo della richiesta viene passato  id dello studente da iscrivere al corso con nome courseName."
+     *               Esempio Body: {"id": "s1"}
      * @param courseName: riceve dal path il nome di un Corso
      */
     @PostMapping("/{courseName}/enrollOne")
     @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
     public void enrollOne(@RequestBody Map<String, String> input, @PathVariable String courseName){
         if( !input.containsKey("id"))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, input.get("id"));
-        try {
+        try{
             if (!vlService.addStudentToCourse(input.get("id"), courseName))
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+courseName+" not present");
-        }catch (PermissionDeniedException permissionException){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, permissionException.getMessage());
+                throw new StudentAlreadyInCourse();
+        }catch (StudentNotFoundException | CourseNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch(PermissionDeniedException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 
@@ -155,6 +162,7 @@ public class CourseController {
      * @param enabled: flag (true/false) che indica se il Professore deve abilitare/disabilitare il dato corso
      */
     @PostMapping("/{courseName}/enable")
+    @ResponseBody
     public void enableCourse(@PathVariable String courseName, @RequestBody Boolean enabled){
         try {
             if(enabled)
@@ -170,27 +178,9 @@ public class CourseController {
         }
     }
 
-    /**
-     * Metodo: GET
-     * Authority: Studente
-     * @param studentId: riceve dal path l'id di uno studente
-     * @return: ritorna una lista di DTO dei corsi a cui lo studente con studentId indicato è iscritto
-     */
-    @GetMapping("/{studentId}")
-    public List<CourseDTO>  getCoursesForStudent(@PathVariable String studentId){
-            return vlService.getCoursesForStudent(studentId).stream().map(c-> ModelHelper.enrich(c)).collect(Collectors.toList());
-    }
 
-    /**
-     * Metodo: GET
-     * Authority: Docente
-     * @param professorId: riceve dal path l'id di un professore
-     * @return: ritorna una lista di DTO dei corsi di cui il professore con professorId indicato è titolare
-     */
-    @GetMapping("/{professorId}")
-    public List<CourseDTO>  getCoursesForProfessor(@PathVariable String professorId){
-        return vlService.getCoursesForProfessor(professorId).stream().map(c-> ModelHelper.enrich(c)).collect(Collectors.toList());
-    }
+
+
 
 
     /**

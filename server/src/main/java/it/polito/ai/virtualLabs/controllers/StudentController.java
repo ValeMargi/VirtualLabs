@@ -33,9 +33,13 @@ public class StudentController {
             return ModelHelper.enrich(studentDTO.get());
     }
 
-
-
-    /*GET mapping request to see the list of courses enrolled by a student with studentId*/
+    /**
+     * Metodo: GET
+     * Authority: Studente
+     * @param studentId: riceve dal path l'id di uno studente
+     * @return: ritorna una lista di DTO dei corsi a cui lo studente con studentId indicato è iscritto
+     */
+      /*GET mapping request to see the list of courses enrolled by a student with studentId*/
     @GetMapping("/{studentId}/courses")
     public List<CourseDTO> getCourses(@PathVariable String studentId) {
         try {

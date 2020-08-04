@@ -13,7 +13,7 @@ import javax.validation.constraints.Email;
 
 @Data
 @ToString(exclude = {"photoProfessor", "courses"})
-@EqualsAndHashCode(exclude="courses")
+//@EqualsAndHashCode(exclude="courses")
 @Entity
 public class Professor {
     @Id

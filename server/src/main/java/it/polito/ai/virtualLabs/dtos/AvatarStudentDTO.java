@@ -7,7 +7,7 @@ import org.springframework.hateoas.RepresentationModel;
 public class AvatarStudentDTO extends RepresentationModel<AvatarStudentDTO> {
 
     private  Long id;
-    private String name;
+    private String nameFile;
     private String type;
     private byte[] picByte;
 }

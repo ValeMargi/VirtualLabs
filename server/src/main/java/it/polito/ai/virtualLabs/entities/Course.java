@@ -1,6 +1,8 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
+import lombok.ToString;
+import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = {"professors"})
 public class Course {
 
     private String acronym;
@@ -25,6 +28,8 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private List<Team> teams = new ArrayList<>();
 
+   // @ToString.Exclude
+    //@HashCodeExclude
     @ManyToMany //(fetch = FetchType.EAGER) default
     @JoinColumn(name="professor_id")
     List<Professor> professors = new ArrayList<>();

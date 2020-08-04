@@ -53,9 +53,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
    public Optional<UserDTO> addStudent(StudentDTO student, String password,  AvatarStudentDTO avatarStudentDTO) {
            if (  !studentRepository.findById(student.getId()).isPresent() )  {
                Student s = modelMapper.map( student, Student.class);
-               AvatarStudent avatarStudent =modelMapper.map(avatarStudentDTO,AvatarStudent.class);
-               s.setPhotoStudent(avatarStudent);
                studentRepository.saveAndFlush(s);
+               AvatarStudent avatarStudent = modelMapper.map(avatarStudentDTO,AvatarStudent.class);
+               s.setPhotoStudent(avatarStudent);
                UserDTO user = new UserDTO();
                //user.setPassword(UUID.randomUUID().toString());
                user.setPassword(password); //passwordEncoder.encode(password));
@@ -67,9 +67,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                                "Your data to access are as follows::\n\n" +
                                "Username:  " + user.getEmail() +"\n"+
                                "Password:   " + user.getPassword());
-            jwtUserDetailsService.save(user);
-            avatarStudentRepository.saveAndFlush(avatarStudent);
-            return Optional.ofNullable(user);
+                avatarStudentRepository.save(avatarStudent);
+                studentRepository.save(s);
+               jwtUserDetailsService.save(user, s, null);
+                return Optional.ofNullable(user);
                }
                return null;
            }
@@ -78,9 +79,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public Optional<UserDTO> addProfessor(ProfessorDTO professor, String password,  AvatarProfessorDTO avatarProfessorDTO) {
         if ( !professorRepository.findById(professor.getId()).isPresent() )  {
             Professor p = modelMapper.map( professor, Professor.class);
+            professorRepository.saveAndFlush(p);
             AvatarProfessor avatarProfessor = modelMapper.map(avatarProfessorDTO, AvatarProfessor.class);
             p.setPhotoProfessor(avatarProfessor);
-            professorRepository.saveAndFlush(p);
+
             UserDTO user = new UserDTO();
             // user.setPassword(UUID.randomUUID().toString());
             user.setPassword(password); //passwordEncoder.encode(password));
@@ -92,8 +94,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             "Your data to access are as follows::\n\n" +
                             "Username:  " + user.getEmail() + "\n"+
                             "Password:   " + user.getPassword());
-            jwtUserDetailsService.save(user);
             avatarProfessorRepository.saveAndFlush(avatarProfessor);
+            professorRepository.save(p);
+            jwtUserDetailsService.save(user, null, p);
+
             return Optional.ofNullable(user);
             }
             return null;
@@ -108,7 +112,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             admin.setPassword("admin");
             admin.setRole("admin");
             admin.setEmail("admin"); //??
-            jwtUserDetailsService.save(admin);
+            jwtUserDetailsService.save(admin, null, null);
         }
     }
 

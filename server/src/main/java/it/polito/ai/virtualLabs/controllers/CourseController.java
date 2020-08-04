@@ -332,7 +332,7 @@ public class CourseController {
             vmdto.setStatus("off");
 
             PhotoVMDTO photoVMDTO = new PhotoVMDTO();
-            photoVMDTO.setName(file.getOriginalFilename());
+            photoVMDTO.setNameFile(file.getOriginalFilename());
             photoVMDTO.setType(file.getContentType());
             photoVMDTO.setPicByte(vlService.compressZLib(file.getBytes()));
             vmdto.setTimestamp( date.toString());
@@ -456,7 +456,7 @@ public class CourseController {
 
           //  Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
             PhotoAssignmentDTO photoAssignmentDTO = new PhotoAssignmentDTO();
-            photoAssignmentDTO.setName(file.getOriginalFilename());
+            photoAssignmentDTO.setNameFile(file.getOriginalFilename());
             photoAssignmentDTO.setType(file.getContentType());
             photoAssignmentDTO.setPicByte(vlService.compressZLib(file.getBytes()));
             photoAssignmentDTO.setTimestamp( date.toString());
@@ -506,7 +506,7 @@ public class CourseController {
         try {
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
             PhotoVersionHomeworkDTO photoVersionHomeworkDTO = new PhotoVersionHomeworkDTO();
-            photoVersionHomeworkDTO.setName(file.getOriginalFilename());
+            photoVersionHomeworkDTO.setNameFile(file.getOriginalFilename());
             photoVersionHomeworkDTO.setType(file.getContentType());
             photoVersionHomeworkDTO.setPicByte(vlService.compressZLib(file.getBytes()));
             photoVersionHomeworkDTO.setTimestamp(timestamp.toString());

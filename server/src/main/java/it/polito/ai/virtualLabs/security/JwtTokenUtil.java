@@ -78,7 +78,7 @@ public class JwtTokenUtil implements Serializable {
            // claims.put(CLAIM_KEY_PHOTO, userDAO.getStudent().getPhotoStudent());
             claims.put(CLAIM_KEY_PHOTO_NAME, userDAO.getStudent().getPhotoStudent().getNameFile());
             claims.put(CLAIM_KEY_PHOTO_TYPE, userDAO.getStudent().getPhotoStudent().getType());
-            claims.put(CLAIM_KEY_PHOTO_BYTE, vlService.decompressZLib(userDAO.getStudent().getPhotoStudent().getPicByte()));
+        //    claims.put(CLAIM_KEY_PHOTO_BYTE, vlService.decompressZLib(userDAO.getStudent().getPhotoStudent().getPicByte()));
         }
 
         return doGenerateToken(claims, userDetails.getUsername());

@@ -28,11 +28,11 @@ public class VirtualLabsApplication {
             @Override
             public void run(String... args) throws Exception {
 
-                PhotoCorrectionDTO pc = new PhotoCorrectionDTO();
-                pc.setIdProfessor("p1");
-                photoc.saveAndFlush(modelMapper().map(pc, PhotoCorrection.class));
-                PhotoVersionHomeworkDTO ph = new PhotoVersionHomeworkDTO();
-                pvh.saveAndFlush(modelMapper().map(ph, PhotoVersionHomework.class));
+          //      PhotoCorrectionDTO pc = new PhotoCorrectionDTO();
+          //      pc.setIdProfessor("p1");
+           //     photoc.saveAndFlush(modelMapper().map(pc, PhotoCorrection.class));
+          //      PhotoVersionHomeworkDTO ph = new PhotoVersionHomeworkDTO();
+           //     pvh.saveAndFlush(modelMapper().map(ph, PhotoVersionHomework.class));
             }
         };
 

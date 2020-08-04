@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 public class PhotoVersionHomeworkDTO extends RepresentationModel<PhotoVersionHomeworkDTO> {
     private String timestamp;
     private  Long id;
-    private String name;
+    private String nameFile;
     private String type;
     private byte[] picByte;
 

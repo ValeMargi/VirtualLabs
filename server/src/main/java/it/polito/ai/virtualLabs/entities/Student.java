@@ -1,8 +1,7 @@
 package it.polito.ai.virtualLabs.entities;
 
 import com.opencsv.bean.CsvBindByName;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.apache.commons.beanutils.PropertyUtilsBean;
 
 import javax.persistence.*;
@@ -12,6 +11,9 @@ import java.util.List;
 
 @Entity
 @Data
+//@Getter
+//@Setter
+//@RequiredArgsConstructor
 public class Student{
     @Id
     @CsvBindByName
@@ -62,7 +64,7 @@ public class Student{
     }
 
     public void setPhotoStudent(AvatarStudent avatarStudent){
-        if(avatarStudent!=null){
+        if(avatarStudent!=null && photoStudent!=avatarStudent){
             photoStudent = avatarStudent;
             avatarStudent.setStudent(this);
         }

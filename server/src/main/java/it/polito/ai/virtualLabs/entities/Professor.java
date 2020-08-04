@@ -1,7 +1,10 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,8 +12,9 @@ import java.util.List;
 import javax.validation.constraints.Email;
 
 @Data
+@ToString(exclude = {"photoProfessor", "courses"})
+@EqualsAndHashCode(exclude="courses")
 @Entity
-
 public class Professor {
     @Id
     private String id;
@@ -18,9 +22,13 @@ public class Professor {
     @Email
     private String email;
 
+    //@ToString.Exclude
+  //  @HashCodeExclude
     @ManyToMany(mappedBy = "professors")
     private List<Course> courses = new ArrayList<>();
 
+    //@HashCodeExclude
+   // @ToString.Exclude
     @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
     AvatarProfessor photoProfessor;
@@ -37,7 +45,7 @@ public class Professor {
     }
 
     public  void setPhotoProfessor(AvatarProfessor a){
-        if( a!= null){
+        if( a!= null && a!=photoProfessor){
             photoProfessor = a;
             a.setProfessor(this);
         }

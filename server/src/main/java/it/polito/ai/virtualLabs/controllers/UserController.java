@@ -62,38 +62,38 @@ public class UserController {
     //TO DO image student upload ------->
     @PostMapping("/addUser")
     //public Optional<UserDTO> registerUser(@RequestBody String firstName,  String name, String id, String password, String email){
-    public Optional<UserDTO> registerUser(@RequestPart("file") @Valid @NotNull MultipartFile file, @RequestPart Map<String, String> inputLogin) throws IOException {
+    public Optional<UserDTO> registerUser(@RequestPart("file") @Valid @NotNull MultipartFile file, @RequestPart Map<String, String> registerData) throws IOException {
 
-        if(!inputLogin.containsKey("firstName") || !inputLogin.containsKey("name") || !inputLogin.containsKey("id")
-          || !inputLogin.containsKey("email") || !inputLogin.containsKey("password")){
+        if(!registerData.containsKey("firstName") || !registerData.containsKey("name") || !registerData.containsKey("id")
+          || !registerData.containsKey("email") || !registerData.containsKey("password")){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters for login not found");
         }
-        if (!inputLogin.get("email").matches("^[A-z0-9\\.\\+_-]+@polito.it") || !inputLogin.get("email").matches("^[A-z0-9\\.\\+_-]+@studenti.polito.it")) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email " + inputLogin.get("email") + " not supported");
-        } else if (!jwtUserDetailsService.checkUsernameInUserRepo(inputLogin.get("email"))) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with email" + inputLogin.get("email") + "  already present");
+        if (!registerData.get("email").toString().matches("^[A-z0-9\\.\\+_-]+@polito.it") && !registerData.get("email").toString().matches("^[A-z0-9\\.\\+_-]+@studenti.polito.it")) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email " + registerData.get("email") + " not supported");
+        } else if (!jwtUserDetailsService.checkUsernameInUserRepo(registerData.get("email"))) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with email" + registerData.get("email") + "  already present");
         } else {
            // Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
-            if (inputLogin.get("email").matches("^[A-z0-9\\.\\+_-]+@polito.it")) { //Professor
-                ProfessorDTO professorDTO = new ProfessorDTO(inputLogin.get("id"),
-                                                             inputLogin.get("firstName"),
-                                                             inputLogin.get("name"),
-                                                             inputLogin.get("email"));
+            if (registerData.get("email").matches("^[A-z0-9\\.\\+_-]+@polito.it")) { //Professor
+                ProfessorDTO professorDTO = new ProfessorDTO(registerData.get("id"),
+                                                             registerData.get("firstName"),
+                                                             registerData.get("name"),
+                                                             registerData.get("email"));
                 AvatarProfessorDTO avatarProfessorDTO = new AvatarProfessorDTO();
-                avatarProfessorDTO.setName( file.getOriginalFilename());
+                avatarProfessorDTO.setNameFile( file.getOriginalFilename());
                 avatarProfessorDTO.setType(file.getContentType());
                 avatarProfessorDTO.setPicByte(vlService.compressZLib(file.getBytes()));
-                return authenticationService.addProfessor(professorDTO, inputLogin.get("password"), avatarProfessorDTO);
+                return authenticationService.addProfessor(professorDTO, registerData.get("password"), avatarProfessorDTO);
             } else {
-                StudentDTO studentDTO = new StudentDTO(inputLogin.get("id"),
-                                                       inputLogin.get("firstName"),
-                                                       inputLogin.get("firstName"),
-                                                       inputLogin.get("email"));
+                StudentDTO studentDTO = new StudentDTO(registerData.get("id"),
+                                                       registerData.get("firstName"),
+                                                       registerData.get("name"),
+                                                       registerData.get("email"));
                 AvatarStudentDTO avatarStudentDTO = new AvatarStudentDTO();
-                avatarStudentDTO.setName( file.getOriginalFilename());
+                avatarStudentDTO.setNameFile( file.getOriginalFilename());
                 avatarStudentDTO.setType(file.getContentType());
                 avatarStudentDTO.setPicByte(vlService.compressZLib(file.getBytes()));
-                return authenticationService.addStudent(studentDTO, inputLogin.get("password"),avatarStudentDTO);
+                return authenticationService.addStudent(studentDTO, registerData.get("password"),avatarStudentDTO);
             }
         }
     }

@@ -69,7 +69,7 @@ public class VLServiceImpl implements VLService{
     @Autowired
     PhotoCorrectionRepository photoCorrectionRepository;
 
-    /*SERVICE STUDENTE*/
+    /*SERVICE student*/
     @Override
     public Optional<StudentDTO> getStudent(String studentId) {
         return studentRepository.findById(studentId)
@@ -98,7 +98,7 @@ public class VLServiceImpl implements VLService{
         }
     }
 
-    @PreAuthorize("hasAuthority('docente')")  //hasROLE????
+    @PreAuthorize("hasAuthority('professor')")  //hasROLE????
     @Override
     public boolean addStudentToCourse(String studentId, String courseName) {
         Optional<Student> student = studentRepository.findById(studentId);
@@ -128,8 +128,8 @@ public class VLServiceImpl implements VLService{
     }
 
 
-    /*Metodo per eliminare studente da un corso deleteStudentFromCourse*/
-    @PreAuthorize("hasAuthority('docente')")  //hasROLE????
+    /*Metodo per eliminare student da un corso deleteStudentFromCourse*/
+    @PreAuthorize("hasAuthority('professor')")  //hasROLE????
     @Override
     public boolean deleteStudentFromCourse(String studentId, String courseName) {
         Optional<Student> student = studentRepository.findById(studentId);
@@ -176,7 +176,7 @@ public class VLServiceImpl implements VLService{
         return  studentsIds.stream().map( s -> addStudentToCourse(s, courseName)).collect(Collectors.toList());
     }
 
-    /*@PreAuthorize("hasAuthority('docente')") serviva per lab, add and roll
+    /*@PreAuthorize("hasAuthority('professor')") serviva per lab, add and roll
     @Override
     public  List<Boolean> addAndEnroll(Reader r, String courseName){
         try {
@@ -195,7 +195,7 @@ public class VLServiceImpl implements VLService{
      */
 
 
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public  List<Boolean> EnrollAllFromCSV(Reader r, String courseName){
         try {
@@ -212,26 +212,24 @@ public class VLServiceImpl implements VLService{
 
 
     /*SERVICE CORSO*/
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public boolean addCourse(CourseDTO course) {
         if ( !courseRepository.findById(course.getName()).isPresent())  {
             Course c = modelMapper.map( course, Course.class);
-
             String idProfessor= (SecurityContextHolder.getContext().getAuthentication().getName());
             Optional<Professor> op = professorRepository.findById(idProfessor);
             if(op.isPresent()){
                 Professor p=op.get();
                 c.setProfessor(p);
-                courseRepository.save(c);
-                courseRepository.flush();
+                courseRepository.saveAndFlush(c);
                 return true;
             }else throw new ProfessorNotFoundException();
         }
         return false;
     }
 
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public boolean addProfessorToCourse(String courseId, ProfessorDTO professor) {
         Optional<Course> oc= courseRepository.findById(courseId);
@@ -269,7 +267,7 @@ public class VLServiceImpl implements VLService{
                 .collect(Collectors.toList());
     }
 
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public void enableCourse(String courseName) {
         try{
@@ -286,7 +284,7 @@ public class VLServiceImpl implements VLService{
         }
     }
 
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public void disableCourse(String courseName) {
         try{
@@ -304,7 +302,7 @@ public class VLServiceImpl implements VLService{
     }
 
 
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public List<CourseDTO> getCoursesForStudent(String studentId){
         try{
@@ -314,7 +312,7 @@ public class VLServiceImpl implements VLService{
             throw new StudentNotFoundException();
         }
     }
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public List<CourseDTO> getCoursesForProfessor(String professorId){
         try{
@@ -326,7 +324,7 @@ public class VLServiceImpl implements VLService{
     }
 
     /*Metodo per cancellare corso*/
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public boolean removeCourse(String courseId) {
         Optional<Course> oc= courseRepository.findById(courseId);
@@ -349,7 +347,7 @@ public class VLServiceImpl implements VLService{
     }
 
     /*Metodo per modificare corso (modificare min,max,acronimo)*/
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public boolean modifyCourse(CourseDTO course) {
         Optional<Course> oc=courseRepository.findById(course.getName());
@@ -372,7 +370,7 @@ public class VLServiceImpl implements VLService{
 
 
     /*---> SERVICE GRUPPO*/
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public List<TeamDTO> getTeamsForStudent(String studentId){
         try {
@@ -395,7 +393,7 @@ public class VLServiceImpl implements VLService{
     }
 
 
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public  TeamDTO proposeTeam(String courseId, String name, List<String> memberIds){
         Optional<Course> course = courseRepository.findById(courseId);
@@ -448,7 +446,7 @@ public class VLServiceImpl implements VLService{
         return  modelMapper.map(team, TeamDTO.class);
     }
 
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public List<TeamDTO> getTeamForCourse(String courseName){
         try{
@@ -460,7 +458,7 @@ public class VLServiceImpl implements VLService{
 
     }
 
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public List<StudentDTO> getStudentsInTeams(String courseName){
         if( courseRepository.findById(courseName).isPresent())
@@ -470,7 +468,7 @@ public class VLServiceImpl implements VLService{
         else throw new CourseNotFoundException();
     }
 
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public List<StudentDTO>  getAvailableStudents(String courseName){
         if( courseRepository.findById(courseName).isPresent())
@@ -527,16 +525,16 @@ public class VLServiceImpl implements VLService{
 
 
     /*SERVICE MODELLO VM*/
-    /*Docente può caricare solo un modello per corso e può modificare i parametri per ogni gruppo*/
+    /*professor può caricare solo un modello per corso e può modificare i parametri per ogni gruppo*/
 
     /**
      *
-     * @param courseDTO: contiene le informazioni del modello VM creato dal docente per il corso con courseId indicato
+     * @param courseDTO: contiene le informazioni del modello VM creato dal professor per il corso con courseId indicato
      * @param courseId: nome del corso identificato
      * @param photoModelVM: screenshot del modello VM creato
      * @return
      */
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public boolean addModelVM(CourseDTO courseDTO, String courseId, PhotoModelVM photoModelVM) {
         Optional<Course> oc = courseRepository.findById(courseId);
@@ -585,7 +583,7 @@ public class VLServiceImpl implements VLService{
      * @param courseId: identificativo del corso
      * @return
      */
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public boolean addVM(VMDTO vmdto, String courseId, PhotoVMDTO photoVMDTO) {
         if ( !VMRepository.findById(vmdto.getId()).isPresent())  {
@@ -622,7 +620,7 @@ public class VLServiceImpl implements VLService{
 
 
     /*Metodo per rendere determinati membri del team owner di una data VM*/
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public boolean addOwner(String VMid, String courseId, List<String> studentsId) { //CourseId preso dal pathVariable
        Optional<VM> ovm= VMRepository.findById(VMid);
@@ -634,7 +632,7 @@ public class VLServiceImpl implements VLService{
             if(!vm.getCourse().equals(c))
                 throw new PermissionDeniedException();
                 String studentAuth = SecurityContextHolder.getContext().getAuthentication().getName();
-                if (vm.getOwnersVM().stream().anyMatch(s->s.getId().equals(studentAuth))) //lo studente autenticato è già owner della VM, può quindi aggiungere altri owner
+                if (vm.getOwnersVM().stream().anyMatch(s->s.getId().equals(studentAuth))) //lo student autenticato è già owner della VM, può quindi aggiungere altri owner
                 {
                     if(vm.getMembersVM().containsAll(studentsId)) //tutti lgi studenti fanno parte del team
                     {
@@ -650,7 +648,7 @@ public class VLServiceImpl implements VLService{
     }
 
      /*Metodo per attivare VM, controllo se l'utente autenticato è un owner della VM*/
-        @PreAuthorize("hasAuthority('studente')")
+        @PreAuthorize("hasAuthority('student')")
         @Override
         public boolean activateVM(String VMid ){ //CourseId preso dal pathVariable
             Optional<VM> vm = VMRepository.findById(VMid);
@@ -664,7 +662,7 @@ public class VLServiceImpl implements VLService{
         }
 
     /*Metodo per spegnere VM, controllo se l'utente autenticato è un owner della VM*/
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public boolean disableVM(String VMid ){ //CourseId preso dal pathVariable
         Optional<VM> vm = VMRepository.findById(VMid);
@@ -677,7 +675,7 @@ public class VLServiceImpl implements VLService{
         return true;
     }
     /*Metodo per cancellare VM, controllo se l'utente autenticato è un owner della VM*/
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public boolean removeVM(String VMid){ //CourseId preso dal pathVariable
         Optional<VM> ovm = VMRepository.findById(VMid);
@@ -695,8 +693,8 @@ public class VLServiceImpl implements VLService{
         return true;
     }
 
-    /*Visualizzare VM accessibili allo studente in tab corso*/
-    @PreAuthorize("hasAuthority('studente')")
+    /*Visualizzare VM accessibili allo student in tab corso*/
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public List<VMDTO> allVMforStudent( String courseId) { //CourseId preso dal pathVariable
         String student =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -712,8 +710,8 @@ public class VLServiceImpl implements VLService{
 
     }
 
-    /*Visualizzare VM accessibili al docente in tab corso*/
-    @PreAuthorize("hasAuthority('docente')")
+    /*Visualizzare VM accessibili al professor in tab corso*/
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public List<VMDTO> allVMforCourse( String courseId) { //CourseId preso dal pathVariable
         Optional<Course> oc= courseRepository.findById(courseId);
@@ -728,8 +726,8 @@ public class VLServiceImpl implements VLService{
         }else throw new CourseNotFoundException();
     }
 
-    /*Visualizzare VM con un certo VMid  allo studente in tab corso*/
-    @PreAuthorize("hasAuthority('studente')")
+    /*Visualizzare VM con un certo VMid  allo student in tab corso*/
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public PhotoVMDTO getVMforStudent( String courseId, String VMid) {
         String student =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -749,11 +747,11 @@ public class VLServiceImpl implements VLService{
         }else throw new TeamNotFoundException();
     }
 
-    /*Studente owner modifia risorse associate a VM se è spenta e se non superano i limiti imposti dal gruppo*/
+    /*student owner modifia risorse associate a VM se è spenta e se non superano i limiti imposti dal gruppo*/
 
 
     /*Per vedere chi è owner*/
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public boolean isOwner(  String VMid) { //CourseId preso dal pathVariable
         String student =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -771,7 +769,7 @@ public class VLServiceImpl implements VLService{
     }
 
     /*SERVICE CONSEGNA*/
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public boolean addAssignment( AssignmentDTO assignmentDTO,PhotoAssignmentDTO photoAssignmentDTO,  String courseId) { //CourseId preso dal pathVariable
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -801,7 +799,7 @@ public class VLServiceImpl implements VLService{
     }
 
     /*Metodo per ritornare le consegne di un dato corso*/
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public List<AssignmentDTO> allAssignment(  String courseId) { //CourseId preso dal pathVariable
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -818,7 +816,7 @@ public class VLServiceImpl implements VLService{
 
 
     /*Metodo per ritornare le consegne di un dato corso*/
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public List<AssignmentDTO> allAssignmentStudent(  String courseId) { //CourseId preso dal pathVariable
         String student = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -834,7 +832,7 @@ public class VLServiceImpl implements VLService{
         }else throw new StudentNotFoundException();
     }
     /*Metodo per ritornare la consegna di un dato corso*/
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public PhotoAssignmentDTO getAssignmentStudent( Long assignmentId ) { //CourseId preso dal pathVariable
         String student = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -857,7 +855,7 @@ public class VLServiceImpl implements VLService{
     }
 
     /*Metodo per ritornare la consegna di un dato corso*/
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public PhotoAssignmentDTO getAssignmentProfessor(Long assignmentId ) { //CourseId preso dal pathVariable
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -879,7 +877,7 @@ public class VLServiceImpl implements VLService{
 
 
     /*SERVICE ELABORATI*/
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override //uploadHomework
     public boolean uploadVersionHomework (Long homeworkId, PhotoVersionHomeworkDTO photoVersionHomeworkDTO) { //CourseId preso dal pathVariable
         String student = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -903,7 +901,7 @@ public class VLServiceImpl implements VLService{
         } else throw new PermissionDeniedException();
     }
 
-    //@PreAuthorize("hasAuthority('studente')")
+    //@PreAuthorize("hasAuthority('student')")
     @Override
     public boolean updateStatusHomework( Long homeworkId, String status) {
         Boolean isAuthenticated =SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
@@ -919,7 +917,7 @@ public class VLServiceImpl implements VLService{
     }
 
 
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public  List<Homework> allHomework(String courseName, String assignmentId){ //AGGIUNTA 28/07
         Optional<Course> oc= courseRepository.findById(courseName);
@@ -944,7 +942,7 @@ public class VLServiceImpl implements VLService{
      * di tutte le versioni di Homerwork per un certo corso
      * (evitando così di inviare anche tutte le immagini)
      */
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public  List<Map<String, Object>> getVersionsHMForProfessor( Long homeworkId){
         Optional<Homework> oh = homeworkRepository.findById(homeworkId);
@@ -968,7 +966,7 @@ public class VLServiceImpl implements VLService{
     }
 
 
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public  List<Map<String, Object>> getVersionsHMForStudent(Long assignmentId){
         Optional<Assignment> oa = assignmentRepository.findById(assignmentId);
@@ -992,7 +990,7 @@ public class VLServiceImpl implements VLService{
         }else throw new AssignmentNotFound();
     }
 
-    @PreAuthorize("hasAuthority('docente') || hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
     public  PhotoVersionHomeworkDTO getVersionHM(Long versionId){
 
@@ -1002,7 +1000,7 @@ public class VLServiceImpl implements VLService{
         {
             PhotoVersionHomework p =op.get();
             Homework h = p.getHomework();
-            if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("docente"))) {
+            if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("professor"))) {
                 if (!h.getAssignment().getCourseAssignment().getProfessors().stream().anyMatch(pr -> pr.getId().equals(auth)))
                     throw new PermissionDeniedException();
             }else {
@@ -1017,7 +1015,7 @@ public class VLServiceImpl implements VLService{
 
 
     /*Metodo per consegnare correzione*/
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public boolean uploadCorrection(Long homeworkId, Long versionHMid, PhotoCorrectionDTO photoCorrectionDTO,Boolean permanent) {
         Optional<Homework> oh = homeworkRepository.findById(homeworkId);
@@ -1041,7 +1039,7 @@ public class VLServiceImpl implements VLService{
         }throw new HomeworkNotFound();
     }
 
-    @PreAuthorize("hasAuthority('docente')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public  List<Map<String, Object>>  getCorrectionsForProfessor( Long homeworkId){
         Optional<Homework> oh = homeworkRepository.findById(homeworkId);
@@ -1066,7 +1064,7 @@ public class VLServiceImpl implements VLService{
         }else throw new HomeworkNotFound();
     }
 
-    @PreAuthorize("hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public List<Map<String, Object>> getCorrectionsForStudent(Long assignmentId){
         Optional<Assignment> oa = assignmentRepository.findById(assignmentId);
@@ -1090,7 +1088,7 @@ public class VLServiceImpl implements VLService{
         }else throw new AssignmentNotFound();
     }
 
-    @PreAuthorize("hasAuthority('docente') || hasAuthority('studente')")
+    @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
     public  PhotoCorrectionDTO getCorrectionHM(Long correctionId){
 
@@ -1100,7 +1098,7 @@ public class VLServiceImpl implements VLService{
         {
             PhotoCorrection p =op.get();
             Homework h = p.getHomework();
-            if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("docente"))) {
+            if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("professor"))) {
                 if (!h.getAssignment().getCourseAssignment().getProfessors().stream().anyMatch(pr -> pr.getId().equals(auth)))
                     throw new PermissionDeniedException();
             }else {

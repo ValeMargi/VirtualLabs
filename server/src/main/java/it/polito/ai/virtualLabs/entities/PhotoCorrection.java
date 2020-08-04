@@ -11,8 +11,7 @@ import java.sql.Timestamp;
 @Entity(name = "PhotoCorrection")
 public class PhotoCorrection extends  Image{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(generator="optimized-sequence")
     private  Long id;
 
     @ManyToOne

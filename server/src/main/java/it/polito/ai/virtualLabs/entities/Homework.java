@@ -10,8 +10,7 @@ import java.util.List;
 @Data
 @Entity
 public class Homework {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(generator="optimized-sequence")
     private  Long id;
     private  String status;
     private Boolean permanent; //false può essere  ancora modificato

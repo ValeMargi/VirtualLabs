@@ -10,8 +10,7 @@ import javax.persistence.*;
 @Entity(name = "PhotoModelVM")
 public class PhotoModelVM extends Image {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(generator="optimized-sequence")
     private  Long id;
 
     @OneToOne(mappedBy = "photoModelVM")

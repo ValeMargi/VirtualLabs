@@ -13,8 +13,10 @@ import java.util.List;
 @Entity
 public class Assignment {
 
+   // @Id
+    //@GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator="optimized-sequence")
     private  Long id;
     private  String nameAssignment;
     private Date releaseDate, expiration;

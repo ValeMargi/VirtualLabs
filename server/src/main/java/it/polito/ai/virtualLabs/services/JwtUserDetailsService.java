@@ -1,6 +1,8 @@
 package it.polito.ai.virtualLabs.services;
 
 import it.polito.ai.virtualLabs.dtos.UserDTO;
+import it.polito.ai.virtualLabs.entities.Professor;
+import it.polito.ai.virtualLabs.entities.Student;
 import it.polito.ai.virtualLabs.entities.UserDAO;
 import it.polito.ai.virtualLabs.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +40,15 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
 
-    public UserDAO save(UserDTO userDTO){
+    public UserDAO save(UserDTO userDTO, Student s, Professor p){
         UserDAO user= new UserDAO();
         user.setEmail(userDTO.getEmail());
         user.setPassword(bcryptEncoder.encode(userDTO.getPassword()));
         user.setRole(userDTO.getRole());
+        if(s!=null)
+            user.setStudent(s);
+        else if(p!=null)
+            user.setProfessor(p);
         return userRepository.save(user);
     }
 

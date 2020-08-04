@@ -12,8 +12,7 @@ import java.util.List;
 @Entity
 @Data
 public class VM{
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(generator="optimized-sequence")
     private  Long id;
     private String nameVM;
     private int  numVcpu, diskSpace, ram;

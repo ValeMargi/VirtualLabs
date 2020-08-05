@@ -199,11 +199,11 @@ public class VLServiceImpl implements VLService{
     @Override
     public  List<Boolean> EnrollAllFromCSV(Reader r, String courseName){
         try {
-            CsvToBean<String> csvToBean = new CsvToBeanBuilder(r)
+            CsvToBean<StudentDTO> csvToBean = new CsvToBeanBuilder(r)
                     .withType(StudentDTO.class)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
-            List<String> studentsIds = csvToBean.parse();
+            List<String> studentsIds = csvToBean.parse().stream().map(s->s.getId()).collect(Collectors.toList());
            return enrollAll(studentsIds,  courseName);
         }catch (RuntimeException exception){
             throw  new FormatFileNotValidException();
@@ -442,6 +442,8 @@ public class VLServiceImpl implements VLService{
             team.setDiskSpaceLeft(c.getDiskSpace());
             team.setMaxVpcuLeft(c.getMaxVcpu());
             team.setRamLeft(c.getRam());
+            team.setRunningInstances(c.getRunningInstances());
+            team.setTotInstances(c.getRunningInstances());
         }
         teamRepository.save(team);
         memberIds.stream().forEach(s-> team.addStudentIntoTeam(studentRepository.getOne(s)));
@@ -451,7 +453,7 @@ public class VLServiceImpl implements VLService{
         return  modelMapper.map(team, TeamDTO.class);
     }
 
-    @PreAuthorize("hasAuthority('student')")
+    @PreAuthorize("hasAuthority('student') || hasAuthority('professor')")
     @Override
     public List<TeamDTO> getTeamForCourse(String courseName){
         try{
@@ -487,7 +489,10 @@ public class VLServiceImpl implements VLService{
     public  void activateTeam(Long id){
         try{
             if(teamRepository.existsById(id)){
-                teamRepository.findById(id).get().setStatus(1);
+                Team t = teamRepository.findById(id).get();
+                t.setStatus(1);
+                t.getMembers().stream().forEach(s-> notificationService.sendMessage(s.getEmail(),"Notification: team created","Team creation success!"));
+
             }
         }catch(EntityNotFoundException enf){
             throw  new TeamNotFoundException();
@@ -498,6 +503,7 @@ public class VLServiceImpl implements VLService{
     public void evictTeam(Long id){
         try{
             Team t = teamRepository.getOne(id);
+            t.getMembers().stream().forEach(s-> notificationService.sendMessage(s.getEmail(),"Notification: team not created","A student has rejected the proposal. Team creation stopped!"));
             teamRepository.delete(t);
         }catch(EntityNotFoundException enf){
             throw  new TeamNotFoundException();
@@ -521,7 +527,7 @@ public class VLServiceImpl implements VLService{
         }
         /*Per controllare scadenza elaborati*/
         for(Assignment a: assignmentRepository.findAll()){
-            if(a.getExpiration().compareTo(now)<=0){
+            if(a.getExpiration().compareTo(now.toString())<=0){
                 a.getHomeworks().stream().map(h-> this.updateStatusHomework(h.getId(),"CONSEGNATO"));
                 assignmentRepository.saveAndFlush(a);
             }
@@ -541,41 +547,35 @@ public class VLServiceImpl implements VLService{
      */
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public boolean addModelVM(CourseDTO courseDTO, String courseId, PhotoModelVM photoModelVM) {
+    public CourseDTO addModelVM(CourseDTO courseDTO, String courseId, PhotoModelVM photoModelVM) {
         Optional<Course> oc = courseRepository.findById(courseId);
         if( oc.isPresent()) {
             Course c = oc.get();
             if (c.getProfessors().stream().anyMatch(p -> p.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))) {
                 //Controllo per verificare che il professore setta il modello per il corso con courseId per la prima volta
-                if (c.getPhotoModelVM() != null) {
+                if (c.getPhotoModelVM() == null) {
+                    List<Team> teams = teamRepository.findAllById(c.getTeams().stream().map(t->t.getId()).collect(Collectors.toList()));
                     c.setPhotoModelVM(photoModelVM);
                     c.setMaxVcpu(courseDTO.getMaxVcpu());
                     c.setDiskSpace(courseDTO.getDiskSpace());
                     c.setRam(courseDTO.getRam());
-                    c.getTeams().stream().map(t-> {
-                        t.setDiskSpaceLeft(c.getDiskSpace());
-                        t.setRamLeft(c.getRam());
-                        t.setMaxVpcuLeft(c.getMaxVcpu());
-                        return t;
+                    c.setTotInstances(courseDTO.getTotInstances());
+                    c.setRunningInstances(courseDTO.getRunningInstances());
+
+                    teams.stream().forEach(t-> {
+                        t.setDiskSpaceLeft(courseDTO.getDiskSpace());
+                        t.setRamLeft(courseDTO.getRam());
+                        t.setMaxVpcuLeft(courseDTO.getMaxVcpu());
+                        t.setTotInstances(courseDTO.getTotInstances());
+                        t.setRunningInstances(courseDTO.getRunningInstances());
                     });
-                    photoModelVMRepository.saveAndFlush(photoModelVM);
-                    return true;
+                    photoModelVMRepository.save(photoModelVM);
+                    return modelMapper.map(c, CourseDTO.class);
 
                 } else throw new ModelVMAlreadytPresent();
             }else throw new PermissionDeniedException();
         }else throw new CourseNotFoundException();
 
-        /*if ( !modelVMRepository.findById(modelVMdto.getId()).isPresent())  {
-            ModelVM modelVM = modelMapper.map(modelVMdto, ModelVM.class);
-           Course c = courseRepository.getOne(courseId);
-           if(c==null)
-               throw new CourseNotFoundException();
-            modelVM.setScreenshot(image);
-            modelVM.setCourse(c);
-            modelVMRepository.saveAndFlush(modelVM);
-            imageRepository.saveAndFlush(image);
-            return true;
-        }else throw new ModelVMAlreadytPresent();*/
     }
 
 
@@ -583,15 +583,15 @@ public class VLServiceImpl implements VLService{
     /*Ogni gruppo può avere più VM e ogni VM ha l'identificativo del team e tutti i membri
     * del team possono accederci ma solo chi ha creato la VM è owner*/
     /**
-     *
+     *Controllo l'esistenza di una VM se è già presente una VM con lo stesso nome per lo stesso team all'interno del corso
      * @param vmdto: contiene tutte le caratteristiche della VM compilate nel form per la creazione di una VM per gruppo
      * @param courseId: identificativo del corso
      * @return
      */
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public boolean addVM(VMDTO vmdto, String courseId, PhotoVMDTO photoVMDTO) {
-        if ( !VMRepository.findById(vmdto.getId()).isPresent())  {
+    public VMDTO addVM(VMDTO vmdto, String courseId, PhotoVMDTO photoVMDTO) {
+
             String studentAuth= SecurityContextHolder.getContext().getAuthentication().getName();
             if( getStudentsInTeams(courseId).stream().anyMatch(s-> s.getId().equals(studentAuth))){
                 Course c = courseRepository.getOne(courseId);
@@ -601,33 +601,35 @@ public class VLServiceImpl implements VLService{
                     throw  new ModelVMNotSetted();
 
                 Student s = studentRepository.getOne(studentAuth);
-                Team t = s.getTeams().stream().filter(te->te.getCourse().equals(c)).findFirst().get();
-
-                if( vmdto.getDiskSpace() < t.getDiskSpaceLeft() && vmdto.getNumVcpu()< t.getMaxVpcuLeft()
-                    && vmdto.getRam() < t.getRamLeft()){
+                Team t = teamRepository.getOne(s.getTeams().stream().filter(te->te.getCourse().equals(c)).findFirst().get().getId());
+                if(t.getVms().stream().anyMatch(v->v.getNameVM().equals(vmdto.getNameVM())))
+                    throw new VMduplicated();
+                if( vmdto.getDiskSpace() <= t.getDiskSpaceLeft() && vmdto.getNumVcpu()<= t.getMaxVpcuLeft()
+                    && vmdto.getRam() <= t.getRamLeft() && t.getTotInstances()>0){
                     VM vm = modelMapper.map(vmdto, VM.class);
                     vm.setCourse(c);
                     PhotoVM photoVM = modelMapper.map(photoVMDTO, PhotoVM.class);
                     vm.setPhotoVM(photoVM);
-                    vm.getOwnersVM().add(s);
-                    vm.setMembersVM(t.getMembers());
+                    vm.addStudentToOwnerList(s); //add owner
+                  //  c.setTotInstances(c.getTotInstances()-1);
+                    t.getMembers().stream().forEach(stu-> vm.addStudentToMemberList(stu));
                     vm.setTeam(t);
                     t.setDiskSpaceLeft(t.getDiskSpaceLeft()-vmdto.getDiskSpace());
                     t.setMaxVpcuLeft(t.getMaxVpcuLeft()-vmdto.getNumVcpu());
                     t.setRamLeft(t.getRamLeft()-vmdto.getRam());
-                    VMRepository.saveAndFlush(vm);
-                    photoVMRepository.saveAndFlush(photoVM);
-                   return true;
+                    t.setTotInstances(t.getTotInstances()-1);
+                    VMRepository.save(vm);
+                    photoVMRepository.save(photoVM);
+                   return modelMapper.map(vm, VMDTO.class);
                }else throw new ResourcesVMNotRespected();
             }else throw new TeamNotFoundException();
-        }else throw  new VMduplicated();
     }
 
 
     /*Metodo per rendere determinati membri del team owner di una data VM*/
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public boolean addOwner(String VMid, String courseId, List<String> studentsId) { //CourseId preso dal pathVariable
+    public boolean addOwner(Long VMid, String courseId, List<String> studentsId) { //CourseId preso dal pathVariable
        Optional<VM> ovm= VMRepository.findById(VMid);
         if (ovm.isPresent() ) {
             VM vm =ovm.get();
@@ -639,7 +641,7 @@ public class VLServiceImpl implements VLService{
                 String studentAuth = SecurityContextHolder.getContext().getAuthentication().getName();
                 if (vm.getOwnersVM().stream().anyMatch(s->s.getId().equals(studentAuth))) //lo student autenticato è già owner della VM, può quindi aggiungere altri owner
                 {
-                    if(vm.getMembersVM().containsAll(studentsId)) //tutti lgi studenti fanno parte del team
+                    if(vm.getMembersVM().stream().map(st->st.getId()).collect(Collectors.toList()).containsAll(studentsId)) //tutti lgi studenti fanno parte del team
                     {
                      if( studentsId.stream().map(s-> vm.addStudentToOwnerList(studentRepository.getOne(s))).anyMatch(r->r.equals(false)))
                         throw new RuntimeException("One or more students are already owner");
@@ -655,26 +657,57 @@ public class VLServiceImpl implements VLService{
      /*Metodo per attivare VM, controllo se l'utente autenticato è un owner della VM*/
         @PreAuthorize("hasAuthority('student')")
         @Override
-        public boolean activateVM(String VMid ){ //CourseId preso dal pathVariable
-            Optional<VM> vm = VMRepository.findById(VMid);
-            if (vm.isPresent()) {
-                if (vm.get().getOwnersVM().contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
-                    vm.get().setStatus("enable");
-                    VMRepository.save(vm.get());
+        public boolean activateVM(Long VMid ){ //CourseId preso dal pathVariable
+            Optional<VM> ovm = VMRepository.findById(VMid);
+            if (ovm.isPresent()) {
+                VM vm = ovm.get();
+                if (vm.getOwnersVM().stream().map(s->s.getId()).collect(Collectors.toList()).contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                    Team t = teamRepository.getOne(vm.getTeam().getId());
+                    if(t.getRunningInstances()>0) {
+                        Course c = courseRepository.getOne(t.getCourse().getName());
+                        t.setRunningInstances(t.getRunningInstances() - 1);
+                        vm.setStatus("on");
+                        // VMRepository.save(vm);
+                    }else throw new ResourcesVMNotRespected();
                 } else throw new PermissionDeniedException();
             } else throw new VMNotFound();
             return true;
         }
 
+    /*Metodo per utilizzare VM, controllo se l'utente autenticato è un membro della VM*/
+    @PreAuthorize("hasAuthority('student')")
+    @Override
+    public boolean useVM(Long VMid, String timestamp, PhotoVMDTO photoVMDTO ){ //CourseId preso dal pathVariable
+        Optional<VM> ovm = VMRepository.findById(VMid);
+        if (ovm.isPresent()) {
+            VM vm = ovm.get();
+            if (vm.getMembersVM().stream().map(s->s.getId()).collect(Collectors.toList()).contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                if(vm.getStatus().equals("on")){
+                    PhotoVM p = photoVMRepository.getOne(vm.getPhotoVM().getId());
+                    p.setNameFile(photoVMDTO.getNameFile());
+                    p.setType(photoVMDTO.getType());
+                    p.setPicByte(compressZLib(photoVMDTO.getPicByte()));
+                    vm.setTimestamp(timestamp);
+                    return true;
+                }else throw new VMnotEnabled();
+            } else throw new PermissionDeniedException();
+        } else throw new VMNotFound();
+
+    }
+
     /*Metodo per spegnere VM, controllo se l'utente autenticato è un owner della VM*/
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public boolean disableVM(String VMid ){ //CourseId preso dal pathVariable
-        Optional<VM> vm = VMRepository.findById(VMid);
-        if (vm.isPresent()) {
-            if (vm.get().getOwnersVM().contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
-                vm.get().setStatus("disable");
-                VMRepository.save(vm.get());
+    public boolean disableVM(Long VMid ){ //CourseId preso dal pathVariable
+        Optional<VM> ovm = VMRepository.findById(VMid);
+        if (ovm.isPresent()) {
+            VM vm = ovm.get();
+            if (vm.getOwnersVM().stream().map(s->s.getId()).collect(Collectors.toList()).contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                Team t = teamRepository.getOne(vm.getTeam().getId());
+                Course c = courseRepository.getOne(t.getCourse().getName());
+                t.setRunningInstances(t.getRunningInstances()+1);
+                vm.setStatus("off");
+                //VMRepository.save(vm);
             } else throw new PermissionDeniedException();
         } else throw new VMNotFound();
         return true;
@@ -682,20 +715,51 @@ public class VLServiceImpl implements VLService{
     /*Metodo per cancellare VM, controllo se l'utente autenticato è un owner della VM*/
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public boolean removeVM(String VMid){ //CourseId preso dal pathVariable
+    public boolean removeVM(Long VMid){
         Optional<VM> ovm = VMRepository.findById(VMid);
         if (ovm.isPresent()) {
             VM vm= ovm.get();
-            if (vm.getOwnersVM().contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
-                vm.getTeam().setRamLeft(vm.getRam()+vm.getTeam().getRamLeft());
-                vm.getTeam().setMaxVpcuLeft(vm.getNumVcpu()+vm.getTeam().getMaxVpcuLeft());
-                vm.getTeam().setDiskSpaceLeft(vm.getDiskSpace()+vm.getTeam().getDiskSpaceLeft());
-                vm.getCourse().removeVM(vm);
-                vm.getTeam().removeVM(vm);
+            if (vm.getOwnersVM().stream().map(s->s.getId()).collect(Collectors.toList()).contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                Team t = teamRepository.getOne(vm.getTeam().getId());
+                Course c = courseRepository.getOne(t.getCourse().getName());
+                if( vm.getStatus().equals("on")) {
+                    t.setRunningInstances(t.getRunningInstances()+1);
+                }
+                t.setTotInstances(t.getTotInstances()+1);
+                t.setRamLeft(vm.getRam()+t.getRamLeft());
+                t.setMaxVpcuLeft(vm.getNumVcpu()+t.getMaxVpcuLeft());
+                t.setDiskSpaceLeft(vm.getDiskSpace()+t.getDiskSpaceLeft());
+                photoVMRepository.delete(vm.getPhotoVM());
                 VMRepository.delete(vm);
             } else throw new PermissionDeniedException();
         } else throw new VMNotFound();
         return true;
+    }
+
+    /*Metodo per modificare risorse VM owner*/
+    @PreAuthorize("hasAuthority('student')")
+    @Override
+    public VMDTO updateVMresources(Long VMid,VMDTO vmdto) {
+        Optional<VM> ovm = VMRepository.findById(VMid);
+        if (ovm.isPresent()) {
+            VM vm = ovm.get();
+            if (vm.getOwnersVM().stream().map(s -> s.getId()).collect(Collectors.toList()).contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                Team t = teamRepository.getOne(vm.getTeam().getId());
+               if(!vm.getStatus().equals("off") ) throw new VMnotOff();
+                if (
+                        vmdto.getDiskSpace() <= (t.getDiskSpaceLeft()+vm.getDiskSpace()) &&
+                        vmdto.getNumVcpu() <= (t.getMaxVpcuLeft()+vm.getNumVcpu()) &&
+                        vmdto.getRam() <= (t.getRamLeft()+vm.getRam())) {
+                    t.setDiskSpaceLeft(t.getDiskSpaceLeft() + vm.getDiskSpace() - vmdto.getDiskSpace());
+                    t.setRamLeft(t.getRamLeft() + vm.getRam() - vmdto.getRam());
+                    t.setMaxVpcuLeft(t.getMaxVpcuLeft() + vm.getNumVcpu() - vmdto.getNumVcpu());
+                    vm.setDiskSpace(vmdto.getDiskSpace());
+                    vm.setRam(vmdto.getRam());
+                    vm.setNumVcpu(vmdto.getNumVcpu());
+                    return modelMapper.map(vm, VMDTO.class);
+                } else throw new ResourcesVMNotRespected();
+            } else throw new PermissionDeniedException();
+        }else throw new VMNotFound();
     }
 
     /*Visualizzare VM accessibili allo student in tab corso*/
@@ -704,12 +768,9 @@ public class VLServiceImpl implements VLService{
     public List<VMDTO> allVMforStudent( String courseId) { //CourseId preso dal pathVariable
         String student =SecurityContextHolder.getContext().getAuthentication().getName();
         Student s = studentRepository.getOne(student);
-        List<Team> teams = s.getTeams().stream().filter(c->c.getCourse().equals(courseId)).collect(Collectors.toList());
+        List<Team> teams = s.getTeams().stream().filter(c->c.getCourse().getName().equals(courseId)).collect(Collectors.toList());
         if(!teams.isEmpty()){
-         //   List<PhotoCorrection> correctionsList = h.getCorrections();
-        //    correctionsList.stream().forEach(p->p.setPicByte(decompressZLib(p.getPicByte())));
             List<VM> vmsList = teams.get(0).getVms();
-            //vmsList.stream().forEach(v->v.setPicByte(decompressZLib(v.getPicByte())));
             return  vmsList.stream().map(v->modelMapper.map(v, VMDTO.class)).collect(Collectors.toList());
         }else throw new TeamNotFoundException();
 
@@ -722,11 +783,9 @@ public class VLServiceImpl implements VLService{
         Optional<Course> oc= courseRepository.findById(courseId);
         if( oc.isPresent()){
             Course c= oc.get();
-            if(c.getProfessors().contains(SecurityContextHolder.getContext().getAuthentication().getName())){
+            if(c.getProfessors().stream().map(p->p.getId()).collect(Collectors.toList()).contains(SecurityContextHolder.getContext().getAuthentication().getName())){
                List<VM> vmsList= c.getVms();
-              //  vmsList.stream().forEach(v->v.setPicByte(decompressZLib(v.getPicByte())));
                 return vmsList.stream().map( v -> modelMapper.map(v, VMDTO.class)).collect(Collectors.toList());
-               // return c.getVms();
             }else throw new PermissionDeniedException();
         }else throw new CourseNotFoundException();
     }
@@ -734,10 +793,10 @@ public class VLServiceImpl implements VLService{
     /*Visualizzare VM con un certo VMid  allo student in tab corso*/
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public PhotoVMDTO getVMforStudent( String courseId, String VMid) {
+    public PhotoVMDTO getVMforStudent( String courseId, Long VMid) {
         String student =SecurityContextHolder.getContext().getAuthentication().getName();
         Student s = studentRepository.getOne(student);
-        List<Team> teams = s.getTeams().stream().filter(c->c.getCourse().equals(courseId)).collect(Collectors.toList());
+        List<Team> teams = s.getTeams().stream().filter(c->c.getCourse().getName().equals(courseId)).collect(Collectors.toList());
         if(!teams.isEmpty()){
            Optional<VM> ovm= VMRepository.findById(VMid);
            if(ovm.isPresent()){
@@ -754,11 +813,10 @@ public class VLServiceImpl implements VLService{
 
     /*student owner modifia risorse associate a VM se è spenta e se non superano i limiti imposti dal gruppo*/
 
-
     /*Per vedere chi è owner*/
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public boolean isOwner(  String VMid) { //CourseId preso dal pathVariable
+    public boolean isOwner(  Long VMid) { //CourseId preso dal pathVariable
         String student =SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Student> os = studentRepository.findById(student);
         if(os.isPresent()){
@@ -766,12 +824,17 @@ public class VLServiceImpl implements VLService{
             Optional<VM> ovm= VMRepository.findById(VMid);
             if(ovm.isPresent()){
                 VM vm= ovm.get();
-                if(vm.getOwnersVM().contains(s))
+                if(vm.getOwnersVM().stream().map(st->st.getId()).collect(Collectors.toList()).contains(s.getId()))
                     return true;
                 else throw new PermissionDeniedException();
             }else throw new VMNotFound();
         }else throw new StudentNotFoundException();
     }
+
+    /*Metodo per modificare risorse vm da parte docente*/
+
+
+
 
     /*SERVICE CONSEGNA*/
     @PreAuthorize("hasAuthority('professor')")
@@ -782,8 +845,7 @@ public class VLServiceImpl implements VLService{
         if(oc.isPresent()){
             Course c = oc.get();
             if(c.getProfessors().stream().anyMatch(p->p.getId().equals(professor))){
-                if( !c.getAssignments().stream().anyMatch(a->a.getId().equals(assignmentDTO.getId())) &&
-                    !c.getAssignments().stream().anyMatch(a->a.getNameAssignment().equals(assignmentDTO.getAssignmentName()))) {
+                if( !c.getAssignments().stream().anyMatch(a->a.getNameAssignment().equals(assignmentDTO.getAssignmentName()))) {
                     Assignment assignment= modelMapper.map(assignmentDTO, Assignment.class);
                     PhotoAssignment photoAssignment = modelMapper.map(photoAssignmentDTO, PhotoAssignment.class);
                     assignment.setCourseAssignment(c);
@@ -793,10 +855,11 @@ public class VLServiceImpl implements VLService{
                         h.setStatus("NULL");
                         h.setAssignment(assignment);
                         h.setStudentForHomework(s);
-                        homeworkRepository.saveAndFlush(h);
+                        h.setPermanent(false);
+                        homeworkRepository.save(h);
                     }
-                    assignmentRepository.saveAndFlush(assignment);
-                    photoAssignmentRepository.saveAndFlush(photoAssignment);
+                    assignmentRepository.save(assignment);
+                    photoAssignmentRepository.save(photoAssignment);
                 }else throw new AssignmentAlreadyExist();
             }else throw new PermissionDeniedException();
         }else throw new CourseNotFoundException();
@@ -814,7 +877,7 @@ public class VLServiceImpl implements VLService{
             Optional<Course> c = p.getCourses().stream().filter(co->co.getName().equals(courseId)).findFirst();
             if(c.isPresent()){
                 return c.get().getAssignments().stream().map( a -> modelMapper.map(a, AssignmentDTO.class)).collect(Collectors.toList());
-            }throw new CourseNotFoundException();
+            }throw new PermissionDeniedException();
         }else throw new ProfessorNotFoundException();
     }
 
@@ -848,6 +911,12 @@ public class VLServiceImpl implements VLService{
                 if (oa.isPresent()) {
                     Assignment a = oa.get();
                     if (a.getCourseAssignment().getStudents().contains(s)) {
+                        Homework homework = homeworkRepository.findById(a.getHomeworks().stream()
+                                .filter(h->h.getStudent().getId().equals(s.getId())).findFirst()
+                                .get().getId()).get();
+                        if(homework.getStatus().equals("NULL")){
+                            homework.setStatus("LETTO");
+                        }
                         PhotoAssignment pa = a.getPhotoAssignment();
                         Optional<PhotoAssignment> photoAssignment = photoAssignmentRepository.findById(pa.getId());
                         if (photoAssignment.isPresent()) {
@@ -924,14 +993,14 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public  List<Homework> allHomework(String courseName, String assignmentId){ //AGGIUNTA 28/07
+    public  List<HomeworkDTO> allHomework(String courseName, Long assignmentId){ //AGGIUNTA 28/07
         Optional<Course> oc= courseRepository.findById(courseName);
         if(oc.isPresent()){
             Course c = oc.get();
             if(c.getProfessors().stream().anyMatch(p->p.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))) {
                Assignment assignment = c.getAssignments().stream().filter(a->a.getId().equals(assignmentId)).findFirst().get();
                 if(assignment!=null ) {
-                    return assignment.getHomeworks();
+                    return assignment.getHomeworks().stream().map(h->modelMapper.map(h,HomeworkDTO.class)).collect(Collectors.toList());
                 }else throw new AssignmentNotFound();
             }else throw new PermissionDeniedException();
 
@@ -1022,7 +1091,8 @@ public class VLServiceImpl implements VLService{
     /*Metodo per consegnare correzione*/
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public boolean uploadCorrection(Long homeworkId, Long versionHMid, PhotoCorrectionDTO photoCorrectionDTO,Boolean permanent) {
+    public boolean uploadCorrection(Long homeworkId, Long versionHMid,
+                                    PhotoCorrectionDTO photoCorrectionDTO,Boolean permanent, String grade) {
         Optional<Homework> oh = homeworkRepository.findById(homeworkId);
         String professorAuth = SecurityContextHolder.getContext().getAuthentication().getName();
         if(oh.isPresent()){
@@ -1036,6 +1106,10 @@ public class VLServiceImpl implements VLService{
                     h.setPhotoCorrection(photoCorrection);
                     h.setStatus("RIVISTO");
                     h.setPermanent(permanent);
+                    if(permanent) {
+                        if(grade.equals(null)) throw new GradeNotValidException();
+                        h.setGrade(grade);
+                    }
                     photoCorrectionRepository.saveAndFlush(photoCorrection);
                     return true;
                 }else throw new HomeworkVersionIdNotFound();

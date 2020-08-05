@@ -11,9 +11,7 @@ import java.util.List;
 
 @Entity
 @Data
-//@Getter
-//@Setter
-//@RequiredArgsConstructor
+@ToString(exclude = {"photoStudent", "courses"})
 public class Student{
     @Id
     @CsvBindByName

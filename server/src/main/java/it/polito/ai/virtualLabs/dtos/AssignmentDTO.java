@@ -11,6 +11,6 @@ import java.util.Date;
 public class AssignmentDTO  extends RepresentationModel<AssignmentDTO> {
     private  Long id;
     private String assignmentName;
-    private Date releaseDate, expiration;
+    private String releaseDate, expiration;
 
 }

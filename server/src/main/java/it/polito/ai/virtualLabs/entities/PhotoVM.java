@@ -20,7 +20,7 @@ public class PhotoVM extends Image{
     void setVM(VM v){
         if(v!=null && vm!=v){
             vm=v;
-            v.photoVM(this);
+            v.setPhotoVM(this);
         }
     }
     public  PhotoVM( Image image){

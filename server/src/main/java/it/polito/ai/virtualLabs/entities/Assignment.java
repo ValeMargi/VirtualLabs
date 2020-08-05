@@ -18,7 +18,7 @@ public class Assignment {
     //@GeneratedValue(generator="optimized-sequence")
     private  Long id;
     private  String nameAssignment;
-    private Date releaseDate, expiration;
+    private String releaseDate, expiration;
 
 
 

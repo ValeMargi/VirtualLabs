@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Data
-@ToString(exclude = {"professors"})
+@ToString(exclude = {"professors", "students"})
 public class Course {
 
     private String acronym;

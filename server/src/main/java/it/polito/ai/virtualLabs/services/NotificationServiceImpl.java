@@ -1,7 +1,9 @@
 package it.polito.ai.virtualLabs.services;
 
 import it.polito.ai.virtualLabs.dtos.TeamDTO;
+import it.polito.ai.virtualLabs.entities.Team;
 import it.polito.ai.virtualLabs.entities.Token;
+import it.polito.ai.virtualLabs.repositories.TeamRepository;
 import it.polito.ai.virtualLabs.repositories.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -27,6 +29,9 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Autowired
     VLService VLService;
+
+    @Autowired
+    TeamRepository teamRepository;
 
 
     @Override

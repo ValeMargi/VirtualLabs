@@ -81,7 +81,7 @@ public class VM{
         return false;
     }
 
-    public void photoVM(PhotoVM p){
+    public void setPhotoVM(PhotoVM p){
         if(p!=null && photoVM!=p){
             photoVM=p;
             p.setVM(this);
@@ -93,6 +93,16 @@ public class VM{
         if(c!=null && c!=course){
             course = c;
             c.addVM(this);
+        }
+    }
+
+
+
+
+    public  void setTeam(Team t){
+        if(t!=null && team!=t){
+            team=t;
+            t.addVM(this);
         }
     }
 

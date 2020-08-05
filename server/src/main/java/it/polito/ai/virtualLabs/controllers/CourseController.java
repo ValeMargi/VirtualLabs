@@ -29,6 +29,7 @@ public class CourseController {
 
     /*Metodi non implementati:
     *  - GetModelVM
+    * - ModifyResourcesVM da parte docente
     * */
 
 
@@ -107,9 +108,7 @@ public class CourseController {
         }catch(PermissionDeniedException e){
             throw  new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
-
     }
-
 
     /**
      * Metodo: POST
@@ -120,7 +119,6 @@ public class CourseController {
      */
     @PostMapping("/{courseName}/enrollOne")
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
     public void enrollOne(@RequestBody Map<String, String> input, @PathVariable String courseName){
         if( !input.containsKey("id"))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, input.get("id"));
@@ -149,12 +147,11 @@ public class CourseController {
             try {
                 return vlService.EnrollAllFromCSV(new BufferedReader(new InputStreamReader(file.getInputStream())), courseName);
             }catch(FormatFileNotValidException | IOException e){
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
             }
     }
 
     /*POST mapping request to enable / disable course "name"*/
-
     /**
      * Metodo: POST
      * Authority: Docente
@@ -162,7 +159,6 @@ public class CourseController {
      * @param enabled: flag (true/false) che indica se il Professore deve abilitare/disabilitare il dato corso
      */
     @PostMapping("/{courseName}/enable")
-    @ResponseBody
     public void enableCourse(@PathVariable String courseName, @RequestBody Boolean enabled){
         try {
             if(enabled)
@@ -179,17 +175,13 @@ public class CourseController {
     }
 
 
-
-
-
-
     /**
      * Metodo: POST
      * Authority: Docente
      * @param courseName:riceve dal path il nome di un Corso da rimuovere
      * @return: ritorna l'esito della rimozione del corso indicato
      */
-    @PostMapping("/{courseName}/remove")
+    @DeleteMapping("/{courseName}/remove")
     public boolean removeCourse(@PathVariable String courseName){
         try{
             return vlService.removeCourse(courseName);
@@ -219,44 +211,6 @@ public class CourseController {
         }
     }
 
-    /**
-     * Metodo: POST
-     * Authority: Studente
-     * @param courseName: riceve dal path il nome di un Corso a cui lo studente autenticato è iscritto
-     * @param object: Nel corso della richiesta viene passato il nome del Team proposto dallo studente e la lista degli id degli studenti che formeranno il gruppo
-     *              Esempio Body: {"nameTeam": "Team1",
-     *                             "membersId": {"s1", "s2", "s2"}
-     *                            }
-     * @return: ritorna il DTO del Team appena creato (Long id;String name;int status;)
-     */
-    @PostMapping("/{courseName}/proposeTeam")
-    public TeamDTO proposeTeam(@PathVariable String courseName, @RequestBody Map<String, Object> object) {
-        try {
-            String nameTeam = object.get("nameTeam").toString();
-            List<String> membersId= (List<String>)object.get("membersId");
-            return vlService.proposeTeam(courseName, nameTeam, membersId);
-        } catch (StudentNotEnrolledToCourseExcpetion | CourseNotFoundException
-                | StudentAlreadyInTeamExcpetion | CardinalityNotAccetableException
-                | StudentDuplicateException | PermissionDeniedException exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
-        }
-    }
-
-    /*POST mapping request to see the list of students enrolled in a team with id=teamId*/
-
-    /**
-     * Metodo: GET
-     * @param teamdId: riceve dal path L'ID di un determinato Team
-     * @return: ritorna la lista di DTO degli studenti iscritti a team con id pari a teamId
-     */
-    @GetMapping("/{teamId}/membersTeam")
-    public List<StudentDTO> getMembersTeam(@PathVariable Long teamdId) {
-        try{
-            return vlService.getMembers(teamdId).stream().map(s -> ModelHelper.enrich(s)).collect(Collectors.toList());
-        }catch (TeamNotFoundException tnfe){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " +teamdId.toString() +"not present!");
-        }
-    }
 
     /**
      * Metodo: POST
@@ -269,32 +223,26 @@ public class CourseController {
     @PostMapping("/{courseName}/addModel")
     public CourseDTO addModelVM( @PathVariable String courseName,  @RequestPart("file") @Valid @NotNull MultipartFile file,
                                   @RequestPart("modelVM")  Map<String, Object> input) {
-        if (!input.containsKey("modelVMid") || !input.containsKey("maxVcpu") || !input.containsKey("diskSpace")
-           || !input.containsKey("ram") )
+        if (!input.containsKey("maxVcpu") || !input.containsKey("diskSpace")
+           || !input.containsKey("ram") ||  !input.containsKey("maxRunning")
+            || !input.containsKey("maxTotal") )
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
-
         try{
-            Date date= new Date(System.currentTimeMillis());
-
             CourseDTO courseDTO = new CourseDTO();
             courseDTO.setMaxVcpu((int)input.get("maxVcpu"));
-            courseDTO.setDiskSpace((int)input.get("dispSpace"));
+            courseDTO.setDiskSpace((int)input.get("diskSpace"));
             courseDTO.setRam((int)input.get("ram"));
-            courseDTO.setRunningInstances(0);
-            courseDTO.setTotInstances(0);
+            courseDTO.setRunningInstances((int)input.get("maxRunning"));
+            courseDTO.setTotInstances((int)input.get("maxTotal"));
 
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
             PhotoModelVM photoModelVM = new PhotoModelVM(image);
-           // photoModelVM.setTimestamp((Timestamp) date);
-            vlService.addModelVM(courseDTO, courseName, photoModelVM);
-            return courseDTO;
+            return vlService.addModelVM(courseDTO, courseName, photoModelVM);
         }catch (CourseNotFoundException | ModelVMAlreadytPresent | IOException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
     }
-
-    /*ADDvm*/
 
     /**
      * Metodo: POST
@@ -308,14 +256,17 @@ public class CourseController {
     @PostMapping("/{courseName}/addVM")
     public VMDTO addVM( @PathVariable String courseName,  @RequestPart("file") @Valid @NotNull MultipartFile file,
                                   @RequestPart("VM")  Map<String, Object> input) {
-        if (!input.containsKey("VMid") || !input.containsKey("numVcpu") || !input.containsKey("diskSpace")
+        if ( !input.containsKey("nameVM") ||  !input.containsKey("numVcpu")
+                || !input.containsKey("diskSpace")
                 || !input.containsKey("ram") )
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
 
         try{
-            Date date= new Date(System.currentTimeMillis());
+            //Date date= new Date(System.currentTimeMillis());
+            Timestamp timestamp= new Timestamp(System.currentTimeMillis());
+
             VMDTO vmdto = new VMDTO();
-            vmdto.setDiskSpace((int)input.get("dispSpace"));
+            vmdto.setDiskSpace((int)input.get("diskSpace"));
             vmdto.setNumVcpu((int)input.get("numVcpu"));
             vmdto.setNameVM(input.get("nameVM").toString());
             vmdto.setRam((int)input.get("ram"));
@@ -325,17 +276,14 @@ public class CourseController {
             photoVMDTO.setNameFile(file.getOriginalFilename());
             photoVMDTO.setType(file.getContentType());
             photoVMDTO.setPicByte(vlService.compressZLib(file.getBytes()));
-            vmdto.setTimestamp( date.toString());
+            vmdto.setTimestamp( timestamp.toString());
 
-           // Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
-          //  PhotoVM photoVM = new PhotoVM(image);
-          //  photoVM.setTimestamp((Timestamp)date);
-            vlService.addVM(vmdto, courseName,photoVMDTO);
-            return vmdto;
-        }catch (CourseNotFoundException | ModelVMAlreadytPresent | IOException e){
+            return  vlService.addVM(vmdto, courseName,photoVMDTO);
+        }catch (CourseNotFoundException | ModelVMAlreadytPresent |
+                ResourcesVMNotRespected | TeamNotFoundException  |
+                VMduplicated | IOException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
     }
 
 
@@ -347,7 +295,7 @@ public class CourseController {
      * @param input: nel body della richiesta vengono inviati gli id dei membri del team che divenntano owner della VM
      */
     @PostMapping("/{courseName}/{VMid}/addOwner")
-    public void addOwner(  @PathVariable String courseName, @PathVariable String VMid,@RequestBody Map<String, Object> input) {
+    public void addOwner(  @PathVariable String courseName, @PathVariable Long VMid,@RequestBody Map<String, Object> input) {
         if (!input.containsKey("id"))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, input.get("id").toString());
         try {
@@ -365,7 +313,7 @@ public class CourseController {
      * @param VMid: riceve dal path l'id della VM da attiavare
      */
     @GetMapping("/{courseName}/{VMid}/activateVM")
-    public void activateVM(  @PathVariable String courseName, @PathVariable String VMid) {
+    public void activateVM(  @PathVariable String courseName, @PathVariable Long VMid) {
      try{
             vlService.activateVM(VMid);
         } catch (VMNotFound  | PermissionDeniedException  e) {
@@ -380,7 +328,7 @@ public class CourseController {
      * @param VMid: riceve dal path l'id della VM da disattiavare
      */
     @GetMapping("/{courseName}/{VMid}/disableVM")
-    public void disableVM(  @PathVariable String courseName, @PathVariable String VMid) {
+    public void disableVM(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
             vlService.disableVM(VMid);
         } catch (VMNotFound  | PermissionDeniedException  e) {
@@ -395,13 +343,38 @@ public class CourseController {
      * @param VMid: riceve dal path l'id della VM da rimuovere
      */
     @GetMapping("/{courseName}/{VMid}/removeVM")
-    public void removeVM(  @PathVariable String courseName, @PathVariable String VMid) {
+    public void removeVM(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
             vlService.removeVM(VMid);
         } catch (VMNotFound  | PermissionDeniedException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+    /**
+     * Metodo per aggiornare le risorse si una VM, può farlo solo lo studente owner della VM,
+     * VM deve essere off e i nuovi valori delle risorse devono rispettare i vincoli del team
+     * @param courseName
+     * @param VMid
+     * @param input
+     * @return
+     */
+    @PostMapping("/{courseName}/{VMid}/update")
+    public VMDTO updateVMresources( @PathVariable String courseName,  @PathVariable Long VMid,
+                        @RequestPart("VM")  Map<String, Object> input) {
+        if (  !input.containsKey("numVcpu") || !input.containsKey("diskSpace")   || !input.containsKey("ram") )
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+        try{
+            VMDTO vmdto = new VMDTO();
+            vmdto.setDiskSpace((int)input.get("diskSpace"));
+            vmdto.setNumVcpu((int)input.get("numVcpu"));
+            vmdto.setRam((int)input.get("ram"));
+            return  vlService.updateVMresources(VMid, vmdto);
+        }catch (VMnotOff | PermissionDeniedException  |  ResourcesVMNotRespected | VMNotFound e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
 
     /**
      * Authrority: Docente
@@ -417,6 +390,34 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+
+    /**
+     * Metodo per utilizzare una VM, carico una nuova immagine andando a sovrascrivere
+     * quella vecchia (id invariato= e aggiorno timestamp in vm
+     * @param courseName
+     * @param VMid
+     * @param file
+     */
+    @PostMapping("/{courseName}/{VMid}/use")
+    public void useVM( @PathVariable String courseName, @PathVariable Long VMid,
+                        @RequestPart("file") @Valid @NotNull MultipartFile file) {
+
+        try{
+            //Date date= new Date(System.currentTimeMillis());
+            Timestamp timestamp= new Timestamp(System.currentTimeMillis());
+
+            PhotoVMDTO photoVMDTO = new PhotoVMDTO();
+            photoVMDTO.setNameFile(file.getOriginalFilename());
+            photoVMDTO.setType(file.getContentType());
+            photoVMDTO.setPicByte(vlService.compressZLib(file.getBytes()));
+            vlService.useVM(VMid, timestamp.toString(), photoVMDTO);
+        }catch (  VMnotEnabled | PermissionDeniedException | VMNotFound | IOException  e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
+    }
+
 
 
     // addAssignment ->inserimento consegna Prof
@@ -435,31 +436,23 @@ public class CourseController {
     @PostMapping("/{courseName}/addAssignment")
     public void addAssignment(@PathVariable String courseName, @RequestPart("file") @Valid @NotNull MultipartFile file,
                               @RequestPart("assignment")  Map<String, Object> input ) throws IOException {
-        if (!input.containsKey("assignmentId") || !input.containsKey("expirationDate") || !input.containsKey("image"))
+        if (!input.containsKey("assignmentName") || !input.containsKey("expirationDate") )
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
         try {
             AssignmentDTO assignmentDTO = new AssignmentDTO();
             assignmentDTO.setAssignmentName(input.get("assignmentName").toString());
-            Date date= new Date(System.currentTimeMillis());
-            assignmentDTO.setReleaseDate(date);
-            assignmentDTO.setExpiration((Date)input.get("expirationDate"));
+            //Date date= new Date(System.currentTimeMillis());
+            Timestamp timestamp= new Timestamp(System.currentTimeMillis());
 
-          //  Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
+            assignmentDTO.setReleaseDate(timestamp.toString());
+            assignmentDTO.setExpiration(input.get("expirationDate").toString());
+
             PhotoAssignmentDTO photoAssignmentDTO = new PhotoAssignmentDTO();
             photoAssignmentDTO.setNameFile(file.getOriginalFilename());
             photoAssignmentDTO.setType(file.getContentType());
             photoAssignmentDTO.setPicByte(vlService.compressZLib(file.getBytes()));
-            photoAssignmentDTO.setTimestamp( date.toString());
-
-          /*  assignmentDTO.setName(file.getOriginalFilename());
-            assignmentDTO.setType(file.getContentType());
-            assignmentDTO.setPicByte(vlService.compressZLib(file.getBytes()));
-            assignmentDTO.setTimestamp((Timestamp) date);
-*/
-
+            photoAssignmentDTO.setTimestamp( timestamp.toString());
             vlService.addAssignment(assignmentDTO, photoAssignmentDTO, courseName);
-
-
         }catch (PermissionDeniedException | CourseNotFoundException | AssignmentAlreadyExist e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -476,7 +469,7 @@ public class CourseController {
     public List<AssignmentDTO> allAssignment(@PathVariable String courseName) {
         try{
             return  vlService.allAssignment(courseName);
-        } catch (CourseNotFoundException  | ProfessorNotFoundException  e) {
+        } catch (PermissionDeniedException  | ProfessorNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -514,7 +507,7 @@ public class CourseController {
      * @param homeworkId: riceve dal path l'id dell'elaborata di cui si vuole modificare lo stato
      * @param status: valore che può essere LETTO, CONSEGNATO, RIVISTO
      */
-    @PostMapping("/{courseName}/{homeworkId}")
+    //@PostMapping("/{courseName}/{homeworkId}")
     public void updateStatusHomework(@PathVariable String courseName,@PathVariable Long homeworkId, @RequestParam String status) {
         try{
             vlService.updateStatusHomework(homeworkId, status );
@@ -534,12 +527,15 @@ public class CourseController {
      * @param homeworkId: riceve dal path l'id dell'alaborato di uno studente che il docente vuole corregere
      * @param file: nella richiesta viene inviata l'immagine della correzione
      * @param versionHMid: versione homerwork da correggere
+     * @param permanent ; se true -> versione definitiva, studente non può più caricare versioni homework, professore assegna voto
+     * @param grade:  se permanent è true-> professore carica voto (grade da ricevere a NULL se permanent é false)
      * @throws IOException
      */
-    @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/{versioHMid}/uploadCorrection")
+    @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/{versionHMid}/uploadCorrection")
     public void uploadCorrection(@PathVariable String courseName, @PathVariable String assignmentId,
                                @PathVariable Long homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file,
-                                @RequestPart("permanent") @NotNull Boolean permanent, @PathVariable Long versionHMid) throws IOException {
+                                @RequestPart("permanent") @NotNull Boolean permanent, @PathVariable Long versionHMid,
+                                 @RequestPart("grade") String grade) throws IOException {
         try {
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
 
@@ -548,7 +544,7 @@ public class CourseController {
             photoCorrectionDTO.setType(file.getContentType());
             photoCorrectionDTO.setPicByte(  vlService.compressZLib(file.getBytes()));
             photoCorrectionDTO.setTimestamp(timestamp.toString());
-            vlService.uploadCorrection(homeworkId, versionHMid, photoCorrectionDTO,permanent );
+            vlService.uploadCorrection(homeworkId, versionHMid, photoCorrectionDTO,permanent, grade );
 
         }catch (HomeworkIsPermanent | PermissionDeniedException | HomeworkNotFound e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -566,7 +562,7 @@ public class CourseController {
      * @return: ritorna la lista di elaborati svolti dagli studenti per la consegna indicata
      */
     @GetMapping("/{courseName}/{assignmentId}/allHomework")
-    public List<Homework> allHomework(@PathVariable String courseName, @PathVariable String assignmentId) {
+    public List<HomeworkDTO> allHomework(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.allHomework(courseName, assignmentId);
         } catch (CourseNotFoundException  | ProfessorNotFoundException  e) {
@@ -602,11 +598,11 @@ public class CourseController {
      * @param versionId
      * @return DTO di PhotoVersionHomework per un dato homework
      */
-    @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/{versionId}")
+    @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/{versionId}/version")
     public PhotoVersionHomeworkDTO getVersionHM(@PathVariable String courseName, @PathVariable String assignmentId,
                                                 @PathVariable Long homeworkId, @PathVariable Long versionId) {
         try{
-            return  vlService.getVersionHM( versionId);
+            return  vlService.getVersionHM(versionId);
         } catch ( PermissionDeniedException |  PhotoVersionHMNotFound e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -618,11 +614,10 @@ public class CourseController {
      * Authority: Studente
      * @param courseName
      * @param assignmentId
-     * @param homeworkId
      * @return ritorna la lista di versioni di Homerwork per la consegna con assignmentId indicato e per il courso con courseName indicato
      */
     @GetMapping("/{courseName}/{assignmentId}/getVersions")
-    public List<Map<String, Object>> getVersionsHMForStudent(@PathVariable String courseName, @PathVariable Long assignmentId, @PathVariable Long homeworkId) {
+    public List<Map<String, Object>> getVersionsHMForStudent(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.getVersionsHMForStudent(assignmentId);
         } catch ( PermissionDeniedException |  HomeworkNotFound e) {
@@ -656,7 +651,7 @@ public class CourseController {
      * @param correctionId
      * @return DTO di PhotoCorrection per un dato homework
      */
-    @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/{correctionId}")
+    @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/{correctionId}/correction")
     public PhotoCorrectionDTO getCorrectionHM(@PathVariable String courseName, @PathVariable String assignmentId,
                                                 @PathVariable Long homeworkId, @PathVariable Long correctionId) {
         try{

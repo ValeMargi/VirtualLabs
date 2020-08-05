@@ -49,4 +49,10 @@ public class Team {
         }
     }
 
+    public void addVM(VM vm) {
+        if(vm!=null && !vms.contains(vm)){
+            vms.add(vm);
+            vm.setTeam(this);
+        }
+    }
 }

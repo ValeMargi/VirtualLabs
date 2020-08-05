@@ -50,27 +50,6 @@ public class StudentController {
         }
     }
 
-    /*GET mapping request to see the list of teams a particular student is enrolled in*/
-    @GetMapping("/{studentId}/teams")
-    public List<TeamDTO> getTeamsForStudent(@PathVariable String studentId) {
-        try {
-            return vlService.getTeamsForStudent(studentId);
-        } catch (StudentNotFoundException cnfe) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,  "Student with id:"+studentId+" not present");
-        }
-    }
-
-    /*GET mapping request to see the list of groups of a given course*/
-    @GetMapping("/teams/{courseName}")
-    public List<TeamDTO> getTeamsForCourse(@PathVariable String courseName) {
-        try {
-            return vlService.getTeamForCourse(courseName);
-
-        }catch(CourseNotFoundException cnfe){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+courseName+" not present");
-        }
-    }
-
     /* GET mapping request to see the list of students who are part of a team in a given course*/
     @GetMapping("/inTeam/{courseName}")
     public List<StudentDTO> getStudentsInTeams(@PathVariable String courseName) {
@@ -113,7 +92,7 @@ public class StudentController {
      * @return: ritrona  VM dto con le informazioni della VM con id pari a VMid
      */
     @GetMapping("/VM/{courseName}/{VMid}")
-    public PhotoVMDTO getVMforStudent(@PathVariable String courseName, @PathVariable String VMid) {
+    public PhotoVMDTO getVMforStudent(@PathVariable String courseName, @PathVariable Long VMid) {
         try{
             return vlService.getVMforStudent(courseName, VMid);
         } catch (TeamNotFoundException e) {
@@ -123,10 +102,10 @@ public class StudentController {
 
 
 
-    @GetMapping("/VM/{courseName}/{VMid}/")
-    public void isOwner(  @PathVariable String courseName, @PathVariable String VMid) {
+    @GetMapping("/VM/{courseName}/{VMid}/owner")
+    public boolean isOwner(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
-            vlService.isOwner( VMid);
+            return vlService.isOwner( VMid);
         } catch (PermissionDeniedException | VMNotFound| StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

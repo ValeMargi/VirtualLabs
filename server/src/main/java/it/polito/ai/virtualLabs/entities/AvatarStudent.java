@@ -6,12 +6,11 @@ import javax.persistence.*;
 
 
 @Data
-//@Getter
-//@Setter
 @NoArgsConstructor
-//@ToString(exclude="picByte")
+@EqualsAndHashCode(exclude="student", callSuper = false)
+@ToString(exclude = {"student"})
 @Entity(name = "AvatarStudent")
-public class AvatarStudent  extends Image{//
+public class AvatarStudent  extends Image{
 
    // @Id @GeneratedValue(generator="optimized-sequence")
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,8 +26,7 @@ public class AvatarStudent  extends Image{//
         }
     }
 
-   /* public  AvatarStudent( Image image){
+    public  AvatarStudent( Image image){
         super(image);
-
-    }*/
+    }
 }

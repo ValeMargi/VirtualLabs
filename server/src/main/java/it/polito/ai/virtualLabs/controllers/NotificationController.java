@@ -18,23 +18,20 @@ public class NotificationController {
     NotificationService notificationService;
 
     @GetMapping("/confirm/{token}")
-    public String confirmationPage(@PathVariable String token, Model model) {
-        boolean confirm;
-        confirm = notificationService.confirm((token));
-        model.addAttribute("confirm", confirm);
-        return "confirm";
+    public Boolean confirmationPage(@PathVariable String token) {
+        try{
+            return notificationService.confirm(token);
+        }catch (TeamNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @GetMapping("/reject/{token}")
-    public String rejectionPage(@PathVariable String token, Model model) {
+    public Boolean rejectionPage(@PathVariable String token) {
         try {
-            boolean reject;
-            reject = notificationService.reject(token);
-            model.addAttribute("reject", reject);
-            return "reject";
+            return notificationService.reject(token);
         }catch(TeamNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-
         }
     }
 }

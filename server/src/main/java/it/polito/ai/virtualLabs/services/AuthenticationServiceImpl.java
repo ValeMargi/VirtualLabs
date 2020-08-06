@@ -74,8 +74,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                TokenRegistration t = new TokenRegistration();
                t.setId(UUID.randomUUID().toString());
                t.setUserId(user.getEmail());
-               t.setExpiryDate(Timestamp.from(Instant.now().plus(120000, ChronoUnit.MILLIS))); //for debug
-               //  t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
+           //    t.setExpiryDate(Timestamp.from(Instant.now().plus(120000, ChronoUnit.MILLIS))); //for debug
+               t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
                notificationService.sendMessage(user.getEmail(),
                        "Enrollment to the VirtualLabs app",
                        "You have been subscribed to the application.\n" +
@@ -110,8 +110,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             TokenRegistration t = new TokenRegistration();
             t.setId(UUID.randomUUID().toString());
             t.setUserId(user.getEmail());
-            t.setExpiryDate(Timestamp.from(Instant.now().plus(120000, ChronoUnit.MILLIS)));// for debug
-            //  t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
+            //t.setExpiryDate(Timestamp.from(Instant.now().plus(120000, ChronoUnit.MILLIS)));// for debug
+            t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
             notificationService.sendMessage( user.getEmail(),
                     "Enrollment to the VirtualLabs app",
                     "You have been subscribed to the application.\n" +
@@ -211,6 +211,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public void changeUserPassword(UserDAO user, String password) {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
+    }
+    @Override
+    public boolean checkIfValidOldPassword(UserDAO user, final String oldPassword) {
+        return passwordEncoder.matches(oldPassword, user.getPassword());
     }
 
 

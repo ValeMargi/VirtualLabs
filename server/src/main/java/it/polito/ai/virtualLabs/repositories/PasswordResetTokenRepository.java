@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.stream.Stream;
 
@@ -14,14 +15,10 @@ import java.util.stream.Stream;
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
 
     PasswordResetToken findByToken(String token);
+    PasswordResetToken deleteByToken(String token);
 
-    PasswordResetToken findByUser(UserDAO user);
-
-    Stream<PasswordResetToken> findAllByExpiryDateLessThan(Date now);
-
-    void deleteByExpiryDateLessThan(Date now);
-
+    @Transactional
     @Modifying
-    @Query("delete from PasswordResetToken t where t.expiryDate <= ?1")
+    @Query("delete from PasswordResetToken t where t.expiryDate <=:now")
     void deleteAllExpiredSince(Date now);
 }

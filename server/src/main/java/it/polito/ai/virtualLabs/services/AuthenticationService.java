@@ -18,5 +18,5 @@ public interface AuthenticationService {
     boolean confirmRegistration(String token);
     Optional<TokenRegistration> checkTokenValidity(String token);
     void activateUser(String userId);
-
+    public boolean checkIfValidOldPassword(UserDAO user, final String oldPassword);
     }

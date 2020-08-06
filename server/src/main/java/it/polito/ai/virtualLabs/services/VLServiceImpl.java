@@ -70,6 +70,8 @@ public class VLServiceImpl implements VLService{
     TokenRegistrationRepository tokenRegistrationRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    PasswordResetTokenRepository passwordResetTokenRepository;
 
     /*To check if the tokens contained in the repository have expired,
      if so, they are removed from the repository and the corresponding
@@ -77,6 +79,7 @@ public class VLServiceImpl implements VLService{
     @Scheduled(initialDelay = 1000, fixedRate = 20000)
     public void run(){
         Timestamp now = new Timestamp(System.currentTimeMillis());
+        passwordResetTokenRepository.deleteAllExpiredSince(now);
 
         for(Token token: tokenRepository.findAll() )
         {
@@ -108,6 +111,7 @@ public class VLServiceImpl implements VLService{
                 tokenRegistrationRepository.delete(tokenR);
             }
         }
+
     }
 
     /*SERVICE student*/
@@ -126,6 +130,7 @@ public class VLServiceImpl implements VLService{
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
     public List<StudentDTO> getEnrolledStudents(String courseName) {
         try {
@@ -175,8 +180,6 @@ public class VLServiceImpl implements VLService{
     public boolean deleteStudentFromCourse(String studentId, String courseName) {
         Optional<Student> student = studentRepository.findById(studentId);
         Optional<Course> course = courseRepository.findById(courseName);
-
-
         if( ! student.isPresent()){
             throw new StudentNotFoundException();
         }else if(!course.isPresent() || !course.get().isEnabled() ){
@@ -190,6 +193,7 @@ public class VLServiceImpl implements VLService{
     }
 
 
+    @PreAuthorize("hasAuthority('professor') || hasAnyAuthority('student')")
     @Override
     public List<ProfessorDTO> getProfessorsForCourse(String courseName) {
         try {
@@ -203,38 +207,10 @@ public class VLServiceImpl implements VLService{
         }
     }
 
-
-    /*
-    DOVREBBE ESSERE INUTILE, RICHIESTO NEL LAB MA NON NEL PROGETTO
-    @Override
-    public List<Boolean> addAll(List<StudentDTO> student){
-        return  student.stream().map(s -> authenticationService.addStudent(s).isPresent()).collect(Collectors.toList());
-    }
-    */
-
     @Override
     public List<Boolean> enrollAll(List<String> studentsIds, String courseName){
         return  studentsIds.stream().map( s -> addStudentToCourse(s, courseName)).collect(Collectors.toList());
     }
-
-    /*@PreAuthorize("hasAuthority('professor')") serviva per lab, add and roll
-    @Override
-    public  List<Boolean> addAndEnroll(Reader r, String courseName){
-        try {
-            CsvToBean<StudentDTO> csvToBean = new CsvToBeanBuilder(r)
-                    .withType(StudentDTO.class)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build();
-            List<StudentDTO> students = csvToBean.parse();
-            addAll(students);
-            return enrollAll(students.stream().map(s -> s.getId()).collect(Collectors.toList()),  courseName);
-        }catch (RuntimeException exception){
-            throw  new FormatFileNotValidException();
-        }
-    }
-
-     */
-
 
     @PreAuthorize("hasAuthority('professor')")
     @Override
@@ -306,7 +282,6 @@ public class VLServiceImpl implements VLService{
 
     @Override
     public List<CourseDTO> getAllCourses() {
-        courseRepository.flush();
         return courseRepository.findAll()
                 .stream()
                 .map( p -> modelMapper.map(p, CourseDTO.class))
@@ -458,7 +433,7 @@ public class VLServiceImpl implements VLService{
             throw new NameTeamIntoCourseAlreadyPresentException();
 
         if ( !enrolledStudents.containsAll(memberIds))
-            throw  new StudentNotEnrolledToCourseExcpetion();
+            throw  new StudentNotEnrolledToCourseException();
 
         if( memberIds.stream()
                 .map(s->studentRepository.getOne(s))
@@ -466,7 +441,7 @@ public class VLServiceImpl implements VLService{
                 .filter( lt-> !lt.isEmpty())
                 .map( lt-> lt.stream().map(Team::getCourse)
                         .anyMatch(c-> c.getName().equals(courseId))).collect(Collectors.toList()).contains(true))
-            throw  new StudentAlreadyInTeamExcpetion();
+            throw  new StudentAlreadyInTeamException();
 
         if ( memberIds.size()<getCourse(courseId).get().getMin() || memberIds.size()> getCourse(courseId).get().getMax())
             throw  new CardinalityNotAccetableException();
@@ -685,7 +660,7 @@ public class VLServiceImpl implements VLService{
                     photoVMRepository.save(photoVM);
                    return modelMapper.map(vm, VMDTO.class);
                }else throw new ResourcesVMNotRespectedException();
-            }else throw new TeamNotFoundException();
+            }else throw new PermissionDeniedException();
     }
 
 

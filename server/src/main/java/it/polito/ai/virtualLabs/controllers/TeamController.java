@@ -36,10 +36,15 @@ public class TeamController {
             String nameTeam = object.get("nameTeam").toString();
             List<String> membersId= (List<String>)object.get("membersId");
             return vlService.proposeTeam(courseName, nameTeam, membersId);
-        } catch (StudentNotEnrolledToCourseExcpetion | CourseNotFoundException
-                | StudentAlreadyInTeamExcpetion | CardinalityNotAccetableException
-                | StudentDuplicateException | PermissionDeniedException exception) {
+        } catch (  CourseNotFoundException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+        }catch(PermissionDeniedException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }catch(StudentNotEnrolledToCourseException | StudentAlreadyInTeamException
+                | CardinalityNotAccetableException
+                | StudentDuplicateException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+
         }
     }
 
@@ -54,7 +59,7 @@ public class TeamController {
         try {
             return vlService.getTeamForCourse(courseName).stream().map(t -> ModelHelper.enrich(t)).collect(Collectors.toList());
         }catch(CourseNotFoundException cnfe){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+courseName+" not present");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, cnfe.getMessage());
         }
     }
 
@@ -91,4 +96,23 @@ public class TeamController {
         }
     }
 
+    /* GET mapping request to see the list of students who are part of a team in a given course*/
+    @GetMapping("/inTeam/{courseName}")
+    public List<StudentDTO> getStudentsInTeams(@PathVariable String courseName) {
+        try {
+            return vlService.getStudentsInTeams(courseName).stream().map(s-> ModelHelper.enrich(s)).collect(Collectors.toList());
+        } catch (CourseNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    /* GET mapping request to see the list of students who are not yet part of a team in a given course*/
+    @GetMapping("/notInTeam/{courseName}")
+    public List<StudentDTO> getAvailableStudents(@PathVariable String courseName) {
+        try {
+            return vlService.getAvailableStudents(courseName).stream().map(s-> ModelHelper.enrich(s)).collect(Collectors.toList());
+        } catch (CourseNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 }

@@ -71,6 +71,45 @@ public class VLServiceImpl implements VLService{
     @Autowired
     UserRepository userRepository;
 
+    /*To check if the tokens contained in the repository have expired,
+     if so, they are removed from the repository and the corresponding
+     Team in the repository Team is removed.*/
+    @Scheduled(initialDelay = 1000, fixedRate = 20000)
+    public void run(){
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+
+        for(Token token: tokenRepository.findAll() )
+        {
+            if( token.getExpiryDate().compareTo(now)<0){
+                tokenRepository.deleteFromTokenDBexpired(token.getTeamId());
+                if( teamRepository.findById(token.getTeamId()).isPresent())
+                    evictTeam(token.getTeamId());
+            }
+        }
+        /*Per controllare scadenza elaborati*/
+        for(Assignment a: assignmentRepository.findAll()){
+            if(a.getExpiration().compareTo(now.toString())<=0){
+                a.getHomeworks().stream().map(h-> this.updateStatusHomework(h.getId(),"CONSEGNATO"));
+                assignmentRepository.saveAndFlush(a);
+            }
+        }
+
+        for(TokenRegistration tokenR: tokenRegistrationRepository.findAll() )
+        {
+
+            if( tokenR.getExpiryDate().compareTo(now)<0){
+                if(!userRepository.findById(tokenR.getUserId()).get().getActivate()){
+                    userRepository.deleteById(tokenR.getUserId());
+                    if( studentRepository.existsById(tokenR.getUserId()))
+                        studentRepository.deleteById(tokenR.getUserId());
+                    else
+                        professorRepository.deleteById(tokenR.getUserId());
+                }
+                tokenRegistrationRepository.delete(tokenR);
+            }
+        }
+    }
+
     /*SERVICE student*/
     @Override
     public Optional<StudentDTO> getStudent(String studentId) {
@@ -512,45 +551,7 @@ public class VLServiceImpl implements VLService{
         }
     }
 
-    /*To check if the tokens contained in the repository have expired,
-     if so, they are removed from the repository and the corresponding
-     Team in the repository Team is removed.*/
-    @Scheduled(initialDelay = 1000, fixedRate = 20000)
-    public void run(){
-        Timestamp now = new Timestamp(System.currentTimeMillis());
 
-        for(Token token: tokenRepository.findAll() )
-        {
-            if( token.getExpiryDate().compareTo(now)<0){
-                tokenRepository.deleteFromTokenDBexpired(token.getTeamId());
-                if( teamRepository.findById(token.getTeamId()).isPresent())
-                    evictTeam(token.getTeamId());
-            }
-        }
-        /*Per controllare scadenza elaborati*/
-        for(Assignment a: assignmentRepository.findAll()){
-            if(a.getExpiration().compareTo(now.toString())<=0){
-                a.getHomeworks().stream().map(h-> this.updateStatusHomework(h.getId(),"CONSEGNATO"));
-                assignmentRepository.saveAndFlush(a);
-            }
-        }
-
-        for(TokenRegistration tokenR: tokenRegistrationRepository.findAll() )
-        {
-
-            if( tokenR.getExpiryDate().compareTo(now)<0){
-                if(!userRepository.findById(tokenR.getUserId()).get().getActivate()){
-                    userRepository.deleteById(tokenR.getUserId());
-                    if( studentRepository.existsById(tokenR.getUserId()))
-                        studentRepository.deleteById(tokenR.getUserId());
-                    else
-                        professorRepository.deleteById(tokenR.getUserId());
-                }
-                tokenRegistrationRepository.delete(tokenR);
-            }
-        }
-
-    }
 
 
     /*SERVICE MODELLO VM*/
@@ -594,6 +595,50 @@ public class VLServiceImpl implements VLService{
             }else throw new PermissionDeniedException();
         }else throw new CourseNotFoundException();
 
+    }
+
+    /*Metodo per modificare risorse vm da parte docente*/
+    @PreAuthorize("hasAuthority('professor')")
+    @Override
+    public CourseDTO updateModelVM(CourseDTO courseDTO, String courseName ) {
+        Optional<Course> oc = courseRepository.findById(courseName);
+        if( oc.isPresent()) {
+            Course c = oc.get();
+            if (c.getProfessors().stream().anyMatch(p -> p.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))) {
+                //Controllo per verificare che il professore setta il modello per il corso con courseId per la prima volta
+                if (c.getPhotoModelVM() != null) {
+                    List<Team> teams = teamRepository.findAllById(c.getTeams().stream().map(t->t.getId()).collect(Collectors.toList()));
+                    int diskSpaceDecrease = c.getDiskSpace()-courseDTO.getDiskSpace();
+                    int vcpuDecrease = c.getMaxVcpu()-courseDTO.getMaxVcpu();
+                    int ramDecrease = c.getRam() - courseDTO.getRam();
+                    int runningInstancesDecrease = c.getRunningInstances() - courseDTO.getRunningInstances();
+                    int totalInstancesDecrease = c.getTotInstances() - courseDTO.getTotInstances();
+                    for(Team t:teams){
+                        if(     (diskSpaceDecrease>0 && t.getDiskSpaceLeft()<diskSpaceDecrease) ||
+                                (vcpuDecrease>0 && t.getMaxVpcuLeft()<vcpuDecrease) ||
+                                (ramDecrease>0 && t.getRamLeft()<ramDecrease) ||
+                                (runningInstancesDecrease>0 && t.getRunningInstances()<runningInstancesDecrease) ||
+                                (totalInstancesDecrease>0 && t.getTotInstances()<totalInstancesDecrease))
+                            throw new ResourcesVMNotRespectedException();
+                    }
+                    c.setMaxVcpu(courseDTO.getMaxVcpu());
+                    c.setDiskSpace(courseDTO.getDiskSpace());
+                    c.setRam(courseDTO.getRam());
+                    c.setTotInstances(courseDTO.getTotInstances());
+                    c.setRunningInstances(courseDTO.getRunningInstances());
+
+                    teams.stream().forEach(t-> {
+                        t.setDiskSpaceLeft(courseDTO.getDiskSpace()-diskSpaceDecrease);
+                        t.setRamLeft(t.getRamLeft()-ramDecrease);
+                        t.setMaxVpcuLeft(t.getMaxVpcuLeft()-vcpuDecrease);
+                        t.setTotInstances(t.getTotInstances()-totalInstancesDecrease);
+                        t.setRunningInstances(t.getRunningInstances()-runningInstancesDecrease);
+                    });
+                    return modelMapper.map(c, CourseDTO.class);
+
+                } else throw new ModelVMNotSettedException();
+            }else throw new PermissionDeniedException();
+        }else throw new CourseNotFoundException();
     }
 
 
@@ -848,52 +893,6 @@ public class VLServiceImpl implements VLService{
             }else throw new VMNotFoundException();
         }else throw new StudentNotFoundException();
     }
-
-    /*Metodo per modificare risorse vm da parte docente*/
-    @PreAuthorize("hasAuthority('professor')")
-    @Override
-    public CourseDTO updateModelVM(CourseDTO courseDTO, String courseName ) {
-        Optional<Course> oc = courseRepository.findById(courseName);
-        if( oc.isPresent()) {
-            Course c = oc.get();
-            if (c.getProfessors().stream().anyMatch(p -> p.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))) {
-                //Controllo per verificare che il professore setta il modello per il corso con courseId per la prima volta
-                if (c.getPhotoModelVM() != null) {
-                    List<Team> teams = teamRepository.findAllById(c.getTeams().stream().map(t->t.getId()).collect(Collectors.toList()));
-                    int diskSpaceDecrease = c.getDiskSpace()-courseDTO.getDiskSpace();
-                    int vcpuDecrease = c.getMaxVcpu()-courseDTO.getMaxVcpu();
-                    int ramDecrease = c.getRam() - courseDTO.getRam();
-                    int runningInstancesDecrease = c.getRunningInstances() - courseDTO.getRunningInstances();
-                    int totalInstancesDecrease = c.getTotInstances() - courseDTO.getTotInstances();
-                    for(Team t:teams){
-                        if(     (diskSpaceDecrease>0 && t.getDiskSpaceLeft()<diskSpaceDecrease) ||
-                                (vcpuDecrease>0 && t.getMaxVpcuLeft()<vcpuDecrease) ||
-                                (ramDecrease>0 && t.getRamLeft()<ramDecrease) ||
-                                (runningInstancesDecrease>0 && t.getRunningInstances()<runningInstancesDecrease) ||
-                                (totalInstancesDecrease>0 && t.getTotInstances()<totalInstancesDecrease))
-                            throw new ResourcesVMNotRespectedException();
-                    }
-                    c.setMaxVcpu(courseDTO.getMaxVcpu());
-                    c.setDiskSpace(courseDTO.getDiskSpace());
-                    c.setRam(courseDTO.getRam());
-                    c.setTotInstances(courseDTO.getTotInstances());
-                    c.setRunningInstances(courseDTO.getRunningInstances());
-
-                    teams.stream().forEach(t-> {
-                        t.setDiskSpaceLeft(courseDTO.getDiskSpace()-diskSpaceDecrease);
-                        t.setRamLeft(t.getRamLeft()-ramDecrease);
-                        t.setMaxVpcuLeft(t.getMaxVpcuLeft()-vcpuDecrease);
-                        t.setTotInstances(t.getTotInstances()-totalInstancesDecrease);
-                        t.setRunningInstances(t.getRunningInstances()-runningInstancesDecrease);
-                    });
-                    return modelMapper.map(c, CourseDTO.class);
-
-                } else throw new ModelVMNotSettedException();
-            }else throw new PermissionDeniedException();
-        }else throw new CourseNotFoundException();
-    }
-
-
 
 
 

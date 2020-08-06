@@ -43,6 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
     @Bean
@@ -60,6 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // .antMatchers("/register").per()
                 .antMatchers("/API/notification/**").permitAll()
                 .antMatchers("/API/addUser").permitAll()
+                .antMatchers("/API/registration/confirm/**").permitAll()
 
                 // all other requests need to be authenticated
                 .anyRequest().authenticated().and().

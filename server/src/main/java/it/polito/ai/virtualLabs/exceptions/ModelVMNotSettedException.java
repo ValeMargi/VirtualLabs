@@ -1,7 +1,7 @@
 package it.polito.ai.virtualLabs.exceptions;
 
-public class ModelVMNotSetted extends VLServiceException {
-        public ModelVMNotSetted() {
+public class ModelVMNotSettedException extends VLServiceException {
+        public ModelVMNotSettedException() {
             super("ModelVM is not setted!");
         }
 }

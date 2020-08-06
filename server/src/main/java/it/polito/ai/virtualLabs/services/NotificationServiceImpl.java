@@ -90,9 +90,7 @@ public class NotificationServiceImpl implements NotificationService{
     public Optional<Token> checkTokenValidity(String token){
         Optional<Token> t= tokenRepository.findById(token);
         if(t.isPresent()){
-            if( tokenRepository.existsById(token) && tokenRepository.findById(token)
-                    .get().getExpiryDate()
-                    .compareTo(Timestamp.from(Instant.now()))>0){
+            if( t.get().getExpiryDate().compareTo(Timestamp.from(Instant.now()))>0){
                 tokenRepository.deleteById(token);
                 return t;
             }

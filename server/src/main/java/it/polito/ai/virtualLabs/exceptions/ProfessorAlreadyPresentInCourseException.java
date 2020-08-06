@@ -1,7 +1,7 @@
 package it.polito.ai.virtualLabs.exceptions;
 
-public class ProfessorAlreadyPresentInCourse extends VLServiceException {
-    public ProfessorAlreadyPresentInCourse() {
+public class ProfessorAlreadyPresentInCourseException extends VLServiceException {
+    public ProfessorAlreadyPresentInCourseException() {
         super("Professor is already present in the course");
     }
 }

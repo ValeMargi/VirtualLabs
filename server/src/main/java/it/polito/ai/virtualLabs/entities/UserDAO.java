@@ -23,6 +23,8 @@ public class UserDAO {
     private String password;
     @Column
     private  String role;
+    @Column
+    private Boolean activate;
 
     @OneToOne
     @JoinColumn(name="student")

@@ -2,6 +2,9 @@ package it.polito.ai.virtualLabs.services;
 
 import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.entities.*;
+import it.polito.ai.virtualLabs.entities.TokenRegistration;
+import it.polito.ai.virtualLabs.exceptions.StudentDuplicateException;
+import it.polito.ai.virtualLabs.exceptions.UserAlreadyPresentException;
 import it.polito.ai.virtualLabs.repositories.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,6 +54,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     AvatarProfessorRepository avatarProfessorRepository;
 
+    @Autowired
+    TokenRegistrationRepository tokenRegistrationRepository;
+
 
    @Override
    public Optional<UserDTO> addStudent(StudentDTO student, String password,  AvatarStudentDTO avatarStudentDTO) {
@@ -57,22 +66,31 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                AvatarStudent avatarStudent = modelMapper.map(avatarStudentDTO,AvatarStudent.class);
                s.setPhotoStudent(avatarStudent);
                UserDTO user = new UserDTO();
-               //user.setPassword(UUID.randomUUID().toString());
-               user.setPassword(password); //passwordEncoder.encode(password));
+               user.setPassword(password);
                user.setRole("student");
                user.setEmail(student.getId());
+               user.setActivate(false);
+
+               TokenRegistration t = new TokenRegistration();
+               t.setId(UUID.randomUUID().toString());
+               t.setUserId(user.getEmail());
+               t.setExpiryDate(Timestamp.from(Instant.now().plus(120000, ChronoUnit.MILLIS))); //for debug
+               //  t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
                notificationService.sendMessage(user.getEmail(),
                        "Enrollment to the VirtualLabs app",
                        "You have been subscribed to the application.\n" +
                                "Your data to access are as follows::\n\n" +
                                "Username:  " + user.getEmail() +"\n"+
-                               "Password:   " + user.getPassword());
-                avatarStudentRepository.save(avatarStudent);
-                studentRepository.save(s);
+                               "Click here to activate the registration:\n\n" +
+                               "http://localhost:8080/API/registration/confirm/"+ t.getId()
+                       );
+               avatarStudentRepository.save(avatarStudent);
+               studentRepository.save(s);
+               tokenRegistrationRepository.save(t);
                jwtUserDetailsService.save(user, s, null);
                 return Optional.ofNullable(user);
-               }
-               return null;
+               }else throw new UserAlreadyPresentException();
+
            }
 
     @Override
@@ -84,24 +102,70 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             p.setPhotoProfessor(avatarProfessor);
 
             UserDTO user = new UserDTO();
-            // user.setPassword(UUID.randomUUID().toString());
-            user.setPassword(password); //passwordEncoder.encode(password));
+            user.setPassword(password);
             user.setRole("professor");
             user.setEmail(professor.getId());
+            user.setActivate(false);
+
+            TokenRegistration t = new TokenRegistration();
+            t.setId(UUID.randomUUID().toString());
+            t.setUserId(user.getEmail());
+            t.setExpiryDate(Timestamp.from(Instant.now().plus(120000, ChronoUnit.MILLIS)));// for debug
+            //  t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
             notificationService.sendMessage( user.getEmail(),
                     "Enrollment to the VirtualLabs app",
                     "You have been subscribed to the application.\n" +
                             "Your data to access are as follows::\n\n" +
-                            "Username:  " + user.getEmail() + "\n"+
-                            "Password:   " + user.getPassword());
+                            "Username:  " + user.getEmail() +"\n"+
+                            "Click here to activate the registration:\n\n" +
+                            "http://localhost:8080/API/registration/confirm/"+ t.getId()
+            );
             avatarProfessorRepository.saveAndFlush(avatarProfessor);
             professorRepository.save(p);
+            tokenRegistrationRepository.save(t);
             jwtUserDetailsService.save(user, null, p);
-
             return Optional.ofNullable(user);
-            }
-            return null;
+            }else throw new UserAlreadyPresentException();
+
         }
+
+    @Override
+    public boolean confirmRegistration(String token) {
+        Optional<TokenRegistration> t = checkTokenValidity(token);
+        if(t.isPresent()){
+            activateUser(t.get().getUserId());
+            tokenRegistrationRepository.deleteById(token);
+                return true;
+        }else
+            return false;
+    }
+
+    @Override
+    public Optional<TokenRegistration> checkTokenValidity(String token){
+        Optional<TokenRegistration> t= tokenRegistrationRepository.findById(token);
+        if(t.isPresent()){
+            if( t.get().getExpiryDate().compareTo(Timestamp.from(Instant.now()))<0){
+                if( studentRepository.existsById(t.get().getUserId()))
+                    studentRepository.deleteById(t.get().getUserId());
+                else if(professorRepository.existsById(t.get().getUserId()))
+                    professorRepository.deleteById(t.get().getUserId());
+                userRepository.deleteById(t.get().getUserId());
+                tokenRegistrationRepository.deleteById(token);
+                return null;
+            }
+            return t;
+        }
+        return null;
+   }
+
+    @Override
+    public void activateUser(String userId){
+       Optional<UserDAO> user = userRepository.findById(userId);
+       if(user.isPresent()){
+           user.get().setActivate(true);
+       }
+
+    }
 
     /*If the User database is empty, the admin user
     with the "admin" role/authority is inserted*/

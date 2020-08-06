@@ -5,7 +5,6 @@ import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -106,7 +105,7 @@ public class StudentController {
     public boolean isOwner(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
             return vlService.isOwner( VMid);
-        } catch (PermissionDeniedException | VMNotFound| StudentNotFoundException e) {
+        } catch (PermissionDeniedException | VMNotFoundException | StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }

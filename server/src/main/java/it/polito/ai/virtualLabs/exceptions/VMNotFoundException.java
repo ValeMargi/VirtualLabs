@@ -1,7 +1,7 @@
 package it.polito.ai.virtualLabs.exceptions;
 
-public class VMNotFound  extends VLServiceException {
-    public VMNotFound() {
+public class VMNotFoundException extends VLServiceException {
+    public VMNotFoundException() {
         super("VM not found!");
     }
 }

@@ -39,6 +39,7 @@ public interface VLService {
     void activateTeam(Long id);
     void evictTeam(Long id);
     CourseDTO addModelVM(CourseDTO courseDTO, String courseI, PhotoModelVM photoModelVM);
+    CourseDTO updateModelVM(CourseDTO courseDTO, String courseName );
     VMDTO addVM(VMDTO vmdto, String courseId, PhotoVMDTO photoVMDTO);
     boolean addOwner(Long VMid, String courseId, List<String> students);
     boolean activateVM(Long VMid);

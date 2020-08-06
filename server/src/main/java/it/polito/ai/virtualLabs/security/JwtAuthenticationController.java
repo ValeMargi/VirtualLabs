@@ -24,11 +24,19 @@ public class JwtAuthenticationController {
     JwtUserDetailsService jwtUserDetailsService;
 
 
+    /**
+     * Per poter fare il login, l'utente deve aver attivato l'account, cliccando sul link
+     * presente nell'email ricevuta all'atto di registrazione (validità email 2h)
+     * @param authenticationRequest
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
+
 
         final String token = jwtTokenUtil.generateToken(userDetails, jwtUserDetailsService.userDAOfromUserDetails(userDetails));
         return ResponseEntity.ok(new JwtResponse(token));

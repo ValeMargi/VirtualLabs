@@ -1,7 +1,7 @@
 package it.polito.ai.virtualLabs.exceptions;
 
-public class ResourcesVMNotRespected extends VLServiceException {
-    public ResourcesVMNotRespected() {
+public class ResourcesVMNotRespectedException extends VLServiceException {
+    public ResourcesVMNotRespectedException() {
         super("VM resources are not respected!");
     }
 }

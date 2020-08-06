@@ -1,7 +1,7 @@
 package it.polito.ai.virtualLabs.exceptions;
 
-public class VMnotOff  extends VLServiceException {
-    public VMnotOff() {
+public class VMnotOffException extends VLServiceException {
+    public VMnotOffException() {
         super("VM must be off!");
     }
 

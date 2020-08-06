@@ -1,7 +1,7 @@
 package it.polito.ai.virtualLabs.exceptions;
 
-public class ModelVMAlreadytPresent extends VLServiceException {
-    public ModelVMAlreadytPresent() {
+public class ModelVMAlreadytPresentException extends VLServiceException {
+    public ModelVMAlreadytPresentException() {
         super("ModelVM is already present!");
     }
 }

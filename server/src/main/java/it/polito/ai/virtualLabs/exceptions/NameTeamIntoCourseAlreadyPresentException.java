@@ -1,7 +1,7 @@
 package it.polito.ai.virtualLabs.exceptions;
 
-public class NameTeamIntoCourseAlreadyPresent  extends VLServiceException {
-    public NameTeamIntoCourseAlreadyPresent() {
+public class NameTeamIntoCourseAlreadyPresentException extends VLServiceException {
+    public NameTeamIntoCourseAlreadyPresentException() {
         super("Name team already present in that course");
     }
 }

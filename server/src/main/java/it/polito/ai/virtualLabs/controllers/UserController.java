@@ -98,6 +98,13 @@ public class UserController {
         }
     }
 
+
+    @GetMapping("/registration/confirm/{token}")
+    public Boolean confirmationPage(@PathVariable String token) {
+        return authenticationService.confirmRegistration((token));
+
+    }
+
     private SimpleMailMessage constructEmail(String subject, String body, UserDAO user) {
         final SimpleMailMessage email = new SimpleMailMessage();
         email.setSubject(subject);

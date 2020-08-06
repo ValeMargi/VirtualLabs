@@ -1,7 +1,7 @@
 package it.polito.ai.virtualLabs.exceptions;
 
-public class AssignmentNotFound  extends VLServiceException {
-    public AssignmentNotFound() {
+public class AssignmentNotFoundException extends VLServiceException {
+    public AssignmentNotFoundException() {
         super("Assignment not found!");
     }
 }

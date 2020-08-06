@@ -1,7 +1,7 @@
 package it.polito.ai.virtualLabs.exceptions;
 
-public class AssignmentAlreadyExist extends VLServiceException {
-    public AssignmentAlreadyExist() {
+public class AssignmentAlreadyExistException extends VLServiceException {
+    public AssignmentAlreadyExistException() {
         super("Assignment alreasy exist!");
     }
 }

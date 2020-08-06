@@ -9,7 +9,6 @@ import it.polito.ai.virtualLabs.repositories.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.expression.spel.ast.Assign;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +20,6 @@ import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Reader;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -68,6 +66,10 @@ public class VLServiceImpl implements VLService{
     PhotoVersionHMRepository photoVersionHMRepository;
     @Autowired
     PhotoCorrectionRepository photoCorrectionRepository;
+    @Autowired
+    TokenRegistrationRepository tokenRegistrationRepository;
+    @Autowired
+    UserRepository userRepository;
 
     /*SERVICE student*/
     @Override
@@ -250,7 +252,7 @@ public class VLServiceImpl implements VLService{
             {
                 c.setProfessor(p);
                 return modelMapper.map(p, ProfessorDTO.class);
-            }else throw new ProfessorAlreadyPresentInCourse();
+            }else throw new ProfessorAlreadyPresentInCourseException();
 
     }
     }
@@ -414,7 +416,7 @@ public class VLServiceImpl implements VLService{
                 .collect(Collectors.toList());
 
         if(course.get().getTeams().stream().anyMatch(t ->t.getName().equals(name)))
-            throw new NameTeamIntoCourseAlreadyPresent();
+            throw new NameTeamIntoCourseAlreadyPresentException();
 
         if ( !enrolledStudents.containsAll(memberIds))
             throw  new StudentNotEnrolledToCourseExcpetion();
@@ -532,6 +534,22 @@ public class VLServiceImpl implements VLService{
                 assignmentRepository.saveAndFlush(a);
             }
         }
+
+        for(TokenRegistration tokenR: tokenRegistrationRepository.findAll() )
+        {
+
+            if( tokenR.getExpiryDate().compareTo(now)<0){
+                if(!userRepository.findById(tokenR.getUserId()).get().getActivate()){
+                    userRepository.deleteById(tokenR.getUserId());
+                    if( studentRepository.existsById(tokenR.getUserId()))
+                        studentRepository.deleteById(tokenR.getUserId());
+                    else
+                        professorRepository.deleteById(tokenR.getUserId());
+                }
+                tokenRegistrationRepository.delete(tokenR);
+            }
+        }
+
     }
 
 
@@ -572,7 +590,7 @@ public class VLServiceImpl implements VLService{
                     photoModelVMRepository.save(photoModelVM);
                     return modelMapper.map(c, CourseDTO.class);
 
-                } else throw new ModelVMAlreadytPresent();
+                } else throw new ModelVMAlreadytPresentException();
             }else throw new PermissionDeniedException();
         }else throw new CourseNotFoundException();
 
@@ -598,12 +616,12 @@ public class VLServiceImpl implements VLService{
                 if(c==null || !c.isEnabled())
                     throw new CourseNotFoundException();
                 if (c.getPhotoModelVM() == null)
-                    throw  new ModelVMNotSetted();
+                    throw  new ModelVMNotSettedException();
 
                 Student s = studentRepository.getOne(studentAuth);
                 Team t = teamRepository.getOne(s.getTeams().stream().filter(te->te.getCourse().equals(c)).findFirst().get().getId());
                 if(t.getVms().stream().anyMatch(v->v.getNameVM().equals(vmdto.getNameVM())))
-                    throw new VMduplicated();
+                    throw new VMduplicatedException();
                 if( vmdto.getDiskSpace() <= t.getDiskSpaceLeft() && vmdto.getNumVcpu()<= t.getMaxVpcuLeft()
                     && vmdto.getRam() <= t.getRamLeft() && t.getTotInstances()>0){
                     VM vm = modelMapper.map(vmdto, VM.class);
@@ -621,7 +639,7 @@ public class VLServiceImpl implements VLService{
                     VMRepository.save(vm);
                     photoVMRepository.save(photoVM);
                    return modelMapper.map(vm, VMDTO.class);
-               }else throw new ResourcesVMNotRespected();
+               }else throw new ResourcesVMNotRespectedException();
             }else throw new TeamNotFoundException();
     }
 
@@ -651,7 +669,7 @@ public class VLServiceImpl implements VLService{
                      }
                     }else throw new StudentNotFoundException();
                 }else throw new PermissionDeniedException();
-        }else throw new VMNotFound();
+        }else throw new VMNotFoundException();
     }
 
      /*Metodo per attivare VM, controllo se l'utente autenticato è un owner della VM*/
@@ -668,9 +686,9 @@ public class VLServiceImpl implements VLService{
                         t.setRunningInstances(t.getRunningInstances() - 1);
                         vm.setStatus("on");
                         // VMRepository.save(vm);
-                    }else throw new ResourcesVMNotRespected();
+                    }else throw new ResourcesVMNotRespectedException();
                 } else throw new PermissionDeniedException();
-            } else throw new VMNotFound();
+            } else throw new VMNotFoundException();
             return true;
         }
 
@@ -689,9 +707,9 @@ public class VLServiceImpl implements VLService{
                     p.setPicByte(compressZLib(photoVMDTO.getPicByte()));
                     vm.setTimestamp(timestamp);
                     return true;
-                }else throw new VMnotEnabled();
+                }else throw new VMnotEnabledException();
             } else throw new PermissionDeniedException();
-        } else throw new VMNotFound();
+        } else throw new VMNotFoundException();
 
     }
 
@@ -709,7 +727,7 @@ public class VLServiceImpl implements VLService{
                 vm.setStatus("off");
                 //VMRepository.save(vm);
             } else throw new PermissionDeniedException();
-        } else throw new VMNotFound();
+        } else throw new VMNotFoundException();
         return true;
     }
     /*Metodo per cancellare VM, controllo se l'utente autenticato è un owner della VM*/
@@ -732,7 +750,7 @@ public class VLServiceImpl implements VLService{
                 photoVMRepository.delete(vm.getPhotoVM());
                 VMRepository.delete(vm);
             } else throw new PermissionDeniedException();
-        } else throw new VMNotFound();
+        } else throw new VMNotFoundException();
         return true;
     }
 
@@ -745,7 +763,7 @@ public class VLServiceImpl implements VLService{
             VM vm = ovm.get();
             if (vm.getOwnersVM().stream().map(s -> s.getId()).collect(Collectors.toList()).contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
                 Team t = teamRepository.getOne(vm.getTeam().getId());
-               if(!vm.getStatus().equals("off") ) throw new VMnotOff();
+               if(!vm.getStatus().equals("off") ) throw new VMnotOffException();
                 if (
                         vmdto.getDiskSpace() <= (t.getDiskSpaceLeft()+vm.getDiskSpace()) &&
                         vmdto.getNumVcpu() <= (t.getMaxVpcuLeft()+vm.getNumVcpu()) &&
@@ -757,9 +775,9 @@ public class VLServiceImpl implements VLService{
                     vm.setRam(vmdto.getRam());
                     vm.setNumVcpu(vmdto.getNumVcpu());
                     return modelMapper.map(vm, VMDTO.class);
-                } else throw new ResourcesVMNotRespected();
+                } else throw new ResourcesVMNotRespectedException();
             } else throw new PermissionDeniedException();
-        }else throw new VMNotFound();
+        }else throw new VMNotFoundException();
     }
 
     /*Visualizzare VM accessibili allo student in tab corso*/
@@ -807,7 +825,7 @@ public class VLServiceImpl implements VLService{
                    photoVMDTO.setPicByte(decompressZLib(photoVMDTO.getPicByte()));
                    return photoVMDTO;
                }else throw new PermissionDeniedException();
-           }else throw new VMNotFound();
+           }else throw new VMNotFoundException();
         }else throw new TeamNotFoundException();
     }
 
@@ -827,11 +845,54 @@ public class VLServiceImpl implements VLService{
                 if(vm.getOwnersVM().stream().map(st->st.getId()).collect(Collectors.toList()).contains(s.getId()))
                     return true;
                 else throw new PermissionDeniedException();
-            }else throw new VMNotFound();
+            }else throw new VMNotFoundException();
         }else throw new StudentNotFoundException();
     }
 
     /*Metodo per modificare risorse vm da parte docente*/
+    @PreAuthorize("hasAuthority('professor')")
+    @Override
+    public CourseDTO updateModelVM(CourseDTO courseDTO, String courseName ) {
+        Optional<Course> oc = courseRepository.findById(courseName);
+        if( oc.isPresent()) {
+            Course c = oc.get();
+            if (c.getProfessors().stream().anyMatch(p -> p.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))) {
+                //Controllo per verificare che il professore setta il modello per il corso con courseId per la prima volta
+                if (c.getPhotoModelVM() != null) {
+                    List<Team> teams = teamRepository.findAllById(c.getTeams().stream().map(t->t.getId()).collect(Collectors.toList()));
+                    int diskSpaceDecrease = c.getDiskSpace()-courseDTO.getDiskSpace();
+                    int vcpuDecrease = c.getMaxVcpu()-courseDTO.getMaxVcpu();
+                    int ramDecrease = c.getRam() - courseDTO.getRam();
+                    int runningInstancesDecrease = c.getRunningInstances() - courseDTO.getRunningInstances();
+                    int totalInstancesDecrease = c.getTotInstances() - courseDTO.getTotInstances();
+                    for(Team t:teams){
+                        if(     (diskSpaceDecrease>0 && t.getDiskSpaceLeft()<diskSpaceDecrease) ||
+                                (vcpuDecrease>0 && t.getMaxVpcuLeft()<vcpuDecrease) ||
+                                (ramDecrease>0 && t.getRamLeft()<ramDecrease) ||
+                                (runningInstancesDecrease>0 && t.getRunningInstances()<runningInstancesDecrease) ||
+                                (totalInstancesDecrease>0 && t.getTotInstances()<totalInstancesDecrease))
+                            throw new ResourcesVMNotRespectedException();
+                    }
+                    c.setMaxVcpu(courseDTO.getMaxVcpu());
+                    c.setDiskSpace(courseDTO.getDiskSpace());
+                    c.setRam(courseDTO.getRam());
+                    c.setTotInstances(courseDTO.getTotInstances());
+                    c.setRunningInstances(courseDTO.getRunningInstances());
+
+                    teams.stream().forEach(t-> {
+                        t.setDiskSpaceLeft(courseDTO.getDiskSpace()-diskSpaceDecrease);
+                        t.setRamLeft(t.getRamLeft()-ramDecrease);
+                        t.setMaxVpcuLeft(t.getMaxVpcuLeft()-vcpuDecrease);
+                        t.setTotInstances(t.getTotInstances()-totalInstancesDecrease);
+                        t.setRunningInstances(t.getRunningInstances()-runningInstancesDecrease);
+                    });
+                    return modelMapper.map(c, CourseDTO.class);
+
+                } else throw new ModelVMNotSettedException();
+            }else throw new PermissionDeniedException();
+        }else throw new CourseNotFoundException();
+    }
+
 
 
 
@@ -860,7 +921,7 @@ public class VLServiceImpl implements VLService{
                     }
                     assignmentRepository.save(assignment);
                     photoAssignmentRepository.save(photoAssignment);
-                }else throw new AssignmentAlreadyExist();
+                }else throw new AssignmentAlreadyExistException();
             }else throw new PermissionDeniedException();
         }else throw new CourseNotFoundException();
         return true;
@@ -922,9 +983,9 @@ public class VLServiceImpl implements VLService{
                         if (photoAssignment.isPresent()) {
                             pa.setPicByte(decompressZLib(pa.getPicByte()));
                             return modelMapper.map(pa, PhotoAssignmentDTO.class);
-                        } else throw new PhotoAssignmentNotFound();
+                        } else throw new PhotoAssignmentNotFoundException();
                     } else throw new PermissionDeniedException();
-                } else throw new AssignmentNotFound();
+                } else throw new AssignmentNotFoundException();
         }else throw new StudentNotFoundException();
     }
 
@@ -945,7 +1006,7 @@ public class VLServiceImpl implements VLService{
                         paDTO.setPicByte(decompressZLib(paDTO.getPicByte()));
                         return paDTO;
                     } else throw new PermissionDeniedException();
-                } else throw new AssignmentNotFound();
+                } else throw new AssignmentNotFoundException();
         }else throw new ProfessorNotFoundException();
     }
 
@@ -969,9 +1030,9 @@ public class VLServiceImpl implements VLService{
                         homeworkRepository.saveAndFlush(h);
                         photoVersionHMRepository.saveAndFlush(photoVersionHomework);
                         return true;
-                    } else throw new HomeworkIsPermanent();
+                    } else throw new HomeworkIsPermanentException();
                 } else throw new PermissionDeniedException();
-            } else throw new HomeworkNotFound();
+            } else throw new HomeworkNotFoundException();
         } else throw new PermissionDeniedException();
     }
 
@@ -986,7 +1047,7 @@ public class VLServiceImpl implements VLService{
                     h.setStatus(status);
                     homeworkRepository.saveAndFlush(h);
                     return true;
-                }else throw new HomeworkNotFound();
+                }else throw new HomeworkNotFoundException();
         }else throw new PermissionDeniedException();
     }
 
@@ -1001,7 +1062,7 @@ public class VLServiceImpl implements VLService{
                Assignment assignment = c.getAssignments().stream().filter(a->a.getId().equals(assignmentId)).findFirst().get();
                 if(assignment!=null ) {
                     return assignment.getHomeworks().stream().map(h->modelMapper.map(h,HomeworkDTO.class)).collect(Collectors.toList());
-                }else throw new AssignmentNotFound();
+                }else throw new AssignmentNotFoundException();
             }else throw new PermissionDeniedException();
 
 
@@ -1036,7 +1097,7 @@ public class VLServiceImpl implements VLService{
 
                 return l;
             }else throw  new PermissionDeniedException();
-        }else throw new HomeworkNotFound();
+        }else throw new HomeworkNotFoundException();
     }
 
 
@@ -1061,7 +1122,7 @@ public class VLServiceImpl implements VLService{
                 }
                 return l;
             }else throw new PermissionDeniedException();
-        }else throw new AssignmentNotFound();
+        }else throw new AssignmentNotFoundException();
     }
 
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
@@ -1082,7 +1143,7 @@ public class VLServiceImpl implements VLService{
                     throw new PermissionDeniedException();
             }
             return modelMapper.map(op.get(), PhotoVersionHomeworkDTO.class);
-        }else throw new PhotoVersionHMNotFound();
+        }else throw new PhotoVersionHMNotFoundException();
 
     }
 
@@ -1112,10 +1173,10 @@ public class VLServiceImpl implements VLService{
                     }
                     photoCorrectionRepository.saveAndFlush(photoCorrection);
                     return true;
-                }else throw new HomeworkVersionIdNotFound();
+                }else throw new HomeworkVersionIdNotFoundException();
 
             }else throw  new PermissionDeniedException();
-        }throw new HomeworkNotFound();
+        }throw new HomeworkNotFoundException();
     }
 
     @PreAuthorize("hasAuthority('professor')")
@@ -1140,7 +1201,7 @@ public class VLServiceImpl implements VLService{
              //   return correctionsList.stream().map( c -> modelMapper.map(c, PhotoCorrectionDTO.class)).collect(Collectors.toList());
 
             }else throw  new PermissionDeniedException();
-        }else throw new HomeworkNotFound();
+        }else throw new HomeworkNotFoundException();
     }
 
     @PreAuthorize("hasAuthority('student')")
@@ -1164,7 +1225,7 @@ public class VLServiceImpl implements VLService{
                // correctionsList.stream().forEach(p->p.setPicByte(decompressZLib(p.getPicByte())));
                // return correctionsList.stream().map( c -> modelMapper.map(c, PhotoCorrectionDTO.class)).collect(Collectors.toList());
             }else throw new PermissionDeniedException();
-        }else throw new AssignmentNotFound();
+        }else throw new AssignmentNotFoundException();
     }
 
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
@@ -1185,7 +1246,7 @@ public class VLServiceImpl implements VLService{
                     throw new PermissionDeniedException();
             }
             return modelMapper.map(op.get(), PhotoCorrectionDTO.class);
-        }else throw new PhotoCorrectionNotFound();
+        }else throw new PhotoCorrectionNotFoundException();
 
     }
 

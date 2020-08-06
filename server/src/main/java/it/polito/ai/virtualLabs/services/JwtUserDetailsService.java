@@ -4,6 +4,7 @@ import it.polito.ai.virtualLabs.dtos.UserDTO;
 import it.polito.ai.virtualLabs.entities.Professor;
 import it.polito.ai.virtualLabs.entities.Student;
 import it.polito.ai.virtualLabs.entities.UserDAO;
+import it.polito.ai.virtualLabs.exceptions.UserNotActivateException;
 import it.polito.ai.virtualLabs.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,6 +34,8 @@ public class JwtUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found with email: " + email);
         }
+        if(!user.getActivate())
+            throw new UserNotActivateException();
         List<String> roles=new ArrayList<>();
         roles.add(user.getRole());
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
@@ -45,6 +48,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         user.setEmail(userDTO.getEmail());
         user.setPassword(bcryptEncoder.encode(userDTO.getPassword()));
         user.setRole(userDTO.getRole());
+        user.setActivate(false);
         if(s!=null)
             user.setStudent(s);
         else if(p!=null)

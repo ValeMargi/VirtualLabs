@@ -1,7 +1,7 @@
 package it.polito.ai.virtualLabs.exceptions;
 
-public class PhotoCorrectionNotFound extends VLServiceException {
-    public PhotoCorrectionNotFound() {
+public class PhotoCorrectionNotFoundException extends VLServiceException {
+    public PhotoCorrectionNotFoundException() {
         super("Photo ccorrection not found");
     }
 }

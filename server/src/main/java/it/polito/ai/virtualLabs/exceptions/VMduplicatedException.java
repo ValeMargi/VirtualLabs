@@ -1,7 +1,7 @@
 package it.polito.ai.virtualLabs.exceptions;
 
-public class VMduplicated extends VLServiceException {
-    public VMduplicated() {
+public class VMduplicatedException extends VLServiceException {
+    public VMduplicatedException() {
         super("Duplicate VM");
     }
 

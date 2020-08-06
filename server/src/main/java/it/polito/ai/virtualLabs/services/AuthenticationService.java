@@ -2,6 +2,7 @@ package it.polito.ai.virtualLabs.services;
 
 import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.entities.Image;
+import it.polito.ai.virtualLabs.entities.TokenRegistration;
 import it.polito.ai.virtualLabs.entities.UserDAO;
 
 import java.util.Optional;
@@ -14,5 +15,8 @@ public interface AuthenticationService {
     Optional<UserDAO> getUserByPasswordResetToken(final String token);
     void changeUserPassword(UserDAO user, String password);
     void insertAdmin();
+    boolean confirmRegistration(String token);
+    Optional<TokenRegistration> checkTokenValidity(String token);
+    void activateUser(String userId);
 
     }

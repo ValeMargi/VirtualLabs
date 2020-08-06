@@ -1,7 +1,7 @@
 package it.polito.ai.virtualLabs.exceptions;
 
-public class PhotoAssignmentNotFound extends VLServiceException {
-    public PhotoAssignmentNotFound() {
+public class PhotoAssignmentNotFoundException extends VLServiceException {
+    public PhotoAssignmentNotFoundException() {
         super("PhotoAssignment not found");
     }
 }

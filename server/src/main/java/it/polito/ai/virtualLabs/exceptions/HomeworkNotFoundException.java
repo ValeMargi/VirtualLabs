@@ -1,8 +1,8 @@
 package it.polito.ai.virtualLabs.exceptions;
 
 public class
-HomeworkNotFound extends VLServiceException {
-    public HomeworkNotFound() {
+HomeworkNotFoundException extends VLServiceException {
+    public HomeworkNotFoundException() {
         super("Homework not found");
     }
 }

@@ -8,7 +8,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { Team } from '../../models/team.model';
-
+import { CreateVmsContComponent } from './create-vms/create-vms-cont/create-vms-cont.component';
+import {MatDialog,MatDialogConfig} from '@angular/material/dialog';
 @Component({
   selector: 'app-vms-student',
   templateUrl: './vms.component.html',
@@ -28,7 +29,7 @@ export class VmsComponent implements AfterViewInit, OnInit {
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  constructor(private cont: VmsContComponent) { }
+  constructor(private cont: VmsContComponent,public dialog: MatDialog) { }
 
   ngAfterViewInit(): void {
     /*this.cont.vms.subscribe(vv => {
@@ -65,6 +66,14 @@ export class VmsComponent implements AfterViewInit, OnInit {
     else {
       return "Spenta";
     }
+  }
+
+  openCreateVmsDialog() {
+    const dialogRef = this.dialog.open(CreateVmsContComponent,{ id: 'dialogCreteVms'});
+    
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
 }

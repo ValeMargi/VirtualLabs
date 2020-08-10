@@ -26,10 +26,11 @@ export class TeamsComponent implements AfterViewInit,OnInit {
     //Se uno studente è iscritto ad un gruppo 
     tableTeamVisibility:boolean = true;
 
-  displayedColumnsRequest: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
+  displayedColumnsRequest: string[] = ['id', 'name', 'firstName','groupName', 'status', 'timestamp'];
   dataSourceRequest = new MatTableDataSource<Team>();
   
   @Input() public teams: Team[] = [];
+  @Input() public request: Request[] = [];
 
   //Input per la tabella richieste
   tableVisibility: boolean = true;
@@ -41,7 +42,7 @@ export class TeamsComponent implements AfterViewInit,OnInit {
   constructor(private cont: TeamsContComponent, public dialog: MatDialog) { }
   
   openRequestDialog() {
-    const dialogRef = this.dialog.open(RequestTeamDialogComponent,{width: '700px', id: 'dialogRequest'});
+    const dialogRef = this.dialog.open(RequestTeamDialogComponent,{width: '600px', id: 'dialogRequest'});
     
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

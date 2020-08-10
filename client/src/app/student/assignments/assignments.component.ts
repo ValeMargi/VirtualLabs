@@ -52,7 +52,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
 
   openDialogAss() {
-    const dialogRef = this.matDialog.open(AddHomeworkContComponent,{width: '700px', id: 'dialogRequest'});
+    const dialogRef = this.matDialog.open(AddHomeworkContComponent,{width: '600px', id: 'dialogAss'});
     const dialogConfig = new MatDialogConfig();
 
     dialogRef.disableClose = false;

@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Crea Vm</h2>
+<mat-dialog-content>
+    <div>
+        <mat-form-field>
+        <input type="text" placeholder="Nome Vm" matInput required>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field>
+        <input #min class="input" type="number" placeholder="Numero di VCPU" matInput min="1" max="24" value="4" required>
+        </mat-form-field>
+    </div>
+    <br>
+    <div>
+        <mat-form-field>
+        <input #max class="input" type="number" placeholder="Dimensione RAM (MB)" matInput min="1" max="250" value="8" required>
+        </mat-form-field>
+    </div>
+    <br>
+    <div>
+        <mat-form-field>
+        <input #min class="input" type="number" placeholder="Spazio disco (MB)" matInput min="10" max="500" value="100" required>
+        </mat-form-field>
+    </div>
+    <br>
+  
+    <br>
+ 
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="close()">Annulla</button>
+    <button mat-button mat-raised-button color="primary" click="createVms()">Crea</button>
+</mat-dialog-actions>
+

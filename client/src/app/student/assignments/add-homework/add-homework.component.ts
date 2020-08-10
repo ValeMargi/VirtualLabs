@@ -11,6 +11,7 @@ export class AddHomeworkComponent implements OnInit, AfterViewInit {
   currentDate; oneWeek;
   constructor(private matDialogRef: MatDialogRef<AddHomeworkComponent>) { }
 
+
   ngAfterViewInit() {
 
   }
@@ -29,4 +30,8 @@ export class AddHomeworkComponent implements OnInit, AfterViewInit {
   
   }
 
+
+  onFileSelected(event){
+    console.log(event);
+  }
 }

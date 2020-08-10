@@ -59,6 +59,8 @@ import { VersionsContComponent } from './teacher/assignments/versions-cont.compo
 import { VersionsComponent } from './teacher/assignments/versions.component';
 import { TeamVmsContComponent } from './teacher/vms/team-vms-cont.component';
 import { TeamVmsComponent } from './teacher/vms/team-vms.component';
+import { CreateVmsComponent } from './student/vms/create-vms/create-vms.component';
+import { CreateVmsContComponent } from './student/vms/create-vms/create-vms-cont/create-vms-cont.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +97,9 @@ import { TeamVmsComponent } from './teacher/vms/team-vms.component';
     VersionsContComponent,
     VersionsComponent,
     TeamVmsContComponent,
-    TeamVmsComponent
+    TeamVmsComponent,
+    CreateVmsComponent,
+    CreateVmsContComponent
   ],
   imports: [
     BrowserModule,
@@ -120,7 +124,7 @@ import { TeamVmsComponent } from './teacher/vms/team-vms.component';
     MatDialogModule,
     MatFormFieldModule,
     MatCardModule, 
-    TextFieldModule
+    TextFieldModule,
   ],
   entryComponents: [MatDialogModule, MatFormFieldModule],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }/*,

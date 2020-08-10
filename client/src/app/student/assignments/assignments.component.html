@@ -1,3 +1,11 @@
+<!-- Bottone Inserisci elaborato -->
+<div class="button-request" align="right">
+    <button mat-flat-button align ="end" color="primary" (click)="openDialogAss()" class="create" >
+        <mat-icon>post_add</mat-icon> Inserisci elaborato
+    </button>
+  </div>
+
+
 <h1>Elaborati degli studenti</h1>
 
 <div class="assContainer">
@@ -9,10 +17,6 @@
         </mat-selection-list>
     </div>
 
-    <button mat-flat-button align ="end" color="accent" (click)="openDialogAss()" class="create" >
-        <mat-icon>post_add</mat-icon> Inserisci elaborato
-    </button>
-    <br>
 
     <div class="tableContainer"> 
         <table #table mat-table [dataSource]="dataSource" matSort class="matTable">

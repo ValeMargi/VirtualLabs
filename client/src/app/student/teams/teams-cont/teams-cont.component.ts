@@ -12,6 +12,7 @@ export class TeamsContComponent implements OnInit {
   constructor() { }
   
   public TEAMS: Team[] = []
+  public REQUEST: Request[] = []
 
   ngOnInit(): void {
   }

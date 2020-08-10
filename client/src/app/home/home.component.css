@@ -1,5 +1,12 @@
+body{
+    background-image: url("bannerpoli.jpg");
+    height: 80%;
+}
 h1 {
-    padding: 3em;
+    text-align:center;
+    text-decoration: solid;
+    color: cornsilk;
+    font-size: x-large;
 }
 
 h2 {

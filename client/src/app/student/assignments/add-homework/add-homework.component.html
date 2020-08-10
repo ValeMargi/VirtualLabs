@@ -1,1 +1,27 @@
-<p>add-homework works!</p>
+<h2 mat-dialog-title>Inserisci elaborato</h2>
+<mat-dialog-content>
+    <div>
+        <p>Nome elaborato</p>
+        <mat-form-field>
+        <input type="text" placeholder="Nome" matInput required>
+        </mat-form-field>
+    </div>
+    <br>
+    <div>
+        <mat-form-field>
+        <input type="date" placeholder="Data pubblicazione" name="currentDate" [ngModel]="currentDate | date:'yyyy-MM-dd'"
+         matInput readonly required>
+        </mat-form-field>
+    </div>
+
+    <mat-form-field>
+        <input type="file" id="elaborato" accept="image/png, image/jpeg">
+    </mat-form-field>
+    <br>
+    
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="close()">Annulla</button>
+    <button mat-button mat-raised-button color="primary" click="addAss()">Inserisci</button>
+</mat-dialog-actions>
+

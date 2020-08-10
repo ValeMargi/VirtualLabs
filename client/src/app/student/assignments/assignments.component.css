@@ -1,7 +1,10 @@
+
+
 .assContainer {
     width: 100%;
     overflow: hidden; 
 }
+
 
 .delContainer {
     width: 30%;
@@ -26,3 +29,4 @@ h1 {
 .matTable {
     width: 100%;
 }
+

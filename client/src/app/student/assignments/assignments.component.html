@@ -9,6 +9,11 @@
         </mat-selection-list>
     </div>
 
+    <button mat-flat-button align ="end" color="accent" (click)="openDialogAss()" class="create" >
+        <mat-icon>post_add</mat-icon> Inserisci elaborato
+    </button>
+    <br>
+
     <div class="tableContainer"> 
         <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
             <ng-container matColumnDef="id">

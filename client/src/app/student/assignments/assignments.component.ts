@@ -9,7 +9,7 @@ import { Assignment } from 'src/app/models/assignment.model';
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
 import { Student } from 'src/app/models/student.model';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-
+import {AddHomeworkContComponent } from './add-homework/add-homework-cont/add-homework-cont.component'
 
 @Component({
   selector: 'app-assignments-student',
@@ -26,11 +26,13 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   @Input() public homeworks: Homework[] = [];
   @Input() public assignments: Assignment[] = [];
 
+  tableVisibility: boolean = false;
+
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  constructor(private cont: AssignmentsContComponent) { }
+  constructor(private cont: AssignmentsContComponent, private matDialog: MatDialog, ) { }
 
   ngAfterViewInit(): void {
 
@@ -39,11 +41,32 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
+    this.tableVisibility = false;
 
   }
 
   showAssignments(assignment: Assignment) {
     
+  }
+
+
+
+  openDialogAss() {
+    const dialogRef = this.matDialog.open(AddHomeworkContComponent,{width: '700px', id: 'dialogRequest'});
+    const dialogConfig = new MatDialogConfig();
+
+    dialogRef.disableClose = false;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+        id: 1,
+        title: 'Assignment'
+    };
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+
   }
 
 }

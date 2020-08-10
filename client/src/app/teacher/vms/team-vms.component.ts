@@ -14,7 +14,7 @@ export class TeamVmsComponent implements OnInit {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['vmName', 'owner', 'status', 'link', 'edit'];
+  displayedColumns: string[] = ['vmName', 'owner', 'status', 'link'];
   dataSource = new MatTableDataSource<VM>();
   
   @Input() public vms: VM[];
@@ -41,7 +41,7 @@ export class TeamVmsComponent implements OnInit {
     }
   }
 
-  openDialogEdit() {
+  openVM() {
 
   }
 

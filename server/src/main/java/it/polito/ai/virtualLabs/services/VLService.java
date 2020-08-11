@@ -51,6 +51,7 @@ public interface VLService {
     List<VMDTO> allVMforCourse( String courseId);
    PhotoVMDTO getVMforStudent( String courseId, Long VMid);
     boolean isOwner(  Long VMid);
+    List<StudentDTO> getOwners(  Long VMid);
     boolean addAssignment(AssignmentDTO assignmentDTO, PhotoAssignmentDTO photoAssignmentDTO, String courseId);
     PhotoAssignmentDTO getAssignmentStudent( Long assignmentId);
     PhotoAssignmentDTO getAssignmentProfessor(Long assignmentId );
@@ -60,6 +61,7 @@ public interface VLService {
     boolean updateStatusHomework( Long homeworkId, String status);
     boolean uploadCorrection(Long homeworkId, Long versionHMid, PhotoCorrectionDTO photoCorrectionDTO,Boolean permanent, String grade);
     List<HomeworkDTO> allHomework(String courseName, Long assignmentId);
+    HomeworkDTO getHomework(Long assignmentId);
     List<Map<String, Object>> getVersionsHMForStudent(Long assignmentId);
     List<Map<String, Object>> getVersionsHMForProfessor(Long homeworkId);
     PhotoVersionHomeworkDTO getVersionHM(Long versionId);

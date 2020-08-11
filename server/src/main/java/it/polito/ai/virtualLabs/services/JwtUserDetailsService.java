@@ -29,23 +29,23 @@ public class JwtUserDetailsService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserDAO user = userRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+        UserDAO user = userRepository.findById(id).get();
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with email: " + email);
+            throw new UsernameNotFoundException("User not found with id: " + id);
         }
         if(!user.getActivate())
             throw new UserNotActivateException();
         List<String> roles=new ArrayList<>();
         roles.add(user.getRole());
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+        return new org.springframework.security.core.userdetails.User(user.getId(), user.getPassword(),
                 roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
     }
 
 
     public UserDAO save(UserDTO userDTO, Student s, Professor p){
         UserDAO user= new UserDAO();
-        user.setEmail(userDTO.getEmail());
+        user.setId(userDTO.getId());
         user.setPassword(bcryptEncoder.encode(userDTO.getPassword()));
         user.setRole(userDTO.getRole());
         user.setActivate(false);
@@ -64,7 +64,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     public UserDAO userDAOfromUserDetails(UserDetails userDetails){
-        UserDAO userDAO = userRepository.findByEmail(userDetails.getUsername());
+        UserDAO userDAO = userRepository.findById(userDetails.getUsername()).get();
         if( userDAO!=null)
             return  userDAO;
         else throw new UsernameNotFoundException(userDetails.getUsername());

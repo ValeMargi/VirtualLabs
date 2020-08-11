@@ -153,8 +153,10 @@ public class VLServiceImpl implements VLService{
 
         if( ! student.isPresent()){
             throw new StudentNotFoundException();
-        }else if(!course.isPresent() || !course.get().isEnabled() ){
+        }else if(!course.isPresent() ){
             throw new CourseNotFoundException();
+        }else if(!course.get().isEnabled()) {
+            throw new CourseDisabledException();
         }else if(!getProfessorsForCourse(courseName).stream()
                                                     .anyMatch(p ->p.getId()
                                                     .equals(SecurityContextHolder.getContext().getAuthentication().getName())))
@@ -182,8 +184,10 @@ public class VLServiceImpl implements VLService{
         Optional<Course> course = courseRepository.findById(courseName);
         if( ! student.isPresent()){
             throw new StudentNotFoundException();
-        }else if(!course.isPresent() || !course.get().isEnabled() ){
+        }else if(!course.isPresent() ){
             throw new CourseNotFoundException();
+        }else if(!course.get().isEnabled()){
+            throw new CourseDisabledException();
         }else if(!getProfessorsForCourse(courseName).stream()
                 .anyMatch(p ->p.getId()
                         .equals(SecurityContextHolder.getContext().getAuthentication().getName())))
@@ -422,8 +426,10 @@ public class VLServiceImpl implements VLService{
         if( !memberIds.contains(SecurityContextHolder.getContext().getAuthentication().getName()))
             throw new PermissionDeniedException();
 
-        if( !course.isPresent() || !course.get().isEnabled())
+        if( !course.isPresent())
             throw  new CourseNotFoundException();
+        if(!course.get().isEnabled())
+            throw new CourseDisabledException();
 
         List<String> enrolledStudents= getEnrolledStudents(courseId).stream()
                 .map(StudentDTO::getId)
@@ -633,8 +639,10 @@ public class VLServiceImpl implements VLService{
             String studentAuth= SecurityContextHolder.getContext().getAuthentication().getName();
             if( getStudentsInTeams(courseId).stream().anyMatch(s-> s.getId().equals(studentAuth))){
                 Course c = courseRepository.getOne(courseId);
-                if(c==null || !c.isEnabled())
+                if(c==null )
                     throw new CourseNotFoundException();
+                if( !c.isEnabled())
+                    throw new CourseDisabledException();
                 if (c.getPhotoModelVM() == null)
                     throw  new ModelVMNotSettedException();
 
@@ -672,8 +680,10 @@ public class VLServiceImpl implements VLService{
         if (ovm.isPresent() ) {
             VM vm =ovm.get();
             Course c = courseRepository.getOne(courseId);
-            if (c == null || !c.isEnabled())
+            if (c == null )
                 throw new CourseNotFoundException();
+            if(!c.isEnabled())
+                throw new CourseDisabledException();
             if(!vm.getCourse().equals(c))
                 throw new PermissionDeniedException();
                 String studentAuth = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -692,7 +702,23 @@ public class VLServiceImpl implements VLService{
         }else throw new VMNotFoundException();
     }
 
-     /*Metodo per attivare VM, controllo se l'utente autenticato è un owner della VM*/
+
+    @PreAuthorize("hasAuthority('professor')")
+    @Override
+    public List<StudentDTO> getOwners(  Long VMid) { //CourseId preso dal pathVariable
+        String professor =SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Professor> op = professorRepository.findById(professor);
+        if(op.isPresent()){
+            Professor p=op.get();
+            Optional<VM> ovm= VMRepository.findById(VMid);
+            if(ovm.isPresent()){
+                VM vm= ovm.get();
+                return  vm.getOwnersVM().stream().map(st-> modelMapper.map(st, StudentDTO.class)).collect(Collectors.toList());
+            }else throw new VMNotFoundException();
+        }else throw new StudentNotFoundException();
+    }
+
+    /*Metodo per attivare VM, controllo se l'utente autenticato è un owner della VM*/
         @PreAuthorize("hasAuthority('student')")
         @Override
         public boolean activateVM(Long VMid ){ //CourseId preso dal pathVariable
@@ -701,11 +727,12 @@ public class VLServiceImpl implements VLService{
                 VM vm = ovm.get();
                 if (vm.getOwnersVM().stream().map(s->s.getId()).collect(Collectors.toList()).contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
                     Team t = teamRepository.getOne(vm.getTeam().getId());
-                    if(t.getRunningInstances()>0) {
+                    if(t.getRunningInstances()>0) { //se sono disponibili ancora delle VM da runnare
                         Course c = courseRepository.getOne(t.getCourse().getName());
-                        t.setRunningInstances(t.getRunningInstances() - 1);
-                        vm.setStatus("on");
-                        // VMRepository.save(vm);
+                        if( c.isEnabled()){
+                            t.setRunningInstances(t.getRunningInstances() - 1);
+                            vm.setStatus("on");
+                        }else throw new CourseDisabledException();
                     }else throw new ResourcesVMNotRespectedException();
                 } else throw new PermissionDeniedException();
             } else throw new VMNotFoundException();
@@ -1074,6 +1101,22 @@ public class VLServiceImpl implements VLService{
         }else throw new HomeworkNotFoundException();
     }
 
+
+
+    @PreAuthorize("hasAuthority('student')")
+    @Override
+    public  HomeworkDTO getHomework(Long assignmentId){
+        Optional<Assignment> oa = assignmentRepository.findById(assignmentId);
+        if(oa.isPresent()){
+            Assignment a = oa.get();
+            String studentAuth =SecurityContextHolder.getContext().getAuthentication().getName();
+            if(a.getCourseAssignment().getStudents().stream().anyMatch(s->s.getId().equals(studentAuth))){
+                Homework homework = a.getHomeworks().stream().filter(h->h.getStudent().getId().equals(studentAuth)).
+                        findFirst().get();
+                return modelMapper.map(homework, HomeworkDTO.class);
+            }else throw new PermissionDeniedException();
+        }else throw new AssignmentNotFoundException();
+    }
 
     @PreAuthorize("hasAuthority('student')")
     @Override

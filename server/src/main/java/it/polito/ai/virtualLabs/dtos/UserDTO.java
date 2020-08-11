@@ -3,7 +3,7 @@ import lombok.Data;
 
 @Data
 public class UserDTO {
-    private String email;
+    private String id;
     private String password;
     private  String role;
     private Boolean activate;

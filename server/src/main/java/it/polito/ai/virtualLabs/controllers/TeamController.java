@@ -42,7 +42,8 @@ public class TeamController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }catch(StudentNotEnrolledToCourseException | StudentAlreadyInTeamException
                 | CardinalityNotAccetableException
-                | StudentDuplicateException e){
+                | StudentDuplicateException
+                | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 
         }

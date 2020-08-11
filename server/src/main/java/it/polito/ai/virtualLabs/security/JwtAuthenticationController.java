@@ -3,6 +3,7 @@ package it.polito.ai.virtualLabs.security;
 import it.polito.ai.virtualLabs.repositories.StudentRepository;
 import it.polito.ai.virtualLabs.services.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @CrossOrigin
@@ -33,13 +35,24 @@ public class JwtAuthenticationController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUsername());
+        String usernameAuth = authenticationRequest.getUsername();
+        /*Controllare se fare lowerCase*/
+        if( !( usernameAuth.matches("^s[0-9]+@studenti.polito.it")) && !( usernameAuth.matches("^d[0-9]+@polito.it")))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email " + usernameAuth + " not supported");
 
+        int index = usernameAuth.indexOf("@");
+        if(index == -1)
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email " + usernameAuth + " not supported");
+        else{
+            String id = usernameAuth.substring(0, index);
+            authenticate(id, authenticationRequest.getPassword());
+            final UserDetails userDetails = userDetailsService
+                        .loadUserByUsername(id);
 
-        final String token = jwtTokenUtil.generateToken(userDetails, jwtUserDetailsService.userDAOfromUserDetails(userDetails));
-        return ResponseEntity.ok(new JwtResponse(token));
+            final String token = jwtTokenUtil.generateToken(userDetails, jwtUserDetailsService.userDAOfromUserDetails(userDetails));
+            return ResponseEntity.ok(new JwtResponse(token));
+        }
+
     }
 
     private void authenticate(String username, String password) throws Exception {

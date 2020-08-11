@@ -70,17 +70,17 @@ public class UserController {
 
     @PostMapping("/addUser")
     public Optional<UserDTO> registerUser(@RequestPart("file") @Valid @NotNull MultipartFile file, @RequestPart Map<String, String> registerData) throws IOException {
-
+        /*Controllare se fare lowerCase*/
         if(!registerData.containsKey("firstName") || !registerData.containsKey("name") || !registerData.containsKey("id")
           || !registerData.containsKey("email") || !registerData.containsKey("password")){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters for login not found");
         }
-        if (!registerData.get("email").toString().matches("^[A-z0-9\\.\\+_-]+@polito.it") && !registerData.get("email").toString().matches("^[A-z0-9\\.\\+_-]+@studenti.polito.it")) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email " + registerData.get("email") + " not supported");
+        if (!registerData.get("email").matches("^d[0-9]+@polito.it") && !registerData.get("email").matches("^s[0-9]+@studenti.polito.it")) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email " + registerData.get("email") + " not supported");
         } else if (!jwtUserDetailsService.checkUsernameInUserRepo(registerData.get("email"))) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with email" + registerData.get("email") + "  already present");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with email" + registerData.get("email") + "  already present");
         } else {
-            if (registerData.get("email").matches("^[A-z0-9\\.\\+_-]+@polito.it")) { //Professor
+            if (registerData.get("email").matches("^d[0-9]+@polito.it")) { //Professor
                 ProfessorDTO professorDTO = new ProfessorDTO(registerData.get("id"),
                                                              registerData.get("firstName"),
                                                              registerData.get("name"),
@@ -115,7 +115,7 @@ public class UserController {
         final SimpleMailMessage email = new SimpleMailMessage();
         email.setSubject(subject);
         email.setText(body);
-        email.setTo(user.getEmail());
+        email.setTo(user.getId());
         return email;
     }
 
@@ -127,7 +127,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void resetPassword(HttpServletRequest request,
                                          @RequestParam("email") String userEmail) {
-        UserDAO user = userRepository.findByEmail(userEmail);
+        UserDAO user = userRepository.findById(userEmail).get();
         if (user != null) {
             String token = UUID.randomUUID().toString();
             authenticationService.createPasswordResetTokenForUser(user, token);
@@ -195,12 +195,14 @@ public class UserController {
     @PostMapping("/user/updatePassword")
     @ResponseBody
     public boolean changeUserPassword(final Locale locale, @RequestBody Map<String, String> input) {
-        final UserDAO user = userRepository.findByEmail(( SecurityContextHolder.getContext().getAuthentication().getName()));
-        if (!authenticationService.checkIfValidOldPassword(user, input.get("oldPassword"))) {
-            throw new InvalidOldPasswordException();
-        }
-        authenticationService.changeUserPassword(user, input.get("newPassword"));
-        return true;
+        final UserDAO user = userRepository.findById(( SecurityContextHolder.getContext().getAuthentication().getName())).get();
+        if( user !=null) {
+            if (!authenticationService.checkIfValidOldPassword(user, input.get("oldPassword"))) {
+                throw new InvalidOldPasswordException();
+            }
+            authenticationService.changeUserPassword(user, input.get("newPassword"));
+            return true;
+        }else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
     }
 
 

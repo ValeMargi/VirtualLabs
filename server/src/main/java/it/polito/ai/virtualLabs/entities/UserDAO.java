@@ -17,7 +17,7 @@ public class UserDAO {
     @Id
     @Column
     //@Email ?? errore capire il perche'
-    private String email;
+    private String id;
     @Column
     @JsonIgnore
     private String password;

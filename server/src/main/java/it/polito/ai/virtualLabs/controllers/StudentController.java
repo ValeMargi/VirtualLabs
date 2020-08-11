@@ -175,7 +175,7 @@ public class StudentController {
             return  vlService.addVM(vmdto, courseName,photoVMDTO);
         }catch (CourseNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch( ModelVMAlreadytPresentException | ResourcesVMNotRespectedException | VMduplicatedException e){
+        }catch( ModelVMAlreadytPresentException | ResourcesVMNotRespectedException | VMduplicatedException | CourseDisabledException e){
             throw new    ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(IOException e){
             throw new    ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -203,7 +203,7 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, p.getMessage());
-        }catch(ModelVMNotSettedException e){
+        }catch(ModelVMNotSettedException | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
@@ -222,7 +222,7 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, p.getMessage());
-        }catch(ResourcesVMNotRespectedException e){
+        }catch(ResourcesVMNotRespectedException | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
@@ -355,6 +355,25 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
+
+    /**
+     * Metodo: GET
+     * Authority: Studente
+     * @param courseName: riceve dal path il nome del corso di cui si vuole elencare gli elaborati per una certa consegna con id pari a assignmentId
+     * @param assignmentId: riceve dal path l'id della consegna
+     * @return: ritorna la lista di elaborati svolti dagli studenti per la consegna indicata
+     */
+    @GetMapping("/{courseName}/{assignmentId}/getHomework")
+    public HomeworkDTO getHomework(@PathVariable String courseName, @PathVariable Long assignmentId) {
+        try{
+            return  vlService.getHomework( assignmentId);
+        }catch (  HomeworkNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch(PermissionDeniedException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
+
 
     /**
      * Metodo: GET

@@ -60,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
    @Override
    public Optional<UserDTO> addStudent(StudentDTO student, String password,  AvatarStudentDTO avatarStudentDTO) {
-           if (  !studentRepository.findById(student.getId()).isPresent() )  {
+       if (  !studentRepository.findById(student.getId()).isPresent() )  {
                Student s = modelMapper.map( student, Student.class);
                studentRepository.saveAndFlush(s);
                AvatarStudent avatarStudent = modelMapper.map(avatarStudentDTO,AvatarStudent.class);
@@ -68,19 +68,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                UserDTO user = new UserDTO();
                user.setPassword(password);
                user.setRole("student");
-               user.setEmail(student.getId());
+               user.setId(student.getId());
                user.setActivate(false);
 
                TokenRegistration t = new TokenRegistration();
                t.setId(UUID.randomUUID().toString());
-               t.setUserId(user.getEmail());
+               t.setUserId(user.getId());
            //    t.setExpiryDate(Timestamp.from(Instant.now().plus(120000, ChronoUnit.MILLIS))); //for debug
                t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
-               notificationService.sendMessage(user.getEmail(),
+               notificationService.sendMessage(user.getId(),
                        "Enrollment to the VirtualLabs app",
                        "You have been subscribed to the application.\n" +
                                "Your data to access are as follows::\n\n" +
-                               "Username:  " + user.getEmail() +"\n"+
+                               "Username:  " + user.getId() +"\n"+
                                "Click here to activate the registration:\n\n" +
                                "http://localhost:8080/API/registration/confirm/"+ t.getId()
                        );
@@ -104,19 +104,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             UserDTO user = new UserDTO();
             user.setPassword(password);
             user.setRole("professor");
-            user.setEmail(professor.getId());
+            user.setId(professor.getId());
             user.setActivate(false);
 
             TokenRegistration t = new TokenRegistration();
             t.setId(UUID.randomUUID().toString());
-            t.setUserId(user.getEmail());
+            t.setUserId(user.getId());
             //t.setExpiryDate(Timestamp.from(Instant.now().plus(120000, ChronoUnit.MILLIS)));// for debug
             t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
-            notificationService.sendMessage( user.getEmail(),
+            notificationService.sendMessage( user.getId(),
                     "Enrollment to the VirtualLabs app",
                     "You have been subscribed to the application.\n" +
                             "Your data to access are as follows::\n\n" +
-                            "Username:  " + user.getEmail() +"\n"+
+                            "Username:  " + user.getId() +"\n"+
                             "Click here to activate the registration:\n\n" +
                             "http://localhost:8080/API/registration/confirm/"+ t.getId()
             );
@@ -175,7 +175,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             UserDTO admin= new UserDTO();
             admin.setPassword("admin");
             admin.setRole("admin");
-            admin.setEmail("admin"); //??
+            admin.setId("admin"); //??
             jwtUserDetailsService.save(admin, null, null);
         }
     }

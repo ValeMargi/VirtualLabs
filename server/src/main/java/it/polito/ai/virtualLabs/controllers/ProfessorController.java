@@ -132,6 +132,24 @@ public class ProfessorController {
         }
     }
 
+    /**
+     * Authrority: Docente
+     * @param courseName
+     * @return: ritrona lista di VM dto con le informazioni
+     *          di tutte le VM di un dato corso
+     */
+    @GetMapping("/VM/{courseName}")
+    public List<StudentDTO> getOwners(@PathVariable String courseName, @PathVariable Long teamId, @PathVariable Long vmId) {
+        try{
+            return vlService.getOwners(vmId);
+        } catch (CourseNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch(PermissionDeniedException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
+
+
     // addAssignment ->inserimento consegna Prof
     /*
      * Ass: id, release, expiration

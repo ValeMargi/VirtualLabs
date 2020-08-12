@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/API/professors")
@@ -24,13 +25,31 @@ public class ProfessorController {
 
     @Autowired
     VLService vlService;
+
+
+    @GetMapping({"", "/"})
+    public List<ProfessorDTO> getAll(){
+        return vlService.getAllProfessors().stream().map(p-> ModelHelper.enrich(p)).collect(Collectors.toList());
+    }
+
+
+    @GetMapping("/{id}")
+    public ProfessorDTO getOne(@PathVariable String id) {
+        Optional<ProfessorDTO> professorDTO = vlService.getProfessor(id);
+        if (!professorDTO.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Professor with id:"+id+" not present");
+        else
+            return ModelHelper.enrich(professorDTO.get());
+    }
+
+
     /**
      * Metodo: GET
      * Authority: Docente
      * @param professorId: riceve dal path l'id di un professore
      * @return: ritorna una lista di DTO dei corsi di cui il professore con professorId indicato è titolare
      */
-    @GetMapping("/{professorId}")
+    @GetMapping("/{professorId}/courses")
     public List<CourseDTO> getCoursesForProfessor(@PathVariable String professorId){
         try{
             return vlService.getCoursesForProfessor(professorId).stream()

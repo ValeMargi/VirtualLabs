@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -208,9 +209,9 @@ public class CourseController {
     }
 
     @PostMapping("/{courseName}/enrollAll")
-    public List<Boolean> enrollAll(@RequestBody List<String> membersId, @PathVariable String courseName){
+    public List<Boolean> enrollAll(@RequestBody String[] membersId, @PathVariable String courseName){
         try{
-             return vlService.enrollAll(membersId, courseName);
+             return vlService.enrollAll(Arrays.asList(membersId), courseName);
         }catch (StudentNotFoundException | CourseNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){

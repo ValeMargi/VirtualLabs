@@ -85,7 +85,7 @@ public class TeamController {
      * @return ritorna la lista di team DTO a cui lo studente con id=studentId è iscritto
      */
     /*GET mapping request to see the list of teams a particular student is enrolled in*/
-    @GetMapping("/{studentId}/forStudent")
+    @GetMapping("/{studentId}/teams")
     public List<TeamDTO> getTeamsForStudent(@PathVariable String studentId) {
         try {
             return vlService.getTeamsForStudent(studentId).stream().map(s -> ModelHelper.enrich(s)).collect(Collectors.toList());
@@ -98,7 +98,7 @@ public class TeamController {
     }
 
     /* GET mapping request to see the list of students who are part of a team in a given course*/
-    @GetMapping("/inTeam/{courseName}")
+    @GetMapping("/{courseName}/inTeam")
     public List<StudentDTO> getStudentsInTeams(@PathVariable String courseName) {
         try {
             return vlService.getStudentsInTeams(courseName).stream().map(s-> ModelHelper.enrich(s)).collect(Collectors.toList());
@@ -108,7 +108,7 @@ public class TeamController {
     }
 
     /* GET mapping request to see the list of students who are not yet part of a team in a given course*/
-    @GetMapping("/notInTeam/{courseName}")
+    @GetMapping("/{courseName}/notInTeam")
     public List<StudentDTO> getAvailableStudents(@PathVariable String courseName) {
         try {
             return vlService.getAvailableStudents(courseName).stream().map(s-> ModelHelper.enrich(s)).collect(Collectors.toList());

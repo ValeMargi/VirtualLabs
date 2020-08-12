@@ -1,17 +1,17 @@
 export class Assignment {
     public id: string;
-    public name: string;
+    public assignmentName: string;
     public teacherId: string;
     public courseId: string;
-    public release: string;
+    public releaseDate: string;
     public expiration: string;
 
-    constructor(id: string, name: string, teacherId: string, courseId: string, release: string, expiration: string) {
+    constructor(id: string, assignmentName: string, teacherId: string, courseId: string, releaseDate: string, expiration: string) {
         this.id = id;
-        this.name = name;
+        this.assignmentName = assignmentName;
         this.teacherId = teacherId;
         this.courseId = courseId;
-        this.release = release;
+        this.releaseDate = releaseDate;
         this.expiration = expiration;
     }
 }

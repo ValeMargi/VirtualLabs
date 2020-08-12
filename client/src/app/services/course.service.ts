@@ -4,7 +4,8 @@ import { map, concatMap, toArray } from 'rxjs/operators';
 import { Course } from '../models/course.model';
 import { Student } from '../models/student.model';
 import { Teacher } from '../models/teacher.model';
-import { Modelvm } from '../models/modelvm';
+import { HomeworkVersion } from '../models/homework-version.model';
+import { HomeworkCorrection } from '../models/homework-correction.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,81 +24,61 @@ export class CourseService {
     return this.http.get<Course>(`${this.API_COURSES}/${name}`);
   }
 
-  enrolledStudents(name: string) {
-    return this.http.get<Student[]>(`${this.API_COURSES}/${name}/enrolled`).pipe(map(students => students || []));
-  }
-
   addCourse(course: Course) {
     return this.http.post<Course>(this.API_COURSES, course);
-  }
-
-  addProfessorToCourse(name: string, teacher: Teacher) {
-    return this.http.post<Teacher>(`${this.API_COURSES}/${name}/addProfessor`, teacher);
-  }
-
-  enrollOne() {
-    //chiedere
-  }
-
-  enrollStudents(name: string, file: File) {
-    //chiedere
-    const data: FormData = new FormData();
-    data.append('file', file);
-    return this.http.post<File>(`${this.API_COURSES}/${name}/enrollMany`, data);
   }
 
   enableCourse(name: string, enabled: boolean) {
     return this.http.post<boolean>(`${this.API_COURSES}/${name}/enable`, enabled);
   }
 
-  getCoursesForStudent(studentId: string) {
-    return this.http.get<Course[]>(`${this.API_COURSES}/${studentId}`).pipe(map(courses => courses || []));
+  removeCourse(courseName: string) {
+    return this.http.post<void>(`${this.API_COURSES}/${courseName}/remove`, null);
   }
 
-  getCoursesForProfessor(teacherId: string) {
-    return this.http.get<Course[]>(`${this.API_COURSES}/${teacherId}`).pipe(map(courses => courses || []));
+  modifyCourse(courseName: string, course: Course) {
+    return this.http.post<Course>(`${this.API_COURSES}/${courseName}/modify`, course);
   }
 
-  removeCourse(courseId: string) {
-    return this.http.post<void>(`${this.API_COURSES}/${courseId}/remove`, null);
+  addProfessorToCourse(courseName: string, teacher: Teacher) {
+    return this.http.post<Teacher>(`${this.API_COURSES}/${courseName}/addProfessor`, teacher);
   }
 
-  modifyCourse(courseId: string, course: Course) {
-    return this.http.post<Course>(`${this.API_COURSES}/${courseId}/modify`, course);
-  }
-
-  proposeTeam(courseId: string) {
-    //chiarire, team controller?
-    //return this.http.post<Course>(`${this.API_COURSES}/${courseId}/proposeTeam`, course);
-  }
-
-  getMembersTeam() {
-    //chiarire, possibile errore nel server, manca teamId nel path
-  }
-
-  addModelVM(courseId: string, model: Modelvm) {
-    return this.http.post<Modelvm>(`${this.API_COURSES}/${courseId}/addModel`, model);
-  }
-
-  addOwner(courseId: string, vmId: string, input) {
+  enrollOne() {
     //chiedere
-    return this.http.post<void>(`${this.API_COURSES}/${courseId}/${vmId}/addOwner`, input);
   }
 
-  //chiarire metodi VM
+  enrollStudents(courseName: string, file: File) {
+    if (file == null)
+       return null;
 
-  activateVM() {
-
+    let data: FormData = new FormData();
+    data.append("file", file, file.name);
+    return this.http.post(`${this.API_COURSES}/${courseName}/enrollMany`, data);
   }
 
-  disableVM() {
-
+  enrollAll(courseName: string, studentsIds: string[]) {
+    return this.http.post<string[]>(`${this.API_COURSES}/${courseName}/enrollAll`, studentsIds);
   }
 
-  removeVM() {
-
+  deleteStudentFromCourse(courseName: string, studentId: string) {
+    return this.http.post<void>(`${this.API_COURSES}/${courseName}/${studentId}/removeStudent`, null);
+  }
+  
+  enrolledStudents(courseName: string) {
+    return this.http.get<Student[]>(`${this.API_COURSES}/${courseName}/enrolled`).pipe(map(students => students || []));
   }
 
-  //da completare
+  getProfessorsForCourse(courseName: string) {
+    return this.http.get<Teacher[]>(`${this.API_COURSES}/${courseName}/getProfessors`).pipe(map(teachers => teachers || []));
+  }
+
+  getVersionHM(courseName: string, assignmentId: string, homeworkId: number, versionId: number) {
+    return this.http.get<HomeworkVersion>(`${this.API_COURSES}/${courseName}/${assignmentId}/${homeworkId}/${versionId}/version`);
+  }
+
+  getCorrectionHM(courseName: string, assignmentId: string, homeworkId: number, correctionId: number) {
+    return this.http.get<HomeworkCorrection>(`${this.API_COURSES}/${courseName}/${assignmentId}/${homeworkId}/${correctionId}/correction`);
+  }
 
 }

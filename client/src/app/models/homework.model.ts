@@ -1,10 +1,10 @@
 export class Homework {
-    public id: string;
+    public id: number;
     public status: string;
     public permanent: boolean;
     public grade: string;
 
-    constructor(id: string, status: string, permanent: boolean, grade: string) {
+    constructor(id: number, status: string, permanent: boolean, grade: string) {
         this.id = id; 
         this.status = status;
         this.permanent = permanent;

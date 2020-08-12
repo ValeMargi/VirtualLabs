@@ -277,7 +277,7 @@ public class ProfessorController {
      *           di versioni di Homerwork per la consegna con assignmentId indicato e per il corso con courseName indicato
      */
     @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/getVersions")
-    public List<Map<String, Object>> getVersionsHMForProfessor(@PathVariable String courseName, @PathVariable String assignmentId, @PathVariable Long homeworkId) {
+    public List<Map<String, Object>> getVersionsHMForProfessor(@PathVariable String courseName, @PathVariable Long assignmentId, @PathVariable Long homeworkId) {
         try{
             return  vlService.getVersionsHMForProfessor(homeworkId);
         } catch (  HomeworkNotFoundException e) {
@@ -304,7 +304,7 @@ public class ProfessorController {
     @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/{versionHMid}/uploadCorrection")
     public void uploadCorrection(@PathVariable String courseName, @PathVariable String assignmentId,
                                  @PathVariable Long homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file,
-                                 @RequestPart("permanent") @NotNull Boolean permanent, @PathVariable Long versionHMid,
+                                 @RequestPart("permanent") @NotNull String permanent, @PathVariable Long versionHMid,
                                  @RequestPart("grade") String grade) throws IOException {
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
@@ -318,7 +318,7 @@ public class ProfessorController {
             photoCorrectionDTO.setType(file.getContentType());
             photoCorrectionDTO.setPicByte(  vlService.compressZLib(file.getBytes()));
             photoCorrectionDTO.setTimestamp(timestamp.toString());
-            vlService.uploadCorrection(homeworkId, versionHMid, photoCorrectionDTO,permanent, grade );
+            vlService.uploadCorrection(homeworkId, versionHMid, photoCorrectionDTO, Boolean.parseBoolean(permanent), grade);
 
         }catch ( HomeworkNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

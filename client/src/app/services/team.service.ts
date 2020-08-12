@@ -12,42 +12,27 @@ export class TeamService {
 
   constructor(private http: HttpClient) {}
 
-  MY_PAHT = "http://localhost:3000/teams";
+  API_TEAMS = "http://localhost:8080/teams";
 
-  create(team: Team) {
-    return this.http.post<Team>(this.MY_PAHT, team);
+  proposeTeam(courseName: string, teamMap: Map<string, string[]>) {
+    //nella mappa le chiavi sono nameTeam e membersId
+    return this.http.post(`${this.API_TEAMS}/${courseName}/proposeTeam`, teamMap);
   }
 
-  update(team: Team) {
-    return this.http.put<Team>(this.MY_PAHT, team);
+  getMembersTeam(teamId: number) {
+    return this.http.get<Student[]>(`${this.API_TEAMS}/${teamId}/members`).pipe(map(students => students || []));
   }
 
-  find(id: string) {
-    return this.http.get<Team>(`${this.MY_PAHT}/${id}`);
+  getTeamsForStudent(studentId: string) {
+    return this.http.get<Team[]>(`${this.API_TEAMS}/${studentId}/teams`).pipe(map(teams => teams || []));
   }
 
-  query() {
-    return this.http.get<Team[]>(`${this.MY_PAHT}`)
-                    .pipe(map(teams => teams || []));
+  getStudentsInTeams(courseName: string) {
+    return this.http.get<Student[]>(`${this.API_TEAMS}/${courseName}/inTeam`).pipe(map(students => students || []));
   }
 
-  delete(id: string) {
-    return this.http.delete(`${this.MY_PAHT}/${id}`);
+  getAvailableStudents(courseName: string) {
+    return this.http.get<Student[]>(`${this.API_TEAMS}/${courseName}/notInTeam`).pipe(map(students => students || []));
   }
 
-  addStudents(team: Team, students: Student[]) {
-    students.forEach(student => {
-      //team.members.push(student);
-    });
-
-    return this.http.put<Team>(`${this.MY_PAHT}/${team.id}`, team);
-  }
-
-  removeStudents(team: Team, students: Student[]) {
-    students.forEach(student => {
-      //team.members.splice(team.members.indexOf(student), 1);
-    });
-
-    return this.http.put<Team>(`${this.MY_PAHT}/${team.id}`, team);
-  }
 }

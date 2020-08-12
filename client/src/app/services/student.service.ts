@@ -6,6 +6,11 @@ import { map, switchMap, concatMap, toArray } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { Course } from '../models/course.model';
 import { Team } from '../models/team.model';
+import { VM } from '../models/vm.model';
+import { PhotoVM } from '../models/photo-vm.model';
+import { Assignment } from '../models/assignment.model';
+import { PhotoAssignment } from '../models/photo-assignment.model';
+import { Homework } from '../models/homework.model';
 
 @Injectable({
   providedIn: 'root'
@@ -70,18 +75,91 @@ export class StudentService {
     return this.http.get<Student[]>(`${this.API_STUDENTS}`).pipe(map(students => students || []));
   }
 
-  getOne(id: string) {
-    return this.http.get<Student>(`${this.API_STUDENTS}/${id}`);
+  getOne(studentId: string) {
+    return this.http.get<Student>(`${this.API_STUDENTS}/${studentId}`);
   }
 
-  getCourses(id: string) {
-    return this.http.get<Course[]>(`${this.API_STUDENTS}/${id}/courses`).pipe(map(courses => courses || []));
+  getCourses(studentId: string) {
+    return this.http.get<Course[]>(`${this.API_STUDENTS}/${studentId}/courses`).pipe(map(courses => courses || []));
   }
 
-  getTeamsForStudent(id: string) {
-    return this.http.get<Team[]>(`${this.API_STUDENTS}/${id}/teams`).pipe(map(teams => teams || []));
+  allVMsForStudent(courseName: string) {
+    return this.http.get<VM[]>(`${this.API_STUDENTS}/VM/${courseName}`).pipe(map(vms => vms || []));
   }
 
-  //discutere gli altri metodi
+  getVMForStudent(courseName: string, VMId: number) {
+    return this.http.get<PhotoVM[]>(`${this.API_STUDENTS}/VM/${courseName}/${VMId}`).pipe(map(vms => vms || []));
+  }
+
+  isOwner(courseName: string, VMId: number) {
+    return this.http.get<boolean>(`${this.API_STUDENTS}/VM/${courseName}/${VMId}/owner`);
+  }
+
+  allAssignments(courseName: string) {
+    return this.http.get<Assignment[]>(`${this.API_STUDENTS}/${courseName}/assignment`).pipe(map(ass => ass || []));
+  }
+
+  getAssignment(courseName: string, assignmentId: number) {
+    return this.http.get<PhotoAssignment>(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getAssignment`)
+  }
+
+  addVM(courseName: string, file: File, vm: VM) {
+    let data: FormData = new FormData();
+    data.append("file", file, file.name);
+    data.append("VM", JSON.stringify(vm));
+
+    return this.http.post(`${this.API_STUDENTS}/${courseName}/addVM`, data);
+  }
+
+  addOwner(courseName: string, VMId: number, membersId: string[]) {
+    return this.http.post(`${this.API_STUDENTS}/${courseName}/${VMId}/addOwner`, membersId);
+  }
+
+  activateVM(courseName: string, VMId: number) {
+    return this.http.get(`${this.API_STUDENTS}/${courseName}/${VMId}/activateVM`);
+  }
+
+  disableVM(courseName: string, VMId: number) {
+    return this.http.get(`${this.API_STUDENTS}/${courseName}/${VMId}/disableVM`);
+  }
+
+  removeVM(courseName: string, VMId: number) {
+    return this.http.get(`${this.API_STUDENTS}/${courseName}/${VMId}/removeVM`);
+  }
+
+  useVM(courseName: string, VMId: number, file: File) {
+    let data: FormData = new FormData();
+    data.append("file", file, file.name);
+
+    return this.http.post(`${this.API_STUDENTS}/${courseName}/${VMId}/useVM`, data);
+  }
+
+  updateVMresources(courseName: string, VMId: number, vm: VM) {
+    let data: FormData = new FormData();
+    data.append("VM", JSON.stringify(vm));
+
+    return this.http.post(`${this.API_STUDENTS}/${courseName}/${VMId}/update`, data);
+  }
+
+  uploadVersionHomework(courseName: string, assignmentId: number, homeworkId: number, file: File) {
+    let data: FormData = new FormData();
+    data.append("file", file, file.name);
+
+    return this.http.post(`${this.API_STUDENTS}/${courseName}/${assignmentId}/${homeworkId}/uploadHomework`, data);
+  }
+
+  getHomework(courseName: string, assignmentId: number) {
+    this.http.get<Homework>(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getHomework`);
+  }
+
+  getVersionsHMForStudent(courseName: string, assignmentId: number) {
+    //elaborare risultato
+    this.http.get(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getVersions`).pipe(map(versions => versions || []));
+  }
+
+  getCorrectionsForStudent(courseName: string, assignmentId: number) {
+    //elaborare risultato
+    this.http.get(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getCorrections`).pipe(map(corrections => corrections || []));
+  }
 
 }

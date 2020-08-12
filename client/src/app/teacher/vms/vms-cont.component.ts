@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { VM } from '../../models/vm.model';
 import { AuthService } from '../../auth/auth.service';
-import { VmService } from '../../services/vm.service';
 import { TeamService } from '../../services/team.service';
 import { Team } from '../../models/team.model';
 
@@ -14,7 +13,7 @@ export class VmsContComponent implements OnInit {
   
   public COURSE_TEAMS: Team[] = []
 
-  constructor(public vmService: VmService, public teamService: TeamService, public authService: AuthService) { 
+  constructor(public teamService: TeamService, public authService: AuthService) { 
     
   }
 

@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -193,11 +194,9 @@ public class StudentController {
      * @param input: nel body della richiesta vengono inviati gli id dei membri del team che divenntano owner della VM
      */
     @PostMapping("/{courseName}/{VMid}/addOwner")
-    public void addOwner(  @PathVariable String courseName, @PathVariable Long VMid,@RequestBody Map<String, Object> input) {
-        if (!input.containsKey("id"))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, input.get("id").toString());
+    public void addOwner(  @PathVariable String courseName, @PathVariable Long VMid,@RequestBody String[] input) {
         try {
-            List<String> membersId = (List<String>) input.get("id");
+            List<String> membersId = Arrays.asList(input);
             vlService.addOwner(VMid, courseName, membersId);
         } catch (VMNotFoundException | CourseNotFoundException | StudentNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -332,7 +331,7 @@ public class StudentController {
      * @throws IOException
      */
     @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/uploadHomework")
-    public void uploadVersionHomework(@PathVariable String courseName, @PathVariable String assignmentId,
+    public void uploadVersionHomework(@PathVariable String courseName, @PathVariable Long assignmentId,
                                       @PathVariable Long homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file ) throws IOException {
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))

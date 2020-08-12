@@ -10,6 +10,7 @@ import { HomeworkVersion } from 'src/app/models/homework-version.model';
 import { Student } from 'src/app/models/student.model';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {AddHomeworkContComponent } from './add-homework/add-homework-cont/add-homework-cont.component'
+import {AssignmentsService} from '../../services/assignments.service'
 
 @Component({
   selector: 'app-assignments-student',
@@ -32,7 +33,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  constructor(private cont: AssignmentsContComponent, private matDialog: MatDialog, ) { }
+  constructor(private cont: AssignmentsContComponent, private matDialog: MatDialog,private assignmentsService: AssignmentsService ) { }
 
   ngAfterViewInit(): void {
 

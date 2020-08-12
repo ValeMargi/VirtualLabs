@@ -15,7 +15,7 @@ export class HomeworksContComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.HOMEWORKS.push(new Homework("primo", "new", false, ""));
+    this.HOMEWORKS.push(new Homework(1, "new", false, ""));
   }
 
 }

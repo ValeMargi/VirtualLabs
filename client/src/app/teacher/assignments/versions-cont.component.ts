@@ -17,12 +17,7 @@ export class VersionsContComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.VERSIONS.push(new HomeworkVersion(new Student("s268746", "Carlo", "Verdone", ""), 1, "timestamp1"));
-    this.VERSIONS.push(new HomeworkVersion(new Student("s268746", "Carlo", "Verdone", ""), 2, "timestamp2"));
-    this.VERSIONS.push(new HomeworkVersion(new Student("s268746", "Carlo", "Verdone", ""), 2, ""));
-    this.REVIEWS.push(new HomeworkVersion(new Student("s268746", "Carlo", "Verdone", ""), 2, ""));
-    this.REVIEWS.push(new HomeworkVersion(new Student("s268746", "Carlo", "Verdone", ""), 2, ""));
-    this.REVIEWS.push(new HomeworkVersion(new Student("s268746", "Carlo", "Verdone", ""), 3, "timestamp3"))
+
   }
 
 }

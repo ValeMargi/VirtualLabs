@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface AvatarStudentRepository extends JpaRepository<AvatarStudent, String> {
+public interface AvatarStudentRepository extends JpaRepository<AvatarStudent, Long> {
 
 }

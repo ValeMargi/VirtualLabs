@@ -5,7 +5,10 @@ import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.entities.AvatarStudent;
 import it.polito.ai.virtualLabs.entities.UserDAO;
 import it.polito.ai.virtualLabs.dtos.ProfessorDTO;
+import it.polito.ai.virtualLabs.exceptions.AvatarNotPresentException;
 import it.polito.ai.virtualLabs.exceptions.InvalidOldPasswordException;
+import it.polito.ai.virtualLabs.exceptions.ProfessorNotFoundException;
+import it.polito.ai.virtualLabs.exceptions.StudentNotFoundException;
 import it.polito.ai.virtualLabs.repositories.PasswordResetTokenRepository;
 import it.polito.ai.virtualLabs.repositories.UserRepository;
 import it.polito.ai.virtualLabs.services.AuthenticationService;
@@ -203,6 +206,34 @@ public class UserController {
             authenticationService.changeUserPassword(user, input.get("newPassword"));
             return true;
         }else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+    }
+
+
+    @PostMapping("/user/updateAvatar")
+    public boolean changeAvatar(@RequestPart("file") @Valid @NotNull MultipartFile file) throws IOException {
+       boolean res = false;
+       try {
+           if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("professor"))) {
+               AvatarProfessorDTO avatarProfessorDTO = new AvatarProfessorDTO();
+               avatarProfessorDTO.setNameFile(file.getOriginalFilename());
+               avatarProfessorDTO.setType(file.getContentType());
+               avatarProfessorDTO.setPicByte(vlService.compressZLib(file.getBytes()));
+               res = vlService.changeAvatar(avatarProfessorDTO, null);
+           } else if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("student"))) {
+               AvatarStudentDTO avatarStudentDTO = new AvatarStudentDTO();
+               avatarStudentDTO.setNameFile(file.getOriginalFilename());
+               avatarStudentDTO.setType(file.getContentType());
+               avatarStudentDTO.setPicByte(vlService.compressZLib(file.getBytes()));
+               res = vlService.changeAvatar(null, avatarStudentDTO);
+
+           }
+
+           return res;
+       }catch (AvatarNotPresentException | StudentNotFoundException | ProfessorNotFoundException e){
+           throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+       }
+
+
     }
 
 

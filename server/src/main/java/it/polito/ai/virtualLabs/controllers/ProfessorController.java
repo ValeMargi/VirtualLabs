@@ -157,7 +157,7 @@ public class ProfessorController {
      * @return: ritrona lista di VM dto con le informazioni
      *          di tutte le VM di un dato corso
      */
-    @GetMapping("/VM/{courseName}")
+    @GetMapping("/VM/{courseName}/{teamId}/{vmId}")
     public List<StudentDTO> getOwners(@PathVariable String courseName, @PathVariable Long teamId, @PathVariable Long vmId) {
         try{
             return vlService.getOwners(vmId);

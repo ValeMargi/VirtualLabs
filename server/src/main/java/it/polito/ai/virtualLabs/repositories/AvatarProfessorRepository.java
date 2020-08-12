@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AvatarProfessorRepository extends JpaRepository<AvatarProfessor, String> {
+public interface AvatarProfessorRepository extends JpaRepository<AvatarProfessor, Long> {
 }

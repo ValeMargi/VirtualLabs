@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface VLService {
+    boolean changeAvatar(AvatarProfessorDTO avatarProfessorDTO, AvatarStudentDTO avatarStudentDTO);
     Optional<StudentDTO> getStudent(String studentId);
     List<StudentDTO> getAllStudents();
     List<ProfessorDTO> getAllProfessors();
@@ -22,12 +23,12 @@ public interface VLService {
     List<Boolean> enrollAll(List<String> studentsIds, String courseName);
    // List<Boolean> addAndEnroll(Reader r, String courseName);
    List<Boolean> EnrollAllFromCSV(Reader r, String courseName);
-    boolean addCourse(CourseDTO course);
+    boolean addCourse(CourseDTO course, List<String> professorsId);
     boolean removeCourse(String courseId);
     boolean modifyCourse(CourseDTO course);
     Optional<CourseDTO> getCourse(String name);
     List<CourseDTO> getAllCourses();
-    ProfessorDTO addProfessorToCourse(String courseId, String professorId);
+    List<ProfessorDTO> addProfessorsToCourse(String courseId, List<String> professorsId);
     void enableCourse(String courseName);
     void disableCourse(String courseName);
     List<CourseDTO> getCoursesForStudent(String studentId);

@@ -72,6 +72,10 @@ public class VLServiceImpl implements VLService{
     UserRepository userRepository;
     @Autowired
     PasswordResetTokenRepository passwordResetTokenRepository;
+    @Autowired
+    AvatarProfessorRepository avatarProfessorRepository;
+    @Autowired
+    AvatarStudentRepository avatarStudentRepository;
 
     /*To check if the tokens contained in the repository have expired,
      if so, they are removed from the repository and the corresponding
@@ -112,6 +116,37 @@ public class VLServiceImpl implements VLService{
             }
         }
 
+    }
+
+    @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
+    @Override
+    public boolean changeAvatar(AvatarProfessorDTO avatarProfessorDTO, AvatarStudentDTO avatarStudentDTO){
+        String auth = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(avatarProfessorDTO!=null){
+            Optional<Professor> op= professorRepository.findById(auth);
+            if(op.isPresent()){
+                Professor p = op.get();
+                if(p.getPhotoProfessor()!=null){
+                    AvatarProfessor avatar = avatarProfessorRepository.findById(p.getPhotoProfessor().getId()).get();
+                    avatar.setPicByte(avatarProfessorDTO.getPicByte());
+                    avatar.setNameFile(avatarProfessorDTO.getNameFile());
+                    avatar.setType(avatarProfessorDTO.getType());
+                    return true;
+                }else throw new AvatarNotPresentException();
+            }else throw new ProfessorNotFoundException();
+        }else if(avatarStudentDTO!=null){
+            Optional<Student> os= studentRepository.findById(auth);
+            if(os.isPresent()){
+                Student s = os.get();
+                if(s.getPhotoStudent()!=null){
+                    AvatarStudent avatar = avatarStudentRepository.findById(s.getPhotoStudent().getId()).get();
+                    avatar.setPicByte(avatarStudentDTO.getPicByte());
+                    avatar.setNameFile(avatarStudentDTO.getNameFile());
+                    avatar.setType(avatarStudentDTO.getType());
+                    return true;
+                }else throw new AvatarNotPresentException();
+            }else throw new StudentNotFoundException();
+        }else return false;
     }
 
     /*SERVICE student*/
@@ -248,7 +283,7 @@ public class VLServiceImpl implements VLService{
     /*SERVICE CORSO*/
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public boolean addCourse(CourseDTO course) {
+    public boolean addCourse(CourseDTO course, List<String> professorsId) {
         if ( !courseRepository.findById(course.getName()).isPresent())  {
             Course c = modelMapper.map( course, Course.class);
             String idProfessor= (SecurityContextHolder.getContext().getAuthentication().getName());
@@ -256,8 +291,15 @@ public class VLServiceImpl implements VLService{
             if(op.isPresent()){
                 Professor p=op.get();
                 c.setProfessor(p);
-                courseRepository.saveAndFlush(c);
-                return true;
+                List<Professor> professors = professorRepository.findAllById(professorsId);
+                if(professors.size()!=professorsId.size())
+                    throw new ProfessorNotFoundException();
+                else{
+                    professors.stream().forEach(pr-> c.setProfessor(pr));
+                    courseRepository.saveAndFlush(c);
+                    return true;
+                }
+
             }else throw new ProfessorNotFoundException();
         }
         return false;
@@ -265,26 +307,32 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public ProfessorDTO addProfessorToCourse(String courseId, String professorId) {
+    public List<ProfessorDTO> addProfessorsToCourse(String courseId, List<String> professorsId) {
         Optional<Course> oc= courseRepository.findById(courseId);
         if ( !oc.isPresent())  {
            throw new CourseNotFoundException();
         }
         Course c = oc.get();
-        Optional<Professor> op =professorRepository.findById(professorId);
-        if(!op.isPresent()){
+        List<Professor> professors = professorRepository.findAllById(professorsId);
+        if(professors.size()!=professorsId.size())
             throw new ProfessorNotFoundException();
-        }else if(getProfessorsForCourse(courseId).stream()
-                                                  .noneMatch(pf ->pf.getId()
-                                                  .equals(SecurityContextHolder.getContext().getAuthentication().getName()))){
-            throw new PermissionDeniedException();
-        }else{
-            Professor p = op.get();
-            if( !c.getProfessors().contains(p))
-            {
-                c.setProfessor(p);
-                return modelMapper.map(p, ProfessorDTO.class);
-            }else throw new ProfessorAlreadyPresentInCourseException();
+        else{
+            if(getProfessorsForCourse(courseId).stream()
+                    .noneMatch(pf ->pf.getId()
+                            .equals(SecurityContextHolder.getContext().getAuthentication().getName()))){
+                throw new PermissionDeniedException();
+            }else{
+                for(Professor professor: professors){
+                    if( !c.getProfessors().contains(professor))
+                        c.setProfessor(professor);
+                    else throw new ProfessorAlreadyPresentInCourseException();
+                }
+
+                return professors.stream().map(pro-> modelMapper.map(pro, ProfessorDTO.class)).collect(Collectors.toList());
+
+        }
+
+
 
     }
     }

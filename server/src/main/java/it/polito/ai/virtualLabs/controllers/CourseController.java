@@ -63,9 +63,9 @@ public class CourseController {
      * @return: ritorna il DTO del corso
      */
     @PostMapping({"", "/"})
-    public CourseDTO addCourse(@RequestBody CourseDTO courseDTO) {
+    public CourseDTO addCourse(@RequestParam("course") CourseDTO courseDTO, @RequestParam("professors") List<String> professorsId ) {
         try {
-            if (vlService.addCourse(courseDTO)) {
+            if (vlService.addCourse(courseDTO, professorsId)) {
                 return ModelHelper.enrich(courseDTO);
             } else
                 throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getName());
@@ -145,15 +145,15 @@ public class CourseController {
     /**
      * Metodo: POST
      * Authority: Docente
-     * @param professorId: parametro acquisito dal corspo della richiesta (String idProfessor MATRICOLA es p1;)
+     * @param professorsId: parametro acquisito dal corspo della richiesta (riceve una lista di String idProfessor MATRICOLA es p1,p2,p3;)
      * @param courseName:  riceve dal path il nome di un Corso
      * @return: ritorna il DTO del professore aggiunto al corso con CourseName indicato
      * @return: ritorna il DTO del professore aggiaddAssunto al corso con CourseName indicato
      */
-    @PostMapping({"/{courseName}/addProfessor"})
-    public ProfessorDTO addProfessorToCourse(@RequestBody String professorId, @PathVariable String courseName){
+    @PostMapping({"/{courseName}/addProfessors"})
+    public List<ProfessorDTO> addProfessorsToCourse(@RequestBody List<String> professorsId, @PathVariable String courseName){
         try{
-            return ModelHelper.enrich(vlService.addProfessorToCourse(courseName, professorId));
+            return vlService.addProfessorsToCourse(courseName, professorsId).stream().map(p-> ModelHelper.enrich(p)).collect(Collectors.toList());
         }catch(CourseNotFoundException | ProfessorNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){

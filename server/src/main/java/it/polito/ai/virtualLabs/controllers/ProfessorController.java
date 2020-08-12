@@ -302,7 +302,7 @@ public class ProfessorController {
      * @throws IOException
      */
     @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/{versionHMid}/uploadCorrection")
-    public void uploadCorrection(@PathVariable String courseName, @PathVariable String assignmentId,
+    public void uploadCorrection(@PathVariable String courseName, @PathVariable Long assignmentId,
                                  @PathVariable Long homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file,
                                  @RequestPart("permanent") @NotNull String permanent, @PathVariable Long versionHMid,
                                  @RequestPart("grade") String grade) throws IOException {
@@ -340,7 +340,7 @@ public class ProfessorController {
      * @return : ritorna la lista di correzioni di Homerwork per la consegna con assignmentId indicato e per il courso con courseName indicato
      */
     @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/getCorrections")
-    public List<Map<String, Object>> getCorrectionsForProfessor(@PathVariable String courseName, @PathVariable String assignmentId, @PathVariable Long homeworkId) {
+    public List<Map<String, Object>> getCorrectionsForProfessor(@PathVariable String courseName, @PathVariable Long assignmentId, @PathVariable Long homeworkId) {
         try{
             return  vlService.getCorrectionsForProfessor(homeworkId);
         } catch (  HomeworkNotFoundException e) {

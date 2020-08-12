@@ -130,6 +130,19 @@ public class VLServiceImpl implements VLService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ProfessorDTO> getAllProfessors() {
+        return professorRepository.findAll()
+                .stream()
+                .map( p -> modelMapper.map(p, ProfessorDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<ProfessorDTO> getProfessor(String professorId) {
+        return professorRepository.findById(professorId)
+                .map(p -> modelMapper.map(p, ProfessorDTO.class));
+    }
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
     public List<StudentDTO> getEnrolledStudents(String courseName) {

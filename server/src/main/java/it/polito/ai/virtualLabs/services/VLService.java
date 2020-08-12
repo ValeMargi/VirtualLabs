@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface VLService {
     Optional<StudentDTO> getStudent(String studentId);
     List<StudentDTO> getAllStudents();
+    List<ProfessorDTO> getAllProfessors();
+    Optional<ProfessorDTO> getProfessor(String professorId);
     List<StudentDTO> getEnrolledStudents(String courseName);
     boolean addStudentToCourse(String studentId, String courseName);
     boolean deleteStudentFromCourse(String studentId, String courseName);

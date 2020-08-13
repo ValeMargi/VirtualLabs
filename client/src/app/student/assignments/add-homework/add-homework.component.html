@@ -1,31 +1,25 @@
 <h2 mat-dialog-title>Inserisci elaborato</h2>
-<mat-dialog-content>
-    <div>
-        <mat-form-field>
-        <input type="text" placeholder="Nome" matInput required>
-        </mat-form-field>
-    </div>
-    <br>
-    <div>
-        <mat-form-field>
-        <input type="date" 
-        placeholder="Data pubblicazione" 
-        name="currentDate" 
-        [ngModel]="currentDate | date:'yyyy-MM-dd'"
-        matInput 
-        readonly 
-        required>
-        </mat-form-field>
-    </div>
 
-    <div>
-        <input type='file' (change)="onFileSelected($event)" accept="image/*">
-    </div>
-    <br>
+<mat-dialog-content>
+    
+        <!--Nome Elaborato-->
+        <mat-form-field class="form-group">
+        <input type="text" id="name" class="form-control" placeholder="Nome" [formControl]="form.name" matInput required minlength="3">
+        <mat-error *ngIf="form.name.invalid">{{getErrorMessage()}}</mat-error>
+        </mat-form-field><br><br>
+
+        <!--Data Elaborato-->
+        <mat-form-field class="form-group">
+        <input type="date" id="date" placeholder="Data pubblicazione" name="currentDate" [ngModel]="currentDate | date:'yyyy-MM-dd'" matInput readonly required>
+        </mat-form-field><br>
+
+         <!--File-->
+        <input type="file" id="file" (change)="onFileSelected($event)" [formControl] = "form.file" accept="image/*" required>
+        <mat-error *ngIf="form.file.invalid">{{getErrorMessage()}}</mat-error>
     
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button (click)="close()">Annulla</button>
-    <button mat-button mat-raised-button color="primary" click="addAss()">Inserisci</button>
+    <button mat-button mat-raised-button color="accent" (click)="close()">Annulla</button>
+    <button mat-button mat-raised-button color="primary" (click)="addAss()">Inserisci</button>
 </mat-dialog-actions>
 

@@ -3,7 +3,7 @@ import { ViewChild, AfterViewInit } from '@angular/core';
 import {MatSort} from '@angular/material/sort';
 import {MatTable} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
-
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 export interface ListStudent {
   Matricola: string;
   Cognome: string;
@@ -36,6 +36,19 @@ export class RequestTeamDialogComponent implements AfterViewInit,OnInit{
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
+
+  form = {
+    name : new FormControl('', [Validators.required, Validators.minLength(3)]),
+    date : new FormControl('', [Validators.required])
+  }
+    getErrorMessage() {
+      if (this.form.name.hasError('required') || this.form.date.hasError('required')) {
+        return 'Campo obbligatorio';
+      }
+      if(this.form.name.hasError('minlength')){
+        return 'Inserire almeno 3 caratteri';
+      }
+    }
 
   constructor() {}
 

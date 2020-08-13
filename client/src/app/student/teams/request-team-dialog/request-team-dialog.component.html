@@ -4,14 +4,16 @@
   <mat-form-field>
         <mat-label>Gruppo</mat-label>
         <mat-icon matSuffix>group</mat-icon>
-        <input matInput required placeholder="Nome gruppo">
+        <input matInput required [formControl]="form.name" placeholder="Nome gruppo" required>
+        <mat-error *ngIf="form.name.invalid">{{getErrorMessage()}}</mat-error>
     </mat-form-field>
     <br>
     <mat-form-field>
-    <mat-select required placeholder="Durata richieste">
+    <mat-select required placeholder="Durata richieste" [formControl]="form.date" required>
         <mat-option value="1-sett">1 settimana</mat-option>
         <mat-option value="2-sett">2 settimana</mat-option>
       </mat-select>
+      <mat-error *ngIf="form.date.invalid">{{getErrorMessage()}}</mat-error>
     </mat-form-field>
 
 

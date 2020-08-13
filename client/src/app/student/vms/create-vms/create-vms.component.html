@@ -2,7 +2,8 @@
 <mat-dialog-content>
     <div>
         <mat-form-field>
-        <input type="text" placeholder="Nome Vm" matInput required>
+        <input type="text" placeholder="Nome Vm" [formControl] = "form.name" matInput required>
+        <mat-error *ngIf="form.name.invalid">{{getErrorMessage()}}</mat-error>
         </mat-form-field>
     </div>
     <div>

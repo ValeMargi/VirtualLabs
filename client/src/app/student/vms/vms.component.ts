@@ -40,10 +40,6 @@ export class VmsComponent implements AfterViewInit, OnInit {
       this.length = this.vms.length;
     });*/
 
-    //provvisorio
-    this.teams.push(new Team("T01", "Gruppo 1", 1));
-    this.teams.push(new Team("T02", "Gruppo 2", 1));
-
     this.vms.push(new VM("VM01", 2, 100, 2, "spenta"));
     this.dataSource = new MatTableDataSource<VM>(this.vms);
     this.dataSource.paginator = this.paginator;
@@ -58,6 +54,9 @@ export class VmsComponent implements AfterViewInit, OnInit {
   openDialogEdit() {
 
   }
+
+  swithOnVm(){}
+  switchOffVm(){}
 
   getStatus(on: boolean) {
     if (on) {

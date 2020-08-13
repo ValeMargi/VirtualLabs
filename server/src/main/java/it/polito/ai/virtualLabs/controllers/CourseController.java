@@ -294,7 +294,7 @@ public class CourseController {
      * @return DTO di PhotoVersionHomework per un dato homework
      */
     @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/{versionId}/version")
-    public PhotoVersionHomeworkDTO getVersionHM(@PathVariable String courseName, @PathVariable String assignmentId,
+    public PhotoVersionHomeworkDTO getVersionHM(@PathVariable String courseName, @PathVariable Long assignmentId,
                                                 @PathVariable Long homeworkId, @PathVariable Long versionId) {
         try{
             return  vlService.getVersionHM(versionId);
@@ -315,7 +315,7 @@ public class CourseController {
      * @return DTO di PhotoCorrection per un dato homework
      */
     @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/{correctionId}/correction")
-    public PhotoCorrectionDTO getCorrectionHM(@PathVariable String courseName, @PathVariable String assignmentId,
+    public PhotoCorrectionDTO getCorrectionHM(@PathVariable String courseName, @PathVariable Long assignmentId,
                                                 @PathVariable Long homeworkId, @PathVariable Long correctionId) {
         try{
             return  vlService.getCorrectionHM( correctionId);

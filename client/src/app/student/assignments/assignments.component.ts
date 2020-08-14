@@ -37,7 +37,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
 
     //provvisorio
-    this.assignments.push(new Assignment("D01", "Laboratorio 1", "T01", "C01", "01/01/2020", "31/07/2020"));
+    this.assignments.push(new Assignment(-1, "Laboratorio 1", "01/01/2020", "31/07/2020"));
   }
 
   ngOnInit(): void {

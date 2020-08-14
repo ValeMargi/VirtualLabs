@@ -1,5 +1,3 @@
-import { Course } from './course.model';
-
 export class Teacher {
     public id: string;
     public fistName: string;

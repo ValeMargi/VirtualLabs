@@ -152,9 +152,9 @@ public class CourseController {
      * @return: ritorna il DTO del professore aggiaddAssunto al corso con CourseName indicato
      */
     @PostMapping({"/{courseName}/addProfessors"})
-    public List<ProfessorDTO> addProfessorsToCourse(@RequestBody List<String> professorsId, @PathVariable String courseName){
+    public List<ProfessorDTO> addProfessorsToCourse(@RequestBody String[] professorsId, @PathVariable String courseName){
         try{
-            return vlService.addProfessorsToCourse(courseName, professorsId).stream().map(p-> ModelHelper.enrich(p)).collect(Collectors.toList());
+            return vlService.addProfessorsToCourse(courseName, Arrays.asList(professorsId)).stream().map(p-> ModelHelper.enrich(p)).collect(Collectors.toList());
         }catch(CourseNotFoundException | ProfessorNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
@@ -167,17 +167,14 @@ public class CourseController {
     /**
      * Metodo: POST
      * Authority: Docente
-     * @param input: Nel corpo della richiesta viene passato  id dello studente da iscrivere al corso con nome courseName."
-     *               Esempio Body: {"id": "s1"}
+     * @param memberId: id dello studente da aggiungere
      * @param courseName: riceve dal path il nome di un Corso
      */
     @PostMapping("/{courseName}/enrollOne")
     @ResponseStatus(HttpStatus.CREATED)
-    public void enrollOne(@RequestBody Map<String, String> input, @PathVariable String courseName){
-        if( !input.containsKey("id"))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, input.get("id"));
+    public void enrollOne(@RequestBody String memberId, @PathVariable String courseName){
         try{
-            if (!vlService.addStudentToCourse(input.get("id"), courseName))
+            if (!vlService.addStudentToCourse(memberId, courseName))
                 throw new StudentAlreadyInCourseException();
         }catch (StudentNotFoundException | CourseNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

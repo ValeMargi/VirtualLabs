@@ -1,13 +1,6 @@
 <h2 mat-dialog-title>Crea/modifica modello</h2>
 <mat-dialog-content>
     <div>
-        <p>Nome del modello</p>
-        <mat-form-field>
-        <input #courseName class="input" type="text" placeholder="Nome del modello" matInput required>
-        </mat-form-field>
-    </div>
-    <br>
-    <div>
         <p>Massimo VCPU</p>
         <mat-form-field>
         <input #min class="input" type="number" placeholder="Massimo VCPU" matInput min="1" max="24" value="4" required>
@@ -15,16 +8,16 @@
     </div>
     <br>
     <div>
-        <p>Massima RAM</p>
+        <p>Massimo disco</p>
         <mat-form-field>
-        <input #max class="input" type="number" placeholder="Massima RAM" matInput min="1" max="250" value="8" required>
+        <input #min class="input" type="number" placeholder="Massimo disco" matInput min="10" max="500" value="100" required>
         </mat-form-field>
     </div>
     <br>
     <div>
-        <p>Massimo disco</p>
+        <p>Massima RAM</p>
         <mat-form-field>
-        <input #min class="input" type="number" placeholder="Massimo disco" matInput min="10" max="500" value="100" required>
+        <input #max class="input" type="number" placeholder="Massima RAM" matInput min="1" max="250" value="8" required>
         </mat-form-field>
     </div>
     <br>

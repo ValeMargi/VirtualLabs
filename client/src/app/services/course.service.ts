@@ -40,12 +40,12 @@ export class CourseService {
     return this.http.post<Course>(`${this.API_COURSES}/${courseName}/modify`, course);
   }
 
-  addProfessorToCourse(courseName: string, teacher: Teacher) {
-    return this.http.post<Teacher>(`${this.API_COURSES}/${courseName}/addProfessor`, teacher);
+  addProfessorsToCourse(courseName: string, teachersId: string[]) {
+    return this.http.post(`${this.API_COURSES}/${courseName}/addProfessor`, teachersId);
   }
 
-  enrollOne() {
-    //chiedere
+  enrollOne(courseName: string, studentId: string) {
+    return this.http.post(`${this.API_COURSES}/${courseName}/enrollOne`, studentId);
   }
 
   enrollStudents(courseName: string, file: File) {

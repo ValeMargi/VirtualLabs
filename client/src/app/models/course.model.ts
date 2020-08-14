@@ -1,20 +1,26 @@
-import { Student } from './student.model';
-import { Team } from './team.model';
-import { Teacher } from './teacher.model';
-
 export class Course {
-    public id: string;
     public name: string;
+    public acronym: string;
     public min: number;
     public max: number;
     public enabled: boolean;
+    public maxVcpu: number;
+    public diskSpace: number;
+    public ram: number;
+    public runningInstances: number;
+    public totInstances: number;
 
-    constructor(id: string, name: string, min: number, max: number, enabled: boolean) {
-        this.id = id;
+    constructor(name: string, acronym: string, min: number, max: number, enabled: boolean, maxVcpu: number, diskSpace: number, ram: number, runningInstances: number, totInstances: number) {
         this.name = name;
+        this.acronym = acronym;
         this.min = min;
         this.max = max;
         this.enabled = enabled;
+        this.maxVcpu = maxVcpu;
+        this.diskSpace = diskSpace;
+        this.ram = ram;
+        this.runningInstances = runningInstances;
+        this.totInstances = totInstances;
     }
     
 }

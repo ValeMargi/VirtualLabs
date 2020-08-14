@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Assignment } from 'src/app/models/assignment.model';
 
 @Component({
   selector: 'app-create-assignment',
@@ -27,8 +28,8 @@ export class CreateAssignmentComponent implements OnInit, AfterViewInit {
     this.matDialogRef.close();
   }
 
-  createAss() {
-    
+  createAss(name: string, release: string, expire: string) {
+    let assignment = new Assignment(-1, name, release, expire);
+    //TODO servizio
   }
-
 }

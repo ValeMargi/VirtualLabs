@@ -10,6 +10,8 @@ import { Student } from '../models/student.model';
 const API_URL_LOGIN = 'http://localhost:3000/login';
 const API_URL_USERS = 'http://localhost:3000/users';    
 
+const API_LOGIN = 'http://localhost:8080/login';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,13 +22,7 @@ export class AuthService {
   private userSubject: BehaviorSubject<User>;
 
   constructor(private http: HttpClient) {
-    const user = new User();
-    if (this.isLoggedIn()) {
-      user.email = localStorage.getItem('email');
-    }
-
-    this.userSubject = new BehaviorSubject<User>(user);
-    this.user = this.userSubject.asObservable();
+    
   }
   
   login(email: string, password: string) {
@@ -35,7 +31,7 @@ export class AuthService {
     this.http.post(
       API_URL_LOGIN,{
         email: email,
-        password:password
+        password: password
       }
     ).subscribe(
       (authResult: any) => {
@@ -60,7 +56,7 @@ export class AuthService {
     localStorage.setItem('expires_at', tkn.exp);
     localStorage.setItem('email', email);
     
-    this.getUser(email).subscribe(
+    /*this.getUser(email).subscribe(
       (data) => {
         //console.log(data);
         //let user: User = new User();
@@ -82,7 +78,7 @@ export class AuthService {
       (error: any) => {
         this.userLogged.emit(false);
       }
-    );
+    );*/
     //user.password = password;
     //this.userSubject.next(user);
   }

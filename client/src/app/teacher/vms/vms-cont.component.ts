@@ -19,8 +19,8 @@ export class VmsContComponent implements OnInit {
 
   ngOnInit(): void {
     //provvisorio
-    this.COURSE_TEAMS.push(new Team("T01", "Gruppo 1", 1));
-    this.COURSE_TEAMS.push(new Team("T02", "Gruppo 2", 1));
+    this.COURSE_TEAMS.push(new Team(-1, "Gruppo 1", 1, 0, 0, 0, 0, 0));
+    this.COURSE_TEAMS.push(new Team(-1, "Gruppo 2", 1, 0, 0, 0, 0, 0));
   }
 
 }

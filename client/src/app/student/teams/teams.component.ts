@@ -51,8 +51,8 @@ export class TeamsComponent implements AfterViewInit,OnInit {
 
   ngAfterViewInit(): void {
     //Inserimento provvisorio
-    this.teams.push(new Team("S265645", "Vassallo Giorgio", 2));
-    this.teams.push(new Team("s265434", "Cordellic Marco", 1));
+    this.teams.push(new Team(-1, "Vassallo Giorgio", 2, 0, 0, 0, 0, 0));
+    this.teams.push(new Team(-1, "Cordellic Marco", 1, 0, 0, 0, 0, 0));
 
     this.dataSourceTeam.paginator = this.paginator;
     this.dataSourceTeam.sort = this.sort;

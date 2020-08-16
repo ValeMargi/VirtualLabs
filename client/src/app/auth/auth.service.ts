@@ -56,7 +56,7 @@ export class AuthService {
     localStorage.setItem('expires_at', tkn.exp);
     localStorage.setItem('email', email);
     
-    /*this.getUser(email).subscribe(
+    this.getUser(email).subscribe(
       (data) => {
         //console.log(data);
         //let user: User = new User();
@@ -78,7 +78,7 @@ export class AuthService {
       (error: any) => {
         this.userLogged.emit(false);
       }
-    );*/
+    );
     //user.password = password;
     //this.userSubject.next(user);
   }

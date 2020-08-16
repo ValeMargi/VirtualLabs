@@ -45,11 +45,26 @@ matcher = new MyErrorStateMatcher();
     this.RegisterForm = this.formBuilder.group({
       name : new FormControl('', [Validators.required, Validators.minLength(3)]),
       surname : new FormControl('', [Validators.required]),
-      email: new FormControl('',[Validators.email]),
+      email: new FormControl('',[Validators.email,this.emailDomainValidator]),
       password: ['', [Validators.required,Validators.minLength(8)]],
       confirmPassword: ['',[Validators.minLength(8)]],
     }, { validator: this.checkPasswords });
 
+}
+
+emailDomainValidator(control: FormControl) { 
+  let email = control.value; 
+  if (email && email.indexOf("@") != -1) { 
+    let [_, domain] = email.split("@"); 
+    if (domain !== "studenti.polito.it" && domain !== "polito.it") { 
+      return {
+        emailDomain: {
+          parsedDomain: domain
+        }
+      }
+    }
+  }
+  return null; 
 }
 
 checkPasswords(group: FormGroup) { // here we have the 'passwords' group

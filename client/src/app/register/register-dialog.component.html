@@ -20,32 +20,34 @@
       <!--Nome-->
       <mat-form-field>
       <input #name type="text" placeholder="Nome" formControlName="name" matInput required autofocus>
-      <mat-error *ngIf="RegisterForm.hasError('required')">Campo obbligatorio</mat-error>
-      </mat-form-field><br>
+      <mat-error *ngIf="RegisterForm.get('name').hasError('required')">Il nome è richiesto</mat-error>
+      </mat-form-field><br><br>
 
       <!--Cognome-->
       <mat-form-field>
       <input #surname type="text" placeholder="Cognome" formControlName="surname" matInput required>
-      <mat-error *ngIf="RegisterForm.hasError('required')">Campo obbligatorio</mat-error>
-      </mat-form-field><br>
+      <mat-error *ngIf="RegisterForm.get('surname').hasError('required')">Il cognome è richiesto</mat-error>
+      </mat-form-field><br><br>
 
       <!--Email-->
       <mat-form-field>
         <input #surname type="email" placeholder="Email" formControlName="email" matInput required>
-        <mat-error *ngIf="RegisterForm.hasError('required','email')">Inserisci un'email valida</mat-error>
-        </mat-form-field> <br>
+        <mat-error *ngIf="RegisterForm.get('email').hasError('required','email')">Inserisci un'email valida</mat-error>
+        </mat-form-field> <br><br>
 
       <!--Password-->
       <mat-form-field>
       <input #password type="password" placeholder="Password" formControlName="password" matInput required minlength="8">
       <mat-error *ngIf="RegisterForm.hasError('required', 'password')">Inserisci una password</mat-error>
+      <mat-error *ngIf="RegisterForm.hasError('minlength','password')">Inserisci almeno 8 caratteri</mat-error>
       </mat-form-field><br>
 
       <!--ConfirmPassword-->
       <mat-form-field>
       <input #passwordRepeat type="password" placeholder="Ripeti password" formControlName="confirmPassword" [errorStateMatcher]="matcher" matInput required minlength="8">
-      <mat-error *ngIf="RegisterForm.hasError('notSame')"> Le due Password non coincidono</mat-error>  
-      </mat-form-field><br>
+      <mat-error *ngIf="RegisterForm.hasError('notSame')"> Le due password non coincidono</mat-error>  
+      <mat-error *ngIf="RegisterForm.get('confirmPassword').hasError('minlength')">Inserisci almeno 8 caratteri</mat-error>
+      </mat-form-field><br><br>
 
       <!--Tipologia Utente-->
       <p>Sono</p>

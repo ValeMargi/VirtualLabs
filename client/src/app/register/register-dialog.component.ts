@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { LoginDialogComponent } from '../login/login-dialog.component';
 import { FormControl, FormGroupDirective, NgForm, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const invalidCtrl = !!(control && control.invalid && control.parent.dirty);
@@ -22,11 +21,15 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 })
 export class RegisterDialogComponent implements OnInit {
 
-  
 RegisterForm: FormGroup;
 matcher = new MyErrorStateMatcher();
 
-  constructor( public matDialog: MatDialog, public authService: AuthService, private dialogRef: MatDialogRef<RegisterDialogComponent>, private router: Router, private formBuilder: FormBuilder) {
+  constructor( 
+    public matDialog: MatDialog, 
+    public authService: AuthService, 
+    private dialogRef: MatDialogRef<RegisterDialogComponent>, 
+    private router: Router, 
+    private formBuilder: FormBuilder) {
 
     authService.userLogged.subscribe(ok => {
       if (ok && authService.isLoggedIn()) {
@@ -43,8 +46,8 @@ matcher = new MyErrorStateMatcher();
       name : new FormControl('', [Validators.required, Validators.minLength(3)]),
       surname : new FormControl('', [Validators.required]),
       email: new FormControl('',[Validators.email]),
-      password: ['', [Validators.required]],
-      confirmPassword: [''],
+      password: ['', [Validators.required,Validators.minLength(8)]],
+      confirmPassword: ['',[Validators.minLength(8)]],
     }, { validator: this.checkPasswords });
 
 }

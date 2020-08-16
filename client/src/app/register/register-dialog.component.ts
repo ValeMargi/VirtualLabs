@@ -3,16 +3,8 @@ import { MatDialog, MatDialogRef, MatDialogConfig } from '@angular/material/dial
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
 import { LoginDialogComponent } from '../login/login-dialog.component';
-import { FormControl, FormGroupDirective, NgForm, Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const invalidCtrl = !!(control && control.invalid && control.parent.dirty);
-    const invalidParent = !!(control && control.parent && control.parent.invalid && control.parent.dirty);
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 
-    return (invalidCtrl || invalidParent);
-  }
-}
 
 @Component({
   selector: 'app-register-dialog',
@@ -22,7 +14,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class RegisterDialogComponent implements OnInit {
 
 RegisterForm: FormGroup;
-matcher = new MyErrorStateMatcher();
 
   constructor( 
     public matDialog: MatDialog, 

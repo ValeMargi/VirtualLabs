@@ -1,25 +1,33 @@
 <h2 mat-dialog-title>Login</h2>
 <mat-dialog-content>
-  <mat-form-field>
-    <input #email type="email" placeholder="email" matInput required>
-    <mat-error *ngIf="email.invalid">Email non valida</mat-error>
-  </mat-form-field>
-  <br>
-  <mat-form-field>
-    <input #password type="password" placeholder="password" matInput required minlength="8">
-    <mat-error>Password non valida</mat-error>
-  </mat-form-field>
 
-  <br>
-  <div class="register">
-    Non sei registrato?
+   <!--LoginForm--> 
+   <form [formGroup]="LoginForm">
+
+    <!--Email-->
+    <mat-form-field>
+      <input #email type="email" placeholder="Email" formControlName="email" matInput required>
+        <mat-error *ngIf="LoginForm.hasError('required','email')">Email non valida</mat-error>
+        <mat-error *ngIf="LoginForm.get('email').hasError('emailDomain')">Utilizza il dominio: studenti.polito.it o polito.it</mat-error> 
+     </mat-form-field><br>
+
+   <!--Password-->
+   <mat-form-field>
+        <input #password type="password" placeholder="Password" formControlName = "password" matInput required minlength="8">
+        <mat-error *ngIf="LoginForm.get('password').hasError('required')">Password obbligatoria</mat-error>
+   </mat-form-field><br>
+
+   <!--Register-->
+    <div class="register"> Non sei registrato?
     <button mat-button (click)="openDialogRegister()">Registrati</button>
-  </div>
+    </div>
+  </form>
+
 </mat-dialog-content>
 
 <h3 id="error" style="color: red; visibility: hidden;">Username o password errati</h3>
 
 <mat-dialog-actions>
-  <button mat-button (click)="close()">Annulla</button>
+  <button mat-button mat-raised-button color="warn"(click)="close()">Annulla</button>
   <button mat-button mat-raised-button color="primary" (click)="login(email, password)">Login</button>
 </mat-dialog-actions>

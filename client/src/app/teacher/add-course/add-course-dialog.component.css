@@ -15,3 +15,7 @@ div {
 mat-dialog-actions {
     float: right;
 }
+
+.tableContainer {
+  width: 100%;
+}

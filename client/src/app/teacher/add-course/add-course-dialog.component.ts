@@ -1,8 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Course } from 'src/app/models/course.model';
 import { CourseService } from 'src/app/services/course.service';
 import { Teacher } from 'src/app/models/teacher.model';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-course-dialog',
@@ -10,20 +15,52 @@ import { Teacher } from 'src/app/models/teacher.model';
   styleUrls: ['./add-course-dialog.component.css']
 })
 export class AddCourseDialogComponent implements OnInit {
+  @ViewChild('table') table: MatTable<Element>;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+
+  displayedColumns: string[] = ['id', 'name', 'firstName', 'delete'];
+  dataSource = new MatTableDataSource<Teacher>();
+  tableVisibility: boolean = false;
+
+  myControl = new FormControl();
+  filteredOptions: Observable<Teacher[]>;
 
   allTeachers: Teacher[] = [];
   teacherSelected: Teacher;
-  teachersToAdd: string[] = [];
+  teachersToAdd: Teacher[] = [];
 
   constructor(public matDialog: MatDialog, 
       private dialogRef: MatDialogRef<AddCourseDialogComponent>,
       private courseService: CourseService) { }
 
   ngOnInit(): void {
+    this.dataSource.sort = this.sort;
+
+    this.allTeachers.push(new Teacher("t01", "Baldi", "Mario", "dsf"));
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(value => this._filter(value))
+      );
   }
 
   close() {
     this.dialogRef.close();
+  }
+
+  _filter(value: string): Teacher[] {
+    const filterValue = value.toLowerCase();
+
+    return this.allTeachers.filter(option => 
+      (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
+  }
+
+  displayFn(teacher: Teacher) {
+    if (teacher != null)
+      return teacher.name.concat(" ", teacher.firstName, " (", teacher.id, ")");
+    else
+      return "";
   }
 
   onTeacherSelected(teacher: Teacher) {
@@ -31,8 +68,21 @@ export class AddCourseDialogComponent implements OnInit {
   }
 
   addTeacher() {
-    if (this.teacherSelected != null && !this.teachersToAdd.includes(this.teacherSelected.id)) {
-      this.teachersToAdd.push(this.teacherSelected.id);
+    if (this.teacherSelected != null && !this.teachersToAdd.includes(this.teacherSelected)) {
+      this.teachersToAdd.push(this.teacherSelected);
+      this.dataSource = new MatTableDataSource<Teacher>(this.teachersToAdd);
+      this.tableVisibility = true;
+    }
+  }
+
+  deleteTeacher(teacher: Teacher) {
+    if (teacher != null && this.teachersToAdd.includes(teacher)) {
+      this.teachersToAdd.splice(this.teachersToAdd.indexOf(teacher));
+      this.dataSource = new MatTableDataSource<Teacher>(this.teachersToAdd);
+
+      if (this.teachersToAdd.length == 0) {
+        this.tableVisibility = false;
+      }
     }
   }
 

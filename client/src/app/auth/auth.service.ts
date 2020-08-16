@@ -19,7 +19,6 @@ export class AuthService {
 
   @Output('userLogged') userLogged = new EventEmitter();
   user: Observable<User>;
-  private userSubject: BehaviorSubject<User>;
 
   constructor(private http: HttpClient) {
     
@@ -79,14 +78,11 @@ export class AuthService {
         this.userLogged.emit(false);
       }
     );
-    //user.password = password;
-    //this.userSubject.next(user);
   }
 
   logout() {
     localStorage.removeItem('expires_at');
-    localStorage.removeItem('token');
-    this.userSubject.next(null);    
+    localStorage.removeItem('token');   
     this.userLogged.emit(false);
   }
 

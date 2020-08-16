@@ -2,12 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Course } from 'src/app/models/course.model';
 import { CourseService } from 'src/app/services/course.service';
-import { Teacher } from 'src/app/models/teacher.model';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { Teacher } from 'src/app/models/teacher.model';
 
 @Component({
   selector: 'app-add-course-dialog',

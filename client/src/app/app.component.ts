@@ -20,6 +20,7 @@ import { AssignmentsComponent as AssignmentsComponentStudent } from './student/a
 import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont/assignments-cont.component';
 import { EditProfileContComponent } from './edit-profile/edit-profile-cont.component';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

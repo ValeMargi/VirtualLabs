@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Course } from 'src/app/models/course.model';
 import { CourseService } from 'src/app/services/course.service';
@@ -8,6 +8,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Teacher } from 'src/app/models/teacher.model';
+import { AddCourseContComponent } from './add-course-cont.component';
 
 @Component({
   selector: 'app-add-course-dialog',
@@ -25,18 +26,15 @@ export class AddCourseDialogComponent implements OnInit {
   myControl = new FormControl();
   filteredOptions: Observable<Teacher[]>;
 
-  allTeachers: Teacher[] = [];
+  @Input() allTeachers: Teacher[] = [];
   teacherSelected: Teacher;
   teachersToAdd: Teacher[] = [];
 
-  constructor(public matDialog: MatDialog, 
-      private dialogRef: MatDialogRef<AddCourseDialogComponent>,
-      private courseService: CourseService) { }
+  constructor(private cont: AddCourseContComponent, private courseService: CourseService) { }
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
 
-    this.allTeachers.push(new Teacher("t01", "Baldi", "Mario", "dsf"));
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),
@@ -46,7 +44,7 @@ export class AddCourseDialogComponent implements OnInit {
   }
 
   close() {
-    this.dialogRef.close();
+    this.cont.close();
   }
 
   _filter(value: string): Teacher[] {

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Course } from 'src/app/models/course.model';
+import { TeacherService } from 'src/app/services/teacher.service';
 
 @Component({
   selector: 'app-manage-model',
@@ -7,9 +9,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManageModelComponent implements OnInit {
 
-  constructor() { }
+  @Input() modelvm: Course;
+
+  constructor(private teacherService: TeacherService) { }
 
   ngOnInit(): void {
+   
+  }
+
+  saveModel(maxVcpu: number, maxDisk: number, ram: number, totInstances: number, runningInstances: number) {
+    this.modelvm.maxVcpu = maxVcpu;
+    this.modelvm.diskSpace = maxDisk;
+    this.modelvm.ram = ram;
+    this.modelvm.totInstances = totInstances;
+    this.modelvm.runningInstances = runningInstances;
+    
+    this.teacherService.updateModelVM(this.modelvm.name, this.modelvm);
   }
 
 }

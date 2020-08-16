@@ -61,6 +61,7 @@ import { TeamVmsContComponent } from './teacher/vms/team-vms-cont.component';
 import { TeamVmsComponent } from './teacher/vms/team-vms.component';
 import { CreateVmsComponent } from './student/vms/create-vms/create-vms.component';
 import { CreateVmsContComponent } from './student/vms/create-vms/create-vms-cont/create-vms-cont.component';
+import { AddCourseContComponent } from './teacher/add-course/add-course-cont.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { CreateVmsContComponent } from './student/vms/create-vms/create-vms-cont
     TeamVmsContComponent,
     TeamVmsComponent,
     CreateVmsComponent,
-    CreateVmsContComponent
+    CreateVmsContComponent,
+    AddCourseContComponent
   ],
   imports: [
     BrowserModule,

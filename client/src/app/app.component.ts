@@ -19,6 +19,7 @@ import { AssignmentsContComponent as AssignmentsContComponentTeacher } from './t
 import { AssignmentsComponent as AssignmentsComponentStudent } from './student/assignments/assignments.component';
 import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont/assignments-cont.component';
 import { EditProfileContComponent } from './edit-profile/edit-profile-cont.component';
+import { AddCourseContComponent } from './teacher/add-course/add-course-cont.component';
 
 
 @Component({
@@ -183,7 +184,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         title: 'AddCourse'
     };
 
-    this.matDialog.open(AddCourseDialogComponent, dialogConfig);
+    this.matDialog.open(AddCourseContComponent, dialogConfig);
   }
 
   openDialogProfile() {

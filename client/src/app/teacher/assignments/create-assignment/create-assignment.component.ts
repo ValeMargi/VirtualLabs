@@ -1,6 +1,8 @@
 import { Component, OnInit, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Assignment } from 'src/app/models/assignment.model';
+import { TeacherService } from 'src/app/services/teacher.service';
+import { CourseService } from 'src/app/services/course.service';
 
 @Component({
   selector: 'app-create-assignment',
@@ -12,7 +14,7 @@ export class CreateAssignmentComponent implements OnInit, AfterViewInit {
   currentDate;
   oneWeek;
 
-  constructor(private matDialogRef: MatDialogRef<CreateAssignmentComponent>) { }
+  constructor(private matDialogRef: MatDialogRef<CreateAssignmentComponent>, private courseService: CourseService, private teacherService: TeacherService) { }
 
   ngAfterViewInit() {
 
@@ -30,6 +32,6 @@ export class CreateAssignmentComponent implements OnInit, AfterViewInit {
 
   createAss(name: string, release: string, expire: string) {
     let assignment = new Assignment(-1, name, release, expire);
-    //TODO servizio
+    this.teacherService.addAssignment(this.courseService.currentCourse.name, null, assignment); //TODO togliere null
   }
 }

@@ -12,6 +12,8 @@ import { HomeworkCorrection } from '../models/homework-correction.model';
 })
 export class CourseService {
 
+  currentCourse: Course = new Course("", "", -1, -1, false, -1, -1, -1, -1, -1);
+
   constructor(private http: HttpClient) {}
 
   API_COURSES = "http://localhost:8080/courses";

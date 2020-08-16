@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
+import { CourseService } from 'src/app/services/course.service';
+import { Course } from 'src/app/models/course.model';
 
 @Component({
   selector: 'app-manage-model-cont',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManageModelContComponent implements OnInit {
 
-  constructor() { }
+  @Output() MODEL_VM: Course;
+
+  constructor(private courseService: CourseService) { }
 
   ngOnInit(): void {
+    //this.MODEL_VM = this.courseService.currentCourse;
+    this.MODEL_VM = new Course("Applicazioni Internet", "AI", 10, 250, false, 4, 100, 8, 5, 5);
+
   }
 
 }

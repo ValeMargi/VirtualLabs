@@ -10,7 +10,7 @@
   <div>
   <p>Massimo iscrizioni</p>
   <mat-form-field>
-    <input #min class="input" type="number" placeholder="Massimo iscrizioni" matInput min="10" max="250" value="250" required>
+    <input #max class="input" type="number" placeholder="Massimo iscrizioni" matInput min="10" max="250" value="250" required>
     <mat-error *ngIf="min.value < 10 || min.value > 250">Gli iscritti devono essere compresi tra 10 e 250</mat-error>
   </mat-form-field>
   </div>
@@ -18,7 +18,7 @@
   <div>
   <p>Minimo iscrizioni</p>
   <mat-form-field>
-    <input #max class="input" type="number" placeholder="Minimo iscrizioni" matInput min="10" max="250" value="10" required>
+    <input #min class="input" type="number" placeholder="Minimo iscrizioni" matInput min="10" max="250" value="10" required>
     <mat-error *ngIf="min.value < 10 || min.value > 250">Gli iscritti devono essere compresi tra 10 e 250</mat-error>
   </mat-form-field>
   </div>

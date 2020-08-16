@@ -3,41 +3,41 @@
     <div>
         <p>Massimo VCPU</p>
         <mat-form-field>
-        <input #min class="input" type="number" placeholder="Massimo VCPU" matInput min="1" max="24" value="4" required>
+        <input #maxVcpu class="input" type="number" placeholder="Massimo VCPU" matInput min="1" max="24" [value]="modelvm.maxVcpu" required>
         </mat-form-field>
     </div>
     <br>
     <div>
         <p>Massimo disco</p>
         <mat-form-field>
-        <input #min class="input" type="number" placeholder="Massimo disco" matInput min="10" max="500" value="100" required>
+        <input #maxDisk class="input" type="number" placeholder="Massimo disco" matInput min="10" max="500" [value]="modelvm.diskSpace" required>
         </mat-form-field>
     </div>
     <br>
     <div>
         <p>Massima RAM</p>
         <mat-form-field>
-        <input #max class="input" type="number" placeholder="Massima RAM" matInput min="1" max="250" value="8" required>
+        <input #ram class="input" type="number" placeholder="Massima RAM" matInput min="1" max="250" [value]="modelvm.ram" required>
         </mat-form-field>
     </div>
     <br>
     <div>
         <p>Massimo VM</p>>
         <mat-form-field>
-        <input #min class="input" type="number" placeholder="Massimo VM" matInput min="1" max="10" value="5" required>
+        <input #totInstances class="input" type="number" placeholder="Massimo VM" matInput min="1" max="10" [value]="modelvm.totInstances" required>
         </mat-form-field>
     </div>
     <br>
     <div>
     <p>Massimo VM attive</p>
         <mat-form-field>
-        <input #min class="input" type="number" placeholder="Massimo VM attive" matInput min="1" max="10" value="5" required>
+        <input #runningInstances class="input" type="number" placeholder="Massimo VM attive" matInput min="1" max="10" [value]="modelvm.runningInstances" required>
         </mat-form-field>
     </div>
     <br>
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button>Annulla</button>
-    <button mat-button mat-raised-button color="primary">Crea</button>
+    <button mat-button mat-raised-button color="primary" (click)="saveModel(maxVcpu.value, maxDisk.value, ram.value, totInstances.value, runningInstances.value)">Aggiorna</button>
 </mat-dialog-actions>
                

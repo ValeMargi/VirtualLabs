@@ -61,7 +61,11 @@ import { TeamVmsContComponent } from './teacher/vms/team-vms-cont.component';
 import { TeamVmsComponent } from './teacher/vms/team-vms.component';
 import { CreateVmsComponent } from './student/vms/create-vms/create-vms.component';
 import { CreateVmsContComponent } from './student/vms/create-vms/create-vms-cont/create-vms-cont.component';
+<<<<<<< Updated upstream
 import { AddCourseContComponent } from './teacher/add-course/add-course-cont.component';
+=======
+import { RegisterSuccessComponent } from './register-success/register-success.component';
+>>>>>>> Stashed changes
 
 @NgModule({
   declarations: [
@@ -101,7 +105,11 @@ import { AddCourseContComponent } from './teacher/add-course/add-course-cont.com
     TeamVmsComponent,
     CreateVmsComponent,
     CreateVmsContComponent,
+<<<<<<< Updated upstream
     AddCourseContComponent
+=======
+    RegisterSuccessComponent
+>>>>>>> Stashed changes
   ],
   imports: [
     BrowserModule,

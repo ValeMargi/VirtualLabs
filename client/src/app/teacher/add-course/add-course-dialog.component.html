@@ -1,44 +1,46 @@
-<h2 mat-dialog-title>Crea corso</h2>
+<h2 mat-dialog-title><mat-icon>school</mat-icon> Crea corso</h2>
 <mat-dialog-content>
-  <div>
-  <p>Nome del corso</p>
+  <!--RegisterForm--> 
+  <form [formGroup]="AddCourseForm">
+ 
+  <!--Nome Corso-->
   <mat-form-field>
-    <input #courseName class="input" type="text" placeholder="Nome del corso" matInput required>
-  </mat-form-field>
-  </div>
-  <br>
-  <div>
-  <p>Massimo iscrizioni</p>
+    <input #courseName class="input" type="text" placeholder="Nome del corso" formControlName="name" matInput required>
+    <mat-error *ngIf="AddCourseForm.get('name').hasError('required')">Il nome è richiesto</mat-error>
+  </mat-form-field><br><br>
+  
+  <!--Massimo Iscrizioni-->
   <mat-form-field>
-    <input #max class="input" type="number" placeholder="Massimo iscrizioni" matInput min="10" max="250" value="250" required>
-    <mat-error *ngIf="min.value < 10 || min.value > 250">Gli iscritti devono essere compresi tra 10 e 250</mat-error>
-  </mat-form-field>
-  </div>
-  <br>
-  <div>
-  <p>Minimo iscrizioni</p>
+    <input #max class="input" type="number" placeholder="Massimo iscrizioni" formControlName="max_iscrizioni" matInput max="250" value="250" required>
+    <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di iscrizioni</mat-error>
+    <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('min')">Gli iscritti devono essere minimo 10</mat-error>
+    <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('max')">Gli iscritti devono essere massimo 250</mat-error>
+  </mat-form-field><br><br>
+  
+  <!--Minimo Iscrizioni-->
   <mat-form-field>
-    <input #min class="input" type="number" placeholder="Minimo iscrizioni" matInput min="10" max="250" value="10" required>
-    <mat-error *ngIf="min.value < 10 || min.value > 250">Gli iscritti devono essere compresi tra 10 e 250</mat-error>
-  </mat-form-field>
-  </div>
-  <br>
-    <mat-form-field class="matForm">
-        <input #input type="search"
-                placeholder="Aggiungi professore"
-                matInput
-                [formControl]="myControl"
-                [matAutocomplete]="auto">
+    <input #min class="input" type="number" placeholder="Minimo iscrizioni" formControlName="min_iscrizioni" matInput min="10" value="10" required>
+    <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero massimo di iscrizioni</mat-error>
+    <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('min')">Gli iscritti devono essere minimo 10</mat-error>
+    <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('max')">Gli iscritti devono essere massimo 250</mat-error>
+  </mat-form-field><br><br>
+  
+  <!--Aggiungi Professore-->
+  <mat-form-field class="matForm">
+    <input #input type="search" placeholder="Aggiungi professore" matInput [formControl]="myControl" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onTeacherSelected($event.option.value)">
         <mat-option *ngFor="let option of allTeachers" [value]="option">
             {{option.name}} {{option.firstName}} ({{option.id}})
         </mat-option>
         </mat-autocomplete>
-    </mat-form-field>
+  </mat-form-field>
+ <button mat-mini-fab color="primary" (click)="addTeacher()">
+   <mat-icon>add</mat-icon>
+  </button>
 
-    <button mat-button (click)="addTeacher()">Aggiungi</button>
-
-    <div class="tableContainer" *ngIf="tableVisibility"> 
+  </form>
+ <!--Tabella Docenti del Corso-->
+  <div class="tableContainer" *ngIf="tableVisibility"> 
       <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
           <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
@@ -64,11 +66,13 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
   </div>
+
 </mat-dialog-content>
 
+<!--Errore-->
 <h3 id="error" style="color: red; visibility: hidden;">Corso già esistente</h3>
 
 <mat-dialog-actions>
-  <button mat-button (click)="close()">Annulla</button>
+  <button mat-button mat-raised-button color="warn" (click)="close()">Annulla</button>
   <button mat-button mat-raised-button color="primary" (click)="addCourse(courseName.value, min.value, max.value)">Crea</button>
 </mat-dialog-actions>

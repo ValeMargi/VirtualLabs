@@ -4,11 +4,11 @@ import { Course } from 'src/app/models/course.model';
 import { CourseService } from 'src/app/services/course.service';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Teacher } from 'src/app/models/teacher.model';
 import { AddCourseContComponent } from './add-course-cont.component';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-add-course-dialog',
@@ -19,6 +19,7 @@ export class AddCourseDialogComponent implements OnInit {
   @ViewChild('table') table: MatTable<Element>;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
+  AddCourseForm: FormGroup;
   displayedColumns: string[] = ['id', 'name', 'firstName', 'delete'];
   dataSource = new MatTableDataSource<Teacher>();
   tableVisibility: boolean = false;
@@ -30,11 +31,19 @@ export class AddCourseDialogComponent implements OnInit {
   teacherSelected: Teacher;
   teachersToAdd: Teacher[] = [];
 
-  constructor(private cont: AddCourseContComponent, private courseService: CourseService) { }
+  constructor(private cont: AddCourseContComponent,
+     private courseService: CourseService,
+     private formBuilder: FormBuilder) { 
+
+      this.AddCourseForm = this.formBuilder.group({
+        name : new FormControl('', [Validators.required, Validators.minLength(3)]),
+        max_iscrizioni : new FormControl('', [Validators.required, Validators.min(10),Validators.max(250)]),
+        min_iscrizioni : new FormControl('', [Validators.required, Validators.min(10),Validators.max(250)]),
+      });
+     }
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
-
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),

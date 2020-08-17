@@ -19,7 +19,7 @@
 
   <mat-toolbar *ngIf="!homeVisibility && !notFoundVisibility">  
     <mat-toolbar-row>
-      <span>{{ courseName }}</span>
+      <span style="color:rgb(178, 10, 194)">{{ courseName }}</span>
     </mat-toolbar-row>
   </mat-toolbar>
 
@@ -31,11 +31,11 @@
 
     <mat-sidenav #sidenav mode="side" closed class="sidenav">
       <div class="sidenavContainer">
-        <h2>I miei corsi</h2>
+        <h2 style="color: rgb(9, 9, 170);">I miei corsi</h2>
 
         <mat-nav-list>
           <mat-list-item mat-list-item *ngFor="let course of courses" [routerLink]="[getRouteWithCourse(course)]"> 
-            {{ course }} </mat-list-item>
+           -  {{ course }} </mat-list-item>
         </mat-nav-list>
       </div>
 

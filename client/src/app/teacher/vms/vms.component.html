@@ -1,5 +1,12 @@
 <h1>Macchine virtuali degli studenti</h1>
 
+<!-- Bottone Modello Vm -->
+<div class="button-request" align="right">
+    <button mat-button  align ="end" mat-raised-button color="primary" (click)="openDialogModel()">
+        <mat-icon>desktop_windows</mat-icon>Crea/Modifica modello VM
+    </button>
+</div>
+
 <div class="vmsContainer">
     <div class="teamsContainer">
         <mat-selection-list [multiple]="false">
@@ -7,11 +14,5 @@
                 {{ team.name }} </mat-list-option>
         </mat-selection-list>
     </div>
-    <app-team-vms-cont class="tableContainer" [team]="TEAM" *ngIf="teamVMsVisibility"> 
-        
-    </app-team-vms-cont>
-
-    <button mat-button (click)="openDialogModel()">
-        <mat-icon>desktop_windows</mat-icon>Crea/modifica modello VM
-    </button>
+    <app-team-vms-cont class="tableContainer" [team]="TEAM" *ngIf="teamVMsVisibility"></app-team-vms-cont> 
 </div>

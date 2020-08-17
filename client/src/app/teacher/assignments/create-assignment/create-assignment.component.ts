@@ -3,6 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Assignment } from 'src/app/models/assignment.model';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { CourseService } from 'src/app/services/course.service';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-create-assignment',
@@ -10,11 +11,24 @@ import { CourseService } from 'src/app/services/course.service';
   styleUrls: ['./create-assignment.component.css']
 })
 export class CreateAssignmentComponent implements OnInit, AfterViewInit {
+  CreateAssignmentForm: FormGroup;
 
   currentDate;
   oneWeek;
 
-  constructor(private matDialogRef: MatDialogRef<CreateAssignmentComponent>, private courseService: CourseService, private teacherService: TeacherService) { }
+  constructor(
+    private matDialogRef: MatDialogRef<CreateAssignmentComponent>, 
+    private courseService: CourseService, 
+    private teacherService: TeacherService,
+    private formBuilder: FormBuilder) { 
+
+      this.CreateAssignmentForm = this.formBuilder.group({
+        name : new FormControl('', [Validators.required]),
+        currentDate : new FormControl('', [Validators.required]),
+        scadenza : new FormControl('', [Validators.required, Validators.min(this.currentDate)]),
+       
+      });
+    }
 
   ngAfterViewInit() {
 

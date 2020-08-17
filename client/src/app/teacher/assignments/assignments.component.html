@@ -1,4 +1,9 @@
 <h1>Elaborati degli studenti</h1>
+<!-- Bottone Crea Consegna -->
+<div class="button-request" align="right">
+    <button mat-button  align ="end" mat-raised-button color="primary" (click)="openDialogAss()">
+        <mat-icon>assignment</mat-icon>Crea consegna </button>
+</div>
 
 <div class="assContainer">
     <div class="container1">
@@ -9,15 +14,10 @@
                 </mat-list-option>
             </mat-selection-list>
         </div>
-
-        <button mat-button (click)="openDialogAss()" class="create">
-            <mat-icon>assignment</mat-icon>Crea consegna
-        </button>
     </div>
 
     <div class="container2">
         <app-homeworks-cont class="tableContainer" *ngIf="tableVisibility" [assignment]="ASSIGNMENT"> 
-            
         </app-homeworks-cont>
     </div>
 </div>

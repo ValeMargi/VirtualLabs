@@ -1,27 +1,30 @@
 <h2 mat-dialog-title>Crea consegna</h2>
 <mat-dialog-content>
-    <div>
-        <p>Nome della consegna</p>
-        <mat-form-field>
-        <input #name type="text" placeholder="Nome della consegna" matInput required>
-        </mat-form-field>
-    </div>
-    <br>
-    <div>
-        <p>Data creazione</p>
-        <mat-form-field>
-        <input #release type="date" placeholder="Creazione" name="currentDate" [ngModel]="currentDate | date:'yyyy-MM-dd'"
-         matInput readonly required>
-        </mat-form-field>
-    </div>
-    <br>
-    <div>
-        <p>Data di scadenza</p>
-        <mat-form-field>
-        <input #expire type="date" placeholder="Scadenza" name="oneWeek" [ngModel]="oneWeek | date:'yyyy-MM-dd'" matInput required>
-        </mat-form-field>
-    </div>
+
+<!--RegisterForm--> 
+<form [formGroup]="CreateAssignmentForm">
+  
+<!--Nome della consegna-->
+<mat-form-field>
+    <input #name type="text" placeholder="Nome della consegna" formControlName="name" matInput required>
+    <mat-error *ngIf="CreateAssignmentForm.get('name').hasError('required')">Inserisci un nome</mat-error>
+</mat-form-field><br><br>
+
+<!--Data creazione-->
+<mat-form-field>
+    <input #release type="date" placeholder="Creazione" name="currentDate" formControlName="currentDate" [ngModel]="currentDate | date:'yyyy-MM-dd'" matInput readonly required>
+    <mat-error *ngIf="CreateAssignmentForm.get('currentDate').hasError('required')">Inserisci la data corrente</mat-error>
+</mat-form-field><br><br>
+    
+<!--Data di scadenza-->
+<mat-form-field>
+    <input #expire type="date" placeholder="Scadenza" name="oneWeek" formControlName="scadenza" [ngModel]="oneWeek | date:'yyyy-MM-dd'" matInput required>
+    <mat-error *ngIf="CreateAssignmentForm.get('scadenza').hasError('required')">Inserisci una data successiva a quella corrente</mat-error>
+ </mat-form-field>
+
+</form>
 </mat-dialog-content>
+
 <mat-dialog-actions>
     <button mat-button (click)="close()">Annulla</button>
     <button mat-button mat-raised-button color="primary" click="createAss(name.value, release.value, expire.value)">Crea</button>

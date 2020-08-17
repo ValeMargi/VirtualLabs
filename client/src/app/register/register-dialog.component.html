@@ -5,9 +5,10 @@
   <!--Image profile-->
     <div class="avatar">
       <div class="rounded-box">
-        <div class="outer">
+        <div #avatar class="outer">
           <div class="inner">
-            <input class="inputfile" type="file" name="pic" accept="image/*">
+            <input class="inputfile" type="file" name="pic" accept="image/*" 
+              (change)="onFileChanged($event)">
             <label><mat-icon class="camera">camera_alt</mat-icon></label>
           </div>
         </div>
@@ -29,12 +30,18 @@
       <mat-error *ngIf="RegisterForm.get('surname').hasError('required')">Il cognome è richiesto</mat-error>
       </mat-form-field><br><br>
 
+      <!--Matricola-->
+      <mat-form-field>
+      <input #id type="text" placeholder="Matricola" formControlName="id" matInput required>
+      <mat-error *ngIf="RegisterForm.get('id').hasError('required')">La matricola è richiesta</mat-error>
+      </mat-form-field><br><br>
+
       <!--Email-->
       <mat-form-field>
-        <input #surname type="email" placeholder="Email" formControlName="email" matInput required>
-        <mat-error *ngIf="RegisterForm.hasError('required','email')">Inserisci un'email valida</mat-error>
-        <mat-error *ngIf="RegisterForm.get('email').hasError('emailDomain')">Utilizza il dominio: studenti.polito.it o polito.it</mat-error> 
-        </mat-form-field> <br><br>
+      <input #email type="email" placeholder="Email" formControlName="email" matInput required>
+      <mat-error *ngIf="RegisterForm.hasError('required','email')">Inserisci un'email valida</mat-error>
+      <mat-error *ngIf="RegisterForm.get('email').hasError('emailDomain')">Utilizza il dominio: studenti.polito.it o polito.it</mat-error> 
+      </mat-form-field> <br><br>
 
       <!--Password-->
       <mat-form-field>
@@ -50,13 +57,6 @@
       <mat-error *ngIf="RegisterForm.get('confirmPassword').hasError('minlength')">Inserisci almeno 8 caratteri</mat-error>
       </mat-form-field><br><br>
 
-      <!--Tipologia Utente-->
-      <p>Sono</p>
-      <input type="radio" id="student" name="student" value="student" checked>
-      <label for="student">Studente</label><br>
-      <input type="radio" id="teacher" name="teacher" value="teacher">
-      <label for="teacher">Professore</label><br>
-
     </form>
   </div>
   <br>
@@ -69,6 +69,6 @@
 
 <mat-dialog-actions>
   <button mat-button mat-raised-button color="warn"(click)="close()">Annulla</button>
-  <button mat-button mat-raised-button color="primary" (click)="register()">Registrati</button>
+  <button mat-button mat-raised-button color="primary" (click)="register(name.value, surname.value, id.value, email.value, password.value)">Registrati</button>
 </mat-dialog-actions>
 

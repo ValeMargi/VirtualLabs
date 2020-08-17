@@ -10,7 +10,7 @@ import { Student } from '../models/student.model';
 const API_URL_LOGIN = 'http://localhost:3000/login';
 const API_URL_USERS = 'http://localhost:3000/users';    
 
-const API_LOGIN = 'http://localhost:8080/login';
+const API_AUTH = 'http://localhost:8080/';
 
 @Injectable({
   providedIn: 'root'
@@ -102,6 +102,49 @@ export class AuthService {
 
   getUser(email: string) {
     return this.http.get<User>(`${API_URL_USERS}?email=${email}`);
+  }
+
+  registerUser(file: File, userMap: Map<string, string>) {
+    if (file == null)
+       return null;
+
+    let data: FormData = new FormData();
+    data.append("file", file, file.name);
+    data.append("registerData", userMap.toString());
+
+    return this.http.post<User>(`${API_AUTH}/addUser`, data)
+  }
+
+  confirmationPage(token: string) {
+    return this.http.get<boolean>(`${API_AUTH}/registration/confirm/${token}`);
+  }
+
+  resetPassword(userEmail: string) {
+    return this.http.post(`${API_AUTH}/user/resetPassword`, userEmail);
+  }
+
+  showChangePasswordPage() {
+    return this.http.get<string>(`${API_AUTH}/user/changePassword`);
+  }
+
+  savePassword(newPassword: Map<string, string>) {
+    //Map<Token, Nuova Password>
+    return this.http.post(`${API_AUTH}/user/savePassword`, newPassword);
+  }
+
+  changeUserPassword(newPassword: Map<string, string>) {
+    //Map<Vecchia Password, Nuova Password>
+    return this.http.post(`${API_AUTH}/user/savePassword`, newPassword);
+  }
+
+  changeAvatar(file: File) {
+    if (file == null)
+       return null;
+
+    let data: FormData = new FormData();
+    data.append("file", file, file.name);
+
+    return this.http.post(`${API_AUTH}/user/updateAvatar`, data)
   }
 
 }

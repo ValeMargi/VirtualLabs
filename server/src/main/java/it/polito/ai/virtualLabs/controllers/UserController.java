@@ -72,8 +72,12 @@ public class UserController {
     PasswordResetTokenRepository passwordTokenRepository;
 
     @PostMapping("/addUser")
-    public Optional<UserDTO> registerUser(@RequestPart("file") @Valid @NotNull MultipartFile file, @RequestPart Map<String, String> registerData) throws IOException {
+    public Optional<UserDTO> registerUser(@RequestPart("file") @Valid @NotNull MultipartFile file, @RequestPart("registerData") Map<String, String> registerData) throws IOException {
         /*Controllare se fare lowerCase*/
+        if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
+                && !file.getContentType().equals("image/png"))
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided for the avatar profile is type "+file.getContentType()+" not valid");
+
         if(!registerData.containsKey("firstName") || !registerData.containsKey("name") || !registerData.containsKey("id")
           || !registerData.containsKey("email") || !registerData.containsKey("password")){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters for login not found");

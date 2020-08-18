@@ -16,7 +16,7 @@ export class CourseService {
 
   constructor(private http: HttpClient) {}
 
-  API_COURSES = "http://localhost:8080/courses";
+  API_COURSES = "http://localhost:8080/courses/API";
 
   all() {
     return this.http.get<Course[]>(`${this.API_COURSES}`).pipe(map(courses => courses || []));

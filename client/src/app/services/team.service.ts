@@ -12,7 +12,7 @@ export class TeamService {
 
   constructor(private http: HttpClient) {}
 
-  API_TEAMS = "http://localhost:8080/teams";
+  API_TEAMS = "http://localhost:8080/teams/API";
 
   proposeTeam(courseName: string, teamMap: Map<string, string[]>) {
     //nella mappa le chiavi sono nameTeam e membersId

@@ -2,11 +2,13 @@ body {
     margin: 0;
     height: 100%;
     overflow: hidden;
+    background-image: url("undraw_programmer_imem.png");
+    background-size: 100%;
 }
 
 h1 {
     padding-top: 20%;
-    text-align:center;
+    text-align:top;
     text-decoration: solid;
     color: rgb(23, 3, 204);
     font-size: xx-large;
@@ -14,6 +16,6 @@ h1 {
 }
 
 h2 {
-    text-align:center;
+    text-align:top;
     text-decoration: solid;
 }

@@ -5,6 +5,11 @@
 
 .sidenav {
     width: 25%;
+    background-image: url(teaching.png);
+    background-position: bottom;
+
+    background-size: 80%;
+    background-repeat: no-repeat;
 }
 
 .example-spacer {
@@ -14,3 +19,4 @@
 .mat-tab-link {
     opacity: 1;
 }
+

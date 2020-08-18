@@ -1,9 +1,9 @@
 <h1>Elenco studenti iscritti al corso</h1>
+
+<!--Aggiungi Studente-->
 <form style="margin-left: 2em;">
     <mat-form-field class="matForm">
-        <input #input type="search"
-                placeholder="Aggiungi studente"
-                aria-label="Student"
+        <input #input type="search" placeholder="Aggiungi studente" aria-label="Student"
                 matInput
                 [formControl]="myControl"
                 [matAutocomplete]="auto">
@@ -14,10 +14,13 @@
         </mat-autocomplete>
     </mat-form-field>
 
-    <button mat-button (click)="addStudent()">Aggiungi</button>
+    <button style="margin-left: 2em;" mat-button mat-raised-button color="primary" (click)="addStudent()">Aggiungi</button>
+    <button style="margin-left: 2em;" mat-button mat-raised-button color="primary" class="delete">
+        <mat-icon aria-label="" (click)=deleteStudent()>delete</mat-icon>
+        </button>
 </form>
-<div class="tableContainer"> 
-    <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
+<div class="tableContainer" class="mat-elevation-z8"> 
+    <table #table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef><mat-checkbox #checkall (change)="selectAll($event.checked)"
                                 [checked]="selectedStudents.hasValue() && allSelected()"
@@ -44,13 +47,8 @@
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+        
+        </table>
+        <mat-paginator  class="paginator"  [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>
 
-    <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
-                
-    </mat-paginator>
-
-    <button mat-button class="delete">
-    <mat-icon aria-label="" (click)=deleteStudent()>delete</mat-icon>
-    </button>
 </div>

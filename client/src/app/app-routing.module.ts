@@ -15,6 +15,7 @@ import { TeamsContComponent } from './student/teams/teams-cont/teams-cont.compon
 import { RegisterSuccessComponent } from './register-success/register-success.component';
 import { AuthGuard} from './auth/auth.guard';
 import {LoginDialogComponent} from './login/login-dialog.component';
+import { CourseService } from './services/course.service';
 
 /*
 const routes: Routes = [
@@ -31,6 +32,7 @@ const routes: Routes = [
 ];
 */
 
+
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginDialogComponent },
@@ -41,17 +43,17 @@ const routes: Routes = [
       path: 'student',
       children: [
           {
-              path: 'course/applicazioni-internet/assignments',
+              path: 'course/:courses/assignments',
               component: AssignmentsContComponentStudent,
               canActivate: [AuthGuard]
           },            
           {
-              path: 'course/applicazioni-internet/teams',
+              path: 'course/:courses/teams',
               component: TeamsContComponent,
               canActivate: [AuthGuard]
           },
           {
-              path: 'course/applicazioni-internet/vms',
+              path: 'course/:courses/vms',
               component: VmsContComponentStudent,
               canActivate: [AuthGuard]
           },
@@ -61,20 +63,19 @@ const routes: Routes = [
 
   {
     path: 'teacher',
-    component: HomeComponent,
     children: [
         {
-            path: 'course/applicazioni-internet/assignments',
+            path: 'course/:courses/assignments',
             component: AssignmentsContComponentTeacher,
             canActivate: [AuthGuard]
         },            
         {
-            path: 'course/applicazioni-internet/students',
+            path: 'course/:courses/students',
             component: StudentsContComponent,
             canActivate: [AuthGuard]
         },
         {
-            path: 'course/applicazioni-internet/vms',
+            path: 'course/:courses/vms',
             component: VmsContComponentTeacher,
             canActivate: [AuthGuard]
         }

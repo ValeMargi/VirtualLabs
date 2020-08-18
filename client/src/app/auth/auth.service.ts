@@ -95,10 +95,11 @@ export class AuthService {
   }
 
   public isLoggedIn() {
+
     return moment().isBefore(moment.unix(+localStorage.getItem('expires_at')));
   }
 
-  public isLoggedOut() { return !this.isLoggedIn(); }
+  public isLoggedOut() { return !this.isLoggedIn; }
 
   getUser(email: string) {
     return this.http.get<User>(`${API_URL_USERS}?email=${email}`);

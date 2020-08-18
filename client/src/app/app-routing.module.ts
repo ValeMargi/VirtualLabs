@@ -33,13 +33,12 @@ const routes: Routes = [
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  //{ path: 'login', component: LoginDialogComponent },
+  { path: 'login', component: LoginDialogComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'page-not-found', component: PageNotFoundComponent },
   { path: 'register_success', component: RegisterSuccessComponent },
   {
       path: 'student',
-      component: HomeComponent,
       children: [
           {
               path: 'course/applicazioni-internet/assignments',

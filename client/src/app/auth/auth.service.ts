@@ -1,5 +1,5 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {BehaviorSubject, Observable} from "rxjs";
 import { User } from '../models/user.model';
 
@@ -10,7 +10,11 @@ import { Student } from '../models/student.model';
 const API_URL_LOGIN = 'http://localhost:3000/login';
 const API_URL_USERS = 'http://localhost:3000/users';    
 
-const API_AUTH = 'http://localhost:8080';
+const API_AUTH = 'http://localhost:8080/API';
+
+const httpOptions = {
+  headers: new HttpHeaders({'Content-Type': 'application/json'})
+}
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +23,7 @@ export class AuthService {
 
   @Output('userLogged') userLogged = new EventEmitter();
   user: Observable<User>;
-
+  
   constructor(private http: HttpClient) {
     
   }
@@ -113,7 +117,7 @@ export class AuthService {
     data.append("file", file, file.name);
     data.append("registerData", userMap.toString());
 
-    return this.http.post<User>(`${API_AUTH}/addUser`, data)
+    return this.http.post<User>(`${API_AUTH}/addUser`, data, httpOptions);
   }
 
   confirmationPage(token: string) {

@@ -10,7 +10,7 @@ import { Student } from '../models/student.model';
 const API_URL_LOGIN = 'http://localhost:3000/login';
 const API_URL_USERS = 'http://localhost:3000/users';    
 
-const API_AUTH = 'http://localhost:8080/';
+const API_AUTH = 'http://localhost:8080';
 
 @Injectable({
   providedIn: 'root'

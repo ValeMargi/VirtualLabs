@@ -33,10 +33,17 @@ h2 {
     max-width: 150px;
     max-height: 150px;
     margin: auto;
-    background-image: url("avatar-placeholder.png");
+    /*background-image: url("avatar-placeholder.png");*/
     background-size: 150px 150px;
     border-radius: 100%;
     position: relative;
+}
+
+.img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: fill;
+    src: url("avatar-placeholder.png");
 }
 
 .inner {

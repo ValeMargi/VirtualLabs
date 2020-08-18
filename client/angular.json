@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ai20-lab05": {
+    "virtualLabs": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ai20-lab05",
+            "outputPath": "dist/virtualLabs",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -63,21 +63,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ai20-lab05:build",
+            "browserTarget": "virtualLabs:build",
             "proxyConfig": "src/proxy.conf.json",
             "sslKey": "server.key",
             "sslCert": "server.crt"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ai20-lab05:build:production"
+              "browserTarget": "virtualLabs:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ai20-lab05:build"
+            "browserTarget": "virtualLabs:build"
           }
         },
         "test": {
@@ -115,18 +115,18 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "ai20-lab05:serve"
+            "devServerTarget": "virtualLabs:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ai20-lab05:serve:production"
+              "devServerTarget": "virtualLabs:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "ai20-lab05",
+  "defaultProject": "virtualLabs",
   "cli": {
     "analytics": "b00de1fa-29b9-4125-9f77-5471c73aad33"
   }

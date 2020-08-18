@@ -12,10 +12,10 @@ import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms'
   styleUrls: ['./register-dialog.component.css']
 })
 export class RegisterDialogComponent implements OnInit {
-  @ViewChild('avatar') avatar: ElementRef
 
   RegisterForm: FormGroup;
   selectedPhoto: File;
+  previewPhoto: any;
 
   constructor( 
     public matDialog: MatDialog, 
@@ -98,7 +98,7 @@ register(firstName: string, name: string, id: string, email: string, password: s
 
   let image = this.selectedPhoto;
 
-  if (image.type.match("image/jpg") || image.type.match("image/jpeg") || image.type.match("image/png")) {
+  if (!image.type.match("image/jpg") && !image.type.match("image/jpeg") && !image.type.match("image/png")) {
     console.log("tipo errato");
     //mostrare errore
   }
@@ -110,19 +110,24 @@ register(firstName: string, name: string, id: string, email: string, password: s
   userMap.set("email", email)
   userMap.set("password", password)
 
-  this.authService.registerUser(image, userMap);
+  this.authService.registerUser(image, userMap).subscribe(
+    (success: any) => {
+      console.log("ok");
+    },
+    (error: any) => {
+      console.log("error");
+    }
+  );
 }
 
 onFileChanged(imageInput) {
-  this.selectedPhoto = imageInput.files[0]
+  this.selectedPhoto = imageInput.target.files[0]
   
   const reader = new FileReader();
-
-    /*reader.addEventListener('load', (event: any) => {
-      let snippet = new ImageS(event.target.result, this.selectedPhoto);
-    });
-
-    reader.readAsDataURL(this.selectedPhoto);*/
+  reader.readAsDataURL(this.selectedPhoto);
+  reader.onload = (_event) => { 
+    this.previewPhoto = reader.result; 
+  }
 }
 
 }

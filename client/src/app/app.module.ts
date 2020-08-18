@@ -63,6 +63,7 @@ import { CreateVmsComponent } from './student/vms/create-vms/create-vms.componen
 import { CreateVmsContComponent } from './student/vms/create-vms/create-vms-cont/create-vms-cont.component';
 import { AddCourseContComponent } from './teacher/add-course/add-course-cont.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     CreateVmsComponent,
     CreateVmsContComponent,
     AddCourseContComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

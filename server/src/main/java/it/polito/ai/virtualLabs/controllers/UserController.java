@@ -90,7 +90,7 @@ public class UserController {
             //for id check
              int index = registerData.get("email").indexOf("@");
              String id = registerData.get("email").substring(0, index);
-            if(!id.equals(registerData.get("id"))
+            if(!id.equals(registerData.get("id")))
                throw new ResponseStatusException(HttpStatus.CONFLICT, "Id does not match with email!");            
             
             if (registerData.get("email").matches("^d[0-9]+@polito.it")) { //Professor

@@ -25,7 +25,7 @@ public  class Image {
    // private Long id;
     private String nameFile;
     private String type;
-    @Column(name = "picByte", length = 1000)
+    @Column(name = "picByte", length = 16777215)
     private byte[] picByte;
 
 

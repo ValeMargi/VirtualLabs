@@ -178,6 +178,8 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch( ModelVMAlreadytPresentException | ResourcesVMNotRespectedException | VMduplicatedException | CourseDisabledException e){
             throw new    ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }catch(ImageSizeException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(IOException e){
             throw new    ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }catch(PermissionDeniedException p){
@@ -287,6 +289,8 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch (VMnotEnabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }catch(ImageSizeException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }catch (IOException e){
@@ -345,7 +349,8 @@ public class StudentController {
             photoVersionHomeworkDTO.setPicByte(vlService.compressZLib(file.getBytes()));
             photoVersionHomeworkDTO.setTimestamp(timestamp.toString());
             vlService.uploadVersionHomework(homeworkId,photoVersionHomeworkDTO);
-
+        }catch(ImageSizeException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch (HomeworkNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){

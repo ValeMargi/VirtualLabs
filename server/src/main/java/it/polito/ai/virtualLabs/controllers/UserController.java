@@ -5,10 +5,7 @@ import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.entities.AvatarStudent;
 import it.polito.ai.virtualLabs.entities.UserDAO;
 import it.polito.ai.virtualLabs.dtos.ProfessorDTO;
-import it.polito.ai.virtualLabs.exceptions.AvatarNotPresentException;
-import it.polito.ai.virtualLabs.exceptions.InvalidOldPasswordException;
-import it.polito.ai.virtualLabs.exceptions.ProfessorNotFoundException;
-import it.polito.ai.virtualLabs.exceptions.StudentNotFoundException;
+import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.repositories.PasswordResetTokenRepository;
 import it.polito.ai.virtualLabs.repositories.UserRepository;
 import it.polito.ai.virtualLabs.services.AuthenticationService;
@@ -86,7 +83,7 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email " + registerData.get("email") + " not supported");
         } else if (!jwtUserDetailsService.checkUsernameInUserRepo(registerData.get("email"))) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User with email" + registerData.get("email") + "  already present");
-        } else {
+        } else try {
             //for id check
              int index = registerData.get("email").indexOf("@");
              String id = registerData.get("email").substring(0, index);
@@ -114,6 +111,8 @@ public class UserController {
                 avatarStudentDTO.setPicByte(vlService.compressZLib(file.getBytes()));
                 return authenticationService.addStudent(studentDTO, registerData.get("password"),avatarStudentDTO);
             }
+        }catch(ImageSizeException e){
+        throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -241,6 +240,8 @@ public class UserController {
            return res;
        }catch (AvatarNotPresentException | StudentNotFoundException | ProfessorNotFoundException e){
            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+       }catch(ImageSizeException e){
+           throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
        }
 
 

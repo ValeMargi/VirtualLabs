@@ -1346,6 +1346,8 @@ public class VLServiceImpl implements VLService{
         } catch (IOException e) {
         }
         System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+        if(outputStream.toByteArray().length >= 16777215)
+            throw new ImageSizeException();
 
         return outputStream.toByteArray();
     }

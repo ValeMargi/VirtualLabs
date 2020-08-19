@@ -94,6 +94,8 @@ public class ProfessorController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }catch(ImageSizeException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(ModelVMAlreadytPresentException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(IOException e){
@@ -208,6 +210,8 @@ public class ProfessorController {
             vlService.addAssignment(assignmentDTO, photoAssignmentDTO, courseName);
         }catch ( CourseNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch(ImageSizeException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }catch (AssignmentAlreadyExistException e){
@@ -322,6 +326,8 @@ public class ProfessorController {
 
         }catch ( HomeworkNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch(ImageSizeException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }catch(HomeworkIsPermanentException e){

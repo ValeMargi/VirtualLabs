@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
+import { Teacher } from '../models/teacher.model';
+import { TeacherService } from '../services/teacher.service';
+import { StudentService } from '../services/student.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-edit-profile-cont',
@@ -7,9 +11,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditProfileContComponent implements OnInit {
 
-  constructor() { }
+  @Output() CURRENT_USER: any;
+
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.CURRENT_USER = this.authService.getUserByRole();
+    //provvisorio
+    this.CURRENT_USER = new Teacher("t01", "Ignazio", "La Russa", "blabla");
   }
 
 }

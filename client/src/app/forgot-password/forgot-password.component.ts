@@ -4,39 +4,25 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angu
 import { Router } from '@angular/router';
 import { RegisterDialogComponent } from '../register/register-dialog.component';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
-import {ForgotPasswordComponent} from '../forgot-password/forgot-password.component'
 
 @Component({
-  selector: 'app-login-dialog',
-  templateUrl: './login-dialog.component.html',
-  styleUrls: ['./login-dialog.component.css']
+  selector: 'app-forgot-password',
+  templateUrl: './forgot-password.component.html',
+  styleUrls: ['./forgot-password.component.css']
 })
-export class LoginDialogComponent implements OnInit {
-  
-LoginForm: FormGroup;
+export class ForgotPasswordComponent implements OnInit {
 
-  constructor(
+  ForgotPasswordForm: FormGroup;
+
+ constructor(
       public matDialog: MatDialog, 
       public authService: AuthService,
-      private dialogRef: MatDialogRef<LoginDialogComponent>,
+      private dialogRef: MatDialogRef<ForgotPasswordComponent>,
       private router: Router,
       private formBuilder: FormBuilder) {
 
-      authService.userLogged.subscribe(ok => {
-        if (ok && authService.isLoggedIn()) {
-          this.dialogRef.close();
-          
-          if (router.url == "/")
-            router.navigateByUrl("home");
-        }
-        else {
-          document.getElementById("error").style.visibility = "visible";
-        }
-      });
-
-      this.LoginForm = this.formBuilder.group({
-        email: new FormControl('',[Validators.email,this.emailDomainValidator]),
-        password: ['', [Validators.required,Validators.minLength(8)]],
+      this.ForgotPasswordForm = this.formBuilder.group({
+        email: new FormControl('',[Validators.email,this.emailDomainValidator])
       });
   
   }
@@ -48,14 +34,15 @@ LoginForm: FormGroup;
       this.dialogRef.close();
   }
 
-  login(email, password) {
-    if (email.value.toString().length == 0 || password.value.toString().length == 0) {
+  sendPassword(email) {
+    if (email.value.toString().length == 0) {
       document.getElementById("error").style.visibility = "visible";
     }
     else {
-      this.authService.login(email.value.toString(), password.value.toString())
+      //this.authService.sendPassword(email.value.toString())
     }
   }
+
 
   openDialogRegister() {
     this.dialogRef.close();
@@ -71,22 +58,6 @@ LoginForm: FormGroup;
     };
 
     this.matDialog.open(RegisterDialogComponent, dialogConfig);
-  }
-
-  openDialogForgotPassword() {
-    this.dialogRef.close();
-    
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = true;
-
-    dialogConfig.data = {
-        id: 1,
-        title: 'Register'
-    };
-
-    this.matDialog.open(ForgotPasswordComponent, dialogConfig);
   }
 
   emailDomainValidator(control: FormControl) { 

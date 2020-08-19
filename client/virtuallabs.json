@@ -71,7 +71,6 @@
       "groupId": 0
     }
   ],
-
   "VMs": [
     {
       "id": "VM001",
@@ -82,14 +81,12 @@
       "students": ""
     }
   ],
-
   "teams": [
     {
       "id": "T01",
       "name": ""
     }
   ],
-
   "users": [
     {
       "email": "olivier@mail.com",
@@ -97,14 +94,12 @@
       "id": 1,
       "role": ""
     },
-
     {
       "email": "student@studenti.polito.it",
       "password": "$2a$10$9SFIVF0tDrwRoUlZOo9Q0urEs0cnpBXu9RWGf/TxuHjFzDteQhvDW",
       "id": 2,
       "role": "student"
     },
-
     {
       "email": "teacher@polito.it",
       "password": "$2a$10$9SFIVF0tDrwRoUlZOo9Q0urEs0cnpBXu9RWGf/TxuHjFzDteQhvDW",

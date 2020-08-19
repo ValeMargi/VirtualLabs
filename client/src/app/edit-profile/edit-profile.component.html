@@ -5,16 +5,17 @@
         <div class="rounded-box">
           <div class="outer">
             <div class="inner">
-              <input class="inputfile" type="file" name="pic" accept="image/*">
+              <input class="inputfile" type="file" name="pic" accept="image/*" 
+                (change)="onFileChanged($event)">
               <label><mat-icon class="camera">camera_alt</mat-icon></label>
             </div>
           </div>
         </div>
       </div>
       <div class="info">
-        <h2 id="name">Mario Rossi</h2>
-        <h3 id="enrollN">t123456</h3>
-        <h3 id="email">rossi@polito.it</h3>
+        <h2 id="name">{{ currentUser.name }} {{ currentUser.firstName }}</h2>
+        <h3 id="enrollN">{{ currentUser.id }}</h3>
+        <h3 id="email">{{ currentUser.email }}</h3>
       </div>
     </div>
 </mat-dialog-content>
@@ -28,13 +29,13 @@
     <div *ngIf="changePassVisibility">
         <mat-form-field>
             <mat-label>Nuova password</mat-label>
-            <input #password type="password" matInput required minlength="8">
+            <input #password type="password" formControlName="password" matInput required minlength="8">
             <mat-error>Password non valida</mat-error>
         </mat-form-field>
         <br>
         <mat-form-field>
             <mat-label>Ripeti password</mat-label>
-            <input #passwordRepeat type="password" matInput required minlength="8">
+            <input #passwordRepeat type="password" formControlName="passwordRepeat" matInput required minlength="8">
             <mat-error>Password non valida</mat-error>
         </mat-form-field>
     </div>
@@ -43,5 +44,5 @@
 
 <mat-dialog-actions>
   <button mat-button (click)="close()">Annulla</button>
-  <button mat-button mat-raised-button color="primary">Salva</button>
+  <button mat-button mat-raised-button color="primary" (click)="save(password.value, passwordRepeat.value)">Salva</button>
 </mat-dialog-actions>

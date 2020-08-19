@@ -21,6 +21,8 @@ export class StudentService {
 
   API_STUDENTS = "http://localhost:3000/students";
 
+  currentStudent: Student;
+
   //metodi json server
   create(student: Student) {
     return this.http.post<Student>(this.API_STUDENTS, student);

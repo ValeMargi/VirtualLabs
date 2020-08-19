@@ -6,6 +6,8 @@ import { User } from '../models/user.model';
 import * as moment from 'moment';
 import { shareReplay } from 'rxjs/operators';
 import { Student } from '../models/student.model';
+import { TeacherService } from '../services/teacher.service';
+import { StudentService } from '../services/student.service';
 
 const API_URL_LOGIN = 'http://localhost:3000/login';
 const API_URL_USERS = 'http://localhost:3000/users';    
@@ -13,7 +15,7 @@ const API_URL_USERS = 'http://localhost:3000/users';
 const API_AUTH = 'http://localhost:8080/API';
 
 const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
+  headers: new HttpHeaders({'Content-Type': undefined})
 }
 
 @Injectable({
@@ -24,15 +26,16 @@ export class AuthService {
   @Output('userLogged') userLogged = new EventEmitter();
   user: Observable<User>;
   
-  constructor(private http: HttpClient) {
+  currentUser: User;
+
+  constructor(private http: HttpClient, private teacherService: TeacherService, private studentService: StudentService) {
     
   }
   
   login(email: string, password: string) {
     console.log(email);
     console.log(password);
-    this.http.post(
-      API_URL_LOGIN,{
+    this.http.post(API_URL_LOGIN,{
         email: email,
         password: password
       }
@@ -109,13 +112,32 @@ export class AuthService {
     return this.http.get<User>(`${API_URL_USERS}?email=${email}`);
   }
 
-  registerUser(file: File, userMap: Map<string, string>) {
-    if (file == null)
-       return null;
+  getUserByRole() {
+    if (this.currentUser == null) {
+      return;
+    }
 
+    if (this.currentUser.role == "teacher") {
+      
+    }
+    else {
+
+    }
+  }
+
+  registerUser(file: File, userMap: Map<string, string>) {
+    if (file == null) {
+       return null;
+    }
+
+    const convMap = {};
+    userMap.forEach((val: string, key: string) => {
+      convMap[key] = val;
+    });
+    
     let data: FormData = new FormData();
-    data.append("file", file, file.name);
-    data.append("registerData", userMap.toString());
+    data.append("file", file);
+    data.append("registerData", JSON.stringify(convMap));
 
     return this.http.post<User>(`${API_AUTH}/addUser`, data, httpOptions);
   }

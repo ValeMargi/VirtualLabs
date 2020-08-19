@@ -1,5 +1,7 @@
+<body>
+  <br>
 <h2 mat-dialog-title>Login</h2>
-<mat-dialog-content>
+<mat-dialog-content><br>
 
    <!--LoginForm--> 
    <form [formGroup]="LoginForm">
@@ -19,7 +21,12 @@
 
    <!--Register-->
     <div class="register"> Non sei registrato?
-    <button mat-button (click)="openDialogRegister()">Registrati</button>
+    <button mat-button mat-stroked-button (click)="openDialogRegister()">Registrati</button>
+    </div><br>
+
+    <!--Password Dimenticata-->
+    <div class="passwordForget"> Hai dimenticato la password?
+      <button mat-button mat-stroked-button (click)="openDialogForgotPassword()">Recupera Password</button>
     </div>
   </form>
 
@@ -31,3 +38,4 @@
   <button mat-button mat-raised-button color="warn"(click)="close()">Annulla</button>
   <button mat-button mat-raised-button color="primary" (click)="login(email, password)">Login</button>
 </mat-dialog-actions>
+</body>

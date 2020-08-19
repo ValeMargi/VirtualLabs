@@ -20,6 +20,7 @@ import { AssignmentsComponent as AssignmentsComponentStudent } from './student/a
 import { AssignmentsContComponent as AssignmentsContComponentStudent } from './student/assignments/assignments-cont/assignments-cont.component';
 import { EditProfileContComponent } from './edit-profile/edit-profile-cont.component';
 import { AddCourseContComponent } from './teacher/add-course/add-course-cont.component';
+import { AuthGuard} from './auth/auth.guard';
 
 
 @Component({
@@ -76,7 +77,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     for (let c of this.courses) {
       this.courseSelected = this.setCourseForRoute(c);
       let path: string = "teacher/course/" + this.courseSelected;
-      this.router.config.push({ path: path + "/students", component: StudentsContComponent });
+      this.router.config.push({ path: path + "/students", component: StudentsContComponent});
       this.router.config.push({ path: path + "/vms", component: VmsContComponentTeacher });
       this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentTeacher });
 

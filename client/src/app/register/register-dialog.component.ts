@@ -104,11 +104,11 @@ register(firstName: string, name: string, id: string, email: string, password: s
   }
 
   let userMap = new Map<string, string>();
-  userMap.set("firstName", firstName);
-  userMap.set("name", name);
-  userMap.set("id", id);
-  userMap.set("email", email)
-  userMap.set("password", password)
+  userMap.set("firstName", "Test nome");
+  userMap.set("name", "Test cognome");
+  userMap.set("id", "s223456");
+  userMap.set("email", "test2@polito.it")
+  userMap.set("password", "bestPassw0rd")
 
   this.authService.registerUser(image, userMap).subscribe(
     (success: any) => {

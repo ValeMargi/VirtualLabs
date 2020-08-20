@@ -17,8 +17,6 @@ export class EditProfileContComponent implements OnInit {
 
   ngOnInit(): void {
     this.CURRENT_USER = this.authService.getUserByRole();
-    //provvisorio
-    this.CURRENT_USER = new Teacher("t01", "Ignazio", "La Russa", "blabla");
   }
 
 }

@@ -106,16 +106,23 @@ register(firstName: string, name: string, id: string, email: string, password: s
   let userMap = new Map<string, string>();
   userMap.set("firstName", "Test nome");
   userMap.set("name", "Test cognome");
-  userMap.set("id", "s223456");
-  userMap.set("email", "test2@polito.it")
+  userMap.set("id", "d123456");
+  userMap.set("email", "d123456@polito.it")
   userMap.set("password", "bestPassw0rd")
 
-  this.authService.registerUser(image, userMap).subscribe(
+  let userJson = { "firstName": "Test nome",
+                  "name": "Test cognome", 
+                  "id": "d123457", 
+                  "email": "d123457@polito.it", 
+                  "password": "bestPassw0rd" 
+                };
+
+  this.authService.registerUser(image, userJson).subscribe(
     (success: any) => {
       console.log("ok");
     },
     (error: any) => {
-      console.log("error");
+      console.log(error);
     }
   );
 }

@@ -28,14 +28,20 @@
     <br>
     <div *ngIf="changePassVisibility">
         <mat-form-field>
+            <mat-label>Password attuale</mat-label>
+            <input #password type="password" matInput required minlength="8">
+            <mat-error>Password non valida</mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
             <mat-label>Nuova password</mat-label>
-            <input #password type="password" formControlName="password" matInput required minlength="8">
+            <input #newPassword type="password" matInput required minlength="8">
             <mat-error>Password non valida</mat-error>
         </mat-form-field>
         <br>
         <mat-form-field>
             <mat-label>Ripeti password</mat-label>
-            <input #passwordRepeat type="password" formControlName="passwordRepeat" matInput required minlength="8">
+            <input #passwordRepeat type="password" matInput required minlength="8">
             <mat-error>Password non valida</mat-error>
         </mat-form-field>
     </div>
@@ -44,5 +50,5 @@
 
 <mat-dialog-actions>
   <button mat-button (click)="close()">Annulla</button>
-  <button mat-button mat-raised-button color="primary" (click)="save(password.value, passwordRepeat.value)">Salva</button>
+  <button mat-button mat-raised-button color="primary" (click)="save(password.value, newPassword.value, passwordRepeat.value)">Salva</button>
 </mat-dialog-actions>

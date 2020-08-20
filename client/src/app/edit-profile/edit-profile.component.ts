@@ -42,14 +42,14 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
-  save(pwd: string, pwd2: string) {
+  save(actualPwd: string, pwd: string, pwd2: string) {
     if (pwd != null && pwd2 != null && pwd.length > 0 && pwd2.length > 0 && pwd != pwd2) {
       return;
     }
 
     if (pwd.length > 0) {
       let map = new Map<string, string>();
-      map.set(this.authService.currentUser.password, pwd);
+      map.set(actualPwd, pwd);
 
       this.authService.changeUserPassword(map);
     }

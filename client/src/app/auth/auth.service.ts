@@ -3,11 +3,14 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {BehaviorSubject, Observable} from "rxjs";
 import { User } from '../models/user.model';
 
+import * as jwt_decode from "node_modules/jwt-decode";
+
 import * as moment from 'moment';
 import { shareReplay } from 'rxjs/operators';
 import { Student } from '../models/student.model';
 import { TeacherService } from '../services/teacher.service';
 import { StudentService } from '../services/student.service';
+import { Teacher } from '../models/teacher.model';
 
 const API_URL_LOGIN = 'http://localhost:3000/login';
 const API_URL_USERS = 'http://localhost:3000/users';    
@@ -35,9 +38,9 @@ export class AuthService {
   login(email: string, password: string) {
     console.log(email);
     console.log(password);
-    this.http.post(API_URL_LOGIN,{
-        email: email,
-        password: password
+    this.http.post(`http://localhost:8080/login`,{
+        "username": email,
+        "password": password
       }
     ).subscribe(
       (authResult: any) => {
@@ -53,52 +56,38 @@ export class AuthService {
 
   private setSession(authResult, email, password) {
     console.log("Loggato")
-    console.log(JSON.stringify(authResult));
-    const tkn = JSON.parse(atob(authResult.accessToken.split('.')[1]));
-    console.log(atob(authResult.accessToken.split('.')[1]));
-    console.log(authResult.accessToken);
-    console.log("session ok");
-    localStorage.setItem('token', authResult.accessToken);
-    localStorage.setItem('expires_at', tkn.exp);
-    localStorage.setItem('email', email);
-    
-    this.getUser(email).subscribe(
-      (data) => {
-        //console.log(data);
-        //let user: User = new User();
-        let userJson = JSON.stringify(data);
-        JSON.parse(userJson, (key, value) => {
-          if (key == "role") {
-            if (value == "student") {
-              console.log("student")
-            }
-            else if (value == "teacher") {
-              console.log("teacher")
-            }
+    //console.log(JSON.stringify(authResult));
+    const tkn = JSON.parse(atob(authResult.token.split('.')[1]));
+    //console.log(atob(authResult.token.split('.')[1]));
+    //console.log(authResult.token);
+    let token = jwt_decode(authResult.token);
+    console.log(token);
 
-            localStorage.setItem("role", value);
-            this.userLogged.emit(true);
-          }
-        })
-      },
-      (error: any) => {
-        this.userLogged.emit(false);
-      }
-    );
+    let role = token.role;
+
+    if (role == "professor") {
+      role = "teacher";
+    }
+
+    this.currentUser = new User(-1, "", role, true);
+
+    this.setUserByRole(token);
+
+    localStorage.setItem('token', authResult.token);
+    localStorage.setItem('expires_at', tkn.exp);
+    localStorage.setItem('role', role);
+
+    this.userLogged.emit(true);
   }
 
   logout() {
     localStorage.removeItem('expires_at');
     localStorage.removeItem('token');   
+    localStorage.removeItem('role');
+    this.currentUser = null;
+    this.studentService.currentStudent = null;
+    this.teacherService.currentTeacher = null;
     this.userLogged.emit(false);
-  }
-
-  getToken(){
-    const token = localStorage.getItem('token');
-    if (!token)
-      return '';
-
-    return token;
   }
 
   public isLoggedIn() {
@@ -108,36 +97,60 @@ export class AuthService {
 
   public isLoggedOut() { return !this.isLoggedIn; }
 
-  getUser(email: string) {
-    return this.http.get<User>(`${API_URL_USERS}?email=${email}`);
-  }
-
   getUserByRole() {
     if (this.currentUser == null) {
-      return;
+      this.currentUser = new User(-1, "", localStorage.getItem('role'), true);
     }
 
-    if (this.currentUser.role == "teacher") {
-      
+    if (this.currentUser.role == "student") {
+      if (this.studentService.currentStudent == null) {
+        let token = jwt_decode(localStorage.getItem('token'));
+        this.setUserByRole(token);
+      }
+
+      return this.studentService.currentStudent;
     }
     else {
+      if (this.teacherService.currentTeacher == null) {
+        let token = jwt_decode(localStorage.getItem('token'));
+        this.setUserByRole(token);
+      }
 
+      return this.teacherService.currentTeacher;
     }
   }
 
-  registerUser(file: File, userMap: Map<string, string>) {
+  setUserByRole(token: any) {
+    if (token.role == "student") {
+      this.studentService.currentStudent = new Student(token.id, token.firstname, token.name, token.id + "@studenti.polito.it");
+    }
+    else {
+      this.teacherService.currentTeacher = new Teacher(token.id, token.firstname, token.name, token.id + "@polito.it");
+    }
+  }
+
+  registerUser(file: File, userJson: any) {
     if (file == null) {
        return null;
     }
 
-    const convMap = {};
-    userMap.forEach((val: string, key: string) => {
-      convMap[key] = val;
-    });
+    console.log(userJson)
     
     let data: FormData = new FormData();
-    data.append("file", file);
-    data.append("registerData", JSON.stringify(convMap));
+    data.append("file", file, file.name);
+    /*data.append("registerData", new Blob([JSON.stringify(userJson)], {
+      type: "application/json"
+    }));*/
+
+    data.append('registerData', new Blob([JSON.stringify({
+      "firstName": "Test nome",
+      "name": "Test cognome", 
+      "id": "d2", 
+      "email": "d2@polito.it", 
+      "password": "bestPassw0rd"           
+      })], {
+      type: "application/json"
+  }));
 
     return this.http.post<User>(`${API_AUTH}/addUser`, data, httpOptions);
   }

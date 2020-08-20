@@ -215,11 +215,10 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
-    @PostMapping("/{courseName}/{studentId}/removeStudent")
-    public void deleteStudentFromCourse(@PathVariable String courseName, @PathVariable String studentId){
+    @PostMapping("/{courseName}/removeStudent")
+    public List<Boolean> deleteStudentsFromCourse(@PathVariable String courseName, @PathVariable String[] studentsId){
         try{
-            if (!vlService.deleteStudentFromCourse(studentId, courseName))
-                throw new StudentNotFoundException();
+            return vlService.deleteStudentsFromCourse(Arrays.asList(studentsId), courseName);
         }catch (StudentNotFoundException | CourseNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){

@@ -225,7 +225,6 @@ public class VLServiceImpl implements VLService{
 
 
     /*Metodo per eliminare student da un corso deleteStudentFromCourse*/
-    @PreAuthorize("hasAuthority('professor')")  //hasROLE????
     @Override
     public boolean deleteStudentFromCourse(String studentId, String courseName) {
         Optional<Student> student = studentRepository.findById(studentId);
@@ -243,6 +242,13 @@ public class VLServiceImpl implements VLService{
         else
             return courseRepository.getOne(courseName).removeStudent(studentRepository.getOne(studentId));
     }
+
+    @PreAuthorize("hasAuthority('professor')")
+    @Override
+    public List<Boolean> deleteStudentsFromCourse(List<String> studentsIds, String courseName){
+        return  studentsIds.stream().map( s -> deleteStudentFromCourse(s, courseName)).collect(Collectors.toList());
+    }
+
 
 
     @PreAuthorize("hasAuthority('professor') || hasAnyAuthority('student')")

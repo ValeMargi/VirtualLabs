@@ -17,7 +17,6 @@ public interface VLService {
     Optional<ProfessorDTO> getProfessor(String professorId);
     List<StudentDTO> getEnrolledStudents(String courseName);
     boolean addStudentToCourse(String studentId, String courseName);
-    boolean deleteStudentFromCourse(String studentId, String courseName);
     List<Boolean> deleteStudentsFromCourse(List<String> studentsIds, String courseName);
     List<ProfessorDTO> getProfessorsForCourse(String courseName);
     //List<Boolean> addAll(List<StudentDTO> student);

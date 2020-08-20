@@ -212,6 +212,8 @@ public class VLServiceImpl implements VLService{
         else {
             Course c = course.get();
             Student s = student.get();
+            if(!c.addStudent(s))
+                return false;
             for( Assignment a: c.getAssignments()){
                 Homework h = new Homework();
                 h.setAssignment(a);
@@ -219,19 +221,16 @@ public class VLServiceImpl implements VLService{
                 h.setStudent(s);
                 homeworkRepository.saveAndFlush(h);
             }
-            return c.addStudent(s);
+            return true;
         }
     }
 
 
-    /*Metodo per eliminare student da un corso deleteStudentFromCourse*/
+    @PreAuthorize("hasAuthority('professor')")
     @Override
-    public boolean deleteStudentFromCourse(String studentId, String courseName) {
-        Optional<Student> student = studentRepository.findById(studentId);
+    public List<Boolean> deleteStudentsFromCourse(List<String> studentsIds, String courseName){
         Optional<Course> course = courseRepository.findById(courseName);
-        if( ! student.isPresent()){
-            throw new StudentNotFoundException();
-        }else if(!course.isPresent() ){
+        if(!course.isPresent() ){
             throw new CourseNotFoundException();
         }else if(!course.get().isEnabled()){
             throw new CourseDisabledException();
@@ -239,15 +238,18 @@ public class VLServiceImpl implements VLService{
                 .anyMatch(p ->p.getId()
                         .equals(SecurityContextHolder.getContext().getAuthentication().getName())))
             throw new PermissionDeniedException();
-        else
-            return courseRepository.getOne(courseName).removeStudent(studentRepository.getOne(studentId));
-    }
-
-    @PreAuthorize("hasAuthority('professor')")
-    @Override
-    public List<Boolean> deleteStudentsFromCourse(List<String> studentsIds, String courseName){
-        return  studentsIds.stream().map( s -> deleteStudentFromCourse(s, courseName)).collect(Collectors.toList());
-    }
+        else{
+            List<Boolean> ret = null;
+            for(String s : studentsIds){
+                Optional<Student> student = studentRepository.findById(s);
+                if( ! student.isPresent()){
+                    throw new StudentNotFoundException();
+                }
+                ret.add(course.get().removeStudent(student.get()));
+            }
+            return ret;
+        }
+  }
 
 
 

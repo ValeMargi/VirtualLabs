@@ -19,59 +19,9 @@ export class StudentService {
 
   constructor(private http: HttpClient) {}
 
-  API_STUDENTS = "http://localhost:3000/students";
+  API_STUDENTS = "http://localhost:8080/API/students";
 
   currentStudent: Student;
-
-  //metodi json server
-  create(student: Student) {
-    return this.http.post<Student>(this.API_STUDENTS, student);
-  }
-
-  update(student: Student) {
-    return this.http.put<Student>(this.API_STUDENTS, student);
-  }
-
-  find(id: string): Observable<Student> {
-    return this.http.get<Student>(`${this.API_STUDENTS}/${id}`);
-  }
-
-  query(): Observable<Student[]> {
-    return this.http.get<Student[]>(`${this.API_STUDENTS}`)
-                    .pipe(map(students => students || []));
-  }
-
-  delete(id: string) {
-    return this.http.delete(`${this.API_STUDENTS}/${id}`);
-  }
-
-  enroll(students: Student[], courseId: number) {
-    return from(students).pipe(
-      concatMap(student => {
-        //student.courseId = courseId;
-
-        return this.http.put<Student>(`${this.API_STUDENTS}/${student.id}`, student);
-      }),
-      toArray()
-    );
-  }
-
-  unenroll(students: Student[]) {
-    return from(students).pipe(
-      concatMap(student => {
-        //student.courseId = 0;
-
-        return this.http.put<Student>(`${this.API_STUDENTS}/${student.id}`, student);
-      }),
-      toArray()
-    );
-  }
-
-  enrolledStudents(courseId): Observable<Student[]> {
-    return this.http.get<Student[]>(`${this.API_STUDENTS}?courseId=${courseId}`)
-                    .pipe(map(students => students || []));
-  }
-  //fine metodi json server
 
   all() {
     return this.http.get<Student[]>(`${this.API_STUDENTS}`).pipe(map(students => students || []));

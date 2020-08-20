@@ -10,10 +10,7 @@ import { shareReplay } from 'rxjs/operators';
 import { Student } from '../models/student.model';
 import { TeacherService } from '../services/teacher.service';
 import { StudentService } from '../services/student.service';
-import { Teacher } from '../models/teacher.model';
-
-const API_URL_LOGIN = 'http://localhost:3000/login';
-const API_URL_USERS = 'http://localhost:3000/users';    
+import { Teacher } from '../models/teacher.model';   
 
 const API_AUTH = 'http://localhost:8080/API';
 

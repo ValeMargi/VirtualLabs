@@ -21,6 +21,10 @@ import { AssignmentsContComponent as AssignmentsContComponentStudent } from './s
 import { EditProfileContComponent } from './edit-profile/edit-profile-cont.component';
 import { AddCourseContComponent } from './teacher/add-course/add-course-cont.component';
 import { AuthGuard} from './auth/auth.guard';
+import { CourseService } from './services/course.service';
+import { Course } from './models/course.model';
+import { TeacherService } from './services/teacher.service';
+import { StudentService } from './services/student.service';
 
 
 @Component({
@@ -42,9 +46,14 @@ export class AppComponent implements AfterViewInit, OnInit {
   courseSelected: string = "";
   role: string = "";
 
-  courses = ["Applicazioni internet", "Programmazione di sistema"];
+  courses: Course[] = [];
   
-  constructor(private matDialog: MatDialog, public authService: AuthService, private router: Router) {
+  constructor(private matDialog: MatDialog, 
+              private courseService:  CourseService,     
+              private teacherService: TeacherService,  
+              private studentService: StudentService,   
+              private authService: AuthService, 
+              private router: Router) {
     
   }
 
@@ -61,8 +70,13 @@ export class AppComponent implements AfterViewInit, OnInit {
         else {
           this.teacherVisibility = true;
         }
+
+        this.setCourses();
       }
       else {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expires_at');
+        localStorage.removeItem('role');
         this.loginVisibility = true;
         this.homeVisibility = true;
         this.sidenav.close();
@@ -74,23 +88,9 @@ export class AppComponent implements AfterViewInit, OnInit {
   ngOnInit() {
     this.role = localStorage.getItem("role");
 
-    for (let c of this.courses) {
-      this.courseSelected = this.setCourseForRoute(c);
-      let path: string = "teacher/course/" + this.courseSelected;
-      this.router.config.push({ path: path + "/students", component: StudentsContComponent});
-      this.router.config.push({ path: path + "/vms", component: VmsContComponentTeacher });
-      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentTeacher });
-
-      path = "student/course/" + this.courseSelected;
-      this.router.config.push({ path: path + "/teams", component: TeamsContComponent });
-      this.router.config.push({ path: path + "/vms", component: VmsContComponentStudent });
-      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentStudent });
-    }
-
-    this.router.config.push({ path: '**', redirectTo: 'page-not-found' });
-
     if (this.authService.isLoggedIn()) {
       this.loginVisibility = false;
+      //this.setCourses();
     }
     else {
       this.loginVisibility = true;
@@ -127,6 +127,48 @@ export class AppComponent implements AfterViewInit, OnInit {
         }
       }
     });
+  }
+
+  setRoutes() {
+    for (let c of this.courses) {
+      this.courseSelected = this.setCourseForRoute(c.name);
+      let path: string = "teacher/course/" + this.courseSelected;
+      this.router.config.push({ path: path + "/students", component: StudentsContComponent});
+      this.router.config.push({ path: path + "/vms", component: VmsContComponentTeacher });
+      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentTeacher });
+
+      path = "student/course/" + this.courseSelected;
+      this.router.config.push({ path: path + "/teams", component: TeamsContComponent });
+      this.router.config.push({ path: path + "/vms", component: VmsContComponentStudent });
+      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentStudent });
+    }
+
+    this.router.config.push({ path: '**', redirectTo: 'page-not-found' });
+  }
+
+  setCourses() {
+    if (this.role.match("student")) {
+      this.studentService.getCourses(this.studentService.currentStudent.id).subscribe(
+        (data) => {
+          this.courses = data;
+          this.setRoutes();
+        },
+        (error) => {
+
+        }
+      );
+    }
+    else {
+      this.teacherService.getCoursesForProfessor(this.teacherService.currentTeacher.id).subscribe(
+        (data) => {
+          this.courses = data;
+          this.setRoutes();
+        },
+        (error) => {
+
+        }
+      );
+    }
   }
 
   open() {
@@ -246,8 +288,9 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
   }
 
-  getRouteWithCourse(course: string) {
-    this.courseSelected = this.setCourseForRoute(course);
+  getRouteWithCourse(course: Course) {
+    this.courseService.currentCourse = course;
+    this.courseSelected = this.setCourseForRoute(course.name);
     let res: string = this.role + "/course/" + this.courseSelected;
 
     if (this.role.match("student"))

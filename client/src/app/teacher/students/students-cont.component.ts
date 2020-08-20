@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output, Inject, AfterViewInit } from '
 import { Student } from '../../models/student.model';
 import { StudentService } from '../../services/student.service';
 import { AuthService } from '../../auth/auth.service';
+import { CourseService } from 'src/app/services/course.service';
 
 
 @Component({
@@ -33,7 +34,8 @@ ALL_STUDENTS: Student[] = [new Student('s218582', 'Baglio', 'Aldo', 0, 0),
 
                                   
 
-  constructor(public studentService: StudentService, public authService: AuthService) { 
+  constructor(private studentService: StudentService,
+              private courseService: CourseService) { 
     
   }
 
@@ -42,7 +44,7 @@ ALL_STUDENTS: Student[] = [new Student('s218582', 'Baglio', 'Aldo', 0, 0),
 
   ngAfterViewInit() {
 
-    this.studentService.query().subscribe(
+    this.studentService.all().subscribe(
       (data) => {
         this.ALL_STUDENTS = data;
         this.allStudents.emit(this.ALL_STUDENTS);
@@ -50,14 +52,14 @@ ALL_STUDENTS: Student[] = [new Student('s218582', 'Baglio', 'Aldo', 0, 0),
       (error) => {  } 
       );
 
-      this.studentService.enrolledStudents("1").subscribe(
-        (data) => {
-          console.log(data);
-          this.STUDENTS_ENROLLED = data;
-          this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
-        },
-        (error) => {  } 
-        );
+    this.courseService.enrolledStudents(this.courseService.currentCourse.name).subscribe(
+      (data) => {
+        console.log(data);
+        this.STUDENTS_ENROLLED = data;
+        this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
+      },
+      (error) => {  } 
+      );
     
   }
 
@@ -66,20 +68,21 @@ ALL_STUDENTS: Student[] = [new Student('s218582', 'Baglio', 'Aldo', 0, 0),
   }
 
   enrollStudent(student: Student) {
-    this.studentService.enroll([student], 1).subscribe(
-      (data) => {
-        console.log(data);
-        this.STUDENTS_ENROLLED = this.STUDENTS_ENROLLED.concat(data);
+    this.courseService.enrollOne(this.courseService.currentCourse.name, student.id).subscribe(
+      (success) => {
+        this.STUDENTS_ENROLLED = this.STUDENTS_ENROLLED.concat(student);
         this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
       },
-      (error) => {  } 
+      (error) => { 
+        console.log("studente non aggiunto");
+      } 
       );
   }
 
   removeStudents(students: Student[]) {
-    this.studentService.unenroll(students).subscribe(
-      (data) => {
-        data.forEach(student => {
+    /*this.courseService.(students).subscribe(
+      (success) => {
+        students.forEach(student => {
           this.STUDENTS_ENROLLED.forEach(s => {
             if (s.id == student.id) {
               this.STUDENTS_ENROLLED.splice(this.STUDENTS_ENROLLED.indexOf(s), 1);
@@ -89,7 +92,7 @@ ALL_STUDENTS: Student[] = [new Student('s218582', 'Baglio', 'Aldo', 0, 0),
         this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
       },
       (error) => {  }
-    );
+    );*/
   }
 
 }

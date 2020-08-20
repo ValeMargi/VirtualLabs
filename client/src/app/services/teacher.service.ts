@@ -14,7 +14,7 @@ import { Homework } from '../models/homework.model';
 })
 export class TeacherService {
 
-  API_PROFESSORS = "http://localhost:8080/professors/API";
+  API_PROFESSORS = "http://localhost:8080/API/professors";
 
   currentTeacher: Teacher;
 

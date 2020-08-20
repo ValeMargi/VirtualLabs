@@ -16,7 +16,7 @@ export class CourseService {
 
   constructor(private http: HttpClient) {}
 
-  API_COURSES = "http://localhost:8080/courses/API";
+  API_COURSES = "http://localhost:8080/API/courses";
 
   all() {
     return this.http.get<Course[]>(`${this.API_COURSES}`).pipe(map(courses => courses || []));
@@ -35,7 +35,7 @@ export class CourseService {
   }
 
   removeCourse(courseName: string) {
-    return this.http.post<void>(`${this.API_COURSES}/${courseName}/remove`, null);
+    return this.http.delete<boolean>(`${this.API_COURSES}/${courseName}/remove`, null);
   }
 
   modifyCourse(courseName: string, course: Course) {

@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class VMDTO extends RepresentationModel<VMDTO> {
-    private String id;
+    private Long id;
     private int  numVcpu, diskSpace, ram;
     private String status;
     private String nameVM;

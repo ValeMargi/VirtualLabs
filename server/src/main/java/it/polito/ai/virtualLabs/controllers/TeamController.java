@@ -2,6 +2,7 @@ package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.StudentDTO;
 import it.polito.ai.virtualLabs.dtos.TeamDTO;
+import it.polito.ai.virtualLabs.dtos.VMDTO;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +115,17 @@ public class TeamController {
             return vlService.getAvailableStudents(courseName).stream().map(s-> ModelHelper.enrich(s)).collect(Collectors.toList());
         } catch (CourseNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @GetMapping("/{courseName}/{teamId}/getVM")
+    public List<VMDTO> getAllVMTeam(@PathVariable String courseName, @PathVariable Long teamId) {
+        try{
+            return vlService.getAllVMTeam(teamId);
+        } catch (TeamNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (TeamNotEnabledException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 }

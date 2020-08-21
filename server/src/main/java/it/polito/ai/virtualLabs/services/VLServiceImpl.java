@@ -475,6 +475,7 @@ public class VLServiceImpl implements VLService{
         }
     }
 
+
     @Override
     public List<StudentDTO> getMembers(Long TeamId) {
         try {
@@ -923,6 +924,20 @@ public class VLServiceImpl implements VLService{
             }else throw new PermissionDeniedException();
         }else throw new CourseNotFoundException();
     }
+    @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
+    @Override
+    public  List<VMDTO> getAllVMTeam(  Long teamId){
+        Optional<Team> ot = teamRepository.findById(teamId);
+        if( !ot.isPresent())
+            throw new TeamNotFoundException();
+        Team t = ot.get();
+        if( t.getStatus()==0)
+            throw new TeamNotEnabledException();
+        return t.getVms().stream().map(te-> modelMapper.map(te, VMDTO.class)).collect(Collectors.toList());
+
+
+    }
+
 
     /*Visualizzare VM con un certo VMid  allo student in tab corso*/
     @PreAuthorize("hasAuthority('student')")

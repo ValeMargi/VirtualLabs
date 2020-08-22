@@ -46,6 +46,6 @@ export class CreateAssignmentComponent implements OnInit, AfterViewInit {
 
   createAss(name: string, release: string, expire: string) {
     let assignment = new Assignment(-1, name, release, expire);
-    this.teacherService.addAssignment(this.courseService.currentCourse.name, null, assignment); //TODO togliere null
+    this.teacherService.addAssignment(this.courseService.currentCourse.getValue().name, null, assignment); //TODO togliere null
   }
 }

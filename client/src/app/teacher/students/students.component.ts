@@ -32,7 +32,7 @@ export class StudentsComponent implements AfterViewInit, OnInit {
   @ViewChild('checksingle') checksingle: MatCheckbox;
   @ViewChild('input') input: MatInput
 
-  displayedColumns: string[] = ['select', 'id', 'name', 'firstName', 'group'];
+  displayedColumns: string[] = ['select', 'id', 'name', 'firstName', 'team'];
   @Input() public students: Student[];
   @Input() public options: Student[];
   dataSource = new MatTableDataSource<Student>();

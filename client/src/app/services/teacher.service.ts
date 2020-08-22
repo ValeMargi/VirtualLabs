@@ -37,22 +37,22 @@ export class TeacherService {
     data.append("file", file, file.name);
     data.append("modelVM", JSON.stringify(course));
 
-    this.http.post(`${this.API_PROFESSORS}/${courseName}/addModel`, data);
+    return this.http.post(`${this.API_PROFESSORS}/${courseName}/addModel`, data);
   }
 
   updateModelVM(courseName: string, course: Course) {
     let data: FormData = new FormData();
     data.append("modelVM", JSON.stringify(course));
 
-    this.http.post(`${this.API_PROFESSORS}/${courseName}/update`, data);
+    return this.http.post(`${this.API_PROFESSORS}/${courseName}/update`, data);
   }
 
   allVMforCourse(courseName: string) {
-    this.http.get<VM[]>(`${this.API_PROFESSORS}/VM/${courseName}`).pipe(map(vms => vms || []));
+    return this.http.get<VM[]>(`${this.API_PROFESSORS}/VM/${courseName}`).pipe(map(vms => vms || []));
   }
 
   getOwners(courseName: string, teamId: number, vmId: number) {
-    this.http.get<Student[]>(`${this.API_PROFESSORS}/VM/${courseName}/${teamId}/${vmId}`).pipe(map(students => students || []));
+    return this.http.get<Student[]>(`${this.API_PROFESSORS}/VM/${courseName}/${teamId}/${vmId}`).pipe(map(students => students || []));
   }
 
   addAssignment(courseName: string, file: File, assignment: Assignment) {
@@ -60,27 +60,27 @@ export class TeacherService {
     data.append("file", file, file.name);
     data.append("assignment", JSON.stringify(assignment));
 
-    this.http.post(`${this.API_PROFESSORS}/${courseName}/addAssignment`, data);
+    return this.http.post(`${this.API_PROFESSORS}/${courseName}/addAssignment`, data);
   }
 
   allAssignments(courseName: string) {
-    this.http.get<Assignment[]>(`${this.API_PROFESSORS}/${courseName}/assignments`).pipe(map(ass => ass || []));
+    return this.http.get<Assignment[]>(`${this.API_PROFESSORS}/${courseName}/assignments`).pipe(map(ass => ass || []));
   }
 
   getPhotoAssignment(courseName: string, assignmentId: number) {
-    this.http.get<PhotoAssignment>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/getAssignment`);
+    return this.http.get<PhotoAssignment>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/getAssignment`);
   }
 
   allHomework(courseName: string, assignmentId: number) {
-    this.http.get<Homework[]>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/allHomework`).pipe(map(homeworks => homeworks || []));
+    return this.http.get<Homework[]>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/allHomework`).pipe(map(homeworks => homeworks || []));
   }
 
   getVersionsHMForProfessor(courseName: string, assignmentId: number, homeworkId: number) {
-    this.http.get(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/getVersions`).pipe(map(versions => versions || []));
+    return this.http.get(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/getVersions`).pipe(map(versions => versions || []));
   }
 
   getCorrectionsHMForProfessor(courseName: string, assignmentId: number, homeworkId: number) {
-    this.http.get(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/getCorrections`).pipe(map(corrections => corrections || []));
+    return this.http.get(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/getCorrections`).pipe(map(corrections => corrections || []));
   }
 
   uploadCorrection(courseName: string, assignmentId: number, homeworkId: number, versionHMid, file: File, permanent: boolean, grade: string) {
@@ -89,7 +89,7 @@ export class TeacherService {
     data.append("permanent", permanent.toString());
     data.append("grade", grade);
 
-    this.http.post(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/${versionHMid}/uploadCorrection`, data);
+    return this.http.post(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/${versionHMid}/uploadCorrection`, data);
   }
 
 

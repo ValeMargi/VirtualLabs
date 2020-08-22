@@ -92,7 +92,7 @@ export class AuthService {
     return moment().isBefore(moment.unix(+localStorage.getItem('expires_at')));
   }
 
-  public isLoggedOut() { return !this.isLoggedIn; }
+  public isLoggedOut() { return !this.isLoggedIn(); }
 
   getUserByRole() {
     if (this.currentUser == null) {

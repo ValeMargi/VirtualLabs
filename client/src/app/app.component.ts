@@ -83,18 +83,19 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.router.navigateByUrl("home");
       }
     });
+
+    /*this.courseService.currentCourse.subscribe(
+      (data) => {
+        if (this.courses.indexOf(data) < 0) {
+          this.courses.push(data);
+          this.router.navigateByUrl(this.getRouteWithCourse(data));
+        }
+      }
+    )*/
   }
 
   ngOnInit() {
     this.role = localStorage.getItem("role");
-
-    if (this.authService.isLoggedIn()) {
-      this.loginVisibility = false;
-      //this.setCourses();
-    }
-    else {
-      this.loginVisibility = true;
-    }
 
     if (this.router.url == "") {
       this.notFoundVisibility = true;
@@ -108,13 +109,21 @@ export class AppComponent implements AfterViewInit, OnInit {
       else {
         this.homeVisibility = false;
       }
-    }
 
-    if (this.role.match("student")) {
-      this.teacherVisibility = false;
-    }
-    else {
-      this.teacherVisibility = true;
+      if (this.authService.isLoggedIn()) {
+        this.loginVisibility = false;
+        //this.setCourses();
+
+        if (this.role.match("student")) {
+          this.teacherVisibility = false;
+        }
+        else {
+          this.teacherVisibility = true;
+        }
+      }
+      else {
+        this.loginVisibility = true;
+      }
     }
 
     this.router.events.subscribe((event) => {
@@ -289,7 +298,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   getRouteWithCourse(course: Course) {
-    this.courseService.currentCourse = course;
+    this.courseService.setCurrentCourse(course);
     this.courseSelected = this.setCourseForRoute(course.name);
     let res: string = this.role + "/course/" + this.courseSelected;
 
@@ -300,6 +309,10 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   getRoute(position: number) {
+    if (this.authService.isLoggedOut()) {
+      return;
+    }
+
     let res: string = this.role + "/course/" + this.router.url.split("/")[3];
 
     if (position == 0) {

@@ -40,7 +40,7 @@ export class VmsComponent implements AfterViewInit, OnInit {
       this.length = this.vms.length;
     });*/
 
-    this.vms.push(new VM("VM01", 2, 100, 2, "spenta"));
+    this.vms.push(new VM(-1, 2, 100, 2, "off", "VM01", ""));
     this.dataSource = new MatTableDataSource<VM>(this.vms);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

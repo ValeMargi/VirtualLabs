@@ -28,10 +28,6 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   constructor(private matDialog: MatDialog) { }
 
   ngAfterViewInit(): void {
-
-    //provvisorio
-    this.assignments.push(new Assignment(-1, "Laboratorio 1", "01/01/2020", "31/07/2020"));
-    this.assignments.push(new Assignment(-1, "Laboratorio 2", "01/01/2020", "31/07/2020"));
   }
 
   ngOnInit(): void {

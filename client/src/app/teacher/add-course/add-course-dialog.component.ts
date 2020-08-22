@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Course } from 'src/app/models/course.model';
 import { CourseService } from 'src/app/services/course.service';
@@ -37,6 +37,7 @@ export class AddCourseDialogComponent implements OnInit {
 
       this.AddCourseForm = this.formBuilder.group({
         name : new FormControl('', [Validators.required, Validators.minLength(3)]),
+        acronym : new FormControl('', [Validators.required, Validators.minLength(2)]),
         max_iscrizioni : new FormControl('', [Validators.required, Validators.min(10),Validators.max(250)]),
         min_iscrizioni : new FormControl('', [Validators.required, Validators.min(10),Validators.max(250)]),
       });
@@ -93,9 +94,16 @@ export class AddCourseDialogComponent implements OnInit {
     }
   }
 
-  addCourse(name: string, min: number, max: number) {
-    let course = new Course(name, "", min, max, false, 0, 0, 0, 0, 0);
-    this.courseService.addCourse(course);
+  addCourse(name: string, acronym: string, min: number, max: number) {
+    let course = new Course(name, acronym, min, max, false, 0, 0, 0, 0, 0);
+    this.courseService.addCourse(course, this.teachersToAdd.map(teacher => teacher.id)).subscribe(
+      (data) => {
+        this.courseService.setCurrentCourse(course);
+      },
+      (error) => {
+        console.log("corso non aggiunto");
+      }
+    );
   }
 
 }

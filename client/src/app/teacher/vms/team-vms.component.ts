@@ -32,8 +32,8 @@ export class TeamVmsComponent implements OnInit {
     this.length = this.vms.length;
   }
 
-  getStatus(on: boolean) {
-    if (on) {
+  getStatus(status: string) {
+    if (status.match("on")) {
       return "Accesa";
     }
     else {

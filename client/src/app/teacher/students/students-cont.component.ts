@@ -12,28 +12,10 @@ import { CourseService } from 'src/app/services/course.service';
 })
 export class StudentsContComponent implements OnInit, AfterViewInit {
 
-/*STUDENTS_ENROLLED: Student[] = [new Student('s267782', 'Mosconi', 'Germano', 0, 0),
-                                  new Student('s268882', 'Brazorf', 'Ajeje', 0, 0),
-                                  new Student('s269982', 'Esposito', 'Mohamed', 0, 0),
-                                  new Student('s265482', 'La Barca', 'Remo', 0, 0),
-                                  new Student('s265582', 'Saolini', 'Gianmarco', 0, 0)];
+  STUDENTS_ENROLLED: Student[] = []
+  ALL_STUDENTS: Student[] = []
 
-ALL_STUDENTS: Student[] = [new Student('s218582', 'Baglio', 'Aldo', 0, 0),
-                                  new Student('s268877', 'Di Lernia', 'Leone', 0, 0),
-                                  new Student('s211983', 'Smaila', 'Umberto', 0, 0),
-                                  new Student('s263280', 'Stilton', 'Geronimo', 0, 0),
-                                  new Student('s260001', 'Zalone', 'Checco', 0, 0),
-                                  new Student('s267782', 'Mosconi', 'Germano', 0, 0),
-                                  new Student('s268882', 'Brazorf', 'Ajeje', 0, 0),
-                                  new Student('s269982', 'Esposito', 'Mohamed', 0, 0),
-                                  new Student('s265482', 'La Barca', 'Remo', 0, 0),
-                                  new Student('s265582', 'Saolini', 'Gianmarco', 0, 0)];*/
-
-                                  STUDENTS_ENROLLED: Student[] = []
-                                  ALL_STUDENTS: Student[] = []
-
-                                  
-
+                              
   constructor(private studentService: StudentService,
               private courseService: CourseService) { 
     
@@ -49,16 +31,20 @@ ALL_STUDENTS: Student[] = [new Student('s218582', 'Baglio', 'Aldo', 0, 0),
         this.ALL_STUDENTS = data;
         this.allStudents.emit(this.ALL_STUDENTS);
       },
-      (error) => {  } 
+      (error) => { 
+        console.log("studenti non reperiti");
+       } 
       );
 
-    this.courseService.enrolledStudents(this.courseService.currentCourse.name).subscribe(
+    this.courseService.enrolledStudents(this.courseService.currentCourse.getValue().name).subscribe(
       (data) => {
         console.log(data);
         this.STUDENTS_ENROLLED = data;
         this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
       },
-      (error) => {  } 
+      (error) => { 
+        console.log("studenti iscritti non reperiti");
+       } 
       );
     
   }
@@ -68,7 +54,7 @@ ALL_STUDENTS: Student[] = [new Student('s218582', 'Baglio', 'Aldo', 0, 0),
   }
 
   enrollStudent(student: Student) {
-    this.courseService.enrollOne(this.courseService.currentCourse.name, student.id).subscribe(
+    this.courseService.enrollOne(this.courseService.currentCourse.getValue().name, student.id).subscribe(
       (success) => {
         this.STUDENTS_ENROLLED = this.STUDENTS_ENROLLED.concat(student);
         this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
@@ -80,7 +66,7 @@ ALL_STUDENTS: Student[] = [new Student('s218582', 'Baglio', 'Aldo', 0, 0),
   }
 
   removeStudents(students: Student[]) {
-    /*this.courseService.(students).subscribe(
+    this.courseService.deleteStudentsFromCourse(this.courseService.currentCourse.getValue().name, students.map(student => student.id)).subscribe(
       (success) => {
         students.forEach(student => {
           this.STUDENTS_ENROLLED.forEach(s => {
@@ -91,8 +77,10 @@ ALL_STUDENTS: Student[] = [new Student('s218582', 'Baglio', 'Aldo', 0, 0),
         });
         this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
       },
-      (error) => {  }
-    );*/
+      (error) => { 
+        console.log("rimozione non avvenuta");
+       }
+    );
   }
 
 }

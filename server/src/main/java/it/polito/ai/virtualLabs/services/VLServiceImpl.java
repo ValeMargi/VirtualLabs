@@ -1295,6 +1295,7 @@ public class VLServiceImpl implements VLService{
                     m.put("id", c.getId());
                     m.put("timestamp", c.getTimestamp());
                     m.put("nameFile", c.getNameFile());
+                    m.put("versionId",c.getIdVersionHomework());
                     l.add(m);
                 }
                 return l;
@@ -1320,6 +1321,7 @@ public class VLServiceImpl implements VLService{
                     m.put("id", c.getId());
                     m.put("timestamp", c.getTimestamp());
                     m.put("nameFile", c.getNameFile());
+                    m.put("versionId",c.getIdVersionHomework());
                     l.add(m);
                 }
                 return l;

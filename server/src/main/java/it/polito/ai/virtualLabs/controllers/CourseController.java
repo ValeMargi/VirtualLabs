@@ -64,9 +64,9 @@ public class CourseController {
      * @return: ritorna il DTO del corso
      */
     @PostMapping({"", "/"})
-    public CourseDTO addCourse(@RequestParam("course") CourseDTO courseDTO, @RequestParam("professors") List<String> professorsId ) {
+    public CourseDTO addCourse(@RequestPart("course") CourseDTO courseDTO, @RequestPart("professors") String[] professorsId ) {
         try {
-            if (vlService.addCourse(courseDTO, professorsId)) {
+            if (vlService.addCourse(courseDTO, Arrays.asList(professorsId))) {
                 return ModelHelper.enrich(courseDTO);
             } else
                 throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getName());

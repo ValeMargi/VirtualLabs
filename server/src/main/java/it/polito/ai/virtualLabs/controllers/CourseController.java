@@ -69,7 +69,7 @@ public class CourseController {
             if (vlService.addCourse(courseDTO, Arrays.asList(professorsId))) {
                 return ModelHelper.enrich(courseDTO);
             } else
-                throw new ResponseStatusException(HttpStatus.CONFLICT, courseDTO.getName());
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Course "+courseDTO.getName()+" already present");
         }catch (ProfessorNotFoundException p){
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, p.getMessage());
         }

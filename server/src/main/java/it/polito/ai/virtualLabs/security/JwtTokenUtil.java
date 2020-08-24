@@ -74,19 +74,12 @@ public class JwtTokenUtil implements Serializable {
                 claims.put(CLAIM_KEY_FIRSTNAME, userDAO.getProfessor().getFirstName());
                 claims.put(CLAIM_KEY_NAME, userDAO.getProfessor().getName());
                 claims.put(CLAIM_KEY_ID, userDAO.getProfessor().getId());
-               // claims.put(CLAIM_KEY_PHOTO, userDAO.getProfessor().getPhotoProfessor());
-                claims.put(CLAIM_KEY_PHOTO_NAME, userDAO.getProfessor().getPhotoProfessor().getNameFile());
-                claims.put(CLAIM_KEY_PHOTO_TYPE, userDAO.getProfessor().getPhotoProfessor().getType());
-               // claims.put(CLAIM_KEY_PHOTO_BYTE, vlService.decompressZLib(userDAO.getProfessor().getPhotoProfessor().getPicByte()));
             }else if(userDAO.getRole().equals("student")){
                 claims.put(CLAIM_KEY_ROLE, userDAO.getRole());
                 claims.put(CLAIM_KEY_FIRSTNAME, userDAO.getStudent().getFirstName());
                 claims.put(CLAIM_KEY_NAME, userDAO.getStudent().getName());
                 claims.put(CLAIM_KEY_ID, userDAO.getStudent().getId());
-               // claims.put(CLAIM_KEY_PHOTO, userDAO.getStudent().getPhotoStudent());
-                claims.put(CLAIM_KEY_PHOTO_NAME, userDAO.getStudent().getPhotoStudent().getNameFile());
-                claims.put(CLAIM_KEY_PHOTO_TYPE, userDAO.getStudent().getPhotoStudent().getType());
-               // claims.put(CLAIM_KEY_PHOTO_BYTE, vlService.decompressZLib(userDAO.getStudent().getPhotoStudent().getPicByte()));
+
             }
         }catch(ImageSizeException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());

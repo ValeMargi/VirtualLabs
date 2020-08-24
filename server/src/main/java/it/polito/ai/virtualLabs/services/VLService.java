@@ -11,10 +11,12 @@ import java.util.Optional;
 
 public interface VLService {
     boolean changeAvatar(AvatarProfessorDTO avatarProfessorDTO, AvatarStudentDTO avatarStudentDTO);
-    Optional<StudentDTO> getStudent(String studentId);
+    Map<String, Object> getProfileStudent();
+    Map<String, Object>  getStudent(String studentId);
     List<StudentDTO> getAllStudents();
     List<ProfessorDTO> getAllProfessors();
-    Optional<ProfessorDTO> getProfessor(String professorId);
+    Map<String, Object> getProfessor(String professorId);
+    Map<String, Object> getProfileProfessor();
     List<StudentDTO> getEnrolledStudents(String courseName);
     boolean addStudentToCourse(String studentId, String courseName);
     List<Boolean> deleteStudentsFromCourse(List<String> studentsIds, String courseName);

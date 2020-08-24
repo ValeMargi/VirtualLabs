@@ -150,12 +150,36 @@ public class VLServiceImpl implements VLService{
     }
 
     /*SERVICE student*/
+    @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
-    public Optional<StudentDTO> getStudent(String studentId) {
-        return studentRepository.findById(studentId)
-                .map(s -> modelMapper.map(s, StudentDTO.class));
+    public Map<String, Object> getStudent(String studentId) {
+        Optional<Student> os= studentRepository.findById(studentId);
+        if(!os.isPresent())
+            throw new StudentNotFoundException();
+        Student s = os.get();
+        AvatarStudentDTO avatarStudentDTO = modelMapper.map(s.getPhotoStudent(), AvatarStudentDTO.class);
+        avatarStudentDTO.setPicByte(decompressZLib(avatarStudentDTO.getPicByte()));
+        Map<String, Object> profile = new HashMap<>();
+        profile.put("student", modelMapper.map(os.get(), StudentDTO.class));
+        profile.put("avatar", avatarStudentDTO);
+        return profile;
     }
 
+    @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
+    @Override
+    public Map<String, Object> getProfileStudent(){
+        String auth = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Student> os= studentRepository.findById(auth);
+        if(!os.isPresent())
+            throw new StudentNotFoundException();
+        Student s = os.get();
+        AvatarStudentDTO avatarStudentDTO = modelMapper.map(s.getPhotoStudent(), AvatarStudentDTO.class);
+        avatarStudentDTO.setPicByte(decompressZLib(avatarStudentDTO.getPicByte()));
+        Map<String, Object> profile = new HashMap<>();
+        profile.put("student", modelMapper.map(s, StudentDTO.class));
+        profile.put("avatar", avatarStudentDTO);
+        return profile;
+    }
 
     @Override
     public List<StudentDTO> getAllStudents() {
@@ -173,11 +197,37 @@ public class VLServiceImpl implements VLService{
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
-    public Optional<ProfessorDTO> getProfessor(String professorId) {
-        return professorRepository.findById(professorId)
-                .map(p -> modelMapper.map(p, ProfessorDTO.class));
+    public  Map<String, Object> getProfessor(String professorId) {
+        Optional<Professor> op= professorRepository.findById(professorId);
+        if(!op.isPresent())
+            throw new ProfessorNotFoundException();
+        Professor p = op.get();
+        AvatarProfessorDTO avatarProfessorDTO = modelMapper.map(p.getPhotoProfessor(), AvatarProfessorDTO.class);
+        avatarProfessorDTO.setPicByte(decompressZLib(avatarProfessorDTO.getPicByte()));
+        Map<String, Object> profile = new HashMap<>();
+        profile.put("professor", modelMapper.map(p, ProfessorDTO.class));
+        profile.put("avatar", avatarProfessorDTO);
+        return profile;
     }
+
+    @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
+    @Override
+    public Map<String, Object> getProfileProfessor(){
+        String auth = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Professor> op= professorRepository.findById(auth);
+        if(!op.isPresent())
+            throw new ProfessorNotFoundException();
+        Professor p = op.get();
+        AvatarProfessorDTO avatarProfessorDTO = modelMapper.map(p.getPhotoProfessor(), AvatarProfessorDTO.class);
+        avatarProfessorDTO.setPicByte(decompressZLib(avatarProfessorDTO.getPicByte()));
+        Map<String, Object> profile = new HashMap<>();
+        profile.put("student", modelMapper.map(p, ProfessorDTO.class));
+        profile.put("avatar", avatarProfessorDTO);
+        return profile;
+    }
+
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
     public List<StudentDTO> getEnrolledStudents(String courseName) {

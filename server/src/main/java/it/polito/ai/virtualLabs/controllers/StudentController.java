@@ -1,6 +1,7 @@
 package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.*;
+import it.polito.ai.virtualLabs.entities.Student;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +33,25 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public StudentDTO getOne(@PathVariable String id) {
-        Optional<StudentDTO> studentDTO = vlService.getStudent(id);
-        if (!studentDTO.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id:"+id+" not present");
-        else
-            return ModelHelper.enrich(studentDTO.get());
+    public Map<String, Object> getOne(@PathVariable String id) {
+        try{
+            Map<String, Object> profile=vlService.getStudent(id);
+            profile.put("student",ModelHelper.enrich((StudentDTO) profile.get("student")));
+            return profile;
+        }catch(StudentNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+
+        }
+    }
+
+    @GetMapping("/getProfile")
+    public Map<String, Object> getProfile() {
+        try{
+            return vlService.getProfileStudent();
+        }catch(StudentNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+
+        }
     }
 
     /**

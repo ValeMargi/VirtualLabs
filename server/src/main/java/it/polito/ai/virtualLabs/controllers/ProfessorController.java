@@ -34,15 +34,27 @@ public class ProfessorController {
 
 
     @GetMapping("/{id}")
-    public ProfessorDTO getOne(@PathVariable String id) {
-        Optional<ProfessorDTO> professorDTO = vlService.getProfessor(id);
-        if (!professorDTO.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Professor with id:"+id+" not present");
-        else
-            return ModelHelper.enrich(professorDTO.get());
+    public Map<String, Object> getOne(@PathVariable String id) {
+        try{
+            Map<String, Object> profile=vlService.getProfessor(id);
+            profile.put("professor",ModelHelper.enrich((ProfessorDTO) profile.get("professor")));
+            return profile;
+        }catch(ProfessorNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+
+        }
     }
 
 
+    @GetMapping("/getProfile")
+    public Map<String, Object> getProfile() {
+        try{
+            return vlService.getProfileProfessor();
+        }catch(ProfessorNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+
+        }
+    }
     /**
      * Metodo: GET
      * Authority: Docente

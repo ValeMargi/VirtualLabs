@@ -22,13 +22,15 @@ export class StudentService {
   API_STUDENTS = "http://localhost:8080/API/students";
 
   currentStudent: Student;
+  currentAvatar: File;
 
   all() {
     return this.http.get<Student[]>(`${this.API_STUDENTS}`).pipe(map(students => students || []));
   }
 
   getOne(studentId: string) {
-    return this.http.get<Student>(`${this.API_STUDENTS}/${studentId}`);
+    //ritorna studente e avatar
+    return this.http.get<any>(`${this.API_STUDENTS}/${studentId}`);
   }
 
   getCourses(studentId: string) {

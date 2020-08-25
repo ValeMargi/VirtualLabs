@@ -3,14 +3,14 @@ export class Course {
     public acronym: string;
     public min: number;
     public max: number;
-    public enabled: boolean;
+    public enabled: number;
     public maxVcpu: number;
     public diskSpace: number;
     public ram: number;
     public runningInstances: number;
     public totInstances: number;
 
-    constructor(name: string, acronym: string, min: number, max: number, enabled: boolean, maxVcpu: number, diskSpace: number, ram: number, runningInstances: number, totInstances: number) {
+    constructor(name: string, acronym: string, min: number, max: number, enabled: number, maxVcpu: number, diskSpace: number, ram: number, runningInstances: number, totInstances: number) {
         this.name = name;
         this.acronym = acronym;
         this.min = min;

@@ -15,7 +15,7 @@ export class ManageModelContComponent implements OnInit {
 
   ngOnInit(): void {
     this.MODEL_VM = this.courseService.currentCourse.getValue();
-    //this.MODEL_VM = new Course("Applicazioni Internet", "AI", 10, 250, false, 4, 100, 8, 5, 5);
+    //this.MODEL_VM = new Course("Applicazioni Internet", "AI", 10, 250, 0, 4, 100, 8, 5, 5);
 
   }
 

@@ -15,7 +15,7 @@ import { Teacher } from '../models/teacher.model';
 const API_AUTH = 'http://localhost:8080/API';
 
 const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': undefined})
+  headers: new HttpHeaders({'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'})
 }
 
 @Injectable({
@@ -123,6 +123,39 @@ export class AuthService {
     }
     else {
       this.teacherService.currentTeacher = new Teacher(token.id, token.firstname, token.name, token.id + "@polito.it");
+    }
+
+    localStorage.setItem('currentId', token.id);
+  }
+
+  getUserAvatar() {
+    if (this.currentUser == null) {
+      this.currentUser = new User(-1, "", localStorage.getItem('role'), true);
+    }
+
+    if (this.currentUser.role == "student") {
+      this.studentService.getOne(localStorage.getItem('currentId')).subscribe(
+        (data) => {
+          this.studentService.currentAvatar = data.avatar;
+          return this.studentService.currentAvatar;
+        },
+        (error) => {
+          console.log("Impossibile ottenere lo studente");
+          return null;
+        }
+      );
+    }
+    else {
+      this.teacherService.getOne(localStorage.getItem('currentId')).subscribe(
+        (data) => {
+          this.teacherService.currentAvatar = data.avatar;
+          return this.teacherService.currentAvatar;
+        },
+        (error) => {
+          console.log("Impossibile ottenere lo studente");
+          return null;
+        }
+      );
     }
   }
 

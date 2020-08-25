@@ -12,6 +12,7 @@ import { FormGroup } from '@angular/forms';
 export class EditProfileComponent implements OnInit {
 
   @Input() currentUser: any;
+  @Input() avatar: any;
 
   selectedPhoto: File;
   previewPhoto: any;
@@ -21,7 +22,11 @@ export class EditProfileComponent implements OnInit {
   changePassVisibility: boolean = false;
 
   ngOnInit(): void {
-    
+    const reader = new FileReader();
+    reader.readAsDataURL(this.avatar as File);
+    reader.onload = (_event) => { 
+      this.previewPhoto = reader.result; 
+    }
   }
 
   close() {

@@ -112,13 +112,36 @@ export class AppComponent implements AfterViewInit, OnInit {
 
       if (this.authService.isLoggedIn()) {
         this.loginVisibility = false;
-        //this.setCourses();
 
         if (this.role.match("student")) {
           this.teacherVisibility = false;
+
+          this.studentService.getOne(localStorage.getItem('currentId')).subscribe(
+            (data) => {
+              console.log("ottenuto studente");
+              this.studentService.currentStudent = data.student;
+              this.studentService.currentAvatar = data.avatar;
+              this.setCourses();
+            },
+            (error) => {
+              console.log("Impossibile ottenere lo studente");
+            }
+          );
         }
         else {
           this.teacherVisibility = true;
+
+          this.teacherService.getOne(localStorage.getItem('currentId')).subscribe(
+            (data) => {
+              console.log("ottenuto prof");
+              this.teacherService.currentTeacher = data.professor;
+              this.teacherService.currentAvatar = data.avatar;
+              this.setCourses();
+            },
+            (error) => {
+              console.log("Impossibile ottenere il professore");
+            }
+          );
         }
       }
       else {
@@ -170,6 +193,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     else {
       this.teacherService.getCoursesForProfessor(this.teacherService.currentTeacher.id).subscribe(
         (data) => {
+          console.log("ottenuti corsi");
+          console.log(data);
           this.courses = data;
           this.setRoutes();
         },

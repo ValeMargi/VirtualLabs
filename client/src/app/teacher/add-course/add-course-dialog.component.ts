@@ -95,12 +95,13 @@ export class AddCourseDialogComponent implements OnInit {
   }
 
   addCourse(name: string, acronym: string, min: number, max: number) {
-    let course = new Course(name, acronym, min, max, false, 0, 0, 0, 0, 0);
+    let course = new Course(name, acronym, 10, 100, 0, 0, 0, 0, 0, 0);
     this.courseService.addCourse(course, this.teachersToAdd.map(teacher => teacher.id)).subscribe(
       (data) => {
         this.courseService.setCurrentCourse(course);
       },
       (error) => {
+        console.log(error);
         console.log("corso non aggiunto");
       }
     );

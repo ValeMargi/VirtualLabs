@@ -12,11 +12,13 @@ import { AuthService } from '../auth/auth.service';
 export class EditProfileContComponent implements OnInit {
 
   @Output() CURRENT_USER: any;
+  @Output() CURRENT_AVATAR: any;
 
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     this.CURRENT_USER = this.authService.getUserByRole();
+    this.CURRENT_AVATAR = this.authService.getUserAvatar();
   }
 
 }

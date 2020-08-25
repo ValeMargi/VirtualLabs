@@ -17,6 +17,7 @@ export class TeacherService {
   API_PROFESSORS = "http://localhost:8080/API/professors";
 
   currentTeacher: Teacher;
+  currentAvatar: File;
 
   constructor(private http: HttpClient) { }
 
@@ -25,7 +26,8 @@ export class TeacherService {
   }
 
   getOne(professorId: string) {
-    return this.http.get<Teacher>(`${this.API_PROFESSORS}/${professorId}`);
+    //ritorna professore e avatar
+    return this.http.get<any>(`${this.API_PROFESSORS}/${professorId}`);
   }
 
   getCoursesForProfessor(professorId: string) {

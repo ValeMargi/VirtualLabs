@@ -1,5 +1,5 @@
 import { Injectable, Output, EventEmitter } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, concatMap, toArray } from 'rxjs/operators';
 import { Course } from '../models/course.model';
 import { Student } from '../models/student.model';
@@ -13,13 +13,17 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class CourseService {
 
-  currentCourse = new BehaviorSubject<Course>(new Course("", "", -1, -1, false, -1, -1, -1, -1, -1));
+  currentCourse = new BehaviorSubject<Course>(new Course("", "", -1, -1, 0, -1, -1, -1, -1, -1));
   currentCourse$ = this.currentCourse.asObservable();
   //currentCourse: Course = new Course("", "", -1, -1, false, -1, -1, -1, -1, -1);
 
   constructor(private http: HttpClient) {}
 
   API_COURSES = "http://localhost:8080/API/courses";
+
+  httpOptions = {
+    headers: new HttpHeaders({'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'})
+  }
 
   setCurrentCourse(course: Course) {
     this.currentCourse.next(course);
@@ -34,11 +38,17 @@ export class CourseService {
   }
 
   addCourse(course: Course, teachersId: string[]) {
-    let data: FormData = new FormData();
-    data.append("course", JSON.stringify(course));
-    data.append("professors", JSON.stringify(teachersId));
+    const data = new FormData();
+    /*data.append("course", new Blob([JSON.stringify(
+      course)]), "course");*/
+    /*data.append("professors", new Blob([JSON.stringify({
+       teachersId})]));*/
+       data.append('course', JSON.stringify(course));
+       data.append("professors", JSON.stringify(teachersId));
 
-    return this.http.post<Course>(this.API_COURSES, data);
+    console.log(JSON.stringify(course))
+    console.log(JSON.stringify(teachersId))
+    return this.http.post<Course>(`${this.API_COURSES}/`, data, this.httpOptions);
   }
 
   enableCourse(name: string, enabled: boolean) {

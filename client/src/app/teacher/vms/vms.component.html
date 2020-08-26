@@ -7,7 +7,7 @@
     </button>
 </div>
 
-<div class="vmsContainer">
+<div class="vmsContainer" *ngIf="teamsVisibility">
     <div class="teamsContainer">
         <mat-selection-list [multiple]="false">
             <mat-list-option *ngFor="let team of teams" [value]="team" (click)="selectTeam(team)"> 
@@ -15,4 +15,7 @@
         </mat-selection-list>
     </div>
     <app-team-vms-cont class="tableContainer" [team]="TEAM" *ngIf="teamVMsVisibility"></app-team-vms-cont> 
+</div>
+<div class="noTeams" *ngIf="!teamsVisibility">
+    <h3>Nessun team in questo corso</h3>
 </div>

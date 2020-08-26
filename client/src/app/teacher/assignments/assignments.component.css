@@ -34,3 +34,9 @@ h3 {
 .create {
     margin: 1em;
 }
+
+.noAss {
+    width: 100%;
+    text-align: center;
+    margin-top: 10%;
+}

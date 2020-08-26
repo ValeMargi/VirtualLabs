@@ -24,6 +24,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   @Output() public ASSIGNMENT: Assignment;
 
   tableVisibility: boolean = false;
+  assVisibility: boolean = false;
 
   constructor(private matDialog: MatDialog) { }
 
@@ -32,6 +33,13 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this.tableVisibility = false;
+
+    if (this.assignments.length > 0) {
+      this.assVisibility = true;
+    }
+    else {
+      this.assVisibility = false;
+    }
   }
 
   showHomeworks(ass: Assignment) {

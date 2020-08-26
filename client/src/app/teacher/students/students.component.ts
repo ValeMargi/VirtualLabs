@@ -48,12 +48,10 @@ export class StudentsComponent implements AfterViewInit, OnInit {
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
+  tableVisibility: boolean = false;
+
   @Output('enroll') toInsert = new EventEmitter<Student>()
   @Output('remove') toRemove = new EventEmitter<Student[]>()
-
-  @Input() set enrolledStudents( students: Student[] ) {
-    this.options = students
-  }
 
   constructor(private cont: StudentsContComponent) {}
 
@@ -80,7 +78,12 @@ export class StudentsComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    this.dataSource.sort = this.sort;
+    if (this.students.length > 0) {
+      this.tableVisibility = true;
+    }
+    else {
+      this.tableVisibility = false;
+    }
   }
 
   private _filter(value: string): Student[] {

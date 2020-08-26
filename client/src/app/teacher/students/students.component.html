@@ -19,7 +19,7 @@
         <mat-icon aria-label="" (click)=deleteStudent()>delete</mat-icon>
         </button>
 </form>
-<div class="tableContainer" class="mat-elevation-z8"> 
+<div class="tableContainer" *ngIf="tableVisibility"> 
     <table #table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef><mat-checkbox #checkall (change)="selectAll($event.checked)"
@@ -51,4 +51,7 @@
         </table>
         <mat-paginator  class="paginator"  [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>
 
+</div>
+<div class="noStudents" *ngIf="!tableVisibility">
+    <h3>Nessuno studente in questo corso</h3>
 </div>

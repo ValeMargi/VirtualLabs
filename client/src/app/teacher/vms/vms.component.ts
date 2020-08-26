@@ -15,6 +15,7 @@ export class VmsComponent implements AfterViewInit, OnInit {
   @Output() public TEAM: Team;
   
   teamVMsVisibility: boolean = false;
+  teamsVisibility: boolean = false;
 
   constructor(private cont: VmsContComponent, private matDialog: MatDialog) { }
 
@@ -23,7 +24,12 @@ export class VmsComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    
+    if (this.teams.length > 0) {
+      this.teamsVisibility = true;
+    }
+    else {
+      this.teamsVisibility = false;
+    }
   }
 
   openDialogModel() {

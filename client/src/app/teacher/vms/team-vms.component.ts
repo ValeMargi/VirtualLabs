@@ -21,15 +21,23 @@ export class TeamVmsComponent implements OnInit {
 
   length = 5;
   pageSize = 5;
-  pageSizeOptions: number[] = [5, 10, 25, 100];
+  pageSizeOptions: number[] = [5, 10];
+
+  VMsVisibility: boolean = false;
 
   constructor() { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<VM>(this.vms);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.length = this.vms.length;
+    if (this.vms.length > 0) {
+      this.VMsVisibility = true;
+      this.dataSource = new MatTableDataSource<VM>(this.vms);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.length = this.vms.length;
+    }
+    else {
+      this.VMsVisibility = false;
+    }
   }
 
   getStatus(status: string) {

@@ -167,17 +167,17 @@ export class AuthService {
     console.log(userJson)
     
     let data: FormData = new FormData();
-    data.append("file", file, file.name);
+    data.append('file', file, file.name);
     /*data.append("registerData", new Blob([JSON.stringify(userJson)], {
       type: "application/json"
     }));*/
 
     data.append('registerData', new Blob([JSON.stringify({
-      "firstName": "Test nome",
-      "name": "Test cognome", 
-      "id": "d2", 
-      "email": "d2@polito.it", 
-      "password": "bestPassw0rd"           
+      'firstName': "Test nome",
+      'name': "Test cognome", 
+      'id': "d2", 
+      'email': "d2@polito.it", 
+      'password': "bestPassw0rd"           
       })], {
       type: "application/json"
   }));

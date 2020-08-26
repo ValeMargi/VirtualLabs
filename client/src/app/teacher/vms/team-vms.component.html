@@ -1,28 +1,33 @@
-<table #table mat-table [dataSource]="dataSource" matSort class="matTable">
-    <ng-container matColumnDef="vmName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
-        <td mat-cell *matCellDef="let row"> {{row.nameVM}} </td>
-    </ng-container>
-    <ng-container matColumnDef="owner">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Proprietario </th>
-        <td mat-cell *matCellDef="let row">  </td>
-    </ng-container>
-    <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato </th>
-        <td mat-cell *matCellDef="let row"> {{getStatus(row.status)}} </td>
-    </ng-container>
-    <ng-container matColumnDef="link">
-        <th mat-header-cell *matHeaderCellDef> Collegamento </th>
-        <td mat-cell *matCellDef="let row"> 
-            <button mat-button (click)=openVM()>
-                Collegati
-            </button>
-        </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
+<div *ngIf="VMsVisibility">
+    <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
+        <ng-container matColumnDef="vmName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+            <td mat-cell *matCellDef="let row"> {{row.nameVM}} </td>
+        </ng-container>
+        <ng-container matColumnDef="owner">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Proprietario </th>
+            <td mat-cell *matCellDef="let row">  </td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato </th>
+            <td mat-cell *matCellDef="let row"> {{getStatus(row.status)}} </td>
+        </ng-container>
+        <ng-container matColumnDef="link">
+            <th mat-header-cell *matHeaderCellDef> Collegamento </th>
+            <td mat-cell *matCellDef="let row"> 
+                <button mat-button (click)=openVM()>
+                    Collegati
+                </button>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
 
-<mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
-            
-</mat-paginator>
+    <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
+                
+    </mat-paginator>
+</div>
+<div class="noVMs" *ngIf="!VMsVisibility">
+    <h3>Nessuna VM per questo gruppo</h3>
+</div>

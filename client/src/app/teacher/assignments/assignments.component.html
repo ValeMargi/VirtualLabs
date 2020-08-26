@@ -5,7 +5,7 @@
         <mat-icon>assignment</mat-icon>Crea consegna </button>
 </div>
 
-<div class="assContainer">
+<div class="assContainer" *ngIf="assVisibility">
     <div class="container1">
         <div class="assignments">
             <mat-selection-list [multiple]="false">
@@ -20,4 +20,7 @@
         <app-homeworks-cont class="tableContainer" *ngIf="tableVisibility" [assignment]="ASSIGNMENT"> 
         </app-homeworks-cont>
     </div>
+</div>
+<div class="noAss" *ngIf="!assVisibility">
+    <h3>Ancora nessuna consegna</h3>
 </div>

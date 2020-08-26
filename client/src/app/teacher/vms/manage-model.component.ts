@@ -3,6 +3,7 @@ import { Course } from 'src/app/models/course.model';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { CourseService } from 'src/app/services/course.service';
 
 @Component({
   selector: 'app-manage-model',
@@ -16,19 +17,22 @@ export class ManageModelComponent implements OnInit {
 
   constructor(private teacherService: TeacherService,
     private formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<ManageModelComponent>) { 
+    private dialogRef: MatDialogRef<ManageModelComponent>,
+    private courseService: CourseService) { 
 
-      this.ModelVmForm = this.formBuilder.group({
-        max_vcpu : new FormControl('', [Validators.required, Validators.min(1),Validators.max(24)]),
-        max_disco : new FormControl('', [Validators.required, Validators.min(10),Validators.max(500)]),
-        max_ram : new FormControl('', [Validators.required, Validators.min(1),Validators.max(250)]),
-        max_vm : new FormControl('', [Validators.required, Validators.min(1),Validators.max(10)]),
-        max_vm_active : new FormControl('', [Validators.required, Validators.min(1),Validators.max(10)])
-      });
+      
     }
 
   ngOnInit(): void {
    console.log(this.modelvm)
+
+   this.ModelVmForm = this.formBuilder.group({
+    max_vcpu : new FormControl('', [Validators.required, Validators.min(1),Validators.max(24)]),
+    max_disco : new FormControl('', [Validators.required, Validators.min(10),Validators.max(500)]),
+    max_ram : new FormControl('', [Validators.required, Validators.min(1),Validators.max(250)]),
+    max_vm : new FormControl('', [Validators.required, Validators.min(1),Validators.max(10)]),
+    max_vm_active : new FormControl('', [Validators.required, Validators.min(1),Validators.max(10)])
+  });
 
    this.ModelVmForm.setValue({
      max_vcpu: this.modelvm.maxVcpu,
@@ -36,7 +40,7 @@ export class ManageModelComponent implements OnInit {
      max_ram: this.modelvm.ram,
      max_vm: this.modelvm.totInstances,
      max_vm_active: this.modelvm.runningInstances
-   })
+   });
   }
 
   saveModel(maxVcpu: number, maxDisk: number, ram: number, totInstances: number, runningInstances: number) {  
@@ -48,7 +52,7 @@ export class ManageModelComponent implements OnInit {
     
     this.teacherService.updateModelVM(this.modelvm.name, this.modelvm).subscribe(
       (data) => {
-
+        this.courseService.currentCourse.next(this.modelvm);
       },
       (error) => {
         console.log("modello non aggiornato");

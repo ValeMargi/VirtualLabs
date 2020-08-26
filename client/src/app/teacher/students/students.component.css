@@ -13,4 +13,10 @@ h1 {
 
 .tableContainer {
     margin: 2em;
+} 
+
+.noStudents {
+    width: 100%;
+    text-align: center;
+    margin-top: 10%;
 }

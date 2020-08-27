@@ -156,6 +156,10 @@ export class AppComponent implements AfterViewInit, OnInit {
         }
         else {
           this.homeVisibility = false;
+
+          if (this.courseService.currentCourse.getValue().name == "") {
+            this.courseService.currentCourse.getValue().name = this.getCourseName();
+          }
         }
       }
     });
@@ -279,24 +283,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   get courseName() {
-    if (this.router.url.length <= 1)
-      return "";
-      
-    let res = this.router.url.split("/");
-
-    if (res[2] != null && res[2].match("course")) {
-      let res2 = res[3].split("-");
-      var name = "";
-
-      for (var n of res2) {
-        name += n.charAt(0).toUpperCase() + n.slice(1) + " ";
-      }
-
-      return name;
-    }
-    else {
-      return "";
-    }
+    return this.getCourseName();
   }
 
   get activeTab() {
@@ -319,6 +306,27 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
     else {
       return 0;
+    }
+  }
+
+  getCourseName() {
+    if (this.router.url.length <= 1)
+      return "";
+      
+    let res = this.router.url.split("/");
+
+    if (res[2] != null && res[2].match("course")) {
+      let res2 = res[3].split("-");
+      var name = "";
+
+      for (var n of res2) {
+        name += n.charAt(0).toUpperCase() + n.slice(1) + " ";
+      }
+
+      return name;
+    }
+    else {
+      return "";
     }
   }
 

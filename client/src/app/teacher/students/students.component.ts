@@ -33,13 +33,14 @@ export class StudentsComponent implements AfterViewInit, OnInit {
   @ViewChild('input') input: MatInput
 
   displayedColumns: string[] = ['select', 'id', 'name', 'firstName', 'team'];
-  @Input() public students: Student[];
-  @Input() public options: Student[];
+  @Input() students: Student[];
+  @Input() options: Student[];
   dataSource = new MatTableDataSource<Student>();
 
   selectedStudents = new SelectionModel<Student>(true, []);
 
   myControl = new FormControl();
+  selectedCSV: File;
   
   filteredOptions: Observable<Student[]>;
   studentToAdd : Student = null;
@@ -49,32 +50,34 @@ export class StudentsComponent implements AfterViewInit, OnInit {
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
   tableVisibility: boolean = false;
+  addDisabled: boolean = true;
 
   @Output('enroll') toInsert = new EventEmitter<Student>()
+  @Output('CSV') toInsertCSV = new EventEmitter<File>();
   @Output('remove') toRemove = new EventEmitter<Student[]>()
 
-  constructor(private cont: StudentsContComponent) {}
+  constructor() {}
 
   ngAfterViewInit(): void {
-    this.cont.enrolledStudents.subscribe(ss => {
-      this.students = ss;
+    //this.cont.enrolledStudents.subscribe(ss => {
+      //this.students = ss;
       this.dataSource = new MatTableDataSource<Student>(this.students);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.length = this.students.length;
       this.studentToAdd = null;
       this.selectedStudents.clear();
-    });
+    //});
 
-    this.cont.allStudents.subscribe(ss => {
-      this.options = ss;
+    //this.cont.allStudents.subscribe(ss => {
+      //this.options = ss;
       this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value.name),
         map(value => this._filter(value))
       );
-    });
+    //});
   }
 
   ngOnInit() {
@@ -128,13 +131,22 @@ export class StudentsComponent implements AfterViewInit, OnInit {
     return this.dataSource.data.length == this.selectedStudents.selected.length;
   }
 
-  @Input() deleteStudent() {
+  onSearchChange(searchValue: string) {  
+    if (searchValue.length > 0) {
+      this.addDisabled = false;
+    }
+    else {
+      this.addDisabled = true;
+    }
+  }
+
+  deleteStudent() {
     if (this.selectedStudents.selected.length > 0) {
       this.toRemove.emit(this.selectedStudents.selected);
     }
   }
 
-  @Input() addStudent() {
+  addStudent() {
     if (this.studentToAdd != null) {
 
       var add = true;
@@ -149,6 +161,17 @@ export class StudentsComponent implements AfterViewInit, OnInit {
     }
   }
 
+  addStudentCSV(file) {
+    this.selectedCSV = file.target.files[0]
+    this.toInsertCSV.emit(this.selectedCSV);
+  
+    /*const reader = new FileReader();
+    reader.readAsDataURL(this.selectedPhoto);
+    reader.onload = (_event) => { 
+      let csv = reader.result; 
+    }*/
+  }
+
   displayFn(student: Student) {
     if (student != null)
       return student.name.concat(" ", student.firstName, " (", student.id, ")");
@@ -158,6 +181,7 @@ export class StudentsComponent implements AfterViewInit, OnInit {
 
   onStudentSelected(student: Student) {
     this.studentToAdd = student;
+    this.addDisabled = false;
   }
 
 }

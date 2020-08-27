@@ -5,17 +5,20 @@
     <mat-form-field class="matForm">
         <input #input type="search" placeholder="Aggiungi studente" aria-label="Student"
                 matInput
+                (input)="onSearchChange($event.target.value)"
                 [formControl]="myControl"
                 [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onStudentSelected($event.option.value)">
-        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+        <mat-option *ngFor="let option of filteredOptions" [value]="option">
             {{option.name}} {{option.firstName}} ({{option.id}})
         </mat-option>
         </mat-autocomplete>
     </mat-form-field>
 
-    <button style="margin-left: 2em;" mat-button mat-raised-button color="primary" (click)="addStudent()">Aggiungi</button>
-    <button style="margin-left: 2em;" mat-button mat-raised-button color="primary" class="delete">
+    <input #hiddenfileinput class="inputfile" type="file" accept=".csv" (change)="addStudentCSV($event)">
+    <button class="button" color="primary" mat-button mat-raised-button [disabled]="addDisabled" (click)="addStudent()">Aggiungi</button>
+    <button class="button" color="primary" mat-button mat-raised-button (click)="hiddenfileinput.click()">Aggiungi da CSV</button>
+    <button class="button" color="primary" mat-button mat-raised-button>
         <mat-icon aria-label="" (click)=deleteStudent()>delete</mat-icon>
         </button>
 </form>

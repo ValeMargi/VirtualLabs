@@ -10,7 +10,7 @@ import { CourseService } from 'src/app/services/course.service';
   templateUrl: './students-cont.component.html',
   styleUrls: ['./students-cont.component.css']
 })
-export class StudentsContComponent implements OnInit, AfterViewInit {
+export class StudentsContComponent implements OnInit {
 
   STUDENTS_ENROLLED: Student[] = []
   ALL_STUDENTS: Student[] = []
@@ -24,8 +24,7 @@ export class StudentsContComponent implements OnInit, AfterViewInit {
   @Output() allStudents = new EventEmitter<Student[]>()
   @Output() enrolledStudents = new EventEmitter<Student[]>()
 
-  ngAfterViewInit() {
-
+  ngOnInit(): void {
     this.studentService.all().subscribe(
       (data) => {
         this.ALL_STUDENTS = data;
@@ -46,11 +45,6 @@ export class StudentsContComponent implements OnInit, AfterViewInit {
         console.log("studenti iscritti non reperiti");
        } 
       );
-    
-  }
-
-  ngOnInit(): void {
-  
   }
 
   enrollStudent(student: Student) {
@@ -63,6 +57,17 @@ export class StudentsContComponent implements OnInit, AfterViewInit {
         console.log("studente non aggiunto");
       } 
       );
+  }
+
+  enrollStudentCSV(file: File) {
+    this.courseService.enrollStudents(this.courseService.currentCourse.getValue().name, file).subscribe(
+      (success) => {
+        //gestire
+      },
+      (error) => {
+        console.log("Studenti non aggiunti");
+      }
+    )
   }
 
   removeStudents(students: Student[]) {

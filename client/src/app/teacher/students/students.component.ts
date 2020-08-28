@@ -61,22 +61,12 @@ export class StudentsComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
     //this.cont.enrolledStudents.subscribe(ss => {
       //this.students = ss;
-      this.dataSource = new MatTableDataSource<Student>(this.students);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.length = this.students.length;
-      this.studentToAdd = null;
-      this.selectedStudents.clear();
+      
     //});
 
     //this.cont.allStudents.subscribe(ss => {
       //this.options = ss;
-      this.filteredOptions = this.myControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value.name),
-        map(value => this._filter(value))
-      );
+      
     //});
   }
 
@@ -87,6 +77,19 @@ export class StudentsComponent implements AfterViewInit, OnInit {
     else {
       this.tableVisibility = false;
     }
+
+    this.dataSource = new MatTableDataSource<Student>(this.students);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.length = this.students.length;
+    this.studentToAdd = null;
+    this.selectedStudents.clear();
+
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(value => this._filter(value)));
   }
 
   private _filter(value: string): Student[] {

@@ -21,14 +21,15 @@ export class StudentsContComponent implements OnInit {
     
   }
 
-  @Output() allStudents = new EventEmitter<Student[]>()
-  @Output() enrolledStudents = new EventEmitter<Student[]>()
+  //@Output() allStudents = new EventEmitter<Student[]>()
+  //@Output() enrolledStudents = new EventEmitter<Student[]>()
 
   ngOnInit(): void {
     this.studentService.all().subscribe(
       (data) => {
+        console.log(data);
         this.ALL_STUDENTS = data;
-        this.allStudents.emit(this.ALL_STUDENTS);
+        //this.allStudents.emit(this.ALL_STUDENTS);
       },
       (error) => { 
         console.log("studenti non reperiti");
@@ -37,9 +38,9 @@ export class StudentsContComponent implements OnInit {
 
     this.courseService.enrolledStudents(this.courseService.currentCourse.getValue().name).subscribe(
       (data) => {
-        console.log(data);
+        //console.log(data);
         this.STUDENTS_ENROLLED = data;
-        this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
+        //this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
       },
       (error) => { 
         console.log("studenti iscritti non reperiti");
@@ -51,7 +52,7 @@ export class StudentsContComponent implements OnInit {
     this.courseService.enrollOne(this.courseService.currentCourse.getValue().name, student.id).subscribe(
       (success) => {
         this.STUDENTS_ENROLLED = this.STUDENTS_ENROLLED.concat(student);
-        this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
+        //this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
       },
       (error) => { 
         console.log("studente non aggiunto");
@@ -80,7 +81,7 @@ export class StudentsContComponent implements OnInit {
             }
           })
         });
-        this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
+        //this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
       },
       (error) => { 
         console.log("rimozione non avvenuta");

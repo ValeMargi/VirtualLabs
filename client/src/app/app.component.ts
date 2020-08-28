@@ -158,7 +158,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.homeVisibility = false;
 
           if (this.courseService.currentCourse.getValue().name == "") {
-            this.courseService.currentCourse.getValue().name = this.getCourseName();
+            this.courseService.currentCourse.getValue().name = this.getCourseName(this.router.url);
           }
         }
       }
@@ -283,7 +283,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   get courseName() {
-    return this.getCourseName();
+    return this.getCourseName(this.router.url);
   }
 
   get activeTab() {
@@ -309,25 +309,26 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
   }
 
-  getCourseName() {
-    if (this.router.url.length <= 1)
+  getCourseName(value: string) {
+    if (value.length <= 1)
       return "";
       
-    let res = this.router.url.split("/");
+    let res = value.split("/");
+    let res2 = [];
+    var name = "";
 
     if (res[2] != null && res[2].match("course")) {
-      let res2 = res[3].split("-");
-      var name = "";
-
-      for (var n of res2) {
-        name += n.charAt(0).toUpperCase() + n.slice(1) + " ";
-      }
-
-      return name;
+      res2 = res[3].split("-");
     }
     else {
-      return "";
+      res2 = value.split("-");
     }
+
+    for (var n of res2) {
+      name += n.charAt(0).toUpperCase() + n.slice(1) + " ";
+    }
+
+    return name;
   }
 
   getRouteWithCourse(course: Course) {

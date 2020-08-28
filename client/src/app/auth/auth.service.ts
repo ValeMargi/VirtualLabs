@@ -12,16 +12,11 @@ import { TeacherService } from '../services/teacher.service';
 import { StudentService } from '../services/student.service';
 import { Teacher } from '../models/teacher.model';   
 
-const API_AUTH = 'http://localhost:8080/API';
-
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'})
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  API_AUTH = 'http://localhost:8080/API';
 
   @Output('userLogged') userLogged = new EventEmitter();
   user: Observable<User>;
@@ -148,11 +143,12 @@ export class AuthService {
     else {
       this.teacherService.getOne(localStorage.getItem('currentId')).subscribe(
         (data) => {
-          this.teacherService.currentAvatar = data.avatar;
+          console.log(data);
+          this.teacherService.currentAvatar = data.avatar.picByte;
           return this.teacherService.currentAvatar;
         },
         (error) => {
-          console.log("Impossibile ottenere lo studente");
+          console.log("Impossibile ottenere il professore");
           return null;
         }
       );
@@ -168,43 +164,33 @@ export class AuthService {
     
     let data: FormData = new FormData();
     data.append('file', file, file.name);
-    /*data.append("registerData", new Blob([JSON.stringify(userJson)], {
-      type: "application/json"
-    }));*/
 
-    data.append('registerData', new Blob([JSON.stringify({
-      'firstName': "Test nome",
-      'name': "Test cognome", 
-      'id': "d2", 
-      'email': "d2@polito.it", 
-      'password': "bestPassw0rd"           
-      })], {
-      type: "application/json"
-  }));
+    data.append('registerData', new Blob([JSON.stringify(userJson)], {
+      type: "application/json" }));
 
-    return this.http.post<User>(`${API_AUTH}/addUser`, data, httpOptions);
+    return this.http.post<User>(`${this.API_AUTH}/addUser`, data);
   }
 
   confirmationPage(token: string) {
-    return this.http.get<boolean>(`${API_AUTH}/registration/confirm/${token}`);
+    return this.http.get<boolean>(`${this.API_AUTH}/registration/confirm/${token}`);
   }
 
   resetPassword(userEmail: string) {
-    return this.http.post(`${API_AUTH}/user/resetPassword`, userEmail);
+    return this.http.post(`${this.API_AUTH}/user/resetPassword`, userEmail);
   }
 
   showChangePasswordPage() {
-    return this.http.get<string>(`${API_AUTH}/user/changePassword`);
+    return this.http.get<string>(`${this.API_AUTH}/user/changePassword`);
   }
 
   savePassword(newPassword: Map<string, string>) {
     //Map<Token, Nuova Password>
-    return this.http.post(`${API_AUTH}/user/savePassword`, newPassword);
+    return this.http.post(`${this.API_AUTH}/user/savePassword`, newPassword);
   }
 
   changeUserPassword(newPassword: Map<string, string>) {
     //Map<Vecchia Password, Nuova Password>
-    return this.http.post(`${API_AUTH}/user/savePassword`, newPassword);
+    return this.http.post(`${this.API_AUTH}/user/savePassword`, newPassword);
   }
 
   changeAvatar(file: File) {
@@ -214,7 +200,7 @@ export class AuthService {
     let data: FormData = new FormData();
     data.append("file", file, file.name);
 
-    return this.http.post(`${API_AUTH}/user/updateAvatar`, data)
+    return this.http.post(`${this.API_AUTH}/user/updateAvatar`, data)
   }
 
 }

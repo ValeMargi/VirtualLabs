@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, Input, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Course } from 'src/app/models/course.model';
 import { CourseService } from 'src/app/services/course.service';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Teacher } from 'src/app/models/teacher.model';
 import { AddCourseContComponent } from './add-course-cont.component';
@@ -29,7 +29,8 @@ export class AddCourseDialogComponent implements OnInit {
 
   @Input() allTeachers: Teacher[] = [];
   teacherSelected: Teacher;
-  teachersToAdd: Teacher[] = [];
+  @Output('teachers') teachersToAdd: BehaviorSubject<Teacher[]> = new BehaviorSubject<Teacher[]>([]);
+  @Output('add') add: EventEmitter<Course> = new EventEmitter<Course>();
 
   constructor(private cont: AddCourseContComponent,
      private courseService: CourseService,
@@ -76,35 +77,28 @@ export class AddCourseDialogComponent implements OnInit {
   }
 
   addTeacher() {
-    if (this.teacherSelected != null && !this.teachersToAdd.includes(this.teacherSelected)) {
-      this.teachersToAdd.push(this.teacherSelected);
-      this.dataSource = new MatTableDataSource<Teacher>(this.teachersToAdd);
+    if (this.teacherSelected != null && !this.teachersToAdd.getValue().includes(this.teacherSelected)) {
+      this.teachersToAdd.getValue().push(this.teacherSelected);
+      this.dataSource = new MatTableDataSource<Teacher>(this.teachersToAdd.getValue());
       this.tableVisibility = true;
     }
   }
 
   deleteTeacher(teacher: Teacher) {
-    if (teacher != null && this.teachersToAdd.includes(teacher)) {
-      this.teachersToAdd.splice(this.teachersToAdd.indexOf(teacher));
-      this.dataSource = new MatTableDataSource<Teacher>(this.teachersToAdd);
+    if (teacher != null && this.teachersToAdd.getValue().includes(teacher)) {
+      this.teachersToAdd.getValue().splice(this.teachersToAdd.getValue().indexOf(teacher));
+      this.dataSource = new MatTableDataSource<Teacher>(this.teachersToAdd.getValue());
 
-      if (this.teachersToAdd.length == 0) {
+      if (this.teachersToAdd.getValue().length == 0) {
         this.tableVisibility = false;
       }
     }
   }
 
   addCourse(name: string, acronym: string, min: number, max: number) {
-    let course = new Course(name, acronym, 10, 100, 0, 0, 0, 0, 0, 0);
-    this.courseService.addCourse(course, this.teachersToAdd.map(teacher => teacher.id)).subscribe(
-      (data) => {
-        this.courseService.setCurrentCourse(course);
-      },
-      (error) => {
-        console.log(error);
-        console.log("corso non aggiunto");
-      }
-    );
+    let course = new Course(name.toLowerCase().split(' ').join('-'), acronym, min, max, 0, 4, 100, 8, 10, 10);
+    
+    this.add.emit(course);
   }
 
 }

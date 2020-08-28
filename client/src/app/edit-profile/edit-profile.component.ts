@@ -23,7 +23,7 @@ export class EditProfileComponent implements OnInit {
 
   ngOnInit(): void {
     const reader = new FileReader();
-    reader.readAsDataURL(this.avatar as File);
+    reader.readAsDataURL(new Blob([this.avatar]));
     reader.onload = (_event) => { 
       this.previewPhoto = reader.result; 
     }

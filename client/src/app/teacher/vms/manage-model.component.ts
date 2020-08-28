@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Course } from 'src/app/models/course.model';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
@@ -14,6 +14,8 @@ export class ManageModelComponent implements OnInit {
 
   @Input() modelvm: Course;
   ModelVmForm: FormGroup;
+
+  @Output() update: EventEmitter<Course> = new EventEmitter<Course>();
 
   constructor(private teacherService: TeacherService,
     private formBuilder: FormBuilder,
@@ -49,15 +51,8 @@ export class ManageModelComponent implements OnInit {
     this.modelvm.ram = ram;
     this.modelvm.totInstances = totInstances;
     this.modelvm.runningInstances = runningInstances;
-    
-    this.teacherService.updateModelVM(this.modelvm.name, this.modelvm).subscribe(
-      (data) => {
-        this.courseService.currentCourse.next(this.modelvm);
-      },
-      (error) => {
-        console.log("modello non aggiornato");
-      }
-    )
+
+    this.update.emit(this.modelvm);
   }
 
   close() {

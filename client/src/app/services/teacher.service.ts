@@ -17,7 +17,7 @@ export class TeacherService {
   API_PROFESSORS = "http://localhost:8080/API/professors";
 
   currentTeacher: Teacher;
-  currentAvatar: File;
+  currentAvatar: any;
 
   constructor(private http: HttpClient) { }
 
@@ -37,14 +37,16 @@ export class TeacherService {
   addModelVM(courseName: string, file: File, course: Course) {
     let data: FormData = new FormData();
     data.append("file", file, file.name);
-    data.append("modelVM", JSON.stringify(course));
+    data.append("modelVM", new Blob([JSON.stringify(course)], {
+      type: "application/json" }));
 
     return this.http.post(`${this.API_PROFESSORS}/${courseName}/addModel`, data);
   }
 
   updateModelVM(courseName: string, course: Course) {
     let data: FormData = new FormData();
-    data.append("modelVM", JSON.stringify(course));
+    data.append("modelVM", new Blob([JSON.stringify(course)], {
+      type: "application/json" }));
 
     return this.http.post(`${this.API_PROFESSORS}/${courseName}/update`, data);
   }
@@ -60,7 +62,8 @@ export class TeacherService {
   addAssignment(courseName: string, file: File, assignment: Assignment) {
     let data: FormData = new FormData();
     data.append("file", file, file.name);
-    data.append("assignment", JSON.stringify(assignment));
+    data.append("assignment", new Blob([JSON.stringify(assignment)], {
+      type: "application/json" }));
 
     return this.http.post(`${this.API_PROFESSORS}/${courseName}/addAssignment`, data);
   }

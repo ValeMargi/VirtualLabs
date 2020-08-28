@@ -60,7 +60,8 @@ export class StudentService {
   addVM(courseName: string, file: File, vm: VM) {
     let data: FormData = new FormData();
     data.append("file", file, file.name);
-    data.append("VM", JSON.stringify(vm));
+    data.append("VM", new Blob([JSON.stringify(vm)], {
+      type: "application/json" }));
 
     return this.http.post(`${this.API_STUDENTS}/${courseName}/addVM`, data);
   }
@@ -90,7 +91,8 @@ export class StudentService {
 
   updateVMresources(courseName: string, VMId: number, vm: VM) {
     let data: FormData = new FormData();
-    data.append("VM", JSON.stringify(vm));
+    data.append("VM", new Blob([JSON.stringify(vm)], {
+      type: "application/json" }));
 
     return this.http.post(`${this.API_STUDENTS}/${courseName}/${VMId}/update`, data);
   }

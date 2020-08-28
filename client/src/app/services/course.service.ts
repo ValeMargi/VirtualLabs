@@ -38,17 +38,13 @@ export class CourseService {
   }
 
   addCourse(course: Course, teachersId: string[]) {
-    const data = new FormData();
-    /*data.append("course", new Blob([JSON.stringify(
-      course)]), "course");*/
-    /*data.append("professors", new Blob([JSON.stringify({
-       teachersId})]));*/
-       data.append('course', JSON.stringify(course));
-       data.append("professors", JSON.stringify(teachersId));
+    let data: FormData = new FormData();
+    data.append('course', new Blob([JSON.stringify(course)], {
+    type: "application/json" }));
+    data.append("professors", new Blob([JSON.stringify(teachersId)], {
+    type: "application/json" }));
 
-    console.log(JSON.stringify(course))
-    console.log(JSON.stringify(teachersId))
-    return this.http.post<Course>(`${this.API_COURSES}/`, data, this.httpOptions);
+    return this.http.post<Course>(`${this.API_COURSES}/`, data);
   }
 
   enableCourse(name: string, enabled: boolean) {

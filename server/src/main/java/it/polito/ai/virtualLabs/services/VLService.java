@@ -24,7 +24,7 @@ public interface VLService {
     //List<Boolean> addAll(List<StudentDTO> student);
     List<Boolean> enrollAll(List<String> studentsIds, String courseName);
    // List<Boolean> addAndEnroll(Reader r, String courseName);
-   List<Boolean> EnrollAllFromCSV(Reader r, String courseName);
+   List<StudentDTO> EnrollAllFromCSV(Reader r, String courseName);
     boolean addCourse(CourseDTO course, List<String> professorsId);
     boolean removeCourse(String courseId);
     boolean modifyCourse(CourseDTO course);

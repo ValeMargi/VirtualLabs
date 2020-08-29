@@ -289,7 +289,7 @@ public class VLServiceImpl implements VLService{
                         .equals(SecurityContextHolder.getContext().getAuthentication().getName())))
             throw new PermissionDeniedException();
         else{
-            List<Boolean> ret = null;
+            List<Boolean> ret = new ArrayList<>();
             for(String s : studentsIds){
                 Optional<Student> student = studentRepository.findById(s);
                 if( ! student.isPresent()){
@@ -324,14 +324,19 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public  List<Boolean> EnrollAllFromCSV(Reader r, String courseName){
+    public  List<StudentDTO> EnrollAllFromCSV(Reader r, String courseName){
         try {
             CsvToBean<StudentDTO> csvToBean = new CsvToBeanBuilder(r)
                     .withType(StudentDTO.class)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
-            List<String> studentsIds = csvToBean.parse().stream().map(s->s.getId()).collect(Collectors.toList());
-           return enrollAll(studentsIds,  courseName);
+            List<StudentDTO> students = csvToBean.parse();
+            List<StudentDTO> addedStudents = new ArrayList<>();
+            for (StudentDTO st:students){
+                if(addStudentToCourse(st.getId(),courseName))
+                    addedStudents.add(st);
+            }
+           return addedStudents;
         }catch (RuntimeException exception){
             throw  new FormatFileNotValidException();
         }

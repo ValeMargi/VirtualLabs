@@ -17,6 +17,10 @@ export class EditProfileComponent implements OnInit {
   selectedPhoto: File;
   previewPhoto: any;
 
+  password: any;
+  newPassword: any;
+  passR: any;
+
   constructor(private matDialog: MatDialog, private dialogRef: MatDialogRef<EditProfileComponent>, private authService: AuthService) { }
 
   changePassVisibility: boolean = false;

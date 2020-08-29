@@ -41,7 +41,7 @@
         <br>
         <mat-form-field>
             <mat-label>Ripeti password</mat-label>
-            <input #passwordRepeat type="password" matInput required minlength="8">
+            <input #passR type="password" matInput required minlength="8">
             <mat-error>Password non valida</mat-error>
         </mat-form-field>
     </div>
@@ -50,5 +50,5 @@
 
 <mat-dialog-actions>
   <button mat-button (click)="close()">Annulla</button>
-  <button mat-button mat-raised-button color="primary">Salva</button>
+  <button mat-button mat-raised-button color="primary" (click)="save(password.value, newPassword.value, passR.value)" >Salva</button>
 </mat-dialog-actions>

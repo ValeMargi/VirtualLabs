@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Injectable } from '@angular/core';
+import { Component, OnInit, Inject, Injectable, Output } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -39,7 +39,14 @@ export class ForgotPasswordComponent implements OnInit {
       document.getElementById("error").style.visibility = "visible";
     }
     else {
-      //this.authService.sendPassword(email.value.toString())
+      this.authService.resetPassword(email).subscribe(
+        (data) => {
+          
+        },
+        (error) => {
+          console.log("Errore nel reset della password");
+        }
+      )
     }
   }
 

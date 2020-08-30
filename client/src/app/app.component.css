@@ -20,3 +20,15 @@
     opacity: 1;
 }
 
+.deleteCourse {
+    color: red;
+}
+
+.item .deleteCourse {
+    visibility: hidden;
+}
+
+.item:hover .deleteCourse {
+    visibility: visible;
+}
+

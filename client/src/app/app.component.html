@@ -34,8 +34,15 @@
         <h2 style="color: rgb(9, 9, 170);">I miei corsi</h2>
 
         <mat-nav-list>
-          <mat-list-item mat-list-item *ngFor="let course of courses" [routerLink]="[getRouteWithCourse(course)]"> 
-           -  {{ getCourseName(course.name) }} </mat-list-item>
+          <mat-list-item class="item" mat-list-item *ngFor="let course of courses" [routerLink]="[getRouteWithCourse(course)]"> 
+           -  {{ getCourseName(course.name) }} 
+            <button mat-button (click)="enableCourse(course)">
+              <mat-icon class="enableCourse">power_settings_new</mat-icon>
+            </button>
+            <button mat-button (click)="deleteCourse(course)">
+              <mat-icon class="deleteCourse">delete</mat-icon>
+            </button>
+          </mat-list-item>
         </mat-nav-list>
       </div>
 

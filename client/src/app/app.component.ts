@@ -366,4 +366,28 @@ export class AppComponent implements AfterViewInit, OnInit {
   setCourseForRoute(course: string): string {
     return course.toLowerCase().split(' ').join('-');
   }
+
+  deleteCourse(course: Course) {
+    this.courseService.removeCourse(course.name).subscribe(
+      (data) => {
+        this.courses.splice(this.courses.indexOf(course));
+      }, 
+      (error) => {
+        console.log("Errore nell'eliminazione del corso");
+      }
+    )
+  }
+
+  enableCourse(course: Course) {
+    let enabled = (course.enabled) == 0 ? false : true;
+
+    this.courseService.enableCourse(course.name, !enabled).subscribe(
+      (data) => {
+
+      },
+      (error) => {
+        console.log("Impossibile abilitare/disabilitare il corso");
+      }
+    ) 
+  }
 }

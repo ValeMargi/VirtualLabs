@@ -21,9 +21,6 @@ export class CourseService {
 
   API_COURSES = "http://localhost:8080/API/courses";
 
-  httpOptions = {
-    headers: new HttpHeaders({'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'})
-  }
 
   setCurrentCourse(course: Course) {
     this.currentCourse.next(course);
@@ -52,7 +49,7 @@ export class CourseService {
   }
 
   removeCourse(courseName: string) {
-    return this.http.delete<boolean>(`${this.API_COURSES}/${courseName}/remove`, null);
+    return this.http.delete<boolean>(`${this.API_COURSES}/${courseName}/remove`, {});
   }
 
   modifyCourse(courseName: string, course: Course) {

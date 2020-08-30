@@ -3,7 +3,9 @@ body {
     height: 100%;
     overflow: hidden;
     background-image: url("undraw_programmer_imem.png");
+    background-repeat: no-repeat;
     background-size: 100%;
+    background-position-y: center;
 }
 
 h1 {

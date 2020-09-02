@@ -45,7 +45,7 @@ export class CourseService {
   }
 
   enableCourse(name: string, enabled: boolean) {
-    return this.http.post<boolean>(`${this.API_COURSES}/${name}/enable`, enabled);
+    return this.http.post(`${this.API_COURSES}/${name}/enable`, enabled.toString());
   }
 
   removeCourse(courseName: string) {
@@ -70,7 +70,7 @@ export class CourseService {
 
     let data: FormData = new FormData();
     data.append("file", file, file.name);
-    return this.http.post(`${this.API_COURSES}/${courseName}/enrollMany`, data);
+    return this.http.post<Student[]>(`${this.API_COURSES}/${courseName}/enrollMany`, data).pipe(map(students => students || []));
   }
 
   enrollAll(courseName: string, studentsIds: string[]) {
@@ -78,7 +78,7 @@ export class CourseService {
   }
 
   deleteStudentsFromCourse(courseName: string, studentsId: string[]) {
-    return this.http.post<void>(`${this.API_COURSES}/${courseName}/${studentsId}/removeStudent`, null);
+    return this.http.post<Student[]>(`${this.API_COURSES}/${courseName}/removeStudents`, studentsId).pipe(map(students => students || []));
   }
   
   enrolledStudents(courseName: string) {

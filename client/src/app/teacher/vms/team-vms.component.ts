@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -9,7 +9,7 @@ import { VM } from 'src/app/models/vm.model';
   templateUrl: './team-vms.component.html',
   styleUrls: ['./team-vms.component.css']
 })
-export class TeamVmsComponent implements OnInit {
+export class TeamVmsComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -28,6 +28,15 @@ export class TeamVmsComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.manageTable();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.vms = changes.vms.currentValue;
+    this.manageTable();
+  }
+
+  manageTable() {
     if (this.vms.length > 0) {
       this.VMsVisibility = true;
       this.dataSource = new MatTableDataSource<VM>(this.vms);

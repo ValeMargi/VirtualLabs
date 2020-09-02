@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild, Version, Output } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ViewChild, Version, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { AssignmentsContComponent } from './assignments-cont.component';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -18,7 +18,7 @@ import { HomeworksComponent } from './homeworks.component';
   templateUrl: './assignments.component.html',
   styleUrls: ['./assignments.component.css']
 })
-export class AssignmentsComponent implements AfterViewInit, OnInit {
+export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
   
   @Input() public assignments: Assignment[] = [];
   @Output() public ASSIGNMENT: Assignment;
@@ -33,7 +33,15 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this.tableVisibility = false;
+    this.manageAssVisibility();
+  }
 
+  ngOnChanges(changes: SimpleChanges) {
+    this.assignments = changes.assignments.currentValue;
+    this.manageAssVisibility();
+  }
+
+  manageAssVisibility() {
     if (this.assignments.length > 0) {
       this.assVisibility = true;
     }

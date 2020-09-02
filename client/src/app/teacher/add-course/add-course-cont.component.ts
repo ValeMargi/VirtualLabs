@@ -33,15 +33,28 @@ export class AddCourseContComponent implements OnInit {
     )
   }
 
-  addCourse(course: Course) {
+  addCourse(content: any) {
+    let course: Course = content.course;
+    let file: File = content.file;
+
     this.courseService.addCourse(course, this.teachersToAdd.map(teacher => teacher.id)).subscribe(
       (data) => {
         this.courseService.setCurrentCourse(course);
+        
+        this.teacherService.addModelVM(course.name, file, course).subscribe(
+          (data) => {
+            
+          },
+          (error) => {
+            console.log("Modello VM non creato");
+          }
+        )
+
         this.close();
       },
       (error) => {
         console.log(error);
-        console.log("corso non aggiunto");
+        console.log("Corso non aggiunto");
       }
     );
   }

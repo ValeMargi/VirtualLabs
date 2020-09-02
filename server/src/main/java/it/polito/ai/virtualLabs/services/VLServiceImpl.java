@@ -278,7 +278,7 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public List<Boolean> deleteStudentsFromCourse(List<String> studentsIds, String courseName){
+    public List<StudentDTO> deleteStudentsFromCourse(List<String> studentsIds, String courseName){
         Optional<Course> course = courseRepository.findById(courseName);
         if(!course.isPresent() ){
             throw new CourseNotFoundException();
@@ -289,15 +289,18 @@ public class VLServiceImpl implements VLService{
                         .equals(SecurityContextHolder.getContext().getAuthentication().getName())))
             throw new PermissionDeniedException();
         else{
-            List<Boolean> ret = new ArrayList<>();
+            List<Student> ret = new ArrayList<>();
             for(String s : studentsIds){
                 Optional<Student> student = studentRepository.findById(s);
                 if( ! student.isPresent()){
                     throw new StudentNotFoundException();
                 }
-                ret.add(course.get().removeStudent(student.get()));
+
+                if (course.get().removeStudent(student.get()))
+                    ret.add(student.get());
             }
-            return ret;
+
+            return ret.stream().map(student -> modelMapper.map(student, StudentDTO.class)).collect(Collectors.toList());
         }
   }
 

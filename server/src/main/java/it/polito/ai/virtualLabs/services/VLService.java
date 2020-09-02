@@ -19,7 +19,7 @@ public interface VLService {
     Map<String, Object> getProfileProfessor();
     List<StudentDTO> getEnrolledStudents(String courseName);
     boolean addStudentToCourse(String studentId, String courseName);
-    List<Boolean> deleteStudentsFromCourse(List<String> studentsIds, String courseName);
+    List<StudentDTO> deleteStudentsFromCourse(List<String> studentsIds, String courseName);
     List<ProfessorDTO> getProfessorsForCourse(String courseName);
     //List<Boolean> addAll(List<StudentDTO> student);
     List<Boolean> enrollAll(List<String> studentsIds, String courseName);

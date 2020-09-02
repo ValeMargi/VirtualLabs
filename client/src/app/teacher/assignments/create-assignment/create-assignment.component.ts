@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Assignment } from 'src/app/models/assignment.model';
 import { TeacherService } from 'src/app/services/teacher.service';
@@ -13,20 +13,21 @@ import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms'
 export class CreateAssignmentComponent implements OnInit, AfterViewInit {
   CreateAssignmentForm: FormGroup;
 
+  selectedPhoto: File;
   currentDate;
   oneWeek;
 
+  @Output('create') create = new EventEmitter<any>();
+
   constructor(
     private matDialogRef: MatDialogRef<CreateAssignmentComponent>, 
-    private courseService: CourseService, 
-    private teacherService: TeacherService,
     private formBuilder: FormBuilder) { 
 
       this.CreateAssignmentForm = this.formBuilder.group({
-        name : new FormControl('', [Validators.required]),
+        /*name : new FormControl('', [Validators.required]),
         currentDate : new FormControl('', [Validators.required]),
-        scadenza : new FormControl('', [Validators.required, Validators.min(this.currentDate)]),
-       
+        expire : new FormControl('', [Validators.required, Validators.min(this.currentDate)]),
+        image: new FormControl('', Validators.required)*/
       });
     }
 
@@ -44,8 +45,15 @@ export class CreateAssignmentComponent implements OnInit, AfterViewInit {
     this.matDialogRef.close();
   }
 
+  addAssImage(imageInput) {
+    this.selectedPhoto = imageInput.target.files[0];
+  }
+
   createAss(name: string, release: string, expire: string) {
     let assignment = new Assignment(-1, name, release, expire);
-    this.teacherService.addAssignment(this.courseService.currentCourse.getValue().name, null, assignment); //TODO togliere null
+
+    if (this.selectedPhoto != null) {
+      this.create.emit({assignment: assignment, file: this.selectedPhoto});
+    }
   }
 }

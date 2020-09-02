@@ -3,6 +3,7 @@ import { Student } from '../../models/student.model';
 import { StudentService } from '../../services/student.service';
 import { AuthService } from '../../auth/auth.service';
 import { CourseService } from 'src/app/services/course.service';
+import { Router, NavigationEnd } from '@angular/router';
 
 
 @Component({
@@ -12,35 +13,41 @@ import { CourseService } from 'src/app/services/course.service';
 })
 export class StudentsContComponent implements OnInit {
 
-  STUDENTS_ENROLLED: Student[] = []
-  ALL_STUDENTS: Student[] = []
+  @Output() STUDENTS_ENROLLED: Student[] = []
+  @Output() ALL_STUDENTS: Student[] = []
 
                               
   constructor(private studentService: StudentService,
-              private courseService: CourseService) { 
+              private courseService: CourseService, 
+              private router: Router) { 
     
   }
-
-  //@Output() allStudents = new EventEmitter<Student[]>()
-  //@Output() enrolledStudents = new EventEmitter<Student[]>()
 
   ngOnInit(): void {
     this.studentService.all().subscribe(
       (data) => {
-        console.log(data);
         this.ALL_STUDENTS = data;
-        //this.allStudents.emit(this.ALL_STUDENTS);
       },
       (error) => { 
         console.log("studenti non reperiti");
        } 
       );
 
+      this.loadStudentsEnrolled();
+
+      this.router.events.subscribe((event) => {
+        if (event instanceof NavigationEnd) { 
+          if (event.urlAfterRedirects.match("/students")) {
+            this.loadStudentsEnrolled();
+          }
+        }
+      });
+  }
+
+  loadStudentsEnrolled() {
     this.courseService.enrolledStudents(this.courseService.currentCourse.getValue().name).subscribe(
       (data) => {
-        //console.log(data);
         this.STUDENTS_ENROLLED = data;
-        //this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
       },
       (error) => { 
         console.log("studenti iscritti non reperiti");
@@ -50,9 +57,8 @@ export class StudentsContComponent implements OnInit {
 
   enrollStudent(student: Student) {
     this.courseService.enrollOne(this.courseService.currentCourse.getValue().name, student.id).subscribe(
-      (success) => {
+      (data) => {
         this.STUDENTS_ENROLLED = this.STUDENTS_ENROLLED.concat(student);
-        //this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
       },
       (error) => { 
         console.log("studente non aggiunto");
@@ -62,8 +68,10 @@ export class StudentsContComponent implements OnInit {
 
   enrollStudentCSV(file: File) {
     this.courseService.enrollStudents(this.courseService.currentCourse.getValue().name, file).subscribe(
-      (success) => {
-        //gestire
+      (data) => {
+        data.forEach(Student => {
+          this.STUDENTS_ENROLLED.push(Student);
+        });
       },
       (error) => {
         console.log("Studenti non aggiunti");
@@ -73,18 +81,17 @@ export class StudentsContComponent implements OnInit {
 
   removeStudents(students: Student[]) {
     this.courseService.deleteStudentsFromCourse(this.courseService.currentCourse.getValue().name, students.map(student => student.id)).subscribe(
-      (success) => {
-        students.forEach(student => {
+      (data) => {
+        data.forEach(student => {
           this.STUDENTS_ENROLLED.forEach(s => {
             if (s.id == student.id) {
-              this.STUDENTS_ENROLLED.splice(this.STUDENTS_ENROLLED.indexOf(s), 1);
+              this.STUDENTS_ENROLLED.splice(this.STUDENTS_ENROLLED.indexOf(s));
             }
           })
         });
-        //this.enrolledStudents.emit(this.STUDENTS_ENROLLED);
       },
       (error) => { 
-        console.log("rimozione non avvenuta");
+        console.log("Rimozione studenti non avvenuta");
        }
     );
   }

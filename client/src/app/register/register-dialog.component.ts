@@ -72,7 +72,7 @@ ngOnInit() {
 }
 
 close() {
-    this.dialogRef.close();
+  this.dialogRef.close();
 }
 
 openDialogLogin() {
@@ -103,13 +103,6 @@ register(firstName: string, name: string, id: string, email: string, password: s
     //mostrare errore
   }
 
-  /*let userMap = new Map<string, string>();
-  userMap.set("firstName", "Test nome");
-  userMap.set("name", "Test cognome");
-  userMap.set("id", "d123456");
-  userMap.set("email", "d123456@polito.it")
-  userMap.set("password", "bestPassw0rd")*/
-
   let userJson = { "firstName": firstName,
                   "name": name, 
                   "id": id, 
@@ -118,8 +111,8 @@ register(firstName: string, name: string, id: string, email: string, password: s
                 };
 
   this.authService.registerUser(image, userJson).subscribe(
-    (success: any) => {
-      console.log("ok");
+    (data) => {
+      this.close();
     },
     (error: any) => {
       console.log(error);

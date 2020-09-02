@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Teacher } from '../models/teacher.model';
 import { map } from 'rxjs/operators';
@@ -19,6 +19,8 @@ export class TeacherService {
   currentTeacher: Teacher;
   currentAvatar: any;
 
+  assCreation: EventEmitter<Assignment> = new EventEmitter<Assignment>();
+  
   constructor(private http: HttpClient) { }
 
   all() {
@@ -40,7 +42,7 @@ export class TeacherService {
     data.append("modelVM", new Blob([JSON.stringify(course)], {
       type: "application/json" }));
 
-    return this.http.post(`${this.API_PROFESSORS}/${courseName}/addModel`, data);
+    return this.http.post<Course>(`${this.API_PROFESSORS}/${courseName}/addModel`, data);
   }
 
   updateModelVM(courseName: string, course: Course) {
@@ -48,7 +50,7 @@ export class TeacherService {
     data.append("modelVM", new Blob([JSON.stringify(course)], {
       type: "application/json" }));
 
-    return this.http.post(`${this.API_PROFESSORS}/${courseName}/update`, data);
+    return this.http.post<Course>(`${this.API_PROFESSORS}/${courseName}/update`, data);
   }
 
   allVMforCourse(courseName: string) {

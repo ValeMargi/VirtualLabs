@@ -83,15 +83,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.router.navigateByUrl("home");
       }
     });
-
-    /*this.courseService.currentCourse.subscribe(
-      (data) => {
-        if (this.courses.indexOf(data) < 0) {
-          this.courses.push(data);
-          this.router.navigateByUrl(this.getRouteWithCourse(data));
-        }
-      }
-    )*/
   }
 
   ngOnInit() {
@@ -157,12 +148,24 @@ export class AppComponent implements AfterViewInit, OnInit {
         else {
           this.homeVisibility = false;
 
-          if (this.courseService.currentCourse.getValue().name == "") {
-            this.courseService.currentCourse.getValue().name = this.getCourseName(this.router.url);
+          if (this.courseService.currentCourse.getValue().name == "" && this.router.url.match("course")) {
+            this.courseService.currentCourse.getValue().name = this.router.url.split("/")[3];
           }
         }
       }
     });
+
+    this.courseService.currentCourse.subscribe(
+      (data) => {
+        if (this.courses.indexOf(data) < 0 && data.name != "") {
+          this.courses.push(data);
+          this.router.navigateByUrl(this.getRouteWithCourse(data));
+        }
+      }, 
+      (error) => {
+
+      }
+    );
   }
 
   setRoutes() {
@@ -314,25 +317,27 @@ export class AppComponent implements AfterViewInit, OnInit {
       return "";
       
     let res = value.split("/");
-    let res2 = [];
+    let res2;
     var name = "";
 
     if (res[2] != null && res[2].match("course")) {
-      res2 = res[3].split("-");
+      res2 = res[3].split("-").join(' ');
     }
     else {
-      res2 = value.split("-");
+      res2 = value.split("-").join(' ');
     }
 
-    for (var n of res2) {
-      name += n.charAt(0).toUpperCase() + n.slice(1) + " ";
-    }
+    /*for (var n of res2) {
+      name += n.charAt(0).toUpperCase() + n.slice(1);
+    }*/
+
+    name = res2.charAt(0).toUpperCase() + res2.slice(1);
 
     return name;
   }
 
   getRouteWithCourse(course: Course) {
-    this.courseService.setCurrentCourse(course);
+    //this.courseService.setCurrentCourse(course);
     this.courseSelected = this.setCourseForRoute(course.name);
     let res: string = this.role + "/course/" + this.courseSelected;
 
@@ -367,10 +372,14 @@ export class AppComponent implements AfterViewInit, OnInit {
     return course.toLowerCase().split(' ').join('-');
   }
 
-  deleteCourse(course: Course) {
-    this.courseService.removeCourse(course.name).subscribe(
+  setCurrentCourse(course: Course) {
+    this.courseService.currentCourse.next(course);
+  }
+
+  deleteCourse() {
+    this.courseService.removeCourse(this.courseService.currentCourse.getValue().name).subscribe(
       (data) => {
-        this.courses.splice(this.courses.indexOf(course));
+        this.courses.splice(this.courses.indexOf(this.courseService.currentCourse.getValue()));
       }, 
       (error) => {
         console.log("Errore nell'eliminazione del corso");
@@ -378,12 +387,14 @@ export class AppComponent implements AfterViewInit, OnInit {
     )
   }
 
-  enableCourse(course: Course) {
+  enableCourse() {
+    let course = this.courseService.currentCourse.getValue();
     let enabled = (course.enabled) == 0 ? false : true;
 
     this.courseService.enableCourse(course.name, !enabled).subscribe(
       (data) => {
-
+        course.enabled = (!enabled) ? 1 : 0;
+        this.courseService.setCurrentCourse(course);
       },
       (error) => {
         console.log("Impossibile abilitare/disabilitare il corso");

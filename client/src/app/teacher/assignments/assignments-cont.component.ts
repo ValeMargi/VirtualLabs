@@ -20,16 +20,28 @@ export class AssignmentsContComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //provvisorio
-    //this.ASSIGNMENTS.push(new Assignment(-1, "Laboratorio 1", "01/01/2020", "31/07/2020"));
-    //this.ASSIGNMENTS.push(new Assignment(-1, "Laboratorio 2", "01/01/2020", "31/07/2020"));
-
     this.teacherService.allAssignments(this.courseService.currentCourse.getValue().name).subscribe(
       (data) =>  {
         this.ASSIGNMENTS = data;
       },
       (error) => {
         console.log("Impossibile ottenere gli assignments");
+      }
+    );
+
+    this.teacherService.assCreation.subscribe(
+      (data) => {
+        if (this.ASSIGNMENTS.length == 0) {
+          let array: Assignment[] = new Array();
+          array.push(data);
+          this.ASSIGNMENTS = array;
+        }
+        else {
+          this.ASSIGNMENTS.push(data);
+        }
+      }, 
+      (error) => {
+
       }
     )
   }

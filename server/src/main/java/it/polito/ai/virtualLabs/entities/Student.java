@@ -56,7 +56,7 @@ public class Student{
 
     public  void removeCourses(Course c){
         if(c!=null && courses.contains(c)){
-            courses.add(c);
+            courses.remove(c);
             c.removeStudent(this);
         }
     }

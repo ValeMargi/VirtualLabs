@@ -83,9 +83,9 @@ public class CourseController {
      * @param enabled: flag (true/false) che indica se il Professore deve abilitare/disabilitare il dato corso
      */
     @PostMapping("/{courseName}/enable")
-    public void enableCourse(@PathVariable String courseName, @RequestBody Boolean enabled){
+    public void enableCourse(@PathVariable String courseName, @RequestBody String enabled){
         try {
-            if(enabled)
+            if(Boolean.parseBoolean(enabled))
                 vlService.enableCourse(courseName);
             else
                 vlService.disableCourse(courseName);
@@ -215,8 +215,8 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
-    @PostMapping("/{courseName}/removeStudent")
-    public List<Boolean> deleteStudentsFromCourse(@PathVariable String courseName, @PathVariable String[] studentsId){
+    @PostMapping("/{courseName}/removeStudents")
+    public List<StudentDTO> deleteStudentsFromCourse(@PathVariable String courseName, @RequestBody String[] studentsId){
         try{
             return vlService.deleteStudentsFromCourse(Arrays.asList(studentsId), courseName);
         }catch (StudentNotFoundException | CourseNotFoundException e){

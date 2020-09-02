@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { VmsContComponent } from './vms-cont.component';
 import { Team } from '../../models/team.model';
@@ -10,7 +10,7 @@ import { ManageModelContComponent } from './manage-model-cont.component';
   templateUrl: './vms.component.html',
   styleUrls: ['./vms.component.css']
 })
-export class VmsComponent implements AfterViewInit, OnInit {
+export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
   @Input() public teams: Team[];
   @Output() public TEAM: Team;
   
@@ -30,6 +30,10 @@ export class VmsComponent implements AfterViewInit, OnInit {
     else {
       this.teamsVisibility = false;
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.teams = changes.teams.currentValue;
   }
 
   openDialogModel() {

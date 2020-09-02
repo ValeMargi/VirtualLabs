@@ -20,12 +20,9 @@ export class TeamVmsContComponent implements OnInit {
               private teacherService: TeacherService) { }
 
   ngOnInit(): void {
-    //this.VMs.push(new VM(-1, 2, 100, 2, "off", "VM01", ""));
     this.teamService.getAllVMTeam(this.courseService.currentCourse.getValue().name, this.team.id).subscribe(
       (data) => {
         this.VMs = data;
-
-        
       },
       (error) => {
         console.log("Errore nel recupero delle VM");

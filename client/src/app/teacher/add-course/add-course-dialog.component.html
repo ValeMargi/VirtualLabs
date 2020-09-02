@@ -30,6 +30,12 @@
     <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('min')">Gli iscritti devono essere minimo 10</mat-error>
     <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('max')">Gli iscritti devono essere massimo 250</mat-error>
   </mat-form-field><br><br>
+
+  <!--Foto iniziale VM-->
+
+    Seleziona foto iniziale VM<br>
+    <input class="inputfile" type="file" accept="image/*" (change)="addVMImage($event)" required>
+  <br><br>
   
   <!--Aggiungi Professore-->
   <mat-form-field class="matForm">
@@ -40,6 +46,7 @@
         </mat-option>
         </mat-autocomplete>
   </mat-form-field>
+
  <button mat-mini-fab color="primary" (click)="addTeacher()">
    <mat-icon>add</mat-icon>
   </button>

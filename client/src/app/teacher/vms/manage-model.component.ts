@@ -46,11 +46,11 @@ export class ManageModelComponent implements OnInit {
   }
 
   saveModel(maxVcpu: number, maxDisk: number, ram: number, totInstances: number, runningInstances: number) {  
-    this.modelvm.maxVcpu = maxVcpu;
-    this.modelvm.diskSpace = maxDisk;
-    this.modelvm.ram = ram;
-    this.modelvm.totInstances = totInstances;
-    this.modelvm.runningInstances = runningInstances;
+    this.modelvm.maxVcpu = Number(maxVcpu);
+    this.modelvm.diskSpace = Number(maxDisk);
+    this.modelvm.ram = Number(ram);
+    this.modelvm.totInstances = Number(totInstances);
+    this.modelvm.runningInstances = Number(runningInstances);
 
     this.update.emit(this.modelvm);
   }

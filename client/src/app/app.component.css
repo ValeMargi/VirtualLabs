@@ -24,11 +24,9 @@
     color: red;
 }
 
-.item .deleteCourse {
-    visibility: hidden;
-}
-
-.item:hover .deleteCourse {
-    visibility: visible;
+.noCourses {
+    width: 100%;
+    text-align: center;
+    margin-top: 10%;
 }
 

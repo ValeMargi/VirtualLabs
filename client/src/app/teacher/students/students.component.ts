@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { ViewChild, AfterViewInit } from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatTable} from '@angular/material/table';
@@ -23,7 +23,7 @@ import { StudentsContComponent } from './students-cont.component';
   templateUrl: './students.component.html',
   styleUrls: ['./students.component.css']
 })
-export class StudentsComponent implements AfterViewInit, OnInit {
+export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -59,29 +59,12 @@ export class StudentsComponent implements AfterViewInit, OnInit {
   constructor() {}
 
   ngAfterViewInit(): void {
-    //this.cont.enrolledStudents.subscribe(ss => {
-      //this.students = ss;
-      
-    //});
 
-    //this.cont.allStudents.subscribe(ss => {
-      //this.options = ss;
-      
-    //});
   }
 
   ngOnInit() {
-    if (this.students.length > 0) {
-      this.tableVisibility = true;
-    }
-    else {
-      this.tableVisibility = false;
-    }
-
-    this.dataSource = new MatTableDataSource<Student>(this.students);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.length = this.students.length;
+    this.manageTableVisibility();
+    this.setTable();
     this.studentToAdd = null;
     this.selectedStudents.clear();
 
@@ -90,6 +73,36 @@ export class StudentsComponent implements AfterViewInit, OnInit {
         startWith(''),
         map(value => typeof value === 'string' ? value : value.name),
         map(value => this._filter(value)));
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    //this.options = changes.options.currentValue;
+
+    if (changes.students != null) {
+      this.students = changes.students.currentValue;
+    }
+    else {
+      this.students = new Array();
+    }
+
+    this.manageTableVisibility();
+    this.setTable();
+  }
+
+  manageTableVisibility() {
+    if (this.students.length > 0) {
+      this.tableVisibility = true;
+    }
+    else {
+      this.tableVisibility = false;
+    }
+  }
+
+  setTable() {
+    this.dataSource = new MatTableDataSource<Student>(this.students);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.length = this.students.length;
   }
 
   private _filter(value: string): Student[] {

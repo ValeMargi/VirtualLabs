@@ -10,7 +10,7 @@
         <div class="assignments">
             <mat-selection-list [multiple]="false">
                 <mat-list-option *ngFor="let ass of assignments" [value]="ass" (click)="showHomeworks(ass)"> 
-                    {{ ass.name }}    
+                    {{ ass.assignmentName }}    
                 </mat-list-option>
             </mat-selection-list>
         </div>

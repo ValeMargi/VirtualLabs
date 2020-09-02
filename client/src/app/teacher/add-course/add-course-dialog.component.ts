@@ -27,10 +27,12 @@ export class AddCourseDialogComponent implements OnInit {
   myControl = new FormControl();
   filteredOptions: Observable<Teacher[]>;
 
+  selectedPhoto: File;
+
   @Input() allTeachers: Teacher[] = [];
   teacherSelected: Teacher;
   @Output('teachers') teachersToAdd: BehaviorSubject<Teacher[]> = new BehaviorSubject<Teacher[]>([]);
-  @Output('add') add: EventEmitter<Course> = new EventEmitter<Course>();
+  @Output('add') add = new EventEmitter<any>();
 
   constructor(private cont: AddCourseContComponent,
      private courseService: CourseService,
@@ -95,10 +97,18 @@ export class AddCourseDialogComponent implements OnInit {
     }
   }
 
+  addVMImage(image) {
+    this.selectedPhoto = image.target.files[0];
+  }
+
   addCourse(name: string, acronym: string, min: number, max: number) {
+    if (this.selectedPhoto == null) {
+      return;
+    }
+
     let course = new Course(name.toLowerCase().split(' ').join('-'), acronym, min, max, 0, 4, 100, 8, 10, 10);
     
-    this.add.emit(course);
+    this.add.emit({course: course, file: this.selectedPhoto});
   }
 
 }

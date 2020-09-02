@@ -27,7 +27,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthInterceptor } from './auth/auth.interceptor';
-import { StudentInterceptor } from './services/students.interceptor';
 import { MatCardModule } from '@angular/material/card';
 import { LoginDialogComponent } from './login/login-dialog.component';
 import { RegisterDialogComponent } from './register/register-dialog.component';
@@ -133,8 +132,7 @@ import { FooterComponent } from './footer/footer.component';
     TextFieldModule,
   ],
   entryComponents: [MatDialogModule, MatFormFieldModule],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }/*,
-  { provide: HTTP_INTERCEPTORS, useClass: StudentInterceptor, multi: true }*/],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 

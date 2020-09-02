@@ -88,16 +88,16 @@ public class ProfessorController {
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
 
         if (!input.containsKey("maxVcpu") || !input.containsKey("diskSpace")
-                || !input.containsKey("ram") ||  !input.containsKey("maxRunning")
-                || !input.containsKey("maxTotal") )
+                || !input.containsKey("ram") ||  !input.containsKey("runningInstances")
+                || !input.containsKey("totInstances") )
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
         try{
             CourseDTO courseDTO = new CourseDTO();
             courseDTO.setMaxVcpu((int)input.get("maxVcpu"));
             courseDTO.setDiskSpace((int)input.get("diskSpace"));
             courseDTO.setRam((int)input.get("ram"));
-            courseDTO.setRunningInstances((int)input.get("maxRunning"));
-            courseDTO.setTotInstances((int)input.get("maxTotal"));
+            courseDTO.setRunningInstances((int)input.get("runningInstances"));
+            courseDTO.setTotInstances((int)input.get("totInstances"));
 
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
             PhotoModelVM photoModelVM = new PhotoModelVM(image);
@@ -127,16 +127,16 @@ public class ProfessorController {
     @PostMapping("/{courseName}/update")
     public CourseDTO updateModelVM( @PathVariable String courseName, @RequestPart("modelVM")  Map<String, Object> input) {
         if (!input.containsKey("maxVcpu") || !input.containsKey("diskSpace")
-                || !input.containsKey("ram") ||  !input.containsKey("maxRunning")
-                || !input.containsKey("maxTotal") )
+                || !input.containsKey("ram") ||  !input.containsKey("runningInstances")
+                || !input.containsKey("totInstances") )
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
         try{
             CourseDTO courseDTO = new CourseDTO();
             courseDTO.setMaxVcpu((int)input.get("maxVcpu"));
             courseDTO.setDiskSpace((int)input.get("diskSpace"));
             courseDTO.setRam((int)input.get("ram"));
-            courseDTO.setRunningInstances((int)input.get("maxRunning"));
-            courseDTO.setTotInstances((int)input.get("maxTotal"));
+            courseDTO.setRunningInstances((int)input.get("runningInstances"));
+            courseDTO.setTotInstances((int)input.get("totInstances"));
             return vlService.updateModelVM(courseDTO, courseName);
         }catch(ModelVMNotSettedException | ResourcesVMNotRespectedException  e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -203,7 +203,7 @@ public class ProfessorController {
                 && !file.getContentType().equals("image/png"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
 
-        if (!input.containsKey("assignmentName") || !input.containsKey("expirationDate") )
+        if (!input.containsKey("assignmentName") || !input.containsKey("expiration") )
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
         try {
             AssignmentDTO assignmentDTO = new AssignmentDTO();
@@ -212,7 +212,7 @@ public class ProfessorController {
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
 
             assignmentDTO.setReleaseDate(timestamp.toString());
-            assignmentDTO.setExpiration(input.get("expirationDate").toString());
+            assignmentDTO.setExpiration(input.get("expiration").toString());
 
             PhotoAssignmentDTO photoAssignmentDTO = new PhotoAssignmentDTO();
             photoAssignmentDTO.setNameFile(file.getOriginalFilename());

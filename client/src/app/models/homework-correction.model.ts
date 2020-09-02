@@ -1,19 +1,13 @@
 export class HomeworkCorrection {
     public id: number;
-    public idVersionHomework: number;
-    public idProfessor: string;
     public timestamp: string;
     public nameFile: string;
-    public type: string;
-    public picByte: Uint8Array;
+    public versionId: number;
 
-    constructor(id: number, idVersionHomework: number, idProfessor: string, timestamp: string, nameFile: string, type: string, picByte: Uint8Array) {
+    constructor(id: number, timestamp: string, nameFile: string, versionId: number) {
         this.id = id;
-        this.idVersionHomework = idVersionHomework;
-        this.idProfessor = idProfessor;
         this.timestamp = timestamp;
         this.nameFile = nameFile;
-        this.type = type;
-        this.picByte = picByte;
+        this.versionId = versionId;
     }
 }

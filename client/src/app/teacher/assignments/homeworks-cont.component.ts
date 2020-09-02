@@ -18,7 +18,6 @@ export class HomeworksContComponent implements OnInit {
               private courseService: CourseService) { }
 
   ngOnInit(): void {
-    //this.HOMEWORKS.push(new Homework(1, "new", false, ""));
     this.teacherService.allHomework(this.courseService.currentCourse.getValue().name, this.assignment.id).subscribe(
       (data) => {
         this.HOMEWORKS = data;

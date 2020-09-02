@@ -1,4 +1,4 @@
-.versions-reviews {
+.versions-corrections {
     display: flex;
     justify-content: center;
 }
@@ -11,7 +11,7 @@
     margin-right: 10%;
 }
 
-.reviews {
+.corrections {
     margin-left: 10%;
 }
 

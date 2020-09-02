@@ -1,6 +1,5 @@
 export class PhotoHomeworkVersion {
     public id: number;
-    //id studente/homework?
     public nameFile: string;
     public type: string;
     public picByte: Uint8Array;

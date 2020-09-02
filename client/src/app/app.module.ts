@@ -52,10 +52,10 @@ import { CreateAssignmentComponent } from './teacher/assignments/create-assignme
 import { RequestTeamDialogContComponent } from './student/teams/request-team-dialog/request-team-dialog-cont/request-team-dialog-cont.component';
 import { AddHomeworkComponent } from './student/assignments/add-homework/add-homework.component';
 import { AddHomeworkContComponent } from './student/assignments/add-homework/add-homework-cont/add-homework-cont.component';
-import { HomeworksContComponent } from './teacher/assignments/homeworks-cont.component';
-import { HomeworksComponent } from './teacher/assignments/homeworks.component';
-import { VersionsContComponent } from './teacher/assignments/versions-cont.component';
-import { VersionsComponent } from './teacher/assignments/versions.component';
+import { HomeworksContComponent as HomeworksContComponentTeacher } from './teacher/assignments/homeworks-cont.component';
+import { HomeworksComponent as HomeworksComponentTeacher } from './teacher/assignments/homeworks.component';
+import { VersionsContComponent as VersionsContComponentTeacher } from './teacher/assignments/versions-cont.component';
+import { VersionsComponent as VersionsComponentTeacher } from './teacher/assignments/versions.component';
 import { TeamVmsContComponent } from './teacher/vms/team-vms-cont.component';
 import { TeamVmsComponent } from './teacher/vms/team-vms.component';
 import { CreateVmsComponent } from './student/vms/create-vms/create-vms.component';
@@ -94,10 +94,10 @@ import { FooterComponent } from './footer/footer.component';
     RequestTeamDialogContComponent,
     AddHomeworkComponent,
     AddHomeworkContComponent,
-    HomeworksContComponent,
-    HomeworksComponent,
-    VersionsContComponent,
-    VersionsComponent,
+    HomeworksContComponentTeacher,
+    HomeworksComponentTeacher,
+    VersionsContComponentTeacher,
+    VersionsComponentTeacher,
     TeamVmsContComponent,
     TeamVmsComponent,
     CreateVmsComponent,

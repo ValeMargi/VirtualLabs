@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -9,7 +9,7 @@ import { Homework } from 'src/app/models/homework.model';
   templateUrl: './homeworks.component.html',
   styleUrls: ['./homeworks.component.css']
 })
-export class HomeworksComponent implements OnInit {
+export class HomeworksComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -28,6 +28,15 @@ export class HomeworksComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.manageTable();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.homeworks = changes.homeworks.currentValue;
+    this.manageTable();
+  }
+
+  manageTable() {
     this.versionsVisibility = false;
     this.dataSource = new MatTableDataSource<Homework>(this.homeworks);
     this.dataSource.paginator = this.paginator;

@@ -32,7 +32,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.tableVisibility = false;
+    //this.tableVisibility = false;
     this.manageAssVisibility();
   }
 
@@ -51,7 +51,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   showHomeworks(ass: Assignment) {
-    this.tableVisibility = true;
+    //this.tableVisibility = true;
     this.ASSIGNMENT = ass;
   }
 

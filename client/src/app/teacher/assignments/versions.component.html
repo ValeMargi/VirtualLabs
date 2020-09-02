@@ -2,7 +2,7 @@
     <mat-icon>arrow_back</mat-icon>
 </button>
 <div class="vr-container"> 
-    <div class="versions-reviews">
+    <div class="versions-corrections">
         <div class="versions">
             <h3>Versioni elaborato</h3>
             <mat-selection-list [multiple]="false">
@@ -12,10 +12,10 @@
             </mat-selection-list>
         </div>
         <div class="separator"></div> 
-        <div class="reviews">
+        <div class="corrections">
             <h3>Revisioni</h3>
             <mat-selection-list [multiple]="false">
-                <mat-list-option *ngFor="let rev of reviews" [value]="rev"> 
+                <mat-list-option *ngFor="let rev of corrections" [value]="rev"> 
                     {{ rev.timestamp }}    
                 </mat-list-option>
             </mat-selection-list>

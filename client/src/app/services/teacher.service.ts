@@ -8,6 +8,8 @@ import { Student } from '../models/student.model';
 import { Assignment } from '../models/assignment.model';
 import { PhotoAssignment } from '../models/photo-assignment.model';
 import { Homework } from '../models/homework.model';
+import { HomeworkVersion } from '../models/homework-version.model';
+import { HomeworkCorrection } from '../models/homework-correction.model';
 
 @Injectable({
   providedIn: 'root'
@@ -83,11 +85,11 @@ export class TeacherService {
   }
 
   getVersionsHMForProfessor(courseName: string, assignmentId: number, homeworkId: number) {
-    return this.http.get(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/getVersions`).pipe(map(versions => versions || []));
+    return this.http.get<HomeworkVersion[]>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/getVersions`).pipe(map(versions => versions || []));
   }
 
   getCorrectionsHMForProfessor(courseName: string, assignmentId: number, homeworkId: number) {
-    return this.http.get(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/getCorrections`).pipe(map(corrections => corrections || []));
+    return this.http.get<HomeworkCorrection[]>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/getCorrections`).pipe(map(corrections => corrections || []));
   }
 
   uploadCorrection(courseName: string, assignmentId: number, homeworkId: number, versionHMid, file: File, permanent: boolean, grade: string) {

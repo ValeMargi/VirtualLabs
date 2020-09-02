@@ -25,6 +25,10 @@ import { CourseService } from './services/course.service';
 import { Course } from './models/course.model';
 import { TeacherService } from './services/teacher.service';
 import { StudentService } from './services/student.service';
+import { HomeworksContComponent as HomeworksContComponentTeacher } from './teacher/assignments/homeworks-cont.component';
+import { HomeworksComponent as HomeworksComponentTeacher } from './teacher/assignments/homeworks.component';
+import { VersionsContComponent as VersionsContComponentTeacher } from './teacher/assignments/versions-cont.component';
+import { VersionsComponent as VersionsComponentTeacher } from './teacher/assignments/versions.component';
 
 
 @Component({
@@ -174,12 +178,28 @@ export class AppComponent implements AfterViewInit, OnInit {
       let path: string = "teacher/course/" + this.courseSelected;
       this.router.config.push({ path: path + "/students", component: StudentsContComponent});
       this.router.config.push({ path: path + "/vms", component: VmsContComponentTeacher });
-      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentTeacher });
+      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentTeacher,
+      children: [
+        { path: '/:id/homeworks', component: HomeworksContComponentTeacher,
+          children: [
+            { path: '/:id/versions', component: VersionsContComponentTeacher }
+            ],
+        }
+        ],  
+      });
 
       path = "student/course/" + this.courseSelected;
       this.router.config.push({ path: path + "/teams", component: TeamsContComponent });
       this.router.config.push({ path: path + "/vms", component: VmsContComponentStudent });
-      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentStudent });
+      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentStudent,
+      /*children: [
+        { path: '/:id/homeworks', component: HomeworksContComponentStudent,
+          children: [
+            { path: '/:id/versions', component: VersionsContComponentStudent }
+            ],
+        }
+        ],  */
+      });
     }
 
     this.router.config.push({ path: '**', redirectTo: 'page-not-found' });

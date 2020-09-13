@@ -247,10 +247,12 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
+    dialogConfig.height = '70%';
 
     dialogConfig.data = {
         id: 1,
         title: 'Login'
+      
     };
 
     this.matDialog.open(LoginDialogComponent, dialogConfig);

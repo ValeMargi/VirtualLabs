@@ -24,16 +24,21 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.manageTeamsVisibility();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.teams = changes.teams.currentValue;
+    this.manageTeamsVisibility();
+  }
+
+  manageTeamsVisibility() {
     if (this.teams.length > 0) {
       this.teamsVisibility = true;
     }
     else {
       this.teamsVisibility = false;
     }
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    this.teams = changes.teams.currentValue;
   }
 
   openDialogModel() {

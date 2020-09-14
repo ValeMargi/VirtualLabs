@@ -5,6 +5,7 @@ import { TeamService } from '../../services/team.service';
 import { Team } from '../../models/team.model';
 import { CourseService } from 'src/app/services/course.service';
 import { TeacherService } from 'src/app/services/teacher.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-vms-cont',
@@ -18,11 +19,14 @@ export class VmsContComponent implements OnInit {
   constructor(private teamService: TeamService, 
               private courseService: CourseService,
               private teacherService: TeacherService,
-              private authService: AuthService) { 
+              private authService: AuthService,
+              private route: ActivatedRoute) { 
     
   }
 
   ngOnInit(): void {
+    //this.route.params.subscribe( params => console.log(params));
+
     this.teamService.getTeamsForCourse(this.courseService.currentCourse.getValue().name).subscribe(
       (data) => {
         this.COURSE_TEAMS = data;

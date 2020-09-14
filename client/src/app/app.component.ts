@@ -210,7 +210,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       this.studentService.getCourses(this.studentService.currentStudent.id).subscribe(
         (data) => {
           this.courses = data;
-          this.setRoutes();
+          //this.setRoutes();
         },
         (error) => {
 
@@ -220,10 +220,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     else {
       this.teacherService.getCoursesForProfessor(this.teacherService.currentTeacher.id).subscribe(
         (data) => {
-          console.log("ottenuti corsi");
-          console.log(data);
           this.courses = data;
-          this.setRoutes();
+          //this.setRoutes();
         },
         (error) => {
 

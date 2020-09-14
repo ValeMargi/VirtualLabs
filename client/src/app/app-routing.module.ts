@@ -11,26 +11,16 @@ import { AssignmentsContComponent as AssignmentsContComponentStudent } from './s
 import { VmsContComponent as VmsContComponentTeacher } from './teacher/vms/vms-cont.component';
 import { VmsContComponent as VmsContComponentStudent } from './student/vms/vms-cont/vms-cont.component';
 
+import { HomeworksContComponent as HomeworksContComponentTeacher } from './teacher/assignments/homeworks-cont.component';
+import { HomeworksComponent as HomeworksComponentTeacher } from './teacher/assignments/homeworks.component';
+import { VersionsContComponent as VersionsContComponentTeacher } from './teacher/assignments/versions-cont.component';
+import { VersionsComponent as VersionsComponentTeacher } from './teacher/assignments/versions.component';
+
 import { TeamsContComponent } from './student/teams/teams-cont/teams-cont.component';
 import { RegisterSuccessComponent } from './register-success/register-success.component';
 import { AuthGuard} from './auth/auth.guard';
 import {LoginDialogComponent} from './login/login-dialog.component';
-import { CourseService } from './services/course.service';
-
-/*
-const routes: Routes = [
-  { path: 'home', component: HomeComponent },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'page-not-found', component: PageNotFoundComponent },
-  { path: 'register_success', component: RegisterSuccessComponent },
- // { path: 'teacher/course/applicazioni-internet/students', component: StudentsContComponent },
-  { path: 'teacher/course/applicazioni-internet/vms', component: VmsContComponentTeacher },
-  { path: 'teacher/course/applicazioni-internet/assignments', component: AssignmentsContComponentTeacher },
-  { path: 'student/course/applicazioni-internet/teams', component: TeamsContComponent },
-  { path: 'student/course/applicazioni-internet/vms', component: VmsContComponentStudent },
-  //{ path: 'student/course/applicazioni-internet/assignments', component: AssignmentsContComponentStudent }
-];
-*/
+import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.component';
 
 
 const routes: Routes = [
@@ -38,7 +28,8 @@ const routes: Routes = [
   { path: 'login', component: LoginDialogComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'page-not-found', component: PageNotFoundComponent },
-  { path: 'register_success', component: RegisterSuccessComponent },
+  { path: 'register-success', component: RegisterSuccessComponent },
+  { path: ':role/course/:courses/:tab/not-allowed', component: UserNotAllowedComponent },
   {
       path: 'student',
       children: [
@@ -67,7 +58,14 @@ const routes: Routes = [
         {
             path: 'course/:courses/assignments',
             component: AssignmentsContComponentTeacher,
-            canActivate: [AuthGuard]
+            canActivate: [AuthGuard],
+            children: [
+              { path: ':id/homeworks', component: HomeworksContComponentTeacher,
+                children: [
+                  { path: ':id/versions', component: VersionsContComponentTeacher }
+                  ],
+              }
+            ],  
         },            
         {
             path: 'course/:courses/students',

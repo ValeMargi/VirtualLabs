@@ -577,7 +577,7 @@ public class VLServiceImpl implements VLService{
                         .anyMatch(c-> c.getName().equals(courseId))).collect(Collectors.toList()).contains(true))
             throw  new StudentAlreadyInTeamException();
 
-        if ( memberIds.size()<getCourse(courseId).get().getMin() || memberIds.size()> getCourse(courseId).get().getMax())
+        if ( /*memberIds.size()<getCourse(courseId).get().getMin() ||*/ memberIds.size()> getCourse(courseId).get().getMax())
             throw  new CardinalityNotAccetableException();
 
         if( memberIds.stream().distinct().count() != memberIds.size())

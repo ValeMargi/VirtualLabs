@@ -63,6 +63,7 @@ import { CreateVmsContComponent } from './student/vms/create-vms/create-vms-cont
 import { AddCourseContComponent } from './teacher/add-course/add-course-cont.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { FooterComponent } from './footer/footer.component';
+import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +105,8 @@ import { FooterComponent } from './footer/footer.component';
     CreateVmsContComponent,
     AddCourseContComponent,
     ForgotPasswordComponent,
-    FooterComponent
+    FooterComponent,
+    UserNotAllowedComponent
   ],
   imports: [
     BrowserModule,

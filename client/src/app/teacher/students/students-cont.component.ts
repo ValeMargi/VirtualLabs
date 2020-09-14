@@ -3,7 +3,7 @@ import { Student } from '../../models/student.model';
 import { StudentService } from '../../services/student.service';
 import { AuthService } from '../../auth/auth.service';
 import { CourseService } from 'src/app/services/course.service';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -19,11 +19,14 @@ export class StudentsContComponent implements OnInit {
                               
   constructor(private studentService: StudentService,
               private courseService: CourseService, 
-              private router: Router) { 
+              private router: Router,
+              private route: ActivatedRoute) { 
     
   }
 
   ngOnInit(): void {
+    //this.route.params.subscribe( params => console.log(params));
+
     this.studentService.all().subscribe(
       (data) => {
         this.ALL_STUDENTS = data;

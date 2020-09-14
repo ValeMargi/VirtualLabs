@@ -5,6 +5,7 @@ import { Homework } from 'src/app/models/homework.model';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { CourseService } from 'src/app/services/course.service';
 import { HomeworkCorrection } from 'src/app/models/homework-correction.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-versions-cont',
@@ -18,9 +19,12 @@ export class VersionsContComponent implements OnInit {
   @Output() public CORRECTIONS: HomeworkCorrection[] = [];
 
   constructor(private teacherService: TeacherService,
-              private courseService: CourseService) { }
+              private courseService: CourseService,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    //this.route.params.subscribe( params => console.log(params));
+
     this.teacherService.getVersionsHMForProfessor(this.courseService.currentCourse.getValue().name, -1, this.homework.id).subscribe(
       (data) => {
         this.VERSIONS = data;

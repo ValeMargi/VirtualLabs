@@ -11,6 +11,8 @@ import { PhotoVM } from '../models/photo-vm.model';
 import { Assignment } from '../models/assignment.model';
 import { PhotoAssignment } from '../models/photo-assignment.model';
 import { Homework } from '../models/homework.model';
+import { HomeworkVersion } from '../models/homework-version.model';
+import { HomeworkCorrection } from '../models/homework-correction.model';
 
 @Injectable({
   providedIn: 'root'
@@ -105,17 +107,16 @@ export class StudentService {
   }
 
   getHomework(courseName: string, assignmentId: number) {
-    this.http.get<Homework>(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getHomework`);
+    return this.http.get<Homework>(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getHomework`);
+
   }
 
   getVersionsHMForStudent(courseName: string, assignmentId: number) {
-    //elaborare risultato
-    this.http.get(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getVersions`).pipe(map(versions => versions || []));
+    return this.http.get<HomeworkVersion[]>(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getVersions`).pipe(map(versions => versions || []));
   }
 
-  getCorrectionsForStudent(courseName: string, assignmentId: number) {
-    //elaborare risultato
-    this.http.get(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getCorrections`).pipe(map(corrections => corrections || []));
+  getCorrectionsHMForStudent(courseName: string, assignmentId: number) {
+    return this.http.get<HomeworkCorrection[]>(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getCorrections`).pipe(map(corrections => corrections || []));
   }
 
 }

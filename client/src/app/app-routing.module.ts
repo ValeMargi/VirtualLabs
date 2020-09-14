@@ -16,6 +16,9 @@ import { HomeworksComponent as HomeworksComponentTeacher } from './teacher/assig
 import { VersionsContComponent as VersionsContComponentTeacher } from './teacher/assignments/versions-cont.component';
 import { VersionsComponent as VersionsComponentTeacher } from './teacher/assignments/versions.component';
 
+import { VersionsContComponent as VersionsContComponentStudent } from './student/assignments/versions/versions-cont/versions-cont.component';
+import { VersionsComponent as VersionsComponentStudent } from './student/assignments/versions/versions.component';
+
 import { TeamsContComponent } from './student/teams/teams-cont/teams-cont.component';
 import { RegisterSuccessComponent } from './register-success/register-success.component';
 import { AuthGuard} from './auth/auth.guard';
@@ -36,7 +39,11 @@ const routes: Routes = [
           {
               path: 'course/:courses/assignments',
               component: AssignmentsContComponentStudent,
-              canActivate: [AuthGuard]
+              canActivate: [AuthGuard],
+              children: [
+                { path: ':id/versions', component: VersionsContComponentTeacher
+                }
+              ],  
           },            
           {
               path: 'course/:courses/teams',

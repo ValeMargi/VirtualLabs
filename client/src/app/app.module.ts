@@ -64,6 +64,8 @@ import { AddCourseContComponent } from './teacher/add-course/add-course-cont.com
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { FooterComponent } from './footer/footer.component';
 import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.component';
+import { VersionsComponent } from './student/assignments/versions/versions.component';
+import { VersionsContComponent } from './student/assignments/versions/versions-cont/versions-cont.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +108,9 @@ import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.componen
     AddCourseContComponent,
     ForgotPasswordComponent,
     FooterComponent,
-    UserNotAllowedComponent
+    UserNotAllowedComponent,
+    VersionsComponent,
+    VersionsContComponent
   ],
   imports: [
     BrowserModule,

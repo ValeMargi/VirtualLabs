@@ -20,7 +20,7 @@ public class NotificationController {
 
     @GetMapping("/confirm/{token}")
     @ResponseBody
-    public boolean confirmationPage(@PathVariable String token) {
+    public Integer confirmationPage(@PathVariable String token) {
         try{
             return notificationService.confirm(token);
         }catch (TeamNotFoundException e){
@@ -30,7 +30,7 @@ public class NotificationController {
 
     @GetMapping("/reject/{token}")
     @ResponseBody
-    public boolean rejectionPage(@PathVariable String token) {
+    public Integer rejectionPage(@PathVariable String token) {
         try {
             return notificationService.reject(token);
         }catch(TeamNotFoundException e){

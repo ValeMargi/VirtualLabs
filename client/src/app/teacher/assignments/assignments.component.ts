@@ -12,7 +12,7 @@ import { CreateAssignmentContComponent } from '../assignments/create-assignment/
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { VersionsComponent } from './versions.component';
 import { HomeworksComponent } from './homeworks.component';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-assignments-teacher',
@@ -27,7 +27,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
   tableVisibility: boolean = false;
   assVisibility: boolean = false;
 
-  constructor(private matDialog: MatDialog, private router: Router) { }
+  constructor(private matDialog: MatDialog, private router: Router, private route: ActivatedRoute) { }
 
   ngAfterViewInit(): void {
   }
@@ -54,7 +54,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
   showHomeworks(ass: Assignment) {
     //this.tableVisibility = true;
     this.ASSIGNMENT = ass;
-    this.router.navigateByUrl(this.router.url.concat("/").concat(ass.id.toString()).concat("/homeworks"));
+    this.router.navigate([ass.id, 'homeworks'], { relativeTo: this.route });
   }
 
   openDialogAss() {

@@ -4,6 +4,7 @@
       <div class="avatar">
         <div class="rounded-box">
           <div class="outer">
+            <img class="img" [src]="previewPhoto" />
             <div class="inner">
               <input class="inputfile" type="file" name="pic" accept="image/*" 
                 (change)="onFileChanged($event)">

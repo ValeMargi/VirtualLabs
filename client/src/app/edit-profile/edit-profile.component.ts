@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Teacher } from '../models/teacher.model';
 import { AuthService } from '../auth/auth.service';
@@ -9,7 +9,7 @@ import { FormGroup } from '@angular/forms';
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']
 })
-export class EditProfileComponent implements OnInit {
+export class EditProfileComponent implements OnInit, OnChanges {
 
   @Input() currentUser: any;
   @Input() avatar: any;
@@ -26,6 +26,12 @@ export class EditProfileComponent implements OnInit {
   changePassVisibility: boolean = false;
 
   ngOnInit(): void {
+    
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.avatar = changes.avatar.currentValue;
+    console.log(this.avatar)
     const reader = new FileReader();
     reader.readAsDataURL(new Blob([this.avatar]));
     reader.onload = (_event) => { 

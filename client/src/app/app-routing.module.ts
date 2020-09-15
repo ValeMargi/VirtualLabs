@@ -67,9 +67,9 @@ const routes: Routes = [
             component: AssignmentsContComponentTeacher,
             canActivate: [AuthGuard],
             children: [
-              { path: ':id/homeworks', component: HomeworksContComponentTeacher,
+              { path: ':idH/homeworks', component: HomeworksContComponentTeacher,
                 children: [
-                  { path: ':id/versions', component: VersionsContComponentTeacher }
+                  { path: ':idV/versions', component: VersionsContComponentTeacher }
                   ],
               }
             ],  

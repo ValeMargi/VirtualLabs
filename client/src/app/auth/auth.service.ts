@@ -143,8 +143,7 @@ export class AuthService {
     else {
       this.teacherService.getOne(localStorage.getItem('currentId')).subscribe(
         (data) => {
-          console.log(data);
-          this.teacherService.currentAvatar = data.avatar.picByte;
+          this.teacherService.currentAvatar = data.avatar;
           return this.teacherService.currentAvatar;
         },
         (error) => {

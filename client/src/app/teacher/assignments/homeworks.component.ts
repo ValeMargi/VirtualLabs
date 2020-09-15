@@ -23,16 +23,19 @@ export class HomeworksComponent implements OnInit, OnChanges {
   @Input() public homeworks: Homework[] = [];
   @Output() public HOMEWORK: Homework;
 
-  public versionsVisibility: boolean = false;
+  versionsVisibility: boolean = false;
+  tableVisibility: boolean = false;
 
   constructor() { }
 
   ngOnInit(): void {
+    this.manageTableVisibility();
     this.manageTable();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.homeworks = changes.homeworks.currentValue;
+    this.manageTableVisibility();
     this.manageTable();
   }
 
@@ -42,6 +45,15 @@ export class HomeworksComponent implements OnInit, OnChanges {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.length = this.homeworks.length;
+  }
+
+  manageTableVisibility() {
+    if (this.homeworks.length > 0) {
+      this.tableVisibility = true;
+    }
+    else {
+      this.tableVisibility = false;
+    }
   }
 
   showHistory(homework: Homework) {

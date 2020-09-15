@@ -16,7 +16,7 @@ export class EditProfileContComponent implements OnInit {
 
   constructor(private authService: AuthService) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.CURRENT_USER = this.authService.getUserByRole();
     this.CURRENT_AVATAR = this.authService.getUserAvatar();
   }

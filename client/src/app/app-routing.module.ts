@@ -41,7 +41,7 @@ const routes: Routes = [
               component: AssignmentsContComponentStudent,
               canActivate: [AuthGuard],
               children: [
-                { path: ':id/versions', component: VersionsContComponentTeacher
+                { path: ':id/versions', component: VersionsContComponentStudent
                 }
               ],  
           },            

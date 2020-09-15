@@ -44,30 +44,30 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public boolean confirm(String token) {
+    public Integer confirm(String token) {
         Optional<Token> t = checkTokenValidity(token);
         if(t.isPresent()){
             if( tokenRepository.findAllByTeamId(t.get().getTeamId()).size()==0) {
                 VLService.activateTeam(t.get().getTeamId());
-                return true;
+                return 2;
             }else
-                return false;
+                return 1;
         }else
-            return false;
+            return 0;
     }
 
     @Override
-    public boolean reject(String token) {
+    public Integer reject(String token) {
         Optional<Token> t = checkTokenValidity(token);
         if( t.isPresent()){
             if( tokenRepository.findAllByTeamId(t.get().getTeamId()).size()>=0) {
                 tokenRepository.findAllByTeamId(t.get().getTeamId()).forEach(tk-> tokenRepository.delete(tk));
                 VLService.evictTeam(t.get().getTeamId());
-                return  true;
+                return  2;
             }else
-                return  false;
+                return  1;
         }else
-            return false;
+            return 0;
     }
     @Override
     public void notifyTeam(TeamDTO dto, List<String> memberIds) {

@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
 @Controller
@@ -18,7 +19,8 @@ public class NotificationController {
     NotificationService notificationService;
 
     @GetMapping("/confirm/{token}")
-    public Boolean confirmationPage(@PathVariable String token) {
+    @ResponseBody
+    public boolean confirmationPage(@PathVariable String token) {
         try{
             return notificationService.confirm(token);
         }catch (TeamNotFoundException e){
@@ -27,7 +29,8 @@ public class NotificationController {
     }
 
     @GetMapping("/reject/{token}")
-    public Boolean rejectionPage(@PathVariable String token) {
+    @ResponseBody
+    public boolean rejectionPage(@PathVariable String token) {
         try {
             return notificationService.reject(token);
         }catch(TeamNotFoundException e){

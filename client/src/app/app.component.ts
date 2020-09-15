@@ -47,6 +47,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   homeVisibility: boolean = true;
   teacherVisibility: boolean = true;
   notFoundVisibility: boolean = true;
+  registerSuccess: boolean = true;
   courseSelected: string = "";
   role: string = "";
 
@@ -104,6 +105,8 @@ export class AppComponent implements AfterViewInit, OnInit {
       else {
         this.homeVisibility = false;
       }
+
+      //this.registerSuccess = true;
 
       if (this.authService.isLoggedIn()) {
         this.loginVisibility = false;
@@ -247,7 +250,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    dialogConfig.height = '70%';
+    //dialogConfig.height = '70%';
 
     dialogConfig.data = {
         id: 1,

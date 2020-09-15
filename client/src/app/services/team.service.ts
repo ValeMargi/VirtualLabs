@@ -17,7 +17,7 @@ export class TeamService {
 
   proposeTeam(courseName: string, teamMap: Map<string, string[]>) {
     //nella mappa le chiavi sono nameTeam e membersId
-    return this.http.post(`${this.API_TEAMS}/${courseName}/proposeTeam`, teamMap);
+    return this.http.post<Team>(`${this.API_TEAMS}/${courseName}/proposeTeam`, teamMap);
   }
 
   getTeamsForCourse(courseName: string) {

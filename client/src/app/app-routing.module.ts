@@ -24,6 +24,7 @@ import { RegisterSuccessComponent } from './register-success/register-success.co
 import { AuthGuard} from './auth/auth.guard';
 import {LoginDialogComponent} from './login/login-dialog.component';
 import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.component';
+import { TeamPartecipationComponent } from './team-creation/team-partecipation.component';
 
 
 const routes: Routes = [
@@ -31,7 +32,8 @@ const routes: Routes = [
   { path: 'login', component: LoginDialogComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'page-not-found', component: PageNotFoundComponent },
-  { path: 'register-success', component: RegisterSuccessComponent },
+  { path: 'register/:success/:token', component: RegisterSuccessComponent },
+  { path: 'team/:success/:token', component: TeamPartecipationComponent },
   { path: ':role/course/:courses/:tab/not-allowed', component: UserNotAllowedComponent },
   {
       path: 'student',

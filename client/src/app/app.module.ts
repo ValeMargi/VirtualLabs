@@ -66,6 +66,8 @@ import { FooterComponent } from './footer/footer.component';
 import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.component';
 import { VersionsComponent as VersionsComponentStudent } from './student/assignments/versions/versions.component';
 import { VersionsContComponent as VersionsContComponentStudent } from './student/assignments/versions/versions-cont/versions-cont.component';
+import { RegisterSuccessComponent } from './register-success/register-success.component';
+import { TeamPartecipationComponent } from './team-creation/team-partecipation.component';
 
 @NgModule({
   declarations: [
@@ -110,7 +112,9 @@ import { VersionsContComponent as VersionsContComponentStudent } from './student
     FooterComponent,
     UserNotAllowedComponent,
     VersionsComponentStudent,
-    VersionsContComponentStudent
+    VersionsContComponentStudent,
+    RegisterSuccessComponent,
+    TeamPartecipationComponent
   ],
   imports: [
     BrowserModule,

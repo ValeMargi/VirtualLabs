@@ -16,7 +16,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.net.URI;
 import java.sql.Timestamp;
 import java.util.Locale;
 import java.util.Map;
@@ -88,8 +91,8 @@ public class UserController {
              int index = registerData.get("email").indexOf("@");
              String id = registerData.get("email").substring(0, index);
             if(!id.equals(registerData.get("id")))
-               throw new ResponseStatusException(HttpStatus.CONFLICT, "Id does not match with email!");            
-            
+               throw new ResponseStatusException(HttpStatus.CONFLICT, "Id does not match with email!");
+
             if (registerData.get("email").matches("^d[0-9]+@polito.it")) { //Professor
                 ProfessorDTO professorDTO = new ProfessorDTO(registerData.get("id"),
                                                              registerData.get("firstName"),
@@ -118,9 +121,17 @@ public class UserController {
 
 
     @GetMapping("/registration/confirm/{token}")
-    public Boolean confirmationPage(@PathVariable String token) {
-        return authenticationService.confirmRegistration((token));
+    public ResponseEntity<Void> confirmationPage(@PathVariable String token) {
+        HttpHeaders headers = new HttpHeaders();
 
+        if (authenticationService.confirmRegistration((token))) {
+            headers.setLocation(URI.create("http://localhost:4200/register/confirm/" + token));
+            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
+        }
+        else {
+            headers.setLocation(URI.create("http://localhost:4200/register/expired/" + token));
+            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
+        }
     }
 
     private SimpleMailMessage constructEmail(String subject, String body, UserDAO user) {

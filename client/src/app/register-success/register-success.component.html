@@ -1,5 +1,9 @@
 <body>
-    <!--Inserire <mat-icon>how_to_reg</mat-icon> -->
-    <h1>Registrazione avvenuta con successo su VirtualLabs</h1>
-    <h2>Puoi accedere adesso ai tuoi corsi</h2>
+    <div *ngIf="success">
+        <h1>Registrazione su VirtualLabs avvenuta con successo</h1>
+        <h2>Puoi ora effettuare il login</h2>
+    </div>
+    <div *ngIf="!success">
+        <h1>Registrazione fallita, token scaduto</h1>
+    </div>
  </body>

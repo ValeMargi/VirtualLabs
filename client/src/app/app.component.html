@@ -20,12 +20,17 @@
   <mat-toolbar *ngIf="!homeVisibility && !notFoundVisibility">  
     <mat-toolbar-row>
       <span style="color:rgb(228, 18, 140)">{{ courseName }}</span>
-      <button mat-button *ngIf="teacherVisibility" (click)="enableCourse()">
+      <div class="button-request" align="right">
+      <button mat-button mat-raised-button color="primary" *ngIf="teacherVisibility" (click)="enableCourse()">
+        Abilita/Disabilita
         <mat-icon class="enableCourse">power_settings_new</mat-icon>
       </button>
-      <button mat-button *ngIf="teacherVisibility" (click)="deleteCourse()">
+    </div>
+      <button mat-button mat-raised-button color="warn" *ngIf="teacherVisibility" (click)="deleteCourse()">
+        Elimina 
         <mat-icon class="deleteCourse">delete</mat-icon>
       </button>
+  
     </mat-toolbar-row>
   </mat-toolbar>
 

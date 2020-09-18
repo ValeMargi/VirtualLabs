@@ -20,8 +20,9 @@
     opacity: 1;
 }
 
-.deleteCourse {
-    color: red;
+
+.button-request {
+    margin: 1%;
 }
 
 .noCourses {

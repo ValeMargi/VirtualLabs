@@ -2,34 +2,36 @@
 <mat-dialog-content>
     <div>
         <mat-form-field>
-        <input type="text" placeholder="Nome Vm" [formControl] = "form.name" matInput required>
+        <input #name type="text" placeholder="Nome VM" [formControl] = "form.name" matInput required>
         <mat-error *ngIf="form.name.invalid">{{getErrorMessage()}}</mat-error>
         </mat-form-field>
     </div>
     <div>
         <mat-form-field>
-        <input #min class="input" type="number" placeholder="Numero di VCPU" matInput min="1" max="24" value="4" required>
+        <input #vcpu class="input" type="number" placeholder="Numero di VCPU" matInput min="1" max="24" value="4" required>
         </mat-form-field>
     </div>
     <br>
     <div>
         <mat-form-field>
-        <input #max class="input" type="number" placeholder="Dimensione RAM (MB)" matInput min="1" max="250" value="8" required>
+        <input #ram class="input" type="number" placeholder="Dimensione RAM (MB)" matInput min="1" max="250" value="8" required>
         </mat-form-field>
     </div>
     <br>
     <div>
         <mat-form-field>
-        <input #min class="input" type="number" placeholder="Spazio disco (MB)" matInput min="10" max="500" value="100" required>
+        <input #disk class="input" type="number" placeholder="Spazio disco (MB)" matInput min="10" max="500" value="100" required>
         </mat-form-field>
     </div>
     <br>
+    Selezionare immagine della consegna
+    <input class="inputfile" type="file" accept="image/*" (change)="addAssImage($event)" required>
   
     <br>
  
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button (click)="close()">Annulla</button>
-    <button mat-button mat-raised-button color="primary" click="createVms()">Crea</button>
+    <button mat-button mat-raised-button color="primary" (click)="createVM(vcpu.value, disk.value, ram.value, name.value)">Crea</button>
 </mat-dialog-actions>
 

@@ -47,7 +47,7 @@ export class AssignmentsContComponent implements OnInit {
       (error) => {
 
       }
-    )
+    );
   }
 
 }

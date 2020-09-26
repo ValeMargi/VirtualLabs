@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Student } from '../models/student.model';
 import { of, Observable, from } from 'rxjs';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
@@ -25,6 +25,8 @@ export class StudentService {
 
   currentStudent: Student;
   currentAvatar: File;
+
+  vmCreation: EventEmitter<VM> = new EventEmitter<VM>();
 
   all() {
     return this.http.get<Student[]>(`${this.API_STUDENTS}`).pipe(map(students => students || []));
@@ -65,7 +67,7 @@ export class StudentService {
     data.append("VM", new Blob([JSON.stringify(vm)], {
       type: "application/json" }));
 
-    return this.http.post(`${this.API_STUDENTS}/${courseName}/addVM`, data);
+    return this.http.post<VM>(`${this.API_STUDENTS}/${courseName}/addVM`, data);
   }
 
   addOwner(courseName: string, VMId: number, membersId: string[]) {
@@ -96,7 +98,7 @@ export class StudentService {
     data.append("VM", new Blob([JSON.stringify(vm)], {
       type: "application/json" }));
 
-    return this.http.post(`${this.API_STUDENTS}/${courseName}/${VMId}/update`, data);
+    return this.http.post<VM>(`${this.API_STUDENTS}/${courseName}/${VMId}/update`, data);
   }
 
   uploadVersionHomework(courseName: string, assignmentId: number, homeworkId: number, file: File) {

@@ -36,6 +36,7 @@ public interface VLService {
     List<CourseDTO> getCoursesForStudent(String studentId);
     List<CourseDTO> getCoursesForProfessor(String professorId);
     List<TeamDTO> getTeamsForStudent(String studentId);
+    TeamDTO getTeamForStudent(String courseId, String studentId);
     List<StudentDTO> getMembers(Long TeamId);
     TeamDTO proposeTeam(String courseId, String name, List<String> memberIds);
     List<TeamDTO> getTeamForCourse(String courseName);

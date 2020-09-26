@@ -32,6 +32,10 @@ export class TeamService {
     return this.http.get<Team[]>(`${this.API_TEAMS}/${studentId}/teams`).pipe(map(teams => teams || []));
   }
 
+  getTeamForStudent(courseId: string, studentId: string) {
+    return this.http.get<Team>(`${this.API_TEAMS}/${courseId}/${studentId}/team`);
+  }
+
   getStudentsInTeams(courseName: string) {
     return this.http.get<Student[]>(`${this.API_TEAMS}/${courseName}/inTeam`).pipe(map(students => students || []));
   }

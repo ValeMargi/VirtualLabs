@@ -98,6 +98,24 @@ public class TeamController {
         }
     }
 
+    /**
+     *
+     * @param courseId, studentId
+     * @return ritorna il team DTO per il corso con id=courseId a cui lo studente con id=studentId è iscritto
+     */
+    @GetMapping("/{courseId}/{studentId}/team")
+    public TeamDTO getTeamForStudent(@PathVariable String courseId, @PathVariable String studentId) {
+        try {
+            return vlService.getTeamForStudent(courseId, studentId);
+        } catch (CourseNotFoundException cnfe) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,  "Course with id:" + courseId + " not present");
+        } catch (StudentNotFoundException snfe) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,  "Student with id:" + studentId + " not present");
+        } catch(PermissionDeniedDataAccessException p){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,  p.getMessage());
+        }
+    }
+
     /* GET mapping request to see the list of students who are part of a team in a given course*/
     @GetMapping("/{courseName}/inTeam")
     public List<StudentDTO> getStudentsInTeams(@PathVariable String courseName) {

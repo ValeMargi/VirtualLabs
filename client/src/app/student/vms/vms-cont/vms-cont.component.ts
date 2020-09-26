@@ -3,6 +3,9 @@ import { VM } from '../../../models/vm.model';
 import { AuthService } from '../../../auth/auth.service';
 import { TeamService } from '../../../services/team.service';
 import { Team } from '../../../models/team.model';
+import { CourseService } from 'src/app/services/course.service';
+import { Student } from 'src/app/models/student.model';
+import { StudentService } from 'src/app/services/student.service';
 
 @Component({
   selector: 'app-vms-cont',
@@ -12,34 +15,53 @@ import { Team } from '../../../models/team.model';
 export class VmsContComponent implements OnInit {
 
   public VMs: VM[] = []
-  public COURSE_TEAMS: Team[] = []
+  public TEAM: Team;
 
-  constructor(public teamService: TeamService, public authService: AuthService) { 
+  constructor(private teamService: TeamService, 
+    private courseService: CourseService, 
+    private studentService: StudentService) { 
     
   }
 
-  @Output() vms = new EventEmitter<VM[]>()
-  @Output() teams = new EventEmitter<Team>()
 
-  ngOnInit(): void {
+  ngOnInit() {
+    let courseName = this.courseService.currentCourse.getValue().name;
 
-    
-    /*this.vmService.query().subscribe(
+    this.teamService.getTeamForStudent(courseName, this.studentService.currentStudent.id).subscribe(
       (data) => {
-        this.VMs = data;
-        this.vms.emit(this.VMs);
+        if (data != null) {
+          this.TEAM = data;
+          
+          this.teamService.getAllVMTeam(courseName, this.TEAM.id).subscribe(
+            (data) => {
+              this.VMs = data;
+            },
+            (error) => {
+              console.log("Impossibile reperire le VM per il team")
+            }
+          );
+        }
       },
-      (error) => {  } 
-      );
+      (error) => {
+        console.log("Impossibile reperire il team dello studente")
+      }
+    );
 
-      this.vmService.vms("1").subscribe(
-        (data) => {
-          console.log(data);
-          this.VMs = data;
-          this.vms.emit(this.VMs);
-        },
-        (error) => {  } 
-        );*/
+    this.studentService.vmCreation.subscribe(
+      (data) => {
+        if (this.VMs.length == 0) {
+          let array: VM[] = new Array();
+          array.push(data);
+          this.VMs = array;
+        }
+        else {
+          this.VMs.push(data);
+        }
+      }, 
+      (error) => {
+
+      }
+    );
   }
 
 }

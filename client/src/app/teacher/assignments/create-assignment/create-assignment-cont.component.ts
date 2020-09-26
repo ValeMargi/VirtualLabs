@@ -29,7 +29,7 @@ export class CreateAssignmentContComponent implements OnInit {
       (error) => {
         console.log("Errore nella creazione della consegna");
       }
-    )
+    );
   }
 
 }

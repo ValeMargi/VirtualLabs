@@ -175,10 +175,10 @@ public class StudentController {
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
 
             VMDTO vmdto = new VMDTO();
-            vmdto.setDiskSpace((int)input.get("diskSpace"));
-            vmdto.setNumVcpu((int)input.get("numVcpu"));
+            vmdto.setDiskSpace(Integer.parseInt(input.get("diskSpace").toString()));
+            vmdto.setNumVcpu(Integer.parseInt(input.get("numVcpu").toString()));
             vmdto.setNameVM(input.get("nameVM").toString());
-            vmdto.setRam((int)input.get("ram"));
+            vmdto.setRam(Integer.parseInt(input.get("ram").toString()));
             vmdto.setStatus("off");
 
             PhotoVMDTO photoVMDTO = new PhotoVMDTO();

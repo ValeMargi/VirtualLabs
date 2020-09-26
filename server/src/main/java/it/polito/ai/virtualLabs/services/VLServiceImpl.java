@@ -533,6 +533,34 @@ public class VLServiceImpl implements VLService{
         }
     }
 
+    @PreAuthorize("hasAuthority('student')")
+    @Override
+    public TeamDTO getTeamForStudent(String courseId, String studentId) {
+        try {
+            if (!courseRepository.existsById(courseId))
+                throw new CourseNotFoundException();
+
+            if (!studentRepository.existsById(studentId))
+                throw new StudentNotFoundException();
+
+            Course c = courseRepository.getOne(courseId);
+            Student s = studentRepository.getOne(studentId);
+            Team t = null;
+            boolean found;
+
+            List<TeamDTO> list = c.getTeams().stream().filter(team -> team.getMembers().contains(s)).map(team -> modelMapper.map(team, TeamDTO.class)).collect(Collectors.toList());
+
+            if (list.size() != 1) {
+                return null;
+            }
+            else {
+                return list.get(0);
+            }
+
+        }catch(EntityNotFoundException enfe){
+            throw new StudentNotFoundException();
+        }
+    }
 
     @Override
     public List<StudentDTO> getMembers(Long TeamId) {

@@ -224,6 +224,23 @@ public class StudentController {
     }
 
     /**
+     * Metodo GET
+     * Authrority: Studente
+     * @param courseName, teamId, vmId
+     * @return: ritorna la lista di StudentDTO owner di una VM
+     */
+    @GetMapping("/VM/{courseName}/{teamId}/{vmId}")
+    public List<StudentDTO> getOwners(@PathVariable String courseName, @PathVariable Long teamId, @PathVariable Long vmId) {
+        try{
+            return vlService.getOwnersForStudent(vmId);
+        } catch (CourseNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch(PermissionDeniedException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
+
+    /**
      * Metodo: GET
      * Authority: Studente
      * @param courseName: riceve dal path il nome del corso

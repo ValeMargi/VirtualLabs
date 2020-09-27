@@ -166,15 +166,15 @@ public class ProfessorController {
     }
 
     /**
+     * Metodo GET
      * Authrority: Docente
-     * @param courseName
-     * @return: ritrona lista di VM dto con le informazioni
-     *          di tutte le VM di un dato corso
+     * @param courseName, teamId, vmId
+     * @return: ritorna la lista di StudentDTO owner di una VM
      */
     @GetMapping("/VM/{courseName}/{teamId}/{vmId}")
     public List<StudentDTO> getOwners(@PathVariable String courseName, @PathVariable Long teamId, @PathVariable Long vmId) {
         try{
-            return vlService.getOwners(vmId);
+            return vlService.getOwnersForProfessor(vmId);
         } catch (CourseNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){

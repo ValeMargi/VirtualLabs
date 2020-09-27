@@ -6,6 +6,7 @@ import { Team } from '../../../models/team.model';
 import { CourseService } from 'src/app/services/course.service';
 import { Student } from 'src/app/models/student.model';
 import { StudentService } from 'src/app/services/student.service';
+import { VMOwners } from 'src/app/models/vm-owners.model';
 
 @Component({
   selector: 'app-vms-cont',
@@ -14,7 +15,7 @@ import { StudentService } from 'src/app/services/student.service';
 })
 export class VmsContComponent implements OnInit {
 
-  public VMs: VM[] = []
+  public VMs: VMOwners[] = [];
   public TEAM: Team;
 
   constructor(private teamService: TeamService, 
@@ -34,7 +35,20 @@ export class VmsContComponent implements OnInit {
           
           this.teamService.getAllVMTeam(courseName, this.TEAM.id).subscribe(
             (data) => {
-              this.VMs = data;
+              let vms: VM[] = data;
+              let array: VMOwners[] = new Array();
+
+              vms.forEach(vm => {
+                this.studentService.getOwners(courseName, this.TEAM.id, vm.id).subscribe(
+                  (data) => {
+                    array.push(new VMOwners(vm.id, vm.numVcpu, vm.diskSpace, vm.ram, vm.status, vm.nameVM, vm.timestamp, data))
+                    this.VMs = array;
+                  }, 
+                  (error) => {
+                    console.log("Impossibile ottenere gli owners");
+                  }
+                );
+              });
             },
             (error) => {
               console.log("Impossibile reperire le VM per il team")
@@ -50,7 +64,7 @@ export class VmsContComponent implements OnInit {
     this.studentService.vmCreation.subscribe(
       (data) => {
         if (this.VMs.length == 0) {
-          let array: VM[] = new Array();
+          let array: VMOwners[] = new Array();
           array.push(data);
           this.VMs = array;
         }
@@ -64,4 +78,33 @@ export class VmsContComponent implements OnInit {
     );
   }
 
+  activateVM(vmId: number) {
+    this.studentService.activateVM(this.courseService.currentCourse.getValue().name, vmId).subscribe(
+      (data) => {
+        this.VMs.forEach(vm => {
+          if (vm.id == vmId) {
+            vm.status = "on";
+          }
+        })
+      },
+      (error) => {
+        console.log("Impossibile attivare la VM");
+      }
+    )
+  }
+
+  disableVM(vmId: number) {
+    this.studentService.disableVM(this.courseService.currentCourse.getValue().name, vmId).subscribe(
+      (data) => {
+        this.VMs.forEach(vm => {
+          if (vm.id == vmId) {
+            vm.status = "off";
+          }
+        })
+      },
+      (error) => {
+        console.log("Impossibile spegnere la VM");
+      }
+    )
+  }
 }

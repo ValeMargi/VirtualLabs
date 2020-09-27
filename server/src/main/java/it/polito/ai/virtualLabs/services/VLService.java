@@ -58,7 +58,8 @@ public interface VLService {
    PhotoVMDTO getVMforStudent( String courseId, Long VMid);
     List<VMDTO> getAllVMTeam(  Long teamId);
     boolean isOwner(  Long VMid);
-    List<StudentDTO> getOwners(  Long VMid);
+    List<StudentDTO> getOwnersForProfessor(Long VMid);
+    List<StudentDTO> getOwnersForStudent(Long VMid);
     boolean addAssignment(AssignmentDTO assignmentDTO, PhotoAssignmentDTO photoAssignmentDTO, String courseId);
     PhotoAssignmentDTO getAssignmentStudent( Long assignmentId);
     PhotoAssignmentDTO getAssignmentProfessor(Long assignmentId );

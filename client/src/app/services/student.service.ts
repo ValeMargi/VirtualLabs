@@ -13,6 +13,7 @@ import { PhotoAssignment } from '../models/photo-assignment.model';
 import { Homework } from '../models/homework.model';
 import { HomeworkVersion } from '../models/homework-version.model';
 import { HomeworkCorrection } from '../models/homework-correction.model';
+import { VMOwners } from '../models/vm-owners.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class StudentService {
   currentStudent: Student;
   currentAvatar: File;
 
-  vmCreation: EventEmitter<VM> = new EventEmitter<VM>();
+  vmCreation: EventEmitter<VMOwners> = new EventEmitter<VMOwners>();
 
   all() {
     return this.http.get<Student[]>(`${this.API_STUDENTS}`).pipe(map(students => students || []));
@@ -72,6 +73,10 @@ export class StudentService {
 
   addOwner(courseName: string, VMId: number, membersId: string[]) {
     return this.http.post(`${this.API_STUDENTS}/${courseName}/${VMId}/addOwner`, membersId);
+  }
+
+  getOwners(courseName: string, teamId: number, vmId: number) {
+    return this.http.get<Student[]>(`${this.API_STUDENTS}/VM/${courseName}/${teamId}/${vmId}`).pipe(map(students => students || []));
   }
 
   activateVM(courseName: string, VMId: number) {

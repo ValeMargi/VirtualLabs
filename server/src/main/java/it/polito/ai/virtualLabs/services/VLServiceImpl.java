@@ -858,10 +858,9 @@ public class VLServiceImpl implements VLService{
         }else throw new VMNotFoundException();
     }
 
-
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public List<StudentDTO> getOwners(  Long VMid) { //CourseId preso dal pathVariable
+    public List<StudentDTO> getOwnersForProfessor(Long VMid) { //CourseId preso dal pathVariable
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Professor> op = professorRepository.findById(professor);
         if(op.isPresent()){
@@ -872,6 +871,24 @@ public class VLServiceImpl implements VLService{
                 return  vm.getOwnersVM().stream().map(st-> modelMapper.map(st, StudentDTO.class)).collect(Collectors.toList());
             }else throw new VMNotFoundException();
         }else throw new StudentNotFoundException();
+    }
+
+    @PreAuthorize("hasAuthority('student')")
+    @Override
+    public List<StudentDTO> getOwnersForStudent(Long VMid) { //CourseId preso dal pathVariable
+        String student = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Student> op = studentRepository.findById(student);
+
+        if (op.isPresent()) {
+            Student p = op.get();
+            Optional<VM> ovm= VMRepository.findById(VMid);
+            if (ovm.isPresent()) {
+                VM vm= ovm.get();
+                return  vm.getOwnersVM().stream().map(st-> modelMapper.map(st, StudentDTO.class)).collect(Collectors.toList());
+            }
+            else throw new VMNotFoundException();
+        }
+        else throw new StudentNotFoundException();
     }
 
     /*Metodo per attivare VM, controllo se l'utente autenticato è un owner della VM*/

@@ -26,7 +26,6 @@ export class ManageModelComponent implements OnInit {
     }
 
   ngOnInit(): void {
-   console.log(this.modelvm)
 
    this.ModelVmForm = this.formBuilder.group({
     max_vcpu : new FormControl('', [Validators.required, Validators.min(1),Validators.max(24)]),

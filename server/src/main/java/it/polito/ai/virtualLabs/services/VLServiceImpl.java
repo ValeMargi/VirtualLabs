@@ -991,6 +991,7 @@ public class VLServiceImpl implements VLService{
                     t.setDiskSpaceLeft(t.getDiskSpaceLeft() + vm.getDiskSpace() - vmdto.getDiskSpace());
                     t.setRamLeft(t.getRamLeft() + vm.getRam() - vmdto.getRam());
                     t.setMaxVpcuLeft(t.getMaxVpcuLeft() + vm.getNumVcpu() - vmdto.getNumVcpu());
+                    vm.setNameVM(vmdto.getNameVM());
                     vm.setDiskSpace(vmdto.getDiskSpace());
                     vm.setRam(vmdto.getRam());
                     vm.setNumVcpu(vmdto.getNumVcpu());

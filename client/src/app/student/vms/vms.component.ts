@@ -9,6 +9,7 @@ import {MatDialog,MatDialogConfig} from '@angular/material/dialog';
 import { StudentService } from 'src/app/services/student.service';
 import { VMOwners } from 'src/app/models/vm-owners.model';
 import { Student } from 'src/app/models/student.model';
+import { ManageVmContComponent } from './manage-vm/manage-vm-cont/manage-vm-cont.component';
 @Component({
   selector: 'app-vms-student',
   templateUrl: './vms.component.html',
@@ -81,8 +82,32 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
     this.length = this.vms.length;
   }
 
-  openDialogEdit() {
+  openDialogEdit(vm: VMOwners) {
+    let isOwner: boolean = false;
 
+    vm.owners.forEach(s => {
+      if (s.id == this.studentService.currentStudent.id) {
+        isOwner = true;
+      }
+    });
+
+    if (!isOwner) {
+      window.alert("Devi essere owner della VM per modificarne le risorse");
+      return;
+    }
+
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+        id: 1,
+        title: 'Edit',
+        vm: vm
+    };
+
+    this.dialog.open(ManageVmContComponent, dialogConfig);
   }
 
   swithOnOffVm(vm: VMOwners) {
@@ -130,11 +155,11 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   openCreateVmsDialog() {
-    const dialogRef = this.dialog.open(CreateVmsContComponent,{ id: 'dialogCreteVms'});
+    const dialogRef = this.dialog.open(CreateVmsContComponent,{ id: 'dialogCreateVms'});
     
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+    //dialogRef.afterClosed().subscribe(result => {
+      //console.log(`Dialog result: ${result}`);
+    //});
   }
 
 }

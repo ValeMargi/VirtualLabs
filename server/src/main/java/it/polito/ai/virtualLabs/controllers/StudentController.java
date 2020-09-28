@@ -340,10 +340,11 @@ public class StudentController {
     @PostMapping("/{courseName}/{VMid}/update")
     public VMDTO updateVMresources( @PathVariable String courseName,  @PathVariable Long VMid,
                                     @RequestPart("VM")  Map<String, Object> input) {
-        if (  !input.containsKey("numVcpu") || !input.containsKey("diskSpace")   || !input.containsKey("ram") )
+        if ( !input.containsKey("nameVM") || !input.containsKey("numVcpu") || !input.containsKey("diskSpace")   || !input.containsKey("ram") )
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
         try{
             VMDTO vmdto = new VMDTO();
+            vmdto.setNameVM(input.get("nameVM").toString());
             vmdto.setDiskSpace((int)input.get("diskSpace"));
             vmdto.setNumVcpu((int)input.get("numVcpu"));
             vmdto.setRam((int)input.get("ram"));

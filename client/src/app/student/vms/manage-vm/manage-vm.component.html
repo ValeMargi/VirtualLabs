@@ -1,0 +1,41 @@
+<h2 mat-dialog-title><mat-icon>desktop_mac</mat-icon> Modifica risorse VM</h2>
+<mat-dialog-content>
+<form [formGroup]="ModelVmForm">
+
+    <!--Nome-->
+    <mat-form-field>
+        <input #name class="input" type="text" placeholder="Nome VM" formControlName="name" matInput required>
+        <mat-error *ngIf="ModelVmForm.get('name').hasError('required')">Inserisci il nome</mat-error>
+    </mat-form-field><br><br>
+
+    <!--VCPU-->
+    <mat-form-field>
+        <input #vcpu class="input" type="number" placeholder="Numero VCPU" formControlName="vcpu" matInput required>
+        <mat-error *ngIf="ModelVmForm.get('vcpu').hasError('required')">Inserisci il numero di vcpu</mat-error>
+        <mat-error *ngIf="ModelVmForm.get('vcpu').hasError('min')">Minimo 1</mat-error>
+        <mat-error *ngIf="ModelVmForm.get('vcpu').hasError('max')">Massimo 24 </mat-error>
+    </mat-form-field><br><br>
+    
+    <!--Disco-->
+    <mat-form-field>
+        <input #disk class="input" type="number" placeholder="Numero disco" formControlName="disk" matInput min="10" max="500" required>
+        <mat-error *ngIf="ModelVmForm.get('disk').hasError('required')">Inserisci la dimensione del disco</mat-error>
+        <mat-error *ngIf="ModelVmForm.get('disk').hasError('min')">Minimo 10 MB</mat-error>
+        <mat-error *ngIf="ModelVmForm.get('disk').hasError('max')">Massimo 500 MB </mat-error>
+    </mat-form-field><br><br>
+
+    <!--RAM-->
+    <mat-form-field>
+        <input #ram class="input" type="number" placeholder="Numero RAM" formControlName="ram" matInput min="1" max="250" required>
+        <mat-error *ngIf="ModelVmForm.get('ram').hasError('required')">Inserisci la dimensione della RAM</mat-error>
+        <mat-error *ngIf="ModelVmForm.get('ram').hasError('min')">Minimo 1MB</mat-error>
+        <mat-error *ngIf="ModelVmForm.get('ram').hasError('max')">Massimo 250 MB </mat-error>
+    </mat-form-field><br><br>
+
+</form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-raised-button color="warn" (click)="close()">Annulla</button>
+  <button mat-button mat-raised-button color="primary" (click)="editVM(name.value, vcpu.value, disk.value, ram.value)">Modifica</button>
+</mat-dialog-actions>

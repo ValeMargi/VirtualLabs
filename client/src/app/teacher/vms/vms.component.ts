@@ -4,6 +4,7 @@ import { VmsContComponent } from './vms-cont.component';
 import { Team } from '../../models/team.model';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ManageModelContComponent } from './manage-model-cont.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-vms-teacher',
@@ -17,7 +18,7 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
   teamVMsVisibility: boolean = false;
   teamsVisibility: boolean = false;
 
-  constructor(private cont: VmsContComponent, private matDialog: MatDialog) { }
+  constructor(private matDialog: MatDialog, private router: Router, private route: ActivatedRoute) { }
 
   ngAfterViewInit(): void {
     
@@ -56,8 +57,9 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   selectTeam(team) {
-    this.teamVMsVisibility = true;
+    //this.teamVMsVisibility = true;
     this.TEAM = team;
+    this.router.navigate(['team', team.id], { relativeTo: this.route });
   }
 
 }

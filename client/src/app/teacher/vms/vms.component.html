@@ -14,6 +14,7 @@
                 {{ team.name }} </mat-list-option>
         </mat-selection-list>
     </div>
+    <router-outlet></router-outlet>
     <app-team-vms-cont class="tableContainer" [team]="TEAM" *ngIf="teamVMsVisibility"></app-team-vms-cont> 
 </div>
 <div class="noTeams" *ngIf="!teamsVisibility">

@@ -3,6 +3,8 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { VM } from 'src/app/models/vm.model';
+import { VMOwners } from 'src/app/models/vm-owners.model';
+import { Student } from 'src/app/models/student.model';
 
 @Component({
   selector: 'app-team-vms',
@@ -14,10 +16,10 @@ export class TeamVmsComponent implements OnInit, OnChanges {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['vmName', 'owner', 'status', 'link'];
-  dataSource = new MatTableDataSource<VM>();
+  displayedColumns: string[] = ['vmName', 'owners', 'status', 'link'];
+  dataSource = new MatTableDataSource<VMOwners>();
   
-  @Input() public vms: VM[];
+  @Input() public vms: VMOwners[];
 
   length = 5;
   pageSize = 5;
@@ -39,7 +41,7 @@ export class TeamVmsComponent implements OnInit, OnChanges {
   manageTable() {
     if (this.vms.length > 0) {
       this.VMsVisibility = true;
-      this.dataSource = new MatTableDataSource<VM>(this.vms);
+      this.dataSource = new MatTableDataSource<VMOwners>(this.vms);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.length = this.vms.length;
@@ -56,6 +58,19 @@ export class TeamVmsComponent implements OnInit, OnChanges {
     else {
       return "Spenta";
     }
+  }
+
+  getOwners(owners: Student[]) {
+    let str: string = "";
+
+    owners.forEach(s => {
+      str = str.concat(s.name + " " + s.firstName);
+
+      if (owners.indexOf(s) < owners.length - 1)
+        str = str.concat(", ");
+    });
+
+    return str;
   }
 
   openVM() {

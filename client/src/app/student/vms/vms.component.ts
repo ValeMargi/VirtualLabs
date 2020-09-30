@@ -96,6 +96,11 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
       return;
     }
 
+    if (vm.status == "off") {
+      window.alert("La VM deve essere accesa per apportare modifiche");
+      return;
+    }
+
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = false;

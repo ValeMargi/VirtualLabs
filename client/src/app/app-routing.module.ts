@@ -25,6 +25,7 @@ import { AuthGuard} from './auth/auth.guard';
 import {LoginDialogComponent} from './login/login-dialog.component';
 import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.component';
 import { TeamPartecipationComponent } from './team-creation/team-partecipation.component';
+import { TeamVmsContComponent } from './teacher/vms/team-vms-cont.component';
 
 
 const routes: Routes = [
@@ -84,7 +85,10 @@ const routes: Routes = [
         {
             path: 'course/:courses/vms',
             component: VmsContComponentTeacher,
-            canActivate: [AuthGuard]
+            canActivate: [AuthGuard],
+            children: [
+              { path: 'team/:idT', component: TeamVmsContComponent }
+            ]
         }
     ]
   }

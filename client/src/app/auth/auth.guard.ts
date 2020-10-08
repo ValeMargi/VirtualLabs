@@ -1,41 +1,50 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, Router,RouterStateSnapshot, UrlTree } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, Router,RouterStateSnapshot, UrlTree, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { StudentService } from '../services/student.service';
+import { TeacherService } from '../services/teacher.service';
 
 import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router){}
+  constructor(private authService: AuthService, 
+              private studentService: StudentService,
+              private teacherService: TeacherService,
+              private router: Router,
+              private route: ActivatedRoute){}
 
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    state: RouterStateSnapshot): boolean {
       
-      if (this.authService.isLoggedIn()) {
-        let role = localStorage.getItem('role');
+      let url: string = state.url;
+      return this.checkLogin(url);
+  }
 
-        /*if (role == null || role.length == 0 || this.router.url.length <= 1 || this.router.url.match("home")) {
-          return false;
-        }*/
+  checkLogin(url: string): boolean {
+    if (this.authService.isLoggedIn()) {
+      let role = localStorage.getItem('role');
+      let currentId = localStorage.getItem('currentId');
 
-        /*console.log(this.router.url.split("/")[2]);
+      if (role == null || role.length == 0 || currentId == null || currentId.length == 0) {
+        this.router.navigate([url, {queryParams: { doLogin: true }}]);
+        return false;
+      }
 
-        if ((role.match("teacher") && this.router.url.match("teacher")) || (role.match("student") && this.router.url.match("student"))) {
-          return true;
-        }
-        else {
-          console.log(this.router.url.concat("not-allowed"))
-          this.router.navigateByUrl(this.router.url.concat("not-allowed"));
-          return false;
-        }*/
-
+      if ((role.match("teacher") && currentId.startsWith("d")) || (role.match("student") && currentId.startsWith("s"))) {
         return true;
       }
       else {
-        return this.router.parseUrl("/login");
+        this.router.navigateByUrl(url.concat("/not-allowed"));
+        return false;
       }
+    }
+    else {
+      this.router.navigate([url, {queryParams: { doLogin: true }}]);
+      return false;
+    }
   }
   
 }

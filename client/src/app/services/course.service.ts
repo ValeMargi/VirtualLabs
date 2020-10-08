@@ -49,7 +49,7 @@ export class CourseService {
   }
 
   removeCourse(courseName: string) {
-    return this.http.get<boolean>(`${this.API_COURSES}/${courseName}/remove`);
+    return this.http.delete(`${this.API_COURSES}/${courseName}/remove`);
   }
 
   modifyCourse(courseName: string, course: Course) {

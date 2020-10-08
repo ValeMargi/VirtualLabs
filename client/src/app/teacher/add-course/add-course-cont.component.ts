@@ -24,6 +24,8 @@ export class AddCourseContComponent implements OnInit {
   ngOnInit(): void {
     this.teacherService.all().subscribe(
       (data) => {
+        console.log(data)
+        console.log(this.teacherService.currentTeacher)
         data.splice(data.indexOf(this.teacherService.currentTeacher));
         this.ALL_TEACHERS = data;
       },
@@ -37,20 +39,23 @@ export class AddCourseContComponent implements OnInit {
     let course: Course = content.course;
     let file: File = content.file;
 
+    if (course.min < 0 || course.max <= 0 || course.name.length == 0 || course.acronym.length == 0) {
+      window.alert("Controllare che i dati inseriti siano validi e riprovare");
+      return;
+    }
+
     this.courseService.addCourse(course, this.teachersToAdd.map(teacher => teacher.id)).subscribe(
       (data) => {
         this.courseService.setCurrentCourse(course);
         
         this.teacherService.addModelVM(course.name, file, course).subscribe(
           (data) => {
-            
+            this.close();
           },
           (error) => {
             console.log("Modello VM non creato");
           }
-        )
-
-        this.close();
+        );
       },
       (error) => {
         console.log(error);

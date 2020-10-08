@@ -30,6 +30,7 @@ import { TeamVmsContComponent } from './teacher/vms/team-vms-cont.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
+  { path: 'home/%3FdoLogin%3Dtrue', component: HomeComponent },
   { path: 'login', component: LoginDialogComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'page-not-found', component: PageNotFoundComponent },
@@ -40,25 +41,27 @@ const routes: Routes = [
       path: 'student',
       children: [
           {
-              path: 'course/:courses/assignments',
+            path: 'course',
+            canActivate: [AuthGuard],
+            children: [
+            {
+              path: ':courses/assignments',
               component: AssignmentsContComponentStudent,
-              canActivate: [AuthGuard],
               children: [
                 { path: ':id/versions', component: VersionsContComponentStudent
                 }
               ],  
-          },            
-          {
-              path: 'course/:courses/teams',
+            },            
+            {
+              path: ':courses/teams',
               component: TeamsContComponent,
-              canActivate: [AuthGuard]
-          },
-          {
-              path: 'course/:courses/vms',
+            },
+            {
+              path: ':courses/vms',
               component: VmsContComponentStudent,
-              canActivate: [AuthGuard]
-          },
-         
+            }
+          ]
+        }
       ]
   },
 
@@ -66,30 +69,33 @@ const routes: Routes = [
     path: 'teacher',
     children: [
         {
-            path: 'course/:courses/assignments',
-            component: AssignmentsContComponentTeacher,
-            canActivate: [AuthGuard],
-            children: [
-              { path: ':idH/homeworks', component: HomeworksContComponentTeacher,
-                children: [
-                  { path: ':idV/versions', component: VersionsContComponentTeacher }
-                  ],
-              }
-            ],  
-        },            
-        {
-            path: 'course/:courses/students',
-            component: StudentsContComponent,
-            canActivate: [AuthGuard]
-        },
-        {
-            path: 'course/:courses/vms',
-            component: VmsContComponentTeacher,
-            canActivate: [AuthGuard],
-            children: [
-              { path: 'team/:idT', component: TeamVmsContComponent }
-            ]
-        }
+          path: 'course',
+          canActivate: [AuthGuard],
+          children: [
+            {
+              path: ':courses/assignments',
+              component: AssignmentsContComponentTeacher,
+              children: [
+                { path: ':idH/homeworks', component: HomeworksContComponentTeacher,
+                  children: [
+                    { path: ':idV/versions', component: VersionsContComponentTeacher }
+                    ],
+                }
+              ],  
+            },
+            {
+              path: ':courses/students',
+              component: StudentsContComponent,
+            },
+            {
+              path: ':courses/vms',
+              component: VmsContComponentTeacher,
+              children: [
+                { path: 'team/:idT', component: TeamVmsContComponent }
+              ]
+            }
+          ]
+        }            
     ]
   }
 ];

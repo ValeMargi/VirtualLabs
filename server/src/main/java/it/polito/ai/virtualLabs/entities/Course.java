@@ -16,7 +16,7 @@ public class Course {
     private String acronym;
     @Id
     private String name;
-    private int min, max;
+    private int min, max; //min e max nei teams
     private boolean enabled;
 
     //ModelVM

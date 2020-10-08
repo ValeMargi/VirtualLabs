@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/API/courses")
 public class CourseController {
 

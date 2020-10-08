@@ -102,11 +102,12 @@ export class AddCourseDialogComponent implements OnInit {
   }
 
   addCourse(name: string, acronym: string, min: number, max: number) {
-    if (this.selectedPhoto == null) {
+    if (this.selectedPhoto == null || name == null || acronym == null || min == null || max == null) {
+      window.alert("Controllare di aver inserito tutti i dati richiesti e riprovare");
       return;
     }
 
-    let course = new Course(name.toLowerCase().split(' ').join('-'), acronym, min, max, 0, 4, 100, 8, 10, 10);
+    let course = new Course(name.toLowerCase().split(' ').join('-'), acronym, min, max, 1, 4, 100, 8, 10, 10);
     
     this.add.emit({course: course, file: this.selectedPhoto});
   }

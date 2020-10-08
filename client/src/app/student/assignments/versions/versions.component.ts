@@ -1,14 +1,13 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
-import { HomeworksComponent } from '../homework/homework.component';
+import { HomeworksComponent } from '../homeworks/homeworks.component';
 import { HomeworkCorrection } from 'src/app/models/homework-correction.model';
-
 @Component({
   selector: 'app-versions',
   templateUrl: './versions.component.html',
   styleUrls: ['./versions.component.css']
 })
-export class VersionsComponent implements OnInit {
+export class VersionsComponent implements OnInit, OnChanges {
 
   @Input() public versions: HomeworkVersion[] = [];
   @Input() public corrections: HomeworkCorrection[] = [];

@@ -6,8 +6,8 @@ import { Homework } from 'src/app/models/homework.model';
 
 @Component({
   selector: 'app-homework',
-  templateUrl: './homework.component.html',
-  styleUrls: ['./homework.component.scss']
+  templateUrl: './homeworks.component.html',
+  styleUrls: ['./homeworks.component.scss']
 })
 export class HomeworksComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
@@ -19,6 +19,7 @@ export class HomeworksComponent implements OnInit, OnChanges {
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
+
 
   @Input() public homeworks: Homework[] = [];
   @Output() public HOMEWORK: Homework;

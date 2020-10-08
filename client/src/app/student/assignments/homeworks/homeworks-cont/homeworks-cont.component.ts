@@ -7,11 +7,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
-  selector: 'app-homework-cont',
-  templateUrl: './homework-cont.component.html',
-  styleUrls: ['./homework-cont.component.scss']
+  selector: 'app-homeworks-cont',
+  templateUrl: './homeworks-cont.component.html',
+  styleUrls: ['./homeworks-cont.component.scss']
 })
-export class HomeworkContComponent implements OnInit, OnDestroy {
+export class HomeworksContComponent implements OnInit, OnDestroy {
 
   private route$: Subscription;
 

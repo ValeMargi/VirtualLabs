@@ -7,7 +7,7 @@ import { Homework } from 'src/app/models/homework.model';
 @Component({
   selector: 'app-homeworks',
   templateUrl: './homeworks.component.html',
-  styleUrls: ['./homeworks.component.scss']
+  styleUrls: ['./homeworks.component.css']
 })
 export class HomeworksComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;

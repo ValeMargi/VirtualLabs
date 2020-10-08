@@ -175,7 +175,7 @@ public class ProfessorController {
     public List<StudentDTO> getOwners(@PathVariable String courseName, @PathVariable Long teamId, @PathVariable Long vmId) {
         try{
             return vlService.getOwnersForProfessor(vmId);
-        } catch (CourseNotFoundException e) {
+        } catch (ProfessorNotFoundException | VMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

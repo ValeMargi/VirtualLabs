@@ -233,7 +233,7 @@ public class StudentController {
     public List<StudentDTO> getOwners(@PathVariable String courseName, @PathVariable Long teamId, @PathVariable Long vmId) {
         try{
             return vlService.getOwnersForStudent(vmId);
-        } catch (CourseNotFoundException e) {
+        } catch (StudentNotFoundException | VMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -351,7 +351,7 @@ public class StudentController {
             return  vlService.updateVMresources(VMid, vmdto);
         }catch (VMNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch (VMnotOffException | ResourcesVMNotRespectedException e){
+        }catch (VMnotOffException | ResourcesVMNotRespectedException | VMduplicatedException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

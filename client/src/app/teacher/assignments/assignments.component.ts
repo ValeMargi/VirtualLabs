@@ -13,6 +13,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { VersionsComponent } from './versions.component';
 import { HomeworksComponent } from './homeworks.component';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
 
 @Component({
   selector: 'app-assignments-teacher',
@@ -52,7 +53,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   showHomeworks(ass: Assignment) {
-    //this.tableVisibility = true;
+    this.tableVisibility = true;
     this.ASSIGNMENT = ass;
     this.router.navigate([ass.id, 'homeworks'], { relativeTo: this.route });
   }
@@ -64,11 +65,26 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
     dialogConfig.autoFocus = true;
 
     dialogConfig.data = {
-        id: 1,
-        title: 'Assignment'
+        title: 'AssignmentCreate'
     };
 
     this.matDialog.open(CreateAssignmentContComponent, dialogConfig);
+  }
+
+  openDialogImage() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+        title: 'AssignmentText',
+        isTeacher: true,
+        type: "assignment",
+        assignmentId: this.ASSIGNMENT.id
+    };
+
+    this.matDialog.open(ViewImageContComponent, dialogConfig);
   }
 
 }

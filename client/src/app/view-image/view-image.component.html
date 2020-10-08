@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>{{title}}</h2>
+<h4 mat-dialog-title>Ultima modifica: {{timestamp}}</h4>
+<mat-dialog-content>
+    <div>
+        <img class="img" [src]="photo" />
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-raised-button color="warn" (click)="close()">Annulla</button>
+  <!--<button mat-button mat-raised-button color="primary">Crea</button>-->
+</mat-dialog-actions>

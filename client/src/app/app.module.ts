@@ -72,6 +72,8 @@ import { RegisterSuccessComponent } from './register-success/register-success.co
 import { TeamPartecipationComponent } from './team-creation/team-partecipation.component';
 import { ManageVmComponent } from './student/vms/manage-vm/manage-vm.component';
 import { ManageVmContComponent } from './student/vms/manage-vm/manage-vm-cont/manage-vm-cont.component';
+import { ViewImageContComponent } from './view-image/view-image-cont/view-image-cont.component';
+import { ViewImageComponent } from './view-image/view-image.component';
 
 @NgModule({
   declarations: [
@@ -123,6 +125,8 @@ import { ManageVmContComponent } from './student/vms/manage-vm/manage-vm-cont/ma
     TeamPartecipationComponent,
     ManageVmComponent,
     ManageVmContComponent,
+    ViewImageContComponent,
+    ViewImageComponent
   ],
   imports: [
     BrowserModule,

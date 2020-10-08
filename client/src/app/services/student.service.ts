@@ -48,7 +48,7 @@ export class StudentService {
   }
 
   getVMForStudent(courseName: string, VMId: number) {
-    return this.http.get<PhotoVM[]>(`${this.API_STUDENTS}/VM/${courseName}/${VMId}`).pipe(map(vms => vms || []));
+    return this.http.get<PhotoVM>(`${this.API_STUDENTS}/VM/${courseName}/${VMId}`);
   }
 
   isOwner(courseName: string, VMId: number) {

@@ -16,9 +16,12 @@
         </div>
     </div>
 
+    <button mat-button mat-raised-button color="primary" *ngIf="tableVisibility" (click)="openDialogImage()">
+        <mat-icon>text_format</mat-icon>Visualizza testo</button>
+
     <div class="container2">
         <router-outlet></router-outlet>
-        <app-homeworks-cont class="tableContainer" [assignment]="ASSIGNMENT" *ngIf="tableVisibility"> 
+        <app-homeworks-cont class="tableContainer" [assignment]="ASSIGNMENT" *ngIf="false"> 
         </app-homeworks-cont>
     </div>
 </div>

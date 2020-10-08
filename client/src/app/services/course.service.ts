@@ -7,6 +7,8 @@ import { Teacher } from '../models/teacher.model';
 import { HomeworkVersion } from '../models/homework-version.model';
 import { HomeworkCorrection } from '../models/homework-correction.model';
 import { BehaviorSubject } from 'rxjs';
+import { PhotoHomeworkVersion } from '../models/photo-homework-version.model';
+import { PhotoHomeworkCorrection } from '../models/photo-homework-correction.model';
 
 @Injectable({
   providedIn: 'root'
@@ -89,12 +91,12 @@ export class CourseService {
     return this.http.get<Teacher[]>(`${this.API_COURSES}/${courseName}/getProfessors`).pipe(map(teachers => teachers || []));
   }
 
-  getVersionHM(courseName: string, assignmentId: string, homeworkId: number, versionId: number) {
-    return this.http.get<HomeworkVersion>(`${this.API_COURSES}/${courseName}/${assignmentId}/${homeworkId}/${versionId}/version`);
+  getVersionHM(courseName: string, assignmentId: number, homeworkId: number, versionId: number) {
+    return this.http.get<PhotoHomeworkVersion>(`${this.API_COURSES}/${courseName}/${assignmentId}/${homeworkId}/${versionId}/version`);
   }
 
-  getCorrectionHM(courseName: string, assignmentId: string, homeworkId: number, correctionId: number) {
-    return this.http.get<HomeworkCorrection>(`${this.API_COURSES}/${courseName}/${assignmentId}/${homeworkId}/${correctionId}/correction`);
+  getCorrectionHM(courseName: string, assignmentId: number, homeworkId: number, correctionId: number) {
+    return this.http.get<PhotoHomeworkCorrection>(`${this.API_COURSES}/${courseName}/${assignmentId}/${homeworkId}/${correctionId}/correction`);
   }
 
 }

@@ -87,7 +87,7 @@ import { ManageVmContComponent } from './student/vms/manage-vm/manage-vm-cont/ma
     VmsContComponentStudent,
     AssignmentsComponentTeacher,
     AssignmentsContComponentTeacher,
-    AssignmentsComponentStudent, 
+    AssignmentsComponentStudent,
     AssignmentsContComponentStudent,
     TeamsContComponent,
     TeamsComponent,
@@ -118,7 +118,7 @@ import { ManageVmContComponent } from './student/vms/manage-vm/manage-vm-cont/ma
     RegisterSuccessComponent,
     TeamPartecipationComponent,
     ManageVmComponent,
-    ManageVmContComponent
+    ManageVmContComponent,
   ],
   imports: [
     BrowserModule,
@@ -142,7 +142,7 @@ import { ManageVmContComponent } from './student/vms/manage-vm/manage-vm-cont/ma
     HttpClientModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatCardModule, 
+    MatCardModule,
     TextFieldModule,
   ],
   entryComponents: [MatDialogModule, MatFormFieldModule],
@@ -150,6 +150,6 @@ import { ManageVmContComponent } from './student/vms/manage-vm/manage-vm-cont/ma
   bootstrap: [AppComponent]
 })
 
-export class AppModule { 
+export class AppModule {
 
 }

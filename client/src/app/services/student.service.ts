@@ -68,6 +68,10 @@ export class StudentService {
     return this.http.get<Assignment[]>(`${this.API_STUDENTS}/${courseName}/assignment`).pipe(map(ass => ass || []));
   }
 
+  allHomework(courseName: string, assignmentId: number) {
+    return this.http.get<Homework[]>(`${this.API_STUDENTS}/${courseName}/${assignmentId}/allHomework`).pipe(map(homeworks => homeworks || []));
+  }
+
   getAssignment(courseName: string, assignmentId: number) {
     return this.http.get<PhotoAssignment>(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getAssignment`)
   }

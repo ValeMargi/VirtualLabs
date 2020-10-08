@@ -28,6 +28,7 @@ export class StudentService {
   currentAvatar: File;
 
   vmCreation: EventEmitter<VMOwners> = new EventEmitter<VMOwners>();
+  homeworkCreation: EventEmitter<HomeworkVersion> = new EventEmitter<HomeworkVersion>();
 
   all() {
     return this.http.get<Student[]>(`${this.API_STUDENTS}`).pipe(map(students => students || []));
@@ -52,6 +53,15 @@ export class StudentService {
 
   isOwner(courseName: string, VMId: number) {
     return this.http.get<boolean>(`${this.API_STUDENTS}/VM/${courseName}/${VMId}/owner`);
+  }
+
+  addHomework(courseName: string, file: File, homework: HomeworkVersion) {
+    let data: FormData = new FormData();
+    data.append("file", file, file.name);
+    data.append("homework", new Blob([JSON.stringify(homework)], {
+      type: "application/json" }));
+
+    return this.http.post(`${this.API_STUDENTS}/${courseName}/addHomework`, data);
   }
 
   allAssignments(courseName: string) {

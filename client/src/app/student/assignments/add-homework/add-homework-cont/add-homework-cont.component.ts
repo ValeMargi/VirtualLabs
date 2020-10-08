@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output} from '@angular/core';
 import { Homework } from 'src/app/models/homework.model';
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
 import { StudentService } from 'src/app/services/student.service';
+import { CourseService } from 'src/app/services/course.service';
+import { MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-add-homework-cont',
   templateUrl: './add-homework-cont.component.html',
@@ -11,15 +13,28 @@ export class AddHomeworkContComponent implements OnInit {
 
   @Input() homeworkToAdd: Homework[] = [];
 
-  constructor(private studentService: StudentService,) { }
+  constructor(private matDialogRef: MatDialogRef<AddHomeworkContComponent>,
+               private studentService: StudentService,
+               private courseService: CourseService) { }
 
   ngOnInit(): void {
-  
+
   }
 
   addAssignment(content: any) {
     let homeworkVersion: HomeworkVersion = content.version;
     let file: File = content.file;
+
+
+    this.studentService.addHomework(this.courseService.currentCourse.getValue().name, file, homeworkVersion).subscribe(
+      (data) => {
+        this.matDialogRef.close();
+        this.studentService.homeworkCreation.emit(homeworkVersion);
+      },
+      (error) => {
+        console.log("Errore nel caricamento dell'homework");
+      }
+    );
 
 
   }

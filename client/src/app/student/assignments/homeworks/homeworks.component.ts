@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Homework } from 'src/app/models/homework.model';
 
 @Component({
-  selector: 'app-homework',
+  selector: 'app-homeworks',
   templateUrl: './homeworks.component.html',
   styleUrls: ['./homeworks.component.scss']
 })

@@ -22,16 +22,22 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
+  HomeworkColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
+  AssignmentsColumns: string[] = ['titolo', 'timestamp'];
+
   dataSource = new MatTableDataSource<VM>();
+
+  dataAssignments = new MatTableDataSource<Assignment>();
+  dataHomeworks = new MatTableDataSource<Homework>();
   @Input() public homeworks: Homework[] = [];
   @Input() public assignments: Assignment[] = [];
 
   @Output() public HOMEWORK: Homework;
   @Output() public ASSIGNMENT: Assignment;
 
-  tableVisibility: boolean = false;
-  assVisibility: boolean = false;
+  tableVisibility: boolean = true;
+  tableAssignmetsVisibility: boolean =true;
+  tableHomeworkVisibility: boolean = true;
 
   length = 5;
   pageSize = 5;
@@ -46,20 +52,20 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this.tableVisibility = false;
-    this.manageAssVisibility();
+    //this.manageAssVisibility();
 
   }
   ngOnChanges(changes: SimpleChanges) {
     this.assignments = changes.assignments.currentValue;
-    this.manageAssVisibility();
+    //this.manageAssVisibility();
   }
 
   manageAssVisibility() {
     if (this.assignments.length > 0) {
-      this.assVisibility = true;
+      this.tableAssignmetsVisibility = true;
     }
     else {
-      this.assVisibility = false;
+      this.tableAssignmetsVisibility = false;
     }
   }
 

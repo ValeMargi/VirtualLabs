@@ -23,27 +23,27 @@ export class TeamsComponent implements AfterViewInit,OnInit {
   displayedColumnsTeam: string[] = ['id', 'name', 'status'];
   dataSourceTeam = new MatTableDataSource<Team>();
 
-    //Se uno studente è iscritto ad un gruppo 
+    //Se uno studente è iscritto ad un gruppo
     tableTeamVisibility:boolean = true;
 
-  displayedColumnsRequest: string[] = ['id', 'name', 'firstName','groupName', 'status', 'timestamp'];
+  displayedColumnsRequest: string[] = ['id', 'name', 'firstName','groupName', 'status', 'timestamp','scelta'];
   dataSourceRequest = new MatTableDataSource<Team>();
-  
+
   @Input() public teams: Team[] = [];
   @Input() public request: Request[] = [];
 
   //Input per la tabella richieste
   tableVisibility: boolean = true;
- 
+
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
   constructor(private cont: TeamsContComponent, public dialog: MatDialog) { }
-  
+
   openRequestDialog() {
     const dialogRef = this.dialog.open(RequestTeamDialogComponent,{width: '600px', id: 'dialogRequest'});
-    
+
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });

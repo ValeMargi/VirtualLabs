@@ -6,9 +6,14 @@
   </div>
 
 <!--Tabella dello studente iscritto ad un gruppo-->
-<div class="assContainer">
-    <h2 name = "title"> Gruppo: Nome Gruppo </h2>
-    <div class="tableContainer"*ngIf="tableTeamVisibility"> 
+  <mat-card class="card">
+    <mat-card-header>
+      <mat-card-title>Nome Gruppo</mat-card-title>
+      <mat-card-subtitle>Gruppo</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="tableContainer"*ngIf="tableTeamVisibility">
         <table #table mat-table [dataSource]="dataSourceTeam" matSort class="matTable">
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Matricola </th>
@@ -25,16 +30,21 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumnsTeam"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumnsTeam"></tr>
         </table>
-
         <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
-                    
         </mat-paginator>
-</div>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
-<!--Tabella delle Richieste gruppo-->
-<div class="assContainer">
-    <h2 name = "title"> Richieste di adesione </h2>
-    <div class="tableContainer"*ngIf="tableVisibility"> 
+  <!--Tabella delle Richieste gruppo-->
+  <mat-card class="card">
+    <mat-card-header>
+      <mat-card-title>Richieste</mat-card-title>
+      <mat-card-subtitle>Gruppi</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="tableContainer"*ngIf="tableVisibility">
         <table #table mat-table [dataSource]="dataSourceRequest" matSort class="matTable">
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Matricola </th>
@@ -62,11 +72,28 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Timestamp </th>
                 <td mat-cell *matCellDef="let row">  </td>
             </ng-container>
+            <ng-container matColumnDef="scelta">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Scelta</th>
+              <td mat-cell *matCellDef="let row">
+                <!--Acetta Proposta-->
+                <button mat-raised-button color="primary" (click)="openRequestDialog()" >
+                  <mat-icon>done</mat-icon>Accetta
+                </button>
+
+                <!--Rifiuta Proposta-->
+                <button mat-raised-button color="primary" (click)="openRequestDialog()" >
+                  <mat-icon>clear</mat-icon>Rifiuta
+                </button>
+
+              </td>
+          </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumnsRequest"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumnsRequest"></tr>
         </table>
 
         <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
-                    
+
         </mat-paginator>
-</div>
+      </div>
+    </mat-card-content>
+  </mat-card>

@@ -1,34 +1,25 @@
-.button-request {
-    margin: 1%;
+h1 {
+  font-weight: bold;
+  margin: 1em;
+}
+.mat-table{
+  margin:2%;
+  width: 100%;
 }
 
-.assContainer {
-    width: 100%;
-    overflow: hidden; 
-}
-
-
-.delContainer {
-    width: 30%;
-    float:left;
-    border: 1px solid gray;
-    border-radius: 8px;
-    margin-top: 1%;
-    margin-left: 2%;
-    margin-right: 5%;
+.card {
+  width: 90%;
+  margin-left: 2%;
+  margin-top: 2%;
 }
 
 .tableContainer {
-    overflow: hidden; 
-    margin-right: 2%;
+    overflow: hidden;
 }
 
-h1 {
-    font-weight: bold; 
-    margin: 1em;
-}
+.button-request {
+  margin-top: 2%;
+  margin-left: 2%;
 
-.matTable {
-    width: 100%;
 }
 

@@ -3,6 +3,7 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Teacher } from '../models/teacher.model';
 import { AuthService } from '../auth/auth.service';
 import { FormGroup } from '@angular/forms';
+import { TeacherService } from '../services/teacher.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -15,28 +16,21 @@ export class EditProfileComponent implements OnInit, OnChanges {
   @Input() avatar: any;
 
   selectedPhoto: File;
-  previewPhoto: any;
-
   password: any;
   newPassword: any;
   passR: any;
 
-  constructor(private matDialog: MatDialog, private dialogRef: MatDialogRef<EditProfileComponent>, private authService: AuthService) { }
+  constructor(private dialogRef: MatDialogRef<EditProfileComponent>, 
+              private authService: AuthService) { }
 
   changePassVisibility: boolean = false;
 
   ngOnInit(): void {
-    
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.avatar = changes.avatar.currentValue;
-    console.log(this.avatar)
-    const reader = new FileReader();
-    reader.readAsDataURL(new Blob([this.avatar]));
-    reader.onload = (_event) => { 
-      this.previewPhoto = reader.result; 
-    }
   }
 
   close() {
@@ -53,7 +47,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
     const reader = new FileReader();
     reader.readAsDataURL(this.selectedPhoto);
     reader.onload = (_event) => { 
-      this.previewPhoto = reader.result; 
+      this.avatar = reader.result; 
     }
   }
 
@@ -74,8 +68,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
       let image = this.selectedPhoto;
 
       if (!image.type.match("image/jpg") && !image.type.match("image/jpeg") && !image.type.match("image/png")) {
-        console.log("tipo errato");
-        //mostrare errore
+        window.alert("Formato immagine non supportato");
       }
       else {
         this.authService.changeAvatar(image);

@@ -118,7 +118,6 @@ export class AppComponent implements AfterViewInit, OnInit {
             (data) => {
               console.log("ottenuto studente");
               this.studentService.currentStudent = data.student;
-              this.studentService.currentAvatar = data.avatar;
               this.setCourses();
             },
             (error) => {
@@ -133,7 +132,6 @@ export class AppComponent implements AfterViewInit, OnInit {
             (data) => {
               console.log("ottenuto prof");
               this.teacherService.currentTeacher = data.professor;
-              this.teacherService.currentAvatar = data.avatar;
               this.setCourses();
             },
             (error) => {

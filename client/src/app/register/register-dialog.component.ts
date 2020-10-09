@@ -93,14 +93,14 @@ openDialogLogin() {
 
 register(firstName: string, name: string, id: string, email: string, password: string) {
   if (this.selectedPhoto == null) {
+    window.alert("Selezionare una foto del profilo");
     return;
   }
 
   let image = this.selectedPhoto;
 
   if (!image.type.match("image/jpg") && !image.type.match("image/jpeg") && !image.type.match("image/png")) {
-    console.log("tipo errato");
-    //mostrare errore
+    window.alert("Formato immagine non supportato");
   }
 
   let userJson = { "firstName": firstName,

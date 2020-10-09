@@ -95,6 +95,7 @@ export class TeacherService {
   uploadCorrection(courseName: string, assignmentId: number, homeworkId: number, versionHMid, file: File, permanent: boolean, grade: string) {
     let data: FormData = new FormData();
     data.append("file", file, file.name);
+    //grade e permanent vanno di pari passo => se permanent = false, metto grade = -1
     data.append("permanent", permanent.toString());
     data.append("grade", grade);
 

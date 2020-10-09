@@ -32,7 +32,7 @@ export class ViewImageContComponent implements OnInit {
           this.teacherService.getPhotoAssignment(course, assignmentId).subscribe(
             (data) => {
               this.TIMESTAMP = data.timestamp;
-              this.PHOTO = 'data:image/jpeg;base64,' + data.picByte;
+              this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
             },
             (error) => {
               window.alert("Impossibile ottenere il testo dell'assignment");
@@ -43,7 +43,7 @@ export class ViewImageContComponent implements OnInit {
           this.studentService.getAssignment(course, assignmentId).subscribe(
             (data) => {
               this.TIMESTAMP = data.timestamp;
-              this.PHOTO = 'data:image/jpeg;base64,' + data.picByte;
+              this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
             },
             (error) => {
               window.alert("Impossibile ottenere il testo dell'assignment");
@@ -63,7 +63,7 @@ export class ViewImageContComponent implements OnInit {
         this.courseService.getVersionHM(course, assignmentId, homeworkId, versionId).subscribe(
           (data) => {
             this.TIMESTAMP = data.timestamp;
-            this.PHOTO = 'data:image/jpeg;base64,' + data.picByte;
+            this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
           },
           (error) => {
             window.alert("Impossibile ottenere la versione dell'homework");
@@ -82,7 +82,7 @@ export class ViewImageContComponent implements OnInit {
         this.courseService.getCorrectionHM(course, assignmentId, homeworkId, correctionId).subscribe(
           (data) => {
             this.TIMESTAMP = data.timestamp;
-            this.PHOTO = 'data:image/jpeg;base64,' + data.picByte;
+            this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
           },
           (error) => {
             window.alert("Impossibile ottenere la correzione dell'homework");
@@ -103,7 +103,7 @@ export class ViewImageContComponent implements OnInit {
         else {
           this.studentService.getVMForStudent(course, vmId).subscribe(
             (data) => {
-              this.PHOTO = 'data:image/jpeg;base64,' + data.picByte;
+              this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
             },
             (error) => {
               window.alert("Impossibile ottenere la schermata della VM");

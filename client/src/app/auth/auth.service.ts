@@ -123,37 +123,6 @@ export class AuthService {
     localStorage.setItem('currentId', token.id);
   }
 
-  getUserAvatar() {
-    if (this.currentUser == null) {
-      this.currentUser = new User(-1, "", localStorage.getItem('role'), true);
-    }
-
-    if (this.currentUser.role == "student") {
-      this.studentService.getOne(localStorage.getItem('currentId')).subscribe(
-        (data) => {
-          this.studentService.currentAvatar = data.avatar;
-          return this.studentService.currentAvatar;
-        },
-        (error) => {
-          console.log("Impossibile ottenere lo studente");
-          return null;
-        }
-      );
-    }
-    else {
-      this.teacherService.getOne(localStorage.getItem('currentId')).subscribe(
-        (data) => {
-          this.teacherService.currentAvatar = data.avatar;
-          return this.teacherService.currentAvatar;
-        },
-        (error) => {
-          console.log("Impossibile ottenere il professore");
-          return null;
-        }
-      );
-    }
-  }
-
   registerUser(file: File, userJson: any) {
     if (file == null) {
        return null;

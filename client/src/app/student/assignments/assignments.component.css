@@ -7,6 +7,17 @@ h1 {
   width: 90%;
 }
 
+
+.row:active{
+  background-color:#dfdfdf91;
+  color: white;
+}
+.row:hover{
+  background-color:#dfdfdf91;
+  color: white;
+}
+
+
 .card {
   width: 90%;
   margin-left: 2%;

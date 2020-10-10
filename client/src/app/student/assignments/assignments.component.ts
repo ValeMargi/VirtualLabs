@@ -31,11 +31,11 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   @Input() public homeworks: Homework[] = [];
   @Input() public assignments: Assignment[] = [];
   @Output() public HOMEWORK: Homework;
-  @Output() public ASSIGNMENT: Assignment;
+  @Output() public ASSIGNMENTS: Assignment;
 
   tableVisibility: boolean = true;
   tableAssignmetsVisibility: boolean =true;
-  tableHomeworkVisibility: boolean = true;
+  tableHomeworkVisibility: boolean = false;
 
   buttonHomeworkVisibility:boolean = false;
 
@@ -68,8 +68,9 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
   }
 
-
-
+  openHomeworkTable(ass:Assignment){
+      this.tableHomeworkVisibility = true;
+  }
   manageAssVisibility() {
     if (this.assignments.length > 0) {
       this.tableAssignmetsVisibility = true;
@@ -97,7 +98,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
   }
 
-  openDialogImage() {
+  openDialogImage(ass: Assignment) {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = false;
@@ -105,9 +106,9 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
     dialogConfig.data = {
         title: 'AssignmentText',
-        isTeacher: true,
+        isTeacher: false,
         type: "assignment",
-        assignmentId: this.ASSIGNMENT.id
+        assignmentId: ass.id
     };
 
     this.matDialog.open(ViewImageContComponent, dialogConfig);

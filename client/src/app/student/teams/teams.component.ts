@@ -4,7 +4,6 @@ import{ Team } from '../../models/team.model';
 import{ TeamsContComponent } from './teams-cont/teams-cont.component'
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { VM } from '../../models/vm.model';
 import {RequestTeamDialogComponent} from './request-team-dialog/request-team-dialog.component'
 import {MatDialog,MatDialogConfig} from '@angular/material/dialog';
 
@@ -19,21 +18,18 @@ export class TeamsComponent implements AfterViewInit,OnInit {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-
+  //Table Team
   displayedColumnsTeam: string[] = ['id', 'name', 'status'];
   dataSourceTeam = new MatTableDataSource<Team>();
+  tableTeamVisibility:boolean = true;
 
-    //Se uno studente è iscritto ad un gruppo
-    tableTeamVisibility:boolean = true;
-
+  //Table Request
   displayedColumnsRequest: string[] = ['id', 'name', 'firstName','groupName', 'status', 'timestamp','scelta'];
   dataSourceRequest = new MatTableDataSource<Team>();
+  tableRequestVisibility:boolean = true;
 
   @Input() public teams: Team[] = [];
   @Input() public request: Request[] = [];
-
-  //Input per la tabella richieste
-  tableVisibility: boolean = true;
 
   length = 5;
   pageSize = 5;
@@ -50,10 +46,6 @@ export class TeamsComponent implements AfterViewInit,OnInit {
   }
 
   ngAfterViewInit(): void {
-    //Inserimento provvisorio
-    this.teams.push(new Team(-1, "Vassallo Giorgio", 2, 0, 0, 0, 0, 0));
-    this.teams.push(new Team(-1, "Cordellic Marco", 1, 0, 0, 0, 0, 0));
-
     this.dataSourceTeam.paginator = this.paginator;
     this.dataSourceTeam.sort = this.sort;
     this.length = this.teams.length;

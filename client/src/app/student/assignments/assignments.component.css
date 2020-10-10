@@ -4,7 +4,7 @@ h1 {
 }
 .mat-table{
   margin:2%;
-  width: 100%;
+  width: 90%;
 }
 
 .card {
@@ -13,13 +13,16 @@ h1 {
   margin-top: 2%;
 }
 
+.button-request {
+  margin-left: 68%;
+}
+
+.buttonText{
+  margin-left:45%;
+}
+
 .tableContainer {
     overflow: hidden;
 }
 
-.button-request {
-  margin-top: 2%;
-  margin-left: 2%;
-
-}
 

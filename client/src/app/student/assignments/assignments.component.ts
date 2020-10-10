@@ -4,13 +4,13 @@ import { AssignmentsContComponent } from './assignments-cont/assignments-cont.co
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { VM } from '../../models/vm.model';
 import { Assignment } from 'src/app/models/assignment.model';
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
 import { Student } from 'src/app/models/student.model';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {AddHomeworkContComponent } from './add-homework/add-homework-cont/add-homework-cont.component'
 import { Router, ActivatedRoute } from '@angular/router';
+import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
 
 @Component({
   selector: 'app-assignments-student',
@@ -23,15 +23,13 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   HomeworkColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
-  AssignmentsColumns: string[] = ['titolo', 'timestamp'];
-
-  dataSource = new MatTableDataSource<VM>();
+  AssignmentsColumns: string[] = ['assignmentName', 'releaseDate','expiration','showAssignment'];
 
   dataAssignments = new MatTableDataSource<Assignment>();
   dataHomeworks = new MatTableDataSource<Homework>();
+
   @Input() public homeworks: Homework[] = [];
   @Input() public assignments: Assignment[] = [];
-
   @Output() public HOMEWORK: Homework;
   @Output() public ASSIGNMENT: Assignment;
 
@@ -39,26 +37,38 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   tableAssignmetsVisibility: boolean =true;
   tableHomeworkVisibility: boolean = true;
 
+  buttonHomeworkVisibility:boolean = false;
+
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  constructor(private cont: AssignmentsContComponent,private router: Router,
-              private route: ActivatedRoute, private matDialog: MatDialog) { }
+  constructor(private cont: AssignmentsContComponent,
+              private router: Router,
+              private route: ActivatedRoute,
+              private matDialog: MatDialog) { }
 
   ngAfterViewInit(): void {
-
   }
 
   ngOnInit(): void {
     this.tableVisibility = false;
+    this.setTable();
     //this.manageAssVisibility();
+  }
+
+  setTable() {
+    this.dataAssignments = new MatTableDataSource<Assignment>(this.assignments);
 
   }
+
   ngOnChanges(changes: SimpleChanges) {
     this.assignments = changes.assignments.currentValue;
-    //this.manageAssVisibility();
+    this.setTable();
+
   }
+
+
 
   manageAssVisibility() {
     if (this.assignments.length > 0) {
@@ -68,17 +78,6 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
       this.tableAssignmetsVisibility = false;
     }
   }
-
-  showHomeworks(ass: Assignment) {
-    //this.tableVisibility = true;
-    this.ASSIGNMENT = ass;
-    this.router.navigate([ass.id, 'homeworks'], { relativeTo: this.route });
-  }
-
-  showAssignments(assignment: Assignment) {
-  }
-
-
 
   openDialogAss() {
     const dialogRef = this.matDialog.open(AddHomeworkContComponent,{width: '600px', id: 'dialogAss'});
@@ -96,6 +95,22 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
       console.log(`Dialog result: ${result}`);
     });
 
+  }
+
+  openDialogImage() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+        title: 'AssignmentText',
+        isTeacher: true,
+        type: "assignment",
+        assignmentId: this.ASSIGNMENT.id
+    };
+
+    this.matDialog.open(ViewImageContComponent, dialogConfig);
   }
 
 }

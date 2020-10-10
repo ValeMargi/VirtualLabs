@@ -17,9 +17,10 @@
     <button #btRegister mat-button *ngIf="loginVisibility" (click)="openDialogRegister()"><mat-icon>portrait</mat-icon>Registrati</button>
   </mat-toolbar>
 
-  <mat-toolbar *ngIf="!homeVisibility && !notFoundVisibility">  
+  <mat-toolbar *ngIf="!homeVisibility && !notFoundVisibility">
     <mat-toolbar-row>
       <span style="color:rgb(228, 18, 140)">{{ courseName }}</span>
+      <mat-divider></mat-divider>
       <div class="button-request" align="right">
       <button mat-button mat-raised-button color="primary" *ngIf="teacherVisibility" (click)="enableCourse()">
         Abilita/Disabilita
@@ -27,10 +28,10 @@
       </button>
     </div>
       <button mat-button mat-raised-button color="warn" *ngIf="teacherVisibility" (click)="deleteCourse()">
-        Elimina 
+        Elimina
         <mat-icon class="deleteCourse">delete</mat-icon>
       </button>
-  
+
     </mat-toolbar-row>
   </mat-toolbar>
 
@@ -48,8 +49,10 @@
           <h3>Nessun corso</h3>
         </div>
         <mat-nav-list>
-          <mat-list-item class="item" mat-list-item *ngFor="let course of courses" [routerLink]="[getRouteWithCourse(course)]" (click)="setCurrentCourse(course)"> 
-           -  {{ getCourseName(course.name) }} 
+          <mat-divider></mat-divider>
+          <mat-list-item class="item" mat-list-item *ngFor="let course of courses" [routerLink]="[getRouteWithCourse(course)]" (click)="setCurrentCourse(course)">
+            <mat-icon>web_asset</mat-icon> {{ getCourseName(course.name) }}
+            <mat-divider></mat-divider>
           </mat-list-item>
         </mat-nav-list>
       </div>
@@ -69,7 +72,7 @@
         </a>
 
         <a mat-tab-link [active]="activeTab == 1" [routerLink]="[getRoute(1)]">VMs
-          
+
         </a>
 
         <a mat-tab-link [active]="activeTab == 2" [routerLink]="[getRoute(2)]">Elaborati
@@ -83,7 +86,7 @@
         </a>
 
         <a mat-tab-link [active]="activeTab == 1" [routerLink]="[getRoute(1)]">VMs
-          
+
         </a>
 
         <a mat-tab-link [active]="activeTab == 2" [routerLink]="[getRoute(2)]">Elaborati
@@ -91,7 +94,7 @@
         </a>
       </nav>
       <router-outlet></router-outlet>
-      
+
     </mat-sidenav-content>
   </mat-sidenav-container>
   <app-footer></app-footer>

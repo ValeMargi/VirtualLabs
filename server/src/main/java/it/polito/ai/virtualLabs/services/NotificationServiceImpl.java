@@ -3,6 +3,7 @@ package it.polito.ai.virtualLabs.services;
 import it.polito.ai.virtualLabs.dtos.TeamDTO;
 import it.polito.ai.virtualLabs.entities.Team;
 import it.polito.ai.virtualLabs.entities.Token;
+import it.polito.ai.virtualLabs.repositories.StudentRepository;
 import it.polito.ai.virtualLabs.repositories.TeamRepository;
 import it.polito.ai.virtualLabs.repositories.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Autowired
     TeamRepository teamRepository;
+    @Autowired
+    StudentRepository studentRepository;
 
 
     @Override
@@ -70,21 +73,32 @@ public class NotificationServiceImpl implements NotificationService{
             return 0;
     }
     @Override
-    public void notifyTeam(TeamDTO dto, List<String> memberIds) {
+    public void notifyTeam(TeamDTO dto, List<String> memberIds, String creatorStudent, String courseId) {
         for (int i = 0; i < memberIds.size(); i++) {
             Token t = new Token();
             t.setId(UUID.randomUUID().toString());
             t.setTeamId(dto.getId());
+            t.setStatus(false);
+            t.setCourseId(courseId);
+            t.setStudent(studentRepository.getOne(memberIds.get(i)));
             //t.setExpiryDate(Timestamp.from(Instant.now().plus(5000, ChronoUnit.MILLIS))); for debug
-            t.setExpiryDate(Timestamp.from(Instant.now().plus(1, ChronoUnit.HOURS)));
+            t.setExpiryDate(Timestamp.from(Instant.now().plus(1, ChronoUnit.HOURS))); //MODIFICARE
             tokenRepository.saveAndFlush(t);
             sendMessage(memberIds.get(i)+"@studenti.polito.it",
                     "Join the Team",
-                    "You have been added to the Team "+dto.getName()+"\n\n" +
-                            "Accept the registration on:\n\n http://localhost:8080/API/notification/confirm/"+ t.getId()+
+                    "You have been added to the Team "+dto.getName()+"\n\n"
+                          /*  + "Accept the registration on:\n\n http://localhost:8080/API/notification/confirm/"+ t.getId()+
                             "\n \n" +
-                            "or refuse registration at the following link:\n\n http://localhost:8080/API/notification/reject/"+t.getId());
+                            "or refuse registration at the following link:\n\n http://localhost:8080/API/notification/reject/"+t.getId()*/);
         }
+        Token t = new Token();
+        t.setId(UUID.randomUUID().toString());
+        t.setTeamId(dto.getId());
+        t.setStatus(true);
+        t.setCourseId(courseId);
+        t.setStudent(studentRepository.getOne(creatorStudent));
+        t.setExpiryDate(Timestamp.from(Instant.now().plus(1, ChronoUnit.HOURS))); //MODIFICARE
+        tokenRepository.saveAndFlush(t);
     }
     @Override
     public Optional<Token> checkTokenValidity(String token){

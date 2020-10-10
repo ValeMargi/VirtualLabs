@@ -6,6 +6,7 @@ import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.entities.*;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.repositories.*;
+import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,7 @@ import java.util.zip.Inflater;
 @EnableScheduling
 @Service
 @Transactional
+@Log(topic="service")
 public class VLServiceImpl implements VLService{
 
     @Autowired
@@ -96,14 +98,13 @@ public class VLServiceImpl implements VLService{
         /*Per controllare scadenza elaborati*/
         for(Assignment a: assignmentRepository.findAll()){
             if(a.getExpiration().compareTo(now.toString())<=0){
-                a.getHomeworks().stream().map(h-> this.updateStatusHomework(h.getId(),"CONSEGNATO"));
+                a.getHomeworks().stream().forEach(h-> h.setPermanent(true));
                 assignmentRepository.saveAndFlush(a);
             }
         }
 
         for(TokenRegistration tokenR: tokenRegistrationRepository.findAll() )
         {
-
             if( tokenR.getExpiryDate().compareTo(now)<0){
                 if(!userRepository.findById(tokenR.getUserId()).get().getActivate()){
                     userRepository.deleteById(tokenR.getUserId());
@@ -489,8 +490,22 @@ public class VLServiceImpl implements VLService{
             Optional<Professor> op = professorRepository.findById(idProfessor);
             if(op.isPresent()){
                 Professor p=op.get();
-                p.removeCourse(c);
+                List<Student> students = c.getStudents();
+
+                for(int i=students.size()-1; i>=0; i--){// s: stu){
+                   c.removeStudent(students.get(i));
+                   //log.severe("stu:"); debug
+                }
+                List<Professor> professors= c.getProfessors();
+                for(int i=professors.size()-1; i>=0; i--){// s: stu){
+                    c.removeProfessor(professors.get(i));
+                    //log.severe("stu:"); ug
+                }
+                //stu.stream().forEach(s-> c.removeStudent(s));
+               // c.getProfessors().stream().forEach(pr -> c.removeProfessor(pr));
+                //p.removeCourse(c);
                 courseRepository.delete(c);
+              //  courseRepository.save(c);
                 courseRepository.flush();
                 return true;
             }else throw new ProfessorNotFoundException();
@@ -574,8 +589,8 @@ public class VLServiceImpl implements VLService{
     @Override
     public  TeamDTO proposeTeam(String courseId, String name, List<String> memberIds){
         Optional<Course> course = courseRepository.findById(courseId);
-
-        if( !memberIds.contains(SecurityContextHolder.getContext().getAuthentication().getName()))
+        String creatorStudent = SecurityContextHolder.getContext().getAuthentication().getName();
+        if( !memberIds.contains(creatorStudent))
             throw new PermissionDeniedException();
 
         if( !course.isPresent())
@@ -611,6 +626,8 @@ public class VLServiceImpl implements VLService{
         team.setName(name);
         team.setCourse(course.get());
         team.setStatus(0);
+        team.setCreatorId(creatorStudent);
+
         if( course.get().getPhotoModelVM()!=null){
             Course c =course.get();
             team.setDiskSpaceLeft(c.getDiskSpace());
@@ -622,10 +639,46 @@ public class VLServiceImpl implements VLService{
         teamRepository.save(team);
         memberIds.stream().forEach(s-> team.addStudentIntoTeam(studentRepository.getOne(s)));
 
-        notificationService.notifyTeam(modelMapper.map(team, TeamDTO.class), memberIds);
+        notificationService.notifyTeam(modelMapper.map(team, TeamDTO.class), memberIds, creatorStudent,  courseId);
 
         return  modelMapper.map(team, TeamDTO.class);
     }
+    /*Metodo per ottenere le proposte di Team*/
+    @PreAuthorize("hasAuthority('student')")
+    @Override
+    public   List<Map<String, Object>> getProposals(String courseId) {
+        String student = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Student> os = studentRepository.findById(student);
+        if(!os.isPresent()) throw new StudentNotFoundException(); //PermissionDenied
+        Student s = os.get();
+        if(s.getTokens().stream().filter(t-> t.getCourseId().equals(courseId)).anyMatch(t->  t.getStatus().equals(true)))
+            throw new StudentWaitingTeamCreationException();
+
+        List<Long> teamList = s.getTokens().stream()
+                .filter(t-> t.getCourseId().equals(courseId)).map(t-> t.getTeamId()).collect(Collectors.toList());
+
+        List<Map<String, Object>> l = new ArrayList<>();
+        for( Long teamId : teamList) {
+            Team team= teamRepository.getOne(teamId);
+            Student stu = studentRepository.getOne(team.getCreatorId());
+            Map<String, Object> m = new HashMap<>();
+            m.put("teamName", team.getName());
+            m.put("creator", stu.getFirstName()+" "+stu.getName()+" "+ stu.getId());
+            String currentToken = stu.getTokens().stream().filter(t-> t.getTeamId().equals(teamId)).findFirst().get().getId();
+            m.put("tokenId", tokenRepository.getOne(currentToken));
+            Map<String, Object> m2= new HashMap<>();
+            for(Token token: tokenRepository.findAllByTeamId(teamId).stream()
+                    .filter(t->!t.getStudent().equals(s)).collect(Collectors.toList())){
+                m2.put("student", token.getStudent().getFirstName()+" "+token.getStudent().getName()+" "+token.getStudent().getId());
+                m2.put("status", token.getStatus());
+            }
+            m.put("students", m2);
+            l.add(m);
+
+        }
+        return l;
+    }
+
 
     @PreAuthorize("hasAuthority('student') || hasAuthority('professor')")
     @Override

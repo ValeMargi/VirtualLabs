@@ -30,8 +30,7 @@ public class Course {
 
    // @ToString.Exclude
     //@HashCodeExclude
-    @ManyToMany //(fetch = FetchType.EAGER) default
-    @JoinColumn(name="professor_id")
+    @ManyToMany(mappedBy = "courses") //(fetch = FetchType.EAGER) default
     List<Professor> professors = new ArrayList<>();
 
     @OneToMany(mappedBy = "courseAssignment")

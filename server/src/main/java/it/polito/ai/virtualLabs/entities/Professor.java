@@ -24,7 +24,11 @@ public class Professor {
 
     //@ToString.Exclude
   //  @HashCodeExclude
-    @ManyToMany(mappedBy = "professors")
+    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name="professor_course",
+            joinColumns = @JoinColumn(name="professor_id"),
+            inverseJoinColumns = @JoinColumn(name="course_name"))
+   // @ManyToMany(mappedBy = "professors")
     private List<Course> courses = new ArrayList<>();
 
     //@HashCodeExclude

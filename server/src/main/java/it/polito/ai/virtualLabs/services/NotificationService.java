@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface NotificationService {
     void sendMessage(String address, String subject, String body);
-    void notifyTeam(TeamDTO dto, List<String> memberIds);
+    void notifyTeam(TeamDTO dto, List<String> memberIds, String creator, String courseId);
     Integer confirm(String token);
     Integer reject(String token);
     Optional<Token> checkTokenValidity(String token);

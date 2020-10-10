@@ -12,7 +12,7 @@ public class Team {
     //@Id @GeneratedValue(generator="optimized-sequence")
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private  String name;
+    private  String name, creatorId;
     private int status, maxVpcuLeft, diskSpaceLeft, ramLeft, runningInstances, totInstances;
 
 
@@ -21,6 +21,8 @@ public class Team {
             joinColumns = @JoinColumn(name="team_id"),
             inverseJoinColumns = @JoinColumn(name="student_id"))
     List<Student> members = new ArrayList<>();
+
+
 
     @ManyToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="course_id")

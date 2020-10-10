@@ -46,6 +46,9 @@ public class Student{
     @OneToOne(mappedBy = "student")
     private UserDAO userDAO;
 
+    @OneToMany(mappedBy="student")
+    private List<Token> tokens =new ArrayList<>();
+
 
     public  void setCourses(Course c){
         if(c!=null && !courses.contains(c)){
@@ -112,10 +115,26 @@ public class Student{
         }
     }
 
-    public void removeMemberToVM(VM vm){
-        if(vm!=null && studentsVM.contains(vm)){
+    public void removeMemberToVM(VM vm) {
+        if (vm != null && studentsVM.contains(vm)) {
             studentsVM.remove(vm);
             vm.removeStudentToMemberList(this);
         }
     }
+
+    public void setTokenForStudent(Token t){
+         if(t!=null && !tokens.contains(t))
+         {
+              tokens.add(t);
+              t.setStudent(this);
+         }
+    }
+
+    public void removeToken(Token t){
+        if(t!=null && tokens.contains(t))
+        {
+            tokens.remove(t);
+        }
+    }
+
 }

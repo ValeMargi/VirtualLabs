@@ -17,7 +17,7 @@
             <!--Titolo della Consegna-->
             <ng-container matColumnDef="assignmentName">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Titolo </th>
-              <td mat-cell *matCellDef="let row"> {{ row.assignmentName }} </td>
+              <td mat-cell *matCellDef="let row"> <strong>{{ row.assignmentName }} </strong></td>
             </ng-container>
 
             <!--Data di Rilascio-->

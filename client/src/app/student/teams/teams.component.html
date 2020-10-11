@@ -3,12 +3,6 @@
      <mat-card-header>
         <mat-card-title>Nome Gruppo</mat-card-title>
         <mat-card-subtitle>Gruppo</mat-card-subtitle>
-         <!-- Bottone Composizione gruppo -->
-           <div class="button-request">
-            <button mat-raised-button color="primary" (click)="openRequestDialog()" >
-               <mat-icon>playlist_add</mat-icon>
-               Nuovo gruppo</button>
-           </div>
       </mat-card-header>
 
       <mat-card-content>
@@ -40,6 +34,13 @@
       <mat-card-header>
         <mat-card-title>Richieste</mat-card-title>
         <mat-card-subtitle>Gruppi</mat-card-subtitle>
+
+        <!-- Bottone Composizione gruppo -->
+        <div class="button-request">
+          <button mat-raised-button color="primary" (click)="openRequestDialog()" >
+             <mat-icon>playlist_add</mat-icon>
+             Nuovo gruppo</button>
+         </div>
       </mat-card-header>
 
       <mat-card-content>

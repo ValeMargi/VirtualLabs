@@ -29,6 +29,8 @@ import { HomeworksContComponent as HomeworksContComponentTeacher } from './teach
 import { HomeworksComponent as HomeworksComponentTeacher } from './teacher/assignments/homeworks.component';
 import { VersionsContComponent as VersionsContComponentTeacher } from './teacher/assignments/versions-cont.component';
 import { VersionsComponent as VersionsComponentTeacher } from './teacher/assignments/versions.component';
+import { RegisterContComponent } from './register/register-cont/register-cont.component';
+import { LoginContComponent } from './login/login-cont/login-cont.component';
 
 
 @Component({
@@ -256,7 +258,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       
     };
 
-    this.matDialog.open(LoginDialogComponent, dialogConfig);
+    this.matDialog.open(LoginContComponent, dialogConfig);
   }
 
   openDialogRegister() {
@@ -271,7 +273,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         title: 'Register'
     };
 
-    this.matDialog.open(RegisterDialogComponent, dialogConfig);
+    this.matDialog.open(RegisterContComponent, dialogConfig);
   }
 
   logout() {

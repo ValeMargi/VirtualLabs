@@ -4,6 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { LoginDialogComponent } from '../login/login-dialog.component';
+import { LoginContComponent } from '../login/login-cont/login-cont.component';
 
 @Component({
   selector: 'app-home',
@@ -49,7 +50,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       
     };
 
-    this.matDialog.open(LoginDialogComponent, dialogConfig);
+    this.matDialog.open(LoginContComponent, dialogConfig);
   }
 
   ngOnDestroy() {

@@ -32,7 +32,9 @@
 
 </mat-dialog-content>
 
-<h3 id="error" style="color: red; visibility: hidden;">Username o password errati</h3>
+<div *ngif="error">
+  <h3 id="error" style="color: red;">Username o password errati</h3>
+</div>
 </body>
 
 <mat-dialog-actions>

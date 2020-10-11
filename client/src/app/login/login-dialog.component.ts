@@ -1,10 +1,11 @@
-import { Component, OnInit, Inject, Injectable } from '@angular/core';
+import { Component, OnInit, Inject, Injectable, Output, EventEmitter } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { RegisterDialogComponent } from '../register/register-dialog.component';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import {ForgotPasswordComponent} from '../forgot-password/forgot-password.component'
+import { RegisterContComponent } from '../register/register-cont/register-cont.component';
 
 @Component({
   selector: 'app-login-dialog',
@@ -14,6 +15,9 @@ import {ForgotPasswordComponent} from '../forgot-password/forgot-password.compon
 export class LoginDialogComponent implements OnInit {
   
 LoginForm: FormGroup;
+error: boolean = false;
+
+@Output('login') log = new EventEmitter<any>();
 
   constructor(
       public matDialog: MatDialog, 
@@ -30,7 +34,7 @@ LoginForm: FormGroup;
             router.navigateByUrl("home");
         }
         else {
-          document.getElementById("error").style.visibility = "visible";
+          this.error = true;
         }
       });
 
@@ -50,10 +54,10 @@ LoginForm: FormGroup;
 
   login(email, password) {
     if (email.value.toString().length == 0 || password.value.toString().length == 0) {
-      document.getElementById("error").style.visibility = "visible";
+      this.error = true;
     }
     else {
-      this.authService.login(email.value.toString(), password.value.toString())
+      this.log.emit({email: email, password: password});
     }
   }
 
@@ -70,7 +74,7 @@ LoginForm: FormGroup;
         title: 'Register'
     };
 
-    this.matDialog.open(RegisterDialogComponent, dialogConfig);
+    this.matDialog.open(RegisterContComponent, dialogConfig);
   }
 
   openDialogForgotPassword() {

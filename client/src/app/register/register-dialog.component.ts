@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog, MatDialogRef, MatDialogConfig } from '@angular/material/dialog';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
 import { LoginDialogComponent } from '../login/login-dialog.component';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { LoginContComponent } from '../login/login-cont/login-cont.component';
 
 
 @Component({
@@ -11,11 +12,14 @@ import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms'
   templateUrl: './register-dialog.component.html',
   styleUrls: ['./register-dialog.component.css']
 })
-export class RegisterDialogComponent implements OnInit {
+export class RegisterDialogComponent implements OnInit, OnChanges {
 
   RegisterForm: FormGroup;
   selectedPhoto: File;
   previewPhoto: any;
+  @Input() querying: boolean;
+
+  @Output('register') reg = new EventEmitter<any>(); 
 
   constructor( 
     public matDialog: MatDialog, 
@@ -71,6 +75,10 @@ checkPasswords(group: FormGroup) { // here we have the 'passwords' group
 ngOnInit() {
 }
 
+ngOnChanges(changes: SimpleChanges) {
+  this.querying = changes.querying.currentValue;
+}
+
 close() {
   this.dialogRef.close();
 }
@@ -88,7 +96,7 @@ openDialogLogin() {
       title: 'Login'
   };
 
-  this.matDialog.open(LoginDialogComponent, dialogConfig);
+  this.matDialog.open(LoginContComponent, dialogConfig);
 }
 
 register(firstName: string, name: string, id: string, email: string, password: string) {
@@ -101,6 +109,7 @@ register(firstName: string, name: string, id: string, email: string, password: s
 
   if (!image.type.match("image/jpg") && !image.type.match("image/jpeg") && !image.type.match("image/png")) {
     window.alert("Formato immagine non supportato");
+    return;
   }
 
   let userJson = { "firstName": firstName,
@@ -110,14 +119,7 @@ register(firstName: string, name: string, id: string, email: string, password: s
                   "password": password 
                 };
 
-  this.authService.registerUser(image, userJson).subscribe(
-    (data) => {
-      this.close();
-    },
-    (error: any) => {
-      console.log(error);
-    }
-  );
+  this.reg.emit({image: image, userJson: userJson});
 }
 
 onFileChanged(imageInput) {

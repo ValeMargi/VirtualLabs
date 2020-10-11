@@ -28,6 +28,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LoginDialogComponent } from './login/login-dialog.component';
 import { RegisterDialogComponent } from './register/register-dialog.component';
 import { AddCourseDialogComponent } from './teacher/add-course/add-course-dialog.component';
@@ -42,7 +43,7 @@ import { AssignmentsContComponent as AssignmentsContComponentStudent } from './s
 import { TeamsContComponent } from './student/teams/teams-cont/teams-cont.component';
 import { TeamsComponent } from './student/teams/teams.component';
 import { RequestTeamDialogComponent } from './student/teams/request-team-dialog/request-team-dialog.component';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { ManageModelComponent } from './teacher/vms/manage-model.component';
 import { ManageModelContComponent } from './teacher/vms/manage-model-cont.component';
 import { EditProfileContComponent } from './edit-profile/edit-profile-cont.component';
@@ -74,6 +75,8 @@ import { ManageVmComponent } from './student/vms/manage-vm/manage-vm.component';
 import { ManageVmContComponent } from './student/vms/manage-vm/manage-vm-cont/manage-vm-cont.component';
 import { ViewImageContComponent } from './view-image/view-image-cont/view-image-cont.component';
 import { ViewImageComponent } from './view-image/view-image.component';
+import { RegisterContComponent } from './register/register-cont/register-cont.component';
+import { LoginContComponent } from './login/login-cont/login-cont.component';
 
 import {MatExpansionModule} from '@angular/material/expansion';
 
@@ -128,7 +131,9 @@ import {MatExpansionModule} from '@angular/material/expansion';
     ManageVmComponent,
     ManageVmContComponent,
     ViewImageContComponent,
-    ViewImageComponent
+    ViewImageComponent,
+    RegisterContComponent,
+    LoginContComponent
   ],
   imports: [
     BrowserModule,
@@ -153,6 +158,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatDialogModule,
     MatFormFieldModule,
     MatCardModule,
+    MatProgressBarModule,
     TextFieldModule,
     MatExpansionModule
   ],

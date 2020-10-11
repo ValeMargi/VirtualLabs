@@ -22,19 +22,19 @@
       <mat-form-field>
       <input #name type="text" placeholder="Nome" formControlName="name" matInput required autofocus>
       <mat-error *ngIf="RegisterForm.get('name').hasError('required')">Il nome è richiesto</mat-error>
-      </mat-form-field><br><br>
+      </mat-form-field><br>
 
       <!--Cognome-->
       <mat-form-field>
       <input #surname type="text" placeholder="Cognome" formControlName="surname" matInput required>
       <mat-error *ngIf="RegisterForm.get('surname').hasError('required')">Il cognome è richiesto</mat-error>
-      </mat-form-field><br><br>
+      </mat-form-field><br>
 
       <!--Matricola-->
       <mat-form-field>
       <input #id type="text" placeholder="Matricola" formControlName="id" matInput required>
       <mat-error *ngIf="RegisterForm.get('id').hasError('required')">La matricola è richiesta</mat-error>
-      </mat-form-field><br><br>
+      </mat-form-field><br>
 
       <!--Email-->
       <mat-form-field>
@@ -55,7 +55,7 @@
       <input #passwordRepeat type="password" placeholder="Ripeti password" formControlName="confirmPassword" matInput required minlength="8">
       <mat-error *ngIf="RegisterForm.hasError('notSame')"> Le due password non coincidono</mat-error>  
       <mat-error *ngIf="RegisterForm.get('confirmPassword').hasError('minlength')">Inserisci almeno 8 caratteri</mat-error>
-      </mat-form-field><br><br>
+      </mat-form-field><br>
 
     </form>
   </div>
@@ -63,9 +63,11 @@
 
   <div class="login">
     Già registrato?&nbsp;
-    <button mat-button (click)="openDialogLogin()">Login</button>
+    <button mat-button mat-stroked-button (click)="openDialogLogin()">Login</button>
   </div>
 </mat-dialog-content>
+
+<mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
 
 <mat-dialog-actions>
   <button mat-button mat-raised-button color="warn"(click)="close()">Annulla</button>

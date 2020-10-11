@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angu
 import { Router } from '@angular/router';
 import { RegisterDialogComponent } from '../register/register-dialog.component';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { RegisterContComponent } from '../register/register-cont/register-cont.component';
 
 @Component({
   selector: 'app-forgot-password',
@@ -64,7 +65,7 @@ export class ForgotPasswordComponent implements OnInit {
         title: 'Register'
     };
 
-    this.matDialog.open(RegisterDialogComponent, dialogConfig);
+    this.matDialog.open(RegisterContComponent, dialogConfig);
   }
 
   emailDomainValidator(control: FormControl) { 

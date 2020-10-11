@@ -31,7 +31,6 @@ import { TeamVmsContComponent } from './teacher/vms/team-vms-cont.component';
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'home/%3FdoLogin%3Dtrue', component: HomeComponent },
-  { path: 'login', component: LoginDialogComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'page-not-found', component: PageNotFoundComponent },
   { path: 'register/:success/:token', component: RegisterSuccessComponent },

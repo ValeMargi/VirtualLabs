@@ -28,8 +28,8 @@ export class AuthService {
   }
   
   login(email: string, password: string) {
-    console.log(email);
-    console.log(password);
+    //console.log(email);
+    //console.log(password);
     this.http.post(`http://localhost:8080/login`,{
         "username": email,
         "password": password
@@ -76,6 +76,7 @@ export class AuthService {
     localStorage.removeItem('expires_at');
     localStorage.removeItem('token');   
     localStorage.removeItem('role');
+    localStorage.removeItem('currentId');
     this.currentUser = null;
     this.studentService.currentStudent = null;
     this.teacherService.currentTeacher = null;

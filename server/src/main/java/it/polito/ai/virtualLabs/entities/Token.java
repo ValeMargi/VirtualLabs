@@ -12,7 +12,8 @@ import java.sql.Timestamp;
 @Data
 public class Token {
     @Id
-    private String id, courseId;
+    private String id;
+    private String courseId;
     private Long teamId;
     private Timestamp expiryDate;
     private Boolean status; //false: in attesa, true:accettato

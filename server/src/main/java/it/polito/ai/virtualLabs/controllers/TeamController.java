@@ -49,7 +49,7 @@ public class TeamController {
 
         }
     }
-    @PostMapping("/{courseName}/getProposals")
+    @GetMapping("/{courseName}/getProposals")
     public List<Map<String, Object>> getProposal(@PathVariable String courseName) {
         try {
             return vlService.getProposals(courseName);

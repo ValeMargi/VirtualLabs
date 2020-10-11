@@ -75,6 +75,8 @@ import { ManageVmContComponent } from './student/vms/manage-vm/manage-vm-cont/ma
 import { ViewImageContComponent } from './view-image/view-image-cont/view-image-cont.component';
 import { ViewImageComponent } from './view-image/view-image.component';
 
+import {MatExpansionModule} from '@angular/material/expansion';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -152,6 +154,7 @@ import { ViewImageComponent } from './view-image/view-image.component';
     MatFormFieldModule,
     MatCardModule,
     TextFieldModule,
+    MatExpansionModule
   ],
   entryComponents: [MatDialogModule, MatFormFieldModule],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],

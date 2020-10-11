@@ -39,6 +39,8 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
   buttonHomeworkVisibility:boolean = false;
 
+  panelOpenState = false;
+
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
@@ -71,9 +73,16 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   titolo: string;
 
   openHomeworkTable(ass:Assignment){
+      this.tableAssignmetsVisibility = false;
       this.tableHomeworkVisibility = true;
 
        this.titolo = ass.assignmentName;
+  }
+
+  backAssignmetsTable(){
+    this.tableHomeworkVisibility = false;
+    this.tableAssignmetsVisibility = true;
+
   }
   manageAssVisibility() {
     if (this.assignments.length > 0) {

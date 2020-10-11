@@ -8,11 +8,11 @@ h1 {
 }
 
 .row:active{
-  background-color:#dfdfdf91;
+  background-color:#281fa846;
   color: white;
 }
 .row:hover{
-  background-color:#dfdfdf91;
+  background-color:#001ea34d;
   color: white;
 }
 
@@ -20,6 +20,7 @@ h1 {
   width: 90%;
   margin-left: 2%;
   margin-top: 2%;
+  transition: 0.5s linear all;
 }
 
 .buttonText{

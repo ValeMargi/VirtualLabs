@@ -68,8 +68,12 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
   }
 
+  titolo: string;
+
   openHomeworkTable(ass:Assignment){
       this.tableHomeworkVisibility = true;
+
+       this.titolo = ass.assignmentName;
   }
   manageAssVisibility() {
     if (this.assignments.length > 0) {
@@ -80,8 +84,8 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
     }
   }
 
-  openDialogAss() {
-    const dialogRef = this.matDialog.open(AddHomeworkContComponent,{width: '600px', id: 'dialogAss'});
+  openDialogHomework() {
+    const dialogRef = this.matDialog.open(AddHomeworkContComponent,{ id: 'dialogHomework'});
     const dialogConfig = new MatDialogConfig();
 
     dialogRef.disableClose = false;

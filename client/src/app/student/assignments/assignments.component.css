@@ -7,7 +7,6 @@ h1 {
   width: 90%;
 }
 
-
 .row:active{
   background-color:#dfdfdf91;
   color: white;
@@ -17,15 +16,10 @@ h1 {
   color: white;
 }
 
-
 .card {
   width: 90%;
   margin-left: 2%;
   margin-top: 2%;
-}
-
-.button-request {
-  margin-left: 68%;
 }
 
 .buttonText{

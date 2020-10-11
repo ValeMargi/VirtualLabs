@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Inserisci elaborato</h2>
 
 <mat-dialog-content>
-    
+
         <!--Nome Elaborato-->
         <mat-form-field class="form-group">
         <input type="text" id="name" class="form-control" placeholder="Nome" [formControl]="form.name" matInput required minlength="3">
@@ -16,10 +16,10 @@
          <!--File-->
         <input type="file" id="file" (change)="onFileSelected($event)" [formControl] = "form.file" accept="image/*" required>
         <mat-error *ngIf="form.file.invalid">{{getErrorMessage()}}</mat-error>
-    
+
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button mat-raised-button color="accent" (click)="close()">Annulla</button>
-    <button mat-button mat-raised-button color="primary" (click)="addAss()">Inserisci</button>
+    <button mat-button mat-raised-button color="primary" >Inserisci</button>
 </mat-dialog-actions>
 

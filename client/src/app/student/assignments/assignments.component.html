@@ -46,12 +46,12 @@
 <!--Elaborati Studenti-->
   <mat-card class="card" *ngIf="tableHomeworkVisibility">
       <mat-card-header >
-       <mat-card-title>Elaborati</mat-card-title>
-       <mat-card-subtitle>Studente</mat-card-subtitle>
+       <mat-card-title>Elaborati </mat-card-title>
+       <mat-card-subtitle>Titolo: {{titolo}}</mat-card-subtitle>
 
         <!-- Bottone Inserisci elaborato -->
         <div class="button-request">
-          <button mat-flat-button color="primary" (click)="openDialogAss()" class="create" >
+          <button mat-flat-button color="primary" (click)="openDialogHomework()" class="create" >
           <mat-icon>post_add</mat-icon> Inserisci elaborato
            </button>
          </div>

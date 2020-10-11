@@ -1,5 +1,5 @@
 <!--Consegne Docenti-->
-    <mat-card class="card" *ngIf="tableAssignmetsVisibility">
+<mat-card class="card" *ngIf="tableAssignmetsVisibility">
       <mat-card-header>
 
         <mat-card-title>
@@ -50,14 +50,14 @@
   <mat-card class="card" *ngIf="tableHomeworkVisibility">
       <mat-card-header >
        <mat-card-title>
-        <button mat-mini-fab color="primary" (click)="backAssignmetsTable()">
+        <button class="iconButton" mat-icon-button color="primary" (click)="backAssignmetsTable()">
           <mat-icon>arrow_back</mat-icon></button>
         Elaborati </mat-card-title>
        <mat-card-subtitle>Titolo: {{titolo}}</mat-card-subtitle>
 
         <!-- Bottone Inserisci elaborato -->
         <div class="button-request">
-          <button mat-flat-button color="primary" (click)="openDialogHomework()" class="create" >
+          <button mat-raised-button color="primary" (click)="openDialogHomework()" class="create" >
           <mat-icon>post_add</mat-icon> Inserisci elaborato
            </button>
          </div>

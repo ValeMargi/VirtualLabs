@@ -27,18 +27,18 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
 
   @Output('activate') activate = new EventEmitter<number>();
   @Output('disable') disable = new EventEmitter<number>();
-  
+
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  vmVisibility: boolean = false;
-  noTeamVisibility: boolean = false;
+  vmVisibility: boolean = true;
+  noTeamVisibility: boolean = true;
 
   constructor(private studentService: StudentService, public dialog: MatDialog) { }
 
   ngAfterViewInit(): void {
-    
+
   }
 
   ngOnInit() {
@@ -54,7 +54,7 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
       this.vms = changes.vms.currentValue;
     }
 
-    this.manageViews();
+    //this.manageViews();
   }
 
   manageViews() {
@@ -161,7 +161,7 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
 
   openCreateVmsDialog() {
     const dialogRef = this.dialog.open(CreateVmsContComponent,{ id: 'dialogCreateVms'});
-    
+
     //dialogRef.afterClosed().subscribe(result => {
       //console.log(`Dialog result: ${result}`);
     //});

@@ -665,7 +665,7 @@ public class VLServiceImpl implements VLService{
             m.put("teamName", team.getName());
             m.put("creator", stu.getFirstName()+" "+stu.getName()+" "+ stu.getId());
             String currentToken = stu.getTokens().stream().filter(t-> t.getTeamId().equals(teamId)).findFirst().get().getId();
-            m.put("tokenId", tokenRepository.getOne(currentToken));
+            m.put("tokenId", currentToken);
             Map<String, Object> m2= new HashMap<>();
             for(Token token: tokenRepository.findAllByTeamId(teamId).stream()
                     .filter(t->!t.getStudent().equals(s)).collect(Collectors.toList())){

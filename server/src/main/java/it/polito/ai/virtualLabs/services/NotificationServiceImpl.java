@@ -105,7 +105,7 @@ public class NotificationServiceImpl implements NotificationService{
         t.setStatus(true);
         t.setCourseId(courseId);
         t.setStudent(studentRepository.getOne(creatorStudent));
-        t.setExpiryDate(Timestamp.from(Instant.now().plus(1, ChronoUnit.HOURS))); //MODIFICARE
+        t.setExpiryDate(timeout);
         tokenRepository.saveAndFlush(t);
     }
     @Override

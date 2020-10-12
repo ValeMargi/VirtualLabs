@@ -37,7 +37,7 @@ public class TeamController {
     public TeamDTO proposeTeam(@PathVariable String courseName, @RequestBody Map<String, Object> object) {
         try {
             String nameTeam = object.get("nameTeam").toString();
-            Timestamp timeout = (Timestamp)object.get("timeout");
+            Timestamp timeout = Timestamp.valueOf(object.get("timeout").toString());
             List<String> membersId= (List<String>)object.get("membersId");
             return vlService.proposeTeam(courseName, nameTeam, membersId, timeout);
         } catch (  CourseNotFoundException exception) {
@@ -47,7 +47,8 @@ public class TeamController {
         }catch(StudentNotEnrolledToCourseException | StudentAlreadyInTeamException
                 | CardinalityNotAccetableException
                 | StudentDuplicateException
-                | CourseDisabledException e){
+                | CourseDisabledException
+                | TimeoutNotValidException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 
         }

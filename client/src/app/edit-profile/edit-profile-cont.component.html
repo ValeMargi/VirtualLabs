@@ -1,1 +1,3 @@
-<app-edit-profile [currentUser]="CURRENT_USER" [avatar]="CURRENT_AVATAR"></app-edit-profile>
+<app-edit-profile [currentUser]="CURRENT_USER" [avatar]="CURRENT_AVATAR" [querying]="QUERYING"
+            [avatar_ok]="AVATAR_OK" [pwd_ok]="PWD_OK"
+            (avatar)="changeAvatar($event)" (password)="changePassword($event)"></app-edit-profile>

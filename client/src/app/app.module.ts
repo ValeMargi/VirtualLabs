@@ -79,6 +79,7 @@ import { RegisterContComponent } from './register/register-cont/register-cont.co
 import { LoginContComponent } from './login/login-cont/login-cont.component';
 
 import {MatExpansionModule} from '@angular/material/expansion';
+import { ForgotPasswordContComponent } from './forgot-password/forgot-password-cont/forgot-password-cont.component';
 
 @NgModule({
   declarations: [
@@ -133,7 +134,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     ViewImageContComponent,
     ViewImageComponent,
     RegisterContComponent,
-    LoginContComponent
+    LoginContComponent,
+    ForgotPasswordContComponent
   ],
   imports: [
     BrowserModule,

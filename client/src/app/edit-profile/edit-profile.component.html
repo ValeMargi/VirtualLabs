@@ -47,6 +47,10 @@
   </div>
 </mat-dialog-content>
 
+<mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
+<a *ngIf="avatar_ok">Avatar aggiornato con successo</a>
+<a *ngIf="pwd_ok">Password aggiornata con successo</a>
+
 <mat-dialog-actions>
   <button mat-button (click)="close()">Annulla</button>
   <button mat-button mat-raised-button color="primary" (click)="save(password.value, newPassword.value, passR.value)" >Salva</button>

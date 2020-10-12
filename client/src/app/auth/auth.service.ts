@@ -152,14 +152,14 @@ export class AuthService {
     return this.http.get<string>(`${this.API_AUTH}/user/changePassword`);
   }
 
-  savePassword(newPassword: Map<string, string>) {
-    //Map<Token, Nuova Password>
-    return this.http.post(`${this.API_AUTH}/user/savePassword`, newPassword);
+  savePassword(newPassword: any) {
+    //JSON {token: token, password: password}
+    return this.http.post<boolean>(`${this.API_AUTH}/user/savePassword`, newPassword);
   }
 
   changeUserPassword(newPassword: Map<string, string>) {
     //Map<Vecchia Password, Nuova Password>
-    return this.http.post(`${this.API_AUTH}/user/savePassword`, newPassword);
+    return this.http.post<boolean>(`${this.API_AUTH}/user/updatePassword`, newPassword);
   }
 
   changeAvatar(file: File) {
@@ -169,7 +169,7 @@ export class AuthService {
     let data: FormData = new FormData();
     data.append("file", file, file.name);
 
-    return this.http.post(`${this.API_AUTH}/user/updateAvatar`, data)
+    return this.http.post<boolean>(`${this.API_AUTH}/user/updateAvatar`, data)
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Teacher } from '../models/teacher.model';
 import { AuthService } from '../auth/auth.service';
@@ -14,14 +14,18 @@ export class EditProfileComponent implements OnInit, OnChanges {
 
   @Input() currentUser: any;
   @Input() avatar: any;
+  @Input() querying: boolean;
+  @Input() avatar_ok: boolean;
+  @Input() pwd_ok: boolean;
+  @Output('avatar') changeAvatar = new EventEmitter<any>(); 
+  @Output('password') changePassword = new EventEmitter<Map<string, string>>();
 
   selectedPhoto: File;
   password: any;
   newPassword: any;
   passR: any;
 
-  constructor(private dialogRef: MatDialogRef<EditProfileComponent>, 
-              private authService: AuthService) { }
+  constructor(private dialogRef: MatDialogRef<EditProfileComponent>) { }
 
   changePassVisibility: boolean = false;
 
@@ -30,7 +34,21 @@ export class EditProfileComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.avatar = changes.avatar.currentValue;
+    if (changes.avatar != null) {
+      this.avatar = changes.avatar.currentValue;
+    }
+
+    if (changes.querying != null) {
+      this.querying = changes.querying.currentValue;
+    }
+
+    if (changes.avatar_ok != null) {
+      this.avatar_ok = changes.avatar_ok.currentValue;
+    }
+
+    if (changes.pwd_ok != null) {
+      this.pwd_ok = changes.pwd_ok.currentValue;
+    }
   }
 
   close() {
@@ -52,15 +70,19 @@ export class EditProfileComponent implements OnInit, OnChanges {
   }
 
   save(actualPwd: string, pwd: string, pwd2: string) {
-    if (pwd != null && pwd2 != null && pwd.length > 0 && pwd2.length > 0 && pwd != pwd2) {
-      return;
-    }
+    if (actualPwd.length > 0 && pwd.length > 0 && pwd2.length > 0) {
+      if (actualPwd == pwd) {
+        window.alert("La nuova password deve essere diversa");
+      }
+      else if (pwd == pwd2) {
+        window.alert("Conferma nuova password non corretta");
+      }
+      else {
+        let map = new Map<string, string>();
+        map.set(actualPwd, pwd);
 
-    if (pwd.length > 0) {
-      let map = new Map<string, string>();
-      map.set(actualPwd, pwd);
-
-      this.authService.changeUserPassword(map);
+        this.changePassword.emit(map);
+      }
     }
 
     if (this.selectedPhoto != null) {
@@ -71,7 +93,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
         window.alert("Formato immagine non supportato");
       }
       else {
-        this.authService.changeAvatar(image);
+        this.changeAvatar.emit(image);
       }
     }
   }

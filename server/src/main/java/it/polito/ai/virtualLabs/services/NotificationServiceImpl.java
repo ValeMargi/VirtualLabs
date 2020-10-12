@@ -18,6 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import it.polito.ai.virtualLabs.exceptions.*;
 
 @Service
 @Transactional
@@ -46,11 +47,18 @@ public class NotificationServiceImpl implements NotificationService{
         emailSender.send(message);
     }
 
+    /**
+     * Controllo se tutti gli studenti hanno accettato, elimina token dal repo e attivazione Team con invio email
+     * @param token
+     * @return
+     */
     @Override
     public Integer confirm(String token) {
         Optional<Token> t = checkTokenValidity(token);
         if(t.isPresent()){
-            if( tokenRepository.findAllByTeamId(t.get().getTeamId()).size()==0) {
+            if( tokenRepository.findAllByTeamId(t.get().getTeamId())
+                    .stream().filter(te->te.getStatus()).count() == teamRepository.getOne(t.get().getTeamId()).getMembers().size()) {
+                tokenRepository.findAllByTeamId(t.get().getTeamId()).forEach(tk-> tokenRepository.delete(tk));
                 VLService.activateTeam(t.get().getTeamId());
                 return 2;
             }else
@@ -63,17 +71,16 @@ public class NotificationServiceImpl implements NotificationService{
     public Integer reject(String token) {
         Optional<Token> t = checkTokenValidity(token);
         if( t.isPresent()){
-            if( tokenRepository.findAllByTeamId(t.get().getTeamId()).size()>=0) {
                 tokenRepository.findAllByTeamId(t.get().getTeamId()).forEach(tk-> tokenRepository.delete(tk));
                 VLService.evictTeam(t.get().getTeamId());
-                return  2;
-            }else
                 return  1;
         }else
             return 0;
     }
     @Override
-    public void notifyTeam(TeamDTO dto, List<String> memberIds, String creatorStudent, String courseId) {
+    public void notifyTeam(TeamDTO dto, List<String> memberIds, String creatorStudent, String courseId, Timestamp timeout) {
+        if(timeout.before(Timestamp.from(Instant.now())))
+            throw new TimeoutNotValidException();
         for (int i = 0; i < memberIds.size(); i++) {
             Token t = new Token();
             t.setId(UUID.randomUUID().toString());
@@ -81,8 +88,9 @@ public class NotificationServiceImpl implements NotificationService{
             t.setStatus(false);
             t.setCourseId(courseId);
             t.setStudent(studentRepository.getOne(memberIds.get(i)));
+            t.setExpiryDate(timeout);
             //t.setExpiryDate(Timestamp.from(Instant.now().plus(5000, ChronoUnit.MILLIS))); for debug
-            t.setExpiryDate(Timestamp.from(Instant.now().plus(1, ChronoUnit.HOURS))); //MODIFICARE
+            //t.setExpiryDate(Timestamp.from(Instant.now().plus(1, ChronoUnit.HOURS))); //MODIFICARE
             tokenRepository.saveAndFlush(t);
             sendMessage(memberIds.get(i)+"@studenti.polito.it",
                     "Join the Team",
@@ -104,9 +112,13 @@ public class NotificationServiceImpl implements NotificationService{
     public Optional<Token> checkTokenValidity(String token){
         Optional<Token> t= tokenRepository.findById(token);
         if(t.isPresent()){
+            // se è ancora valido
             if( t.get().getExpiryDate().compareTo(Timestamp.from(Instant.now()))>0){
-                tokenRepository.deleteById(token);
+                t.get().setStatus(true);
                 return t;
+            }else{
+                tokenRepository.deleteById(token);
+                return null;
             }
         }
         return t;

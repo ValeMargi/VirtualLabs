@@ -5,12 +5,14 @@ import it.polito.ai.virtualLabs.dtos.TeamDTO;
 import it.polito.ai.virtualLabs.dtos.VMDTO;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
+import jdk.nashorn.internal.runtime.Timing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,8 +37,9 @@ public class TeamController {
     public TeamDTO proposeTeam(@PathVariable String courseName, @RequestBody Map<String, Object> object) {
         try {
             String nameTeam = object.get("nameTeam").toString();
+            Timestamp timeout = (Timestamp)object.get("timeout");
             List<String> membersId= (List<String>)object.get("membersId");
-            return vlService.proposeTeam(courseName, nameTeam, membersId);
+            return vlService.proposeTeam(courseName, nameTeam, membersId, timeout);
         } catch (  CourseNotFoundException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }catch(PermissionDeniedException e){

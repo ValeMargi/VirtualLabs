@@ -1,5 +1,6 @@
 package it.polito.ai.virtualLabs.repositories;
 
+import it.polito.ai.virtualLabs.entities.Student;
 import it.polito.ai.virtualLabs.entities.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,6 +15,7 @@ import java.util.List;
 public interface TokenRepository extends JpaRepository<Token, String> {
     List<Token> findAllByExpiryDateBefore(Timestamp t);
     List<Token> findAllByTeamId(Long teamId);
+    List<Token> findAllByStudent(Student s);
 
     @Transactional
     @Modifying

@@ -363,7 +363,7 @@ public class VLServiceImpl implements VLService{
                     throw new ProfessorNotFoundException();
                 else{
                     professors.stream().forEach(pr-> c.setProfessor(pr));
-                    courseRepository.saveAndFlush(c);
+                  //  courseRepository.save(c);
                     return true;
                 }
 
@@ -587,10 +587,10 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public  TeamDTO proposeTeam(String courseId, String name, List<String> memberIds){
+    public  TeamDTO proposeTeam(String courseId, String name, List<String> memberIds, Timestamp timeout){
         Optional<Course> course = courseRepository.findById(courseId);
         String creatorStudent = SecurityContextHolder.getContext().getAuthentication().getName();
-        if( !memberIds.contains(creatorStudent))
+        if( memberIds.contains(creatorStudent))
             throw new PermissionDeniedException();
 
         if( !course.isPresent())
@@ -612,7 +612,7 @@ public class VLServiceImpl implements VLService{
                 .map(s->studentRepository.getOne(s))
                 .map(Student::getTeams)
                 .filter( lt-> !lt.isEmpty())
-                .map( lt-> lt.stream().map(Team::getCourse)
+                .map( lt-> lt.stream().filter(l-> l.getStatus()==1).map(Team::getCourse)
                         .anyMatch(c-> c.getName().equals(courseId))).collect(Collectors.toList()).contains(true))
             throw  new StudentAlreadyInTeamException();
 
@@ -638,8 +638,8 @@ public class VLServiceImpl implements VLService{
         }
         teamRepository.save(team);
         memberIds.stream().forEach(s-> team.addStudentIntoTeam(studentRepository.getOne(s)));
-
-        notificationService.notifyTeam(modelMapper.map(team, TeamDTO.class), memberIds, creatorStudent,  courseId);
+        team.addStudentIntoTeam(studentRepository.getOne(creatorStudent));
+        notificationService.notifyTeam(modelMapper.map(team, TeamDTO.class), memberIds, creatorStudent,  courseId, timeout);
 
         return  modelMapper.map(team, TeamDTO.class);
     }
@@ -707,6 +707,7 @@ public class VLServiceImpl implements VLService{
     public List<StudentDTO>  getAvailableStudents(String courseName){
         if( courseRepository.findById(courseName).isPresent())
             return courseRepository.getStudentsNotInTeams(courseName).stream()
+                    .filter(s->!s.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
                     .map(s->modelMapper.map(s, StudentDTO.class))
                     .collect(Collectors.toList());
         else throw new CourseNotFoundException();
@@ -718,8 +719,13 @@ public class VLServiceImpl implements VLService{
             if(teamRepository.existsById(id)){
                 Team t = teamRepository.findById(id).get();
                 t.setStatus(1);
-                t.getMembers().stream().forEach(s-> notificationService.sendMessage(s.getEmail(),"Notification: team created","Team creation success!"));
-
+                for(Student s: t.getMembers()){
+                    tokenRepository.findAllByStudent(s).stream().map(to -> to.getTeamId()).forEach(tId -> {
+                        tokenRepository.findAllByTeamId(tId).forEach(tk-> tokenRepository.delete(tk));
+                        evictTeam(tId);
+                    });
+                }
+                t.getMembers().stream().forEach(s-> notificationService.sendMessage(s.getEmail(),"Notification: Team "+t.getName()+ " created","Team creation success!"));
             }
         }catch(EntityNotFoundException enf){
             throw  new TeamNotFoundException();
@@ -730,7 +736,7 @@ public class VLServiceImpl implements VLService{
     public void evictTeam(Long id){
         try{
             Team t = teamRepository.getOne(id);
-            t.getMembers().stream().forEach(s-> notificationService.sendMessage(s.getEmail(),"Notification: team not created","A student has rejected the proposal. Team creation stopped!"));
+            t.getMembers().stream().forEach(s-> notificationService.sendMessage(s.getEmail(),"Notification: Team "+t.getName()+ " not created","A student has rejected the proposal. Team creation stopped!"));
             teamRepository.delete(t);
         }catch(EntityNotFoundException enf){
             throw  new TeamNotFoundException();

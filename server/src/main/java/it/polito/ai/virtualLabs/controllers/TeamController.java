@@ -5,7 +5,6 @@ import it.polito.ai.virtualLabs.dtos.TeamDTO;
 import it.polito.ai.virtualLabs.dtos.VMDTO;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
-import jdk.nashorn.internal.runtime.Timing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -53,6 +52,7 @@ public class TeamController {
 
         }
     }
+    //TO DO vedere  eccezioni
     @GetMapping("/{courseName}/getProposals")
     public List<Map<String, Object>> getProposal(@PathVariable String courseName) {
         try {

@@ -90,7 +90,7 @@ public class VLServiceImpl implements VLService{
         for(Token token: tokenRepository.findAll() )
         {
             if( token.getExpiryDate().compareTo(now)<0){
-                tokenRepository.deleteFromTokenDBexpired(token.getTeamId());
+                tokenRepository.deleteFromTokenByTeamId(token.getTeamId());
                 if( teamRepository.findById(token.getTeamId()).isPresent())
                     evictTeam(token.getTeamId());
             }
@@ -292,15 +292,59 @@ public class VLServiceImpl implements VLService{
         else{
             List<Student> ret = new ArrayList<>();
             for(String s : studentsIds){
-                Optional<Student> student = studentRepository.findById(s);
-                if( ! student.isPresent()){
+                Optional<Student> so = studentRepository.findById(s);
+                if( ! so.isPresent()){
                     throw new StudentNotFoundException();
                 }
+                Student student = so.get();
 
-                if (course.get().removeStudent(student.get()))
-                    ret.add(student.get());
+                if (course.get().removeStudent(student)) {
+                    Optional<Team> ot = student.getTeams().stream().filter(t -> t.getCourse().getName().equals(courseName)).findAny();
+                    if (ot.isPresent()) {
+                        // rimuovo VM, homework, corrections, membro dal team
+                        Team team = ot.get();
+                        if (team.getStatus() == 1) {
+                            List<VM> VMstudent = student.getStudentsVM().stream()
+                                    .filter(v -> v.getCourse().getName().equals(courseName))
+                                    .collect(Collectors.toList());
+                            if (team.getMembers().size() == 1) {
+                                //lo studente è l'unico membro rimasto nel team -> cancello VM, photoVM e team
+                                for (VM vm : VMstudent) {
+                                    photoVMRepository.delete(vm.getPhotoVM());
+                                    course.get().removeVM(vm);
+                                    team.removeVM(vm);
+                                    VMRepository.delete(vm);
+                                }
+                                course.get().removeTeam(team);
+                                student.removeTeamForStudent(team);
+                                teamRepository.delete(team);
+                            } else {
+                                List<VM> vmOwner = VMstudent.stream().filter(vm -> vm.getOwnersVM().contains(student)).collect(Collectors.toList());
+                                vmOwner.stream().forEach(vm -> {
+                                    vm.getMembersVM().stream().forEach(stu -> vm.addStudentToOwnerList(stu));
+                                    vm.removeStudentToOwnerList(student);
+                                    vm.removeStudentToMemberList(student);
+                                });
+                                student.removeTeamForStudent(team);
+                            }
+                            List<Homework> homeworkStudent = student.getHomeworks().stream().filter(h -> h.getAssignment().getCourseAssignment().equals(course.get())).collect(Collectors.toList());
+                            for (Homework h : homeworkStudent) {
+                                h.getCorrections().stream().forEach(c -> photoCorrectionRepository.delete(c));
+                                h.getVersions().stream().forEach(v -> photoVersionHMRepository.delete(v));
+                            }
+                            homeworkRepository.deleteAll(homeworkStudent);
+                        } else {
+                            // rimuovo token delle proposal
+                            List<Team> teamsStudent = teamRepository.findAllById(tokenRepository.findAllByStudent(student).stream().map(token -> token.getTeamId()).collect(Collectors.toList()));
+                            for (Team t : teamsStudent) {
+                                tokenRepository.deleteFromTokenByTeamId(t.getId());
+                                evictTeam(t.getId());
+                            }
+                        }
+                    }
+                    ret.add(student);
+                }
             }
-
             return ret.stream().map(student -> modelMapper.map(student, StudentDTO.class)).collect(Collectors.toList());
         }
   }
@@ -616,7 +660,8 @@ public class VLServiceImpl implements VLService{
                         .anyMatch(c-> c.getName().equals(courseId))).collect(Collectors.toList()).contains(true))
             throw  new StudentAlreadyInTeamException();
 
-        if ( memberIds.size()<getCourse(courseId).get().getMin() || memberIds.size()> getCourse(courseId).get().getMax())
+        if ( memberIds.size()+1<getCourse(courseId).get().getMin()
+                || memberIds.size()+1> getCourse(courseId).get().getMax())
             throw  new CardinalityNotAccetableException();
 
         if( memberIds.stream().distinct().count() != memberIds.size())
@@ -636,10 +681,14 @@ public class VLServiceImpl implements VLService{
             team.setRunningInstances(c.getRunningInstances());
             team.setTotInstances(c.getRunningInstances());
         }
-        teamRepository.save(team);
-        memberIds.stream().forEach(s-> team.addStudentIntoTeam(studentRepository.getOne(s)));
         team.addStudentIntoTeam(studentRepository.getOne(creatorStudent));
-        notificationService.notifyTeam(modelMapper.map(team, TeamDTO.class), memberIds, creatorStudent,  courseId, timeout);
+        teamRepository.save(team);
+        if(memberIds.isEmpty())
+            team.setStatus(1);
+        else{
+            memberIds.stream().forEach(s-> team.addStudentIntoTeam(studentRepository.getOne(s)));
+            notificationService.notifyTeam(modelMapper.map(team, TeamDTO.class), memberIds, creatorStudent,  courseId, timeout);
+        }
 
         return  modelMapper.map(team, TeamDTO.class);
     }
@@ -1269,12 +1318,17 @@ public class VLServiceImpl implements VLService{
                 Homework h = oh.get();
                 if (h.getStudent().getId().equals(student)) {
                     if (h.getPermanent().equals(false)) {
-                        h.setStatus("CONSEGNATO");
-                        PhotoVersionHomework photoVersionHomework = modelMapper.map(photoVersionHomeworkDTO, PhotoVersionHomework.class);
-                        h.setPhotoVersionHomework(photoVersionHomework);
-                        homeworkRepository.saveAndFlush(h);
-                        photoVersionHMRepository.saveAndFlush(photoVersionHomework);
-                        return true;
+                        Optional<Team> teamStudent = s.getTeams().stream().filter(t-> t.getCourse().equals(h.getAssignment().getCourseAssignment())).findAny();
+                        if(teamStudent.isPresent()){
+                            if(teamStudent.get().getVms().size()>0){
+                                h.setStatus("CONSEGNATO");
+                                PhotoVersionHomework photoVersionHomework = modelMapper.map(photoVersionHomeworkDTO, PhotoVersionHomework.class);
+                                h.setPhotoVersionHomework(photoVersionHomework);
+                                homeworkRepository.saveAndFlush(h);
+                                photoVersionHMRepository.saveAndFlush(photoVersionHomework);
+                                return true;
+                            }else throw new VMNotFoundException();
+                        }else throw new TeamNotFoundException();
                     } else throw new HomeworkIsPermanentException();
                 } else throw new PermissionDeniedException();
             } else throw new HomeworkNotFoundException();

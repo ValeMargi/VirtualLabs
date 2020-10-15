@@ -71,7 +71,8 @@ public class NotificationServiceImpl implements NotificationService{
     public Integer reject(String token) {
         Optional<Token> t = checkTokenValidity(token);
         if( t.isPresent()){
-                tokenRepository.findAllByTeamId(t.get().getTeamId()).forEach(tk-> tokenRepository.delete(tk));
+                tokenRepository.deleteFromTokenByTeamId(t.get().getTeamId()); //TESTare
+               // tokenRepository.findAllByTeamId(t.get().getTeamId()).forEach(tk-> tokenRepository.delete(tk));
                 VLService.evictTeam(t.get().getTeamId());
                 return  1;
         }else

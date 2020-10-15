@@ -66,6 +66,14 @@ public class Course {
         return false;
     }
 
+    public boolean removeTeam(Team t) {
+        if (teams.contains(t)) {
+            teams.remove(t);
+            t.removeCourse(this);
+            return true;
+        }
+        return false;
+    }
 
     /*Gestire rimozione professore dal corso*/
     public void setProfessor(Professor  p){

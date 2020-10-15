@@ -22,14 +22,20 @@ public class Team {
             inverseJoinColumns = @JoinColumn(name="student_id"))
     List<Student> members = new ArrayList<>();
 
-
-
     @ManyToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="course_id")
     Course course;
 
     @OneToMany(mappedBy = "team")
     private List<VM> vms = new ArrayList<>();
+
+    public void removeCourse(Course c){
+        if( course == c){
+            course=null;
+            c.removeTeam(this);
+        }
+    }
+
 
     public void addStudentIntoTeam(Student s) {
         if (!members.contains(s)) {

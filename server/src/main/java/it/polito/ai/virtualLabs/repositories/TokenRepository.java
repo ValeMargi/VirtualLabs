@@ -20,7 +20,7 @@ public interface TokenRepository extends JpaRepository<Token, String> {
     @Transactional
     @Modifying
     @Query("delete  FROM Token  t  WHERE t.teamId=:teamId  ")
-    void deleteFromTokenDBexpired(Long teamId);
+    void deleteFromTokenByTeamId(Long teamId);
 
 
 }

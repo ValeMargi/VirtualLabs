@@ -293,9 +293,9 @@ public class ProfessorController {
      *           di versioni di Homerwork per la consegna con assignmentId indicato e per il corso con courseName indicato
      */
     @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/getVersions")
-    public List<Map<String, Object>> getVersionsHMForProfessor(@PathVariable String courseName, @PathVariable Long assignmentId, @PathVariable Long homeworkId) {
+    public List<Map<String, Object>> getVersionsHWForProfessor(@PathVariable String courseName, @PathVariable Long assignmentId, @PathVariable Long homeworkId) {
         try{
-            return  vlService.getVersionsHMForProfessor(homeworkId);
+            return  vlService.getVersionsHWForProfessor(homeworkId);
         } catch (  HomeworkNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){

@@ -16,6 +16,7 @@ public interface TokenRepository extends JpaRepository<Token, String> {
     List<Token> findAllByExpiryDateBefore(Timestamp t);
     List<Token> findAllByTeamId(Long teamId);
     List<Token> findAllByStudent(Student s);
+    List<Token> findAllByCourseId(String courseName);
 
     @Transactional
     @Modifying

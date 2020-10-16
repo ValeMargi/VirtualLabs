@@ -291,10 +291,10 @@ public class CourseController {
      * @return DTO di PhotoVersionHomework per un dato homework
      */
     @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/{versionId}/version")
-    public PhotoVersionHomeworkDTO getVersionHM(@PathVariable String courseName, @PathVariable Long assignmentId,
+    public PhotoVersionHomeworkDTO getVersionHW(@PathVariable String courseName, @PathVariable Long assignmentId,
                                                 @PathVariable Long homeworkId, @PathVariable Long versionId) {
         try{
-            return  vlService.getVersionHM(versionId);
+            return  vlService.getVersionHW(versionId);
         } catch (  PhotoVersionHMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
@@ -312,10 +312,10 @@ public class CourseController {
      * @return DTO di PhotoCorrection per un dato homework
      */
     @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/{correctionId}/correction")
-    public PhotoCorrectionDTO getCorrectionHM(@PathVariable String courseName, @PathVariable Long assignmentId,
+    public PhotoCorrectionDTO getCorrectionHW(@PathVariable String courseName, @PathVariable Long assignmentId,
                                                 @PathVariable Long homeworkId, @PathVariable Long correctionId) {
         try{
-            return  vlService.getCorrectionHM( correctionId);
+            return  vlService.getCorrectionHW( correctionId);
         } catch ( PhotoCorrectionNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){

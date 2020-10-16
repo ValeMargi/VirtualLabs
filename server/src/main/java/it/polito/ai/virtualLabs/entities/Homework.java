@@ -59,4 +59,12 @@ public class Homework {
             s.setHomeworkForStudent(this);
         }
     }
+
+    public void removeStudentFromHomework(Student s){
+        if(s!=null && s==student){
+            student = null;
+            s.removeHomeworkStudent(this);
+
+        }
+    }
 }

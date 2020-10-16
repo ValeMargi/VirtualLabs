@@ -1,7 +1,9 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,6 +13,10 @@ import java.util.List;
 
 @Data
 @Entity
+//@ToString(exclude = {"homeworks", "photoAssignment"}) //l
+//@EqualsAndHashCode(exclude = {"homeworks","photoAssignment"})
+
+
 public class Assignment {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)

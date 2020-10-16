@@ -94,6 +94,13 @@ public class Student{
         }
     }
 
+    public void removeHomeworkStudent(Homework h){
+        if(h!=null && homeworks.contains(h)){
+            homeworks.remove(h);
+            h.removeStudentFromHomework(this);
+        }
+    }
+
     public void addOwnerToVM(VM vm){
         if(vm!=null && !ownersVM.contains(vm)){
             ownersVM.add(vm);

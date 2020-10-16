@@ -533,28 +533,68 @@ public class VLServiceImpl implements VLService{
                 throw new PermissionDeniedException();
             Optional<Professor> op = professorRepository.findById(idProfessor);
             if(op.isPresent()){
-                Professor p=op.get();
                 List<Student> students = c.getStudents();
+                List<Team> teams = c.getTeams();
 
-                for(int i=students.size()-1; i>=0; i--){// s: stu){
-                   c.removeStudent(students.get(i));
-                   //log.severe("stu:"); debug
+                for(int j=teams.size()-1; j>=0; j--) {
+                    Team tmpTeam = teams.get(j);
+                    // rimuovo VM, homework, corrections, membro dal team
+                    if (tmpTeam.getStatus() == 1) {
+                        List<VM> VMcourse = c.getVms();
+
+                        for ( int i=VMcourse.size()-1; i>=0; i--) {
+                            VM tmp = VMcourse.get(i);
+                            photoVMRepository.delete(tmp.getPhotoVM());
+                            c.removeVM(tmp);
+                            tmpTeam.removeVM(tmp);
+                            students.stream().forEach(s-> {
+                                tmp.removeStudentToOwnerList(s);
+                                tmp.removeStudentToMemberList(s);
+                            });
+                            VMRepository.delete(tmp);
+                        }
+                        c.removeTeam(tmpTeam);
+                        students.stream().forEach(s-> s.removeTeamForStudent(tmpTeam));
+                        teamRepository.delete(tmpTeam);
+
+                        List<Assignment> assignmentsCourse = c.getAssignments();
+                        for(Assignment assignment: assignmentsCourse){ //verificare se rimuove homework per assignment
+                            photoAssignmentRepository.delete(assignment.getPhotoAssignment());
+                            assignment.getHomeworks().stream().forEach(h->{
+                                h.getCorrections().stream().forEach(cor -> photoCorrectionRepository.delete(cor));
+                                h.getVersions().stream().forEach(v -> photoVersionHMRepository.delete(v));
+                                h.removeStudentFromHomework(h.getStudent());
+                            });
+                            homeworkRepository.deleteAll(assignment.getHomeworks());
+                        }
+                        assignmentRepository.deleteAll(assignmentsCourse);
+                    }else{
+                          // rimuovo token delle proposal
+                         List<Team> teamsCourse = teamRepository.findAllById(tokenRepository.findAllByCourseId(c.getName()).stream()
+                                                                                                                .map(token -> token.getTeamId())
+                                                                                                                .collect(Collectors.toList()));
+                        for (Team team : teamsCourse) {
+                            tokenRepository.deleteFromTokenByTeamId(team.getId());
+                            evictTeam(team.getId());
+                        }
+                    }
+
+                    for(int i=students.size()-1; i>=0; i--){// s: stu){
+                        c.removeStudent(students.get(i));
+                        //log.severe("stu:"); debug
+                    }
+                    List<Professor> professors= c.getProfessors();
+                    for(int i=professors.size()-1; i>=0; i--){// s: stu){
+                        c.removeProfessor(professors.get(i));
+                        //log.severe("stu:"); ug
+                    }
+                    photoModelVMRepository.delete(c.getPhotoModelVM());
                 }
-                List<Professor> professors= c.getProfessors();
-                for(int i=professors.size()-1; i>=0; i--){// s: stu){
-                    c.removeProfessor(professors.get(i));
-                    //log.severe("stu:"); ug
-                }
-                //stu.stream().forEach(s-> c.removeStudent(s));
-               // c.getProfessors().stream().forEach(pr -> c.removeProfessor(pr));
-                //p.removeCourse(c);
                 courseRepository.delete(c);
-              //  courseRepository.save(c);
                 courseRepository.flush();
                 return true;
             }else throw new ProfessorNotFoundException();
         }else throw new CourseNotFoundException();
-
     }
 
     /*Metodo per modificare corso (modificare min,max,acronimo)*/
@@ -700,8 +740,10 @@ public class VLServiceImpl implements VLService{
         Optional<Student> os = studentRepository.findById(student);
         if(!os.isPresent()) throw new StudentNotFoundException(); //PermissionDenied
         Student s = os.get();
-        if(s.getTokens().stream().filter(t-> t.getCourseId().equals(courseId)).anyMatch(t->  t.getStatus().equals(true)))
-            throw new StudentWaitingTeamCreationException();
+        if( s.getTeams().stream().filter(t-> t.getCourse().getName().equals(courseId) && t.getStatus()==1).findAny().isPresent())
+            throw new StudentAlreadyInTeamException();
+        //if(s.getTokens().stream().filter(t-> t.getCourseId().equals(courseId)).anyMatch(t->  t.getStatus().equals(true)))
+           // throw new StudentWaitingTeamCreationException();
 
         List<Long> teamList = s.getTokens().stream()
                 .filter(t-> t.getCourseId().equals(courseId)).map(t-> t.getTeamId()).collect(Collectors.toList());
@@ -717,7 +759,7 @@ public class VLServiceImpl implements VLService{
             m.put("tokenId", currentToken);
             Map<String, Object> m2= new HashMap<>();
             for(Token token: tokenRepository.findAllByTeamId(teamId).stream()
-                    .filter(t->!t.getStudent().equals(s)).collect(Collectors.toList())){
+                    .filter(t->!t.getStudent().equals(s) && !t.getStudent().equals(stu)).collect(Collectors.toList())){
                 m2.put("student", token.getStudent().getFirstName()+" "+token.getStudent().getName()+" "+token.getStudent().getId());
                 m2.put("status", token.getStatus());
             }
@@ -912,6 +954,8 @@ public class VLServiceImpl implements VLService{
                     throw new VMduplicatedException();
                 if( vmdto.getDiskSpace() <= t.getDiskSpaceLeft() && vmdto.getNumVcpu()<= t.getMaxVpcuLeft()
                     && vmdto.getRam() <= t.getRamLeft() && t.getTotInstances()>0){
+                    if( vmdto.getDiskSpace()<=0 || vmdto.getNumVcpu()<=0 || vmdto.getRam()<=0)
+                        throw new InvalidInputVMresources();
                     VM vm = modelMapper.map(vmdto, VM.class);
                     vm.setCourse(c);
                     PhotoVM photoVM = modelMapper.map(photoVMDTO, PhotoVM.class);
@@ -1070,6 +1114,13 @@ public class VLServiceImpl implements VLService{
                 t.setRamLeft(vm.getRam()+t.getRamLeft());
                 t.setMaxVpcuLeft(vm.getNumVcpu()+t.getMaxVpcuLeft());
                 t.setDiskSpaceLeft(vm.getDiskSpace()+t.getDiskSpaceLeft());
+                t.removeVM(vm);
+                c.removeVM(vm);
+                List<Student> students = t.getMembers();
+                for(Student s:students){
+                    s.removeMemberToVM(vm);
+                    s.removeOwnerToVM(vm);
+                }
                 photoVMRepository.delete(vm.getPhotoVM());
                 VMRepository.delete(vm);
             } else throw new PermissionDeniedException();
@@ -1378,7 +1429,7 @@ public class VLServiceImpl implements VLService{
      */
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public  List<Map<String, Object>> getVersionsHMForProfessor( Long homeworkId){
+    public  List<Map<String, Object>> getVersionsHWForProfessor( Long homeworkId){
         Optional<Homework> oh = homeworkRepository.findById(homeworkId);
         if(oh.isPresent()){
             Homework h = oh.get();
@@ -1418,7 +1469,7 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public  List<Map<String, Object>> getVersionsHMForStudent(Long assignmentId){
+    public  List<Map<String, Object>> getVersionsHWForStudent(Long assignmentId){
         Optional<Assignment> oa = assignmentRepository.findById(assignmentId);
         if(oa.isPresent()){
             Assignment a = oa.get();
@@ -1442,7 +1493,7 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
-    public  PhotoVersionHomeworkDTO getVersionHM(Long versionId){
+    public  PhotoVersionHomeworkDTO getVersionHW(Long versionId){
 
         String auth =  SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<PhotoVersionHomework> op = photoVersionHMRepository.findById(versionId);
@@ -1547,7 +1598,7 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
-    public  PhotoCorrectionDTO getCorrectionHM(Long correctionId){
+    public  PhotoCorrectionDTO getCorrectionHW(Long correctionId){
 
         String auth =  SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<PhotoCorrection> op = photoCorrectionRepository.findById(correctionId);

@@ -207,7 +207,7 @@ public class UserController {
         Optional<UserDAO> user = authenticationService.getUserByPasswordResetToken(input.get("token"));
         if(user.isPresent()) {
             authenticationService.changeUserPassword(user.get(), input.get("newPassword"));
-           passwordTokenRepository.deleteByToken(input.get("token"));
+            passwordTokenRepository.deleteByToken(input.get("token"));
             return  true; //success
         } else {
             return false; //error

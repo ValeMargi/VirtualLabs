@@ -71,12 +71,12 @@ public interface VLService {
     boolean uploadCorrection(Long homeworkId, Long versionHMid, PhotoCorrectionDTO photoCorrectionDTO,Boolean permanent, String grade);
     List<HomeworkDTO> allHomework(String courseName, Long assignmentId);
     HomeworkDTO getHomework(Long assignmentId);
-    List<Map<String, Object>> getVersionsHMForStudent(Long assignmentId);
-    List<Map<String, Object>> getVersionsHMForProfessor(Long homeworkId);
-    PhotoVersionHomeworkDTO getVersionHM(Long versionId);
+    List<Map<String, Object>> getVersionsHWForStudent(Long assignmentId);
+    List<Map<String, Object>> getVersionsHWForProfessor(Long homeworkId);
+    PhotoVersionHomeworkDTO getVersionHW(Long versionId);
     List<Map<String, Object>> getCorrectionsForProfessor( Long homeworkId);
     List<Map<String, Object>> getCorrectionsForStudent(Long assignmentId);
-    PhotoCorrectionDTO getCorrectionHM(Long correctionId);
+    PhotoCorrectionDTO getCorrectionHW(Long correctionId);
      byte[] compressZLib(byte[] data);
      byte[] decompressZLib(byte[] data);
 

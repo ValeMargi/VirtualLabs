@@ -1,0 +1,7 @@
+INSERT INTO virtualLabs.course (name, acronym, disk_space, enabled, max, max_vcpu, min, ram, running_instances, tot_instances, image_id) VALUES ('applicazione_internet', 'ai', 10, true, 3, 10, 1, 8, 10, 10, null);
+INSERT INTO virtualLabs.course (name, acronym, disk_space, enabled, max, max_vcpu, min, ram, running_instances, tot_instances, image_id) VALUES ('arch', 'arch', 200, true, 3, 4, 1, 8, 15, 20, 26);
+INSERT INTO virtualLabs.course (name, acronym, disk_space, enabled, max, max_vcpu, min, ram, running_instances, tot_instances, image_id) VALUES ('database', 'db', 10, true, 3, 10, 1, 8, 10, 10, null);
+INSERT INTO virtualLabs.course (name, acronym, disk_space, enabled, max, max_vcpu, min, ram, running_instances, tot_instances, image_id) VALUES ('datascience', 'ds', 10, false, 3, 10, 1, 8, 10, 10, null);
+INSERT INTO virtualLabs.course (name, acronym, disk_space, enabled, max, max_vcpu, min, ram, running_instances, tot_instances, image_id) VALUES ('dictar', 'dictar', 10, true, 3, 10, 1, 8, 10, 10, null);
+INSERT INTO virtualLabs.course (name, acronym, disk_space, enabled, max, max_vcpu, min, ram, running_instances, tot_instances, image_id) VALUES ('oop1', 'oop1', 10, false, 3, 10, 1, 8, 10, 10, null);
+INSERT INTO virtualLabs.course (name, acronym, disk_space, enabled, max, max_vcpu, min, ram, running_instances, tot_instances, image_id) VALUES ('reti', 'tsr', 10, false, 3, 10, 1, 8, 10, 10, null);

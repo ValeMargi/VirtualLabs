@@ -1,0 +1,12 @@
+INSERT INTO virtualLabs.hibernate_sequence (next_val) VALUES (84);
+INSERT INTO virtualLabs.hibernate_sequence (next_val) VALUES (84);
+INSERT INTO virtualLabs.hibernate_sequence (next_val) VALUES (84);
+INSERT INTO virtualLabs.hibernate_sequence (next_val) VALUES (84);
+INSERT INTO virtualLabs.hibernate_sequence (next_val) VALUES (84);
+INSERT INTO virtualLabs.hibernate_sequence (next_val) VALUES (84);
+INSERT INTO virtualLabs.hibernate_sequence (next_val) VALUES (84);
+INSERT INTO virtualLabs.hibernate_sequence (next_val) VALUES (84);
+INSERT INTO virtualLabs.hibernate_sequence (next_val) VALUES (84);
+INSERT INTO virtualLabs.hibernate_sequence (next_val) VALUES (84);
+INSERT INTO virtualLabs.hibernate_sequence (next_val) VALUES (84);
+INSERT INTO virtualLabs.hibernate_sequence (next_val) VALUES (84);

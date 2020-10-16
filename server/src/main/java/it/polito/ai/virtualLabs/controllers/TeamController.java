@@ -57,7 +57,7 @@ public class TeamController {
     public List<Map<String, Object>> getProposal(@PathVariable String courseName) {
         try {
             return vlService.getProposals(courseName);
-        }catch(StudentWaitingTeamCreationException e){
+        }catch(StudentWaitingTeamCreationException | StudentAlreadyInTeamException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }

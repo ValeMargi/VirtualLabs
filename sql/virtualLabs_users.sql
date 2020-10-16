@@ -1,0 +1,12 @@
+INSERT INTO virtualLabs.users (id, activate, password, role, professor, student) VALUES ('admin', false, '$2a$10$8ntrCzZdpLI5dTD7uhjFQ.h/zLf6AeTHY3l5p5QXGnxO3u2p5RubW', 'admin', null, null);
+INSERT INTO virtualLabs.users (id, activate, password, role, professor, student) VALUES ('d1', true, '$2a$10$UI2Pg3oBwlLbrEVy9j/ijexfIwtz3jRhUj89vl7uOQGXVEUf4jzs6', 'professor', 'd1', null);
+INSERT INTO virtualLabs.users (id, activate, password, role, professor, student) VALUES ('d2', true, '$2a$10$iH3Xw6FXeN1x4qbo2hNureofpAZSLo6rQg2yJ2G5Jpwl2ulTFuDyC', 'professor', 'd2', null);
+INSERT INTO virtualLabs.users (id, activate, password, role, professor, student) VALUES ('d3', true, '$2a$10$z0m9Hjaj2iGhOI2cfKZD1ukapB/gRF9lpbziXQbODkQoVV/KXpBhS', 'professor', 'd3', null);
+INSERT INTO virtualLabs.users (id, activate, password, role, professor, student) VALUES ('s1', true, '$2a$10$Q.jHpQhjUuaWxeUo/25T2uzzTnVY9/4B88K/rLVyZoUMxFquErxgq', 'student', null, 's1');
+INSERT INTO virtualLabs.users (id, activate, password, role, professor, student) VALUES ('s2', true, '$2a$10$nbZbBwOi25IdN3N3ygx1B.E8NTZJ4mciL.qbexLcS/w2./.3U25ca', 'student', null, 's2');
+INSERT INTO virtualLabs.users (id, activate, password, role, professor, student) VALUES ('s3', true, '$2a$10$f4Osn96hALPm1QiOgTNgleNMvmBM.sxazEbLSRO6j.ObPH.G9n56K', 'student', null, 's3');
+INSERT INTO virtualLabs.users (id, activate, password, role, professor, student) VALUES ('s4', true, '$2a$10$7cx6YmTyo7seJSh3/cbvx.qn2EmM6ixhxghG4YGxo/ZN0TucMf6WC', 'student', null, 's4');
+INSERT INTO virtualLabs.users (id, activate, password, role, professor, student) VALUES ('s5', true, '$2a$10$M2G4Qx2z1fJaFocxUJu3VOU3foaB5HhBtwO3cQz6J7pPi4tHvN7Da', 'student', null, 's5');
+INSERT INTO virtualLabs.users (id, activate, password, role, professor, student) VALUES ('s6', true, '$2a$10$xlO2HxoNQSq4oJt0tmb7l.4aW.KGW.M3wYDUPk3popUkANGXdwyfi', 'student', null, 's6');
+INSERT INTO virtualLabs.users (id, activate, password, role, professor, student) VALUES ('s7', true, '$2a$10$1u5N3yDXEiH2BRNig5oIbeU/78jPgZH0iKesDxMriyUmJ8ZH4yVFy', 'student', null, 's7');
+INSERT INTO virtualLabs.users (id, activate, password, role, professor, student) VALUES ('s8', true, '$2a$10$SiEUBrl2yv/C4ZCpioYkCuwyZ/R1kwe570YutlON9PdImQJgly5AC', 'student', null, 's8');

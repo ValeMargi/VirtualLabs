@@ -15,10 +15,13 @@ import java.util.stream.Stream;
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
 
     PasswordResetToken findByToken(String token);
-    PasswordResetToken deleteByToken(String token);
 
     @Transactional
     @Modifying
     @Query("delete from PasswordResetToken t where t.expiryDate <=:now")
     void deleteAllExpiredSince(Date now);
+    @Transactional
+    @Modifying
+    void deleteByToken(String token);
+
 }

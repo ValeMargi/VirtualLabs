@@ -140,21 +140,14 @@ export class AuthService {
     return this.http.post<User>(`${this.API_AUTH}/addUser`, data);
   }
 
-  confirmationPage(token: string) {
-    return this.http.get<boolean>(`${this.API_AUTH}/registration/confirm/${token}`);
+  resetPassword(userId: string) {
+    return this.http.post<boolean>(`${this.API_AUTH}/user/resetPassword`, userId);
   }
 
-  resetPassword(userEmail: string) {
-    return this.http.post(`${this.API_AUTH}/user/resetPassword`, userEmail);
-  }
-
-  showChangePasswordPage() {
-    return this.http.get<string>(`${this.API_AUTH}/user/changePassword`);
-  }
-
-  savePassword(newPassword: any) {
-    //JSON {token: token, password: password}
-    return this.http.post<boolean>(`${this.API_AUTH}/user/savePassword`, newPassword);
+  savePassword(token: string, newPassword: string) {
+    //JSON {"token": token, "newPassword": newPassword}
+    return this.http.post<boolean>(`${this.API_AUTH}/user/savePassword`, 
+                {"token": token, "newPassword": newPassword});
   }
 
   changeUserPassword(newPassword: Map<string, string>) {

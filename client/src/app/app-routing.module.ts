@@ -26,16 +26,17 @@ import {LoginDialogComponent} from './login/login-dialog.component';
 import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.component';
 import { TeamPartecipationComponent } from './team-creation/team-partecipation.component';
 import { TeamVmsContComponent } from './teacher/vms/team-vms-cont.component';
+import { ChangePasswordContComponent } from './change-password/change-password-cont/change-password-cont.component';
 
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'home/%3FdoLogin%3Dtrue', component: HomeComponent },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home?doLogin=true', component: HomeComponent },
   { path: 'page-not-found', component: PageNotFoundComponent },
   { path: 'register/:success/:token', component: RegisterSuccessComponent },
   { path: 'team/:success/:token', component: TeamPartecipationComponent },
   { path: ':role/course/:courses/:tab/not-allowed', component: UserNotAllowedComponent },
+  { path: 'user/password-reset', component: ChangePasswordContComponent },
   {
       path: 'student',
       children: [
@@ -96,7 +97,8 @@ const routes: Routes = [
           ]
         }            
     ]
-  }
+  },
+  { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
 @NgModule({

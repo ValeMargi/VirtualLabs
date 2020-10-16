@@ -7,6 +7,7 @@ import it.polito.ai.virtualLabs.repositories.StudentRepository;
 import it.polito.ai.virtualLabs.repositories.TeamRepository;
 import it.polito.ai.virtualLabs.repositories.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -39,12 +40,20 @@ public class NotificationServiceImpl implements NotificationService{
 
 
     @Override
-    public void sendMessage(String address, String subject, String body) {
+    public boolean sendMessage(String address, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo("virtuallabs.ai2020@gmail.com");
         message.setSubject(subject);
         message.setText(body);
-        emailSender.send(message);
+
+        try {
+            emailSender.send(message);
+            return true;
+        }
+        catch (MailException me) {
+            me.printStackTrace();
+            return false;
+        }
     }
 
     /**

@@ -148,22 +148,25 @@ public class UserController {
 
     @PostMapping("/user/resetPassword")
     @ResponseStatus(HttpStatus.OK)
-    public void resetPassword(HttpServletRequest request,
-                                         @RequestParam("email") String userEmail) {
-        UserDAO user = userRepository.findById(userEmail).get();
+    public boolean resetPassword(HttpServletRequest request,
+                                         @RequestBody String userId) {
+        UserDAO user = userRepository.findById(userId).get();
         if (user != null) {
             String token = UUID.randomUUID().toString();
             authenticationService.createPasswordResetTokenForUser(user, token);
             String email = null;
             if(user.getRole().equals("student"))
-                email = userEmail+"@studenti.polito.it";
+                email = userId+"@studenti.polito.it";
             else if(user.getRole().equals("professor") )
-                email=userEmail+"@polito.it";
-            notificationService.sendMessage(email, "Change password request",
+                email=userId+"@polito.it";
+            return notificationService.sendMessage(email, "Change password request",
                     " Click here to change password:\n\n"
                     +"http://localhost:8080/API/user/changePassword?token="+token );
             //mailSender.send(constructResetTokenEmail(getAppUrl(request), request.getLocale(), token, user));
 
+        }
+        else {
+            return false;
         }
     }
     /*private SimpleMailMessage constructResetTokenEmail(final String contextPath, final Locale locale, final String token, final UserDAO user) {
@@ -173,15 +176,18 @@ public class UserController {
     }*/
 
     @GetMapping("/user/changePassword")
-    public String showChangePasswordPage(Locale locale, Model model,
-                                         @RequestParam("token") String token) {
+    public ResponseEntity<Void> showChangePasswordPage(Locale locale, Model model, @RequestParam("token") String token) {
         String result = authenticationService.validatePasswordResetToken(token);
-        if(result != null) {
+        HttpHeaders headers = new HttpHeaders();
+
+        if (result == null) {
+            headers.setLocation(URI.create("http://localhost:4200/user/password-reset?token=" + token));
+            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
+        }
+        else {
             String message = messageSource.getMessage("auth.message." + result, null, locale);
-            return "redirect:/login.html?message=" + message;
-        } else {
-            model.addAttribute("token", token);
-            return "redirect:/updatePassword.html";
+            headers.setLocation(URI.create("http://localhost:4200/user/password-reset?error=" + message));
+            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
         }
     }
 

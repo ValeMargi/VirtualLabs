@@ -195,7 +195,7 @@ public class CourseController {
      * @return: ritorna una lista di boolean per tener traccia se l'aggiunta di ogni studente al dato corso ha avuto successo o meno
      */
     @PostMapping("/{courseName}/enrollMany")
-    public List<StudentDTO> enrollStudents(@PathVariable String courseName, @RequestParam("file") MultipartFile file){
+    public List<StudentDTO> enrollStudents(@PathVariable String courseName, @RequestPart("file") MultipartFile file){
         if( !file.getContentType().equals("text/csv") && !file.getContentType().equals("application/vnd.ms-excel"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not text/csv");
         else

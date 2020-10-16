@@ -6,6 +6,7 @@ import { RegisterDialogComponent } from '../register/register-dialog.component';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import {ForgotPasswordComponent} from '../forgot-password/forgot-password.component'
 import { RegisterContComponent } from '../register/register-cont/register-cont.component';
+import { ForgotPasswordContComponent } from '../forgot-password/forgot-password-cont/forgot-password-cont.component';
 
 @Component({
   selector: 'app-login-dialog',
@@ -87,10 +88,10 @@ error: boolean = false;
 
     dialogConfig.data = {
         id: 1,
-        title: 'Register'
+        title: 'ForgotPwd'
     };
 
-    this.matDialog.open(ForgotPasswordComponent, dialogConfig);
+    this.matDialog.open(ForgotPasswordContComponent, dialogConfig);
   }
 
   emailDomainValidator(control: FormControl) { 

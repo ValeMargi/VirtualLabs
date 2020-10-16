@@ -1,19 +1,25 @@
-import { Component, OnInit, Inject, Injectable, Output } from '@angular/core';
+import { Component, OnInit, Inject, Injectable, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { RegisterDialogComponent } from '../register/register-dialog.component';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { RegisterContComponent } from '../register/register-cont/register-cont.component';
+import { emit } from 'process';
 
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.css']
 })
-export class ForgotPasswordComponent implements OnInit {
+export class ForgotPasswordComponent implements OnInit, OnChanges {
 
   ForgotPasswordForm: FormGroup;
+
+  @Input() ok: boolean;
+  @Input() error: boolean;
+  @Input() querying: boolean;
+  @Output('reset') reset = new EventEmitter<string>();
 
  constructor(
       public matDialog: MatDialog, 
@@ -23,7 +29,7 @@ export class ForgotPasswordComponent implements OnInit {
       private formBuilder: FormBuilder) {
 
       this.ForgotPasswordForm = this.formBuilder.group({
-        email: new FormControl('',[Validators.email,this.emailDomainValidator])
+        id: new FormControl('',[Validators.required])
       });
   
   }
@@ -31,24 +37,22 @@ export class ForgotPasswordComponent implements OnInit {
   ngOnInit() {
   }
 
-  close() {
-      this.dialogRef.close();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.ok != null) {
+      this.ok = changes.ok.currentValue;
+    }
+
+    if (changes.error != null) {
+      this.error = changes.error.currentValue;
+    }
   }
 
-  sendPassword(email) {
-    if (email.value.toString().length == 0) {
-      document.getElementById("error").style.visibility = "visible";
-    }
-    else {
-      this.authService.resetPassword(email).subscribe(
-        (data) => {
-          
-        },
-        (error) => {
-          console.log("Errore nel reset della password");
-        }
-      )
-    }
+  close() {
+    this.dialogRef.close();
+  }
+
+  resetPassword(email) {
+    this.reset.emit(email);
   }
 
 
@@ -66,21 +70,6 @@ export class ForgotPasswordComponent implements OnInit {
     };
 
     this.matDialog.open(RegisterContComponent, dialogConfig);
-  }
-
-  emailDomainValidator(control: FormControl) { 
-    let email = control.value; 
-    if (email && email.indexOf("@") != -1) { 
-      let [_, domain] = email.split("@"); 
-      if (domain !== "studenti.polito.it" && domain !== "polito.it") { 
-        return {
-          emailDomain: {
-            parsedDomain: domain
-          }
-        }
-      }
-    }
-    return null; 
   }
 
 }

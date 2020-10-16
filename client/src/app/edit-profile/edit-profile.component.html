@@ -6,7 +6,7 @@
           <img class="img" [src]="avatar" />
         </div>
         <div class="camera-box">
-          <input class="inputfile" type="file" name="pic" accept="image/*" 
+          <input class="inputfile" type="file" name="pic" accept="image/*"
             (change)="onFileChanged($event)">
           <label><mat-icon class="camera">camera_alt</mat-icon></label>
         </div>
@@ -28,20 +28,22 @@
     <div *ngIf="changePassVisibility">
         <mat-form-field>
             <mat-label>Password attuale</mat-label>
-            <input #password type="password" matInput required minlength="8">
-            <mat-error>Password non valida</mat-error>
+            <input #actualPassword type="password" matInput required minlength="8">
+
         </mat-form-field>
         <br>
         <mat-form-field>
             <mat-label>Nuova password</mat-label>
-            <input #newPassword type="password" matInput required minlength="8">
-            <mat-error>Password non valida</mat-error>
+            <input #newPassword type="password"  matInput required minlength="8">
+
+
         </mat-form-field>
         <br>
         <mat-form-field>
             <mat-label>Ripeti password</mat-label>
-            <input #passR type="password" matInput required minlength="8">
-            <mat-error>Password non valida</mat-error>
+            <input #repeatPassword type="password" matInput required minlength="8">
+
+
         </mat-form-field>
     </div>
   </div>
@@ -53,5 +55,5 @@
 
 <mat-dialog-actions>
   <button mat-button (click)="close()">Annulla</button>
-  <button mat-button mat-raised-button color="primary" (click)="save(password.value, newPassword.value, passR.value)" >Salva</button>
+  <button mat-button mat-raised-button color="primary" (click)="save(actualPassword, newPassword, repeatPassword)">Salva</button>
 </mat-dialog-actions>

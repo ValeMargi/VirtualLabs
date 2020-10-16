@@ -17,13 +17,13 @@ export class EditProfileComponent implements OnInit, OnChanges {
   @Input() querying: boolean;
   @Input() avatar_ok: boolean;
   @Input() pwd_ok: boolean;
-  @Output('avatar') changeAvatar = new EventEmitter<any>(); 
+  @Output('avatar') changeAvatar = new EventEmitter<any>();
   @Output('password') changePassword = new EventEmitter<Map<string, string>>();
 
   selectedPhoto: File;
-  password: any;
-  newPassword: any;
-  passR: any;
+  actualPassword: string;
+  newPassword: string;
+  repeatPassword: string;
 
   constructor(private dialogRef: MatDialogRef<EditProfileComponent>) { }
 
@@ -61,11 +61,11 @@ export class EditProfileComponent implements OnInit, OnChanges {
 
   onFileChanged(imageInput) {
     this.selectedPhoto = imageInput.target.files[0]
-    
+
     const reader = new FileReader();
     reader.readAsDataURL(this.selectedPhoto);
-    reader.onload = (_event) => { 
-      this.avatar = reader.result; 
+    reader.onload = (_event) => {
+      this.avatar = reader.result;
     }
   }
 

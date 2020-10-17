@@ -34,6 +34,8 @@ public class TeamController {
      */
     @PostMapping("/{courseName}/proposeTeam")
     public TeamDTO proposeTeam(@PathVariable String courseName, @RequestBody Map<String, Object> object) {
+        if ( !object.containsKey("nameTeam") ||  !object.containsKey("timeout") || !object.containsKey("membersId"))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
         try {
             String nameTeam = object.get("nameTeam").toString();
             Timestamp timeout = Timestamp.valueOf(object.get("timeout").toString());

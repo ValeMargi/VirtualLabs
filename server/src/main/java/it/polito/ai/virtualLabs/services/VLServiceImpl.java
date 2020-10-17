@@ -580,7 +580,7 @@ public class VLServiceImpl implements VLService{
                 }
                 if( c.getPhotoModelVM()!=null)
                     photoModelVMRepository.delete(c.getPhotoModelVM());
-                
+
                 for(int i=students.size()-1; i>=0; i--){// s: stu){
                     c.removeStudent(students.get(i));
                     //log.severe("stu:"); debug
@@ -626,7 +626,7 @@ public class VLServiceImpl implements VLService{
     public List<TeamDTO> getTeamsForStudent(String studentId){
         try {
             Student s = studentRepository.getOne(studentId);
-            return s.getTeams().stream().map(t -> modelMapper.map(t, TeamDTO.class)).collect(Collectors.toList());
+            return s.getTeams().stream().filter(t-> t.getStatus()==1).map(t -> modelMapper.map(t, TeamDTO.class)).collect(Collectors.toList());
         }catch(EntityNotFoundException enfe){
             throw new StudentNotFoundException();
         }
@@ -643,7 +643,7 @@ public class VLServiceImpl implements VLService{
             if (!os.isPresent())
                 throw new StudentNotFoundException();
             List<TeamDTO> list = oc.get().getTeams().stream()
-                                        .filter(team -> team.getMembers().contains(os.get()))
+                                        .filter(team -> team.getMembers().contains(os.get()) && team.getStatus()==1)
                                         .map(team -> modelMapper.map(team, TeamDTO.class)).collect(Collectors.toList());
 
             if (list.size() != 1) {
@@ -683,13 +683,13 @@ public class VLServiceImpl implements VLService{
             throw new CourseDisabledException();
 
         List<String> enrolledStudents= getEnrolledStudents(courseId).stream()
-                .map(StudentDTO::getId)
-                .collect(Collectors.toList());
+                                                                    .map(StudentDTO::getId)
+                                                                    .collect(Collectors.toList());
 
         if(course.get().getTeams().stream().anyMatch(t ->t.getName().equals(name)))
             throw new NameTeamIntoCourseAlreadyPresentException();
 
-        if ( !enrolledStudents.containsAll(memberIds))
+        if ( !enrolledStudents.containsAll(memberIds) || !enrolledStudents.contains(creatorStudent))
             throw  new StudentNotEnrolledToCourseException();
 
         if( memberIds.stream()

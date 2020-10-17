@@ -577,16 +577,18 @@ public class VLServiceImpl implements VLService{
                         }
                     }
 
-                    for(int i=students.size()-1; i>=0; i--){// s: stu){
-                        c.removeStudent(students.get(i));
-                        //log.severe("stu:"); debug
-                    }
-                    List<Professor> professors= c.getProfessors();
-                    for(int i=professors.size()-1; i>=0; i--){// s: stu){
-                        c.removeProfessor(professors.get(i));
-                        //log.severe("stu:"); ug
-                    }
+                }
+                if( c.getPhotoModelVM()!=null)
                     photoModelVMRepository.delete(c.getPhotoModelVM());
+                
+                for(int i=students.size()-1; i>=0; i--){// s: stu){
+                    c.removeStudent(students.get(i));
+                    //log.severe("stu:"); debug
+                }
+                List<Professor> professors= c.getProfessors();
+                for(int i=professors.size()-1; i>=0; i--){// s: stu){
+                    c.removeProfessor(professors.get(i));
+                    //log.severe("stu:"); ug
                 }
                 courseRepository.delete(c);
                 courseRepository.flush();

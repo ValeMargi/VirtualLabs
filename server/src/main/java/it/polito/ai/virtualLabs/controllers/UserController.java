@@ -162,18 +162,12 @@ public class UserController {
             return notificationService.sendMessage(email, "Change password request",
                     " Click here to change password:\n\n"
                     +"http://localhost:8080/API/user/changePassword?token="+token );
-            //mailSender.send(constructResetTokenEmail(getAppUrl(request), request.getLocale(), token, user));
-
         }
         else {
             return false;
         }
     }
-    /*private SimpleMailMessage constructResetTokenEmail(final String contextPath, final Locale locale, final String token, final UserDAO user) {
-        final String url = contextPath + "/user/changePassword?token=" + token;
-        final String message = messageSource.getMessage("message.resetPassword", null, locale);
-        return constructEmail("Reset Password", message + " \r\n" + url, user);
-    }*/
+
 
     @GetMapping("/user/changePassword")
     public ResponseEntity<Void> showChangePasswordPage(Locale locale, Model model, @RequestParam("token") String token) {

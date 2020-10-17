@@ -936,7 +936,7 @@ public class VLServiceImpl implements VLService{
      */
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public VMDTO addVM(VMDTO vmdto, String courseId, PhotoVMDTO photoVMDTO) {
+    public VMDTO addVM(VMDTO vmdto, String courseId) {
 
             String studentAuth= SecurityContextHolder.getContext().getAuthentication().getName();
             if( getStudentsInTeams(courseId).stream().anyMatch(s-> s.getId().equals(studentAuth))){
@@ -947,7 +947,6 @@ public class VLServiceImpl implements VLService{
                     throw new CourseDisabledException();
                 if (c.getPhotoModelVM() == null)
                     throw  new ModelVMNotSettedException();
-
                 Student s = studentRepository.getOne(studentAuth);
                 Team t = teamRepository.getOne(s.getTeams().stream().filter(te->te.getCourse().equals(c)).findFirst().get().getId());
                 if(t.getVms().stream().anyMatch(v->v.getNameVM().equals(vmdto.getNameVM())))
@@ -958,10 +957,17 @@ public class VLServiceImpl implements VLService{
                         throw new InvalidInputVMresources();
                     VM vm = modelMapper.map(vmdto, VM.class);
                     vm.setCourse(c);
-                    PhotoVM photoVM = modelMapper.map(photoVMDTO, PhotoVM.class);
+
+                    PhotoModelVM photoModelVM = c.getPhotoModelVM();
+
+                    PhotoVM photoVM = new PhotoVM();
+                    photoVM.setNameFile(photoModelVM.getNameFile());
+                    photoVM.setType(photoModelVM.getType());
+                    photoVM.setPicByte(compressZLib(photoModelVM.getPicByte()));
+
                     vm.setPhotoVM(photoVM);
-                    vm.addStudentToOwnerList(s); //add owner
-                  //  c.setTotInstances(c.getTotInstances()-1);
+                    vm.addStudentToOwnerList(s);
+
                     t.getMembers().stream().forEach(stu-> vm.addStudentToMemberList(stu));
                     vm.setTeam(t);
                     t.setDiskSpaceLeft(t.getDiskSpaceLeft()-vmdto.getDiskSpace());
@@ -1217,6 +1223,28 @@ public class VLServiceImpl implements VLService{
                    return photoVMDTO;
                }else throw new PermissionDeniedException();
            }else throw new VMNotFoundException();
+        }else throw new TeamNotFoundException();
+    }
+    /* GetPhotoVMforProfessor*/
+
+    @PreAuthorize("hasAuthority('student')")
+    @Override
+    public PhotoVMDTO getVMforProfessor( String courseId, Long VMid) {
+        String professor =SecurityContextHolder.getContext().getAuthentication().getName();
+        Professor p = professorRepository.getOne(professor);
+        Optional<Course> oc = p.getCourses().stream().filter(c-> c.getName().equals(courseId)).findFirst();
+        if(!oc.isPresent()) throw new CourseNotFoundException();
+        if(!oc.get().getTeams().isEmpty()){
+            Optional<VM> ovm= VMRepository.findById(VMid);
+            if(ovm.isPresent()){
+                VM vm = ovm.get();
+                Optional<Team> teamOptional = oc.get().getTeams().stream().filter(t->t.getVms().contains(vm)).findFirst();
+                if(teamOptional.isPresent()){
+                    PhotoVMDTO photoVMDTO = modelMapper.map(vm.getPhotoVM(), PhotoVMDTO.class);
+                    photoVMDTO.setPicByte(decompressZLib(photoVMDTO.getPicByte()));
+                    return photoVMDTO;
+                }else throw new PermissionDeniedException();
+            }else throw new VMNotFoundException();
         }else throw new TeamNotFoundException();
     }
 

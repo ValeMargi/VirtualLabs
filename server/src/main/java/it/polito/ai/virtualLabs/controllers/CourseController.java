@@ -1,7 +1,6 @@
 package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.*;
-import it.polito.ai.virtualLabs.entities.*;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,25 +12,16 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/API/courses")
 public class CourseController {
-
-    /*Metodi non implementati:
-    *  - GetModelVM
-    * */
-
 
     @Autowired
     VLService vlService;
@@ -216,6 +206,7 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
+
     @PostMapping("/{courseName}/removeStudents")
     public List<StudentDTO> deleteStudentsFromCourse(@PathVariable String courseName, @RequestBody String[] studentsId){
         try{
@@ -229,7 +220,6 @@ public class CourseController {
 
         }
     }
-
 
     /**
      * Metodo: GET
@@ -246,9 +236,6 @@ public class CourseController {
         }
     }
 
-
-
-
     @GetMapping("/{courseName}/getProfessors")
     public List<ProfessorDTO> getProfessorsForCourse(@PathVariable String courseName){
         try{
@@ -257,9 +244,6 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-
-
-
 
     /**
      * Metodo: POST

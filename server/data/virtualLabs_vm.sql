@@ -1,0 +1,3 @@
+INSERT INTO virtualLabs.vm (id, disk_space, namevm, num_vcpu, ram, status, timestamp, course_id, photo_id, team_id) VALUES (45, 70, 'VM1_Team1', 2, 4, 'off', '2020-10-16 11:22:37.042', 'arch', 46, 41);
+INSERT INTO virtualLabs.vm (id, disk_space, namevm, num_vcpu, ram, status, timestamp, course_id, photo_id, team_id) VALUES (47, 70, 'VM2_Team1', 2, 4, 'off', '2020-10-16 11:23:22.526', 'arch', 48, 41);
+INSERT INTO virtualLabs.vm (id, disk_space, namevm, num_vcpu, ram, status, timestamp, course_id, photo_id, team_id) VALUES (76, 0, 'VM3_Team1', 0, 0, 'off', '2020-10-16 11:36:53.641', 'arch', 77, 41);

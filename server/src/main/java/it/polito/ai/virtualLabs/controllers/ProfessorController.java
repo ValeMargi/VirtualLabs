@@ -147,6 +147,22 @@ public class ProfessorController {
 
         }
     }
+    /**
+     * Authrority: Professor
+     * @param courseName
+     * @param VMid
+     * @return: ritrona  PhotoVM dto con l'immagine  della VM con id pari a VMid
+     */
+    @GetMapping("/VM/{courseName}/{VMid}")
+    public PhotoVMDTO getVMforProfessor(@PathVariable String courseName, @PathVariable Long VMid) {
+        try{
+            return vlService.getVMforProfessor(courseName, VMid);
+        } catch (TeamNotFoundException | CourseNotFoundException | VMNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch ( PermissionDeniedException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
 
     /**
      * Authrority: Docente

@@ -90,14 +90,16 @@ public class StudentController {
      * Authrority: Studente
      * @param courseName
      * @param VMid
-     * @return: ritrona  VM dto con le informazioni della VM con id pari a VMid
+     * @return: ritrona  VM dto con l'immagine della VM con id pari a VMid
      */
     @GetMapping("/VM/{courseName}/{VMid}")
     public PhotoVMDTO getVMforStudent(@PathVariable String courseName, @PathVariable Long VMid) {
         try{
             return vlService.getVMforStudent(courseName, VMid);
-        } catch (TeamNotFoundException e) {
+        } catch (TeamNotFoundException  | VMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch(PermissionDeniedException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 
@@ -153,18 +155,12 @@ public class StudentController {
      * Metodo: POST
      * Authority: Studente
      * @param courseName:courseName: riceve dal path il nome del corso
-     * @param file:nella richiesta viene inviata l'immagine associata alla VM creata dallo studente
      * @param input: nella richiesta vengono inviati tutti i parametri associati alla VM creata
      * @return: ritorna il DTO della VM appena creata
      */
 
     @PostMapping("/{courseName}/addVM")
-    public VMDTO addVM( @PathVariable String courseName,  @RequestPart("file") @Valid @NotNull MultipartFile file,
-                        @RequestPart("VM") Map<String, Object> input) {
-        if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
-                && !file.getContentType().equals("image/png"))
-            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
-
+    public VMDTO addVM( @PathVariable String courseName, @RequestPart("VM") Map<String, Object> input) {
         if ( !input.containsKey("nameVM") ||  !input.containsKey("numVcpu")
                 || !input.containsKey("diskSpace")
                 || !input.containsKey("ram") )
@@ -180,22 +176,15 @@ public class StudentController {
             vmdto.setNameVM(input.get("nameVM").toString());
             vmdto.setRam(Integer.parseInt(input.get("ram").toString()));
             vmdto.setStatus("off");
-
-            PhotoVMDTO photoVMDTO = new PhotoVMDTO();
-            photoVMDTO.setNameFile(file.getOriginalFilename());
-            photoVMDTO.setType(file.getContentType());
-            photoVMDTO.setPicByte(vlService.compressZLib(file.getBytes()));
             vmdto.setTimestamp( timestamp.toString());
 
-            return  vlService.addVM(vmdto, courseName,photoVMDTO);
+            return  vlService.addVM(vmdto, courseName);
         }catch (CourseNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch( ModelVMAlreadytPresentException | ResourcesVMNotRespectedException | VMduplicatedException | CourseDisabledException e){
             throw new    ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }catch(ImageSizeException e){
+        }catch(ImageSizeException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }catch(IOException e){
-            throw new    ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }catch(PermissionDeniedException p){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, p.getMessage());
         }

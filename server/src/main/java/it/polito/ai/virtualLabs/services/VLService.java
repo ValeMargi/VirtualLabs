@@ -47,7 +47,7 @@ public interface VLService {
     void evictTeam(Long id);
     CourseDTO addModelVM(CourseDTO courseDTO, String courseI, PhotoModelVM photoModelVM);
     CourseDTO updateModelVM(CourseDTO courseDTO, String courseName );
-    VMDTO addVM(VMDTO vmdto, String courseId, PhotoVMDTO photoVMDTO);
+    VMDTO addVM(VMDTO vmdto, String courseId);
     boolean addOwner(Long VMid, String courseId, List<String> students);
     boolean activateVM(Long VMid);
     boolean disableVM(Long VMid);
@@ -56,7 +56,8 @@ public interface VLService {
     VMDTO updateVMresources(Long VMid,VMDTO vmdto);
     List<VMDTO> allVMforStudent(String courseId);
     List<VMDTO> allVMforCourse( String courseId);
-   PhotoVMDTO getVMforStudent( String courseId, Long VMid);
+    PhotoVMDTO getVMforStudent( String courseId, Long VMid);
+    PhotoVMDTO getVMforProfessor( String courseId, Long VMid);
     List<VMDTO> getAllVMTeam(  Long teamId);
     boolean isOwner(  Long VMid);
     List<StudentDTO> getOwnersForProfessor(Long VMid);

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -30,10 +31,11 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        UserDAO user = userRepository.findById(id).get();
-        if (user == null) {
+        Optional<UserDAO> ouser = userRepository.findById(id);
+        if (!ouser.isPresent()) {
             throw new UsernameNotFoundException("User not found with id: " + id);
         }
+        UserDAO user = ouser.get();
         if(!user.getActivate())
             throw new UserNotActivateException();
         List<String> roles=new ArrayList<>();
@@ -57,16 +59,13 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     public  boolean checkUsernameInUserRepo(String username){
-        if( userRepository.existsById(username))
-            return  false;
-        else return  true;
-
+        return !userRepository.existsById(username);
     }
 
     public UserDAO userDAOfromUserDetails(UserDetails userDetails){
-        UserDAO userDAO = userRepository.findById(userDetails.getUsername()).get();
-        if( userDAO!=null)
-            return  userDAO;
+        Optional<UserDAO> ouser = userRepository.findById(userDetails.getUsername());
+        if( ouser.isPresent())
+            return  ouser.get();
         else throw new UsernameNotFoundException(userDetails.getUsername());
     }
 }

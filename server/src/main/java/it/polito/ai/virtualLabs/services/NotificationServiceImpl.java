@@ -1,7 +1,6 @@
 package it.polito.ai.virtualLabs.services;
 
 import it.polito.ai.virtualLabs.dtos.TeamDTO;
-import it.polito.ai.virtualLabs.entities.Team;
 import it.polito.ai.virtualLabs.entities.Token;
 import it.polito.ai.virtualLabs.repositories.StudentRepository;
 import it.polito.ai.virtualLabs.repositories.TeamRepository;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -66,7 +64,7 @@ public class NotificationServiceImpl implements NotificationService{
         Optional<Token> t = checkTokenValidity(token);
         if(t.isPresent()){
             if( tokenRepository.findAllByTeamId(t.get().getTeamId())
-                    .stream().filter(te->te.getStatus()).count() == teamRepository.getOne(t.get().getTeamId()).getMembers().size()) {
+                    .stream().filter(Token::getStatus).count() == teamRepository.getOne(t.get().getTeamId()).getMembers().size()) {
                 tokenRepository.findAllByTeamId(t.get().getTeamId()).forEach(tk-> tokenRepository.delete(tk));
                 VLService.activateTeam(t.get().getTeamId());
                 return 2;
@@ -91,23 +89,18 @@ public class NotificationServiceImpl implements NotificationService{
     public void notifyTeam(TeamDTO dto, List<String> memberIds, String creatorStudent, String courseId, Timestamp timeout) {
         if(timeout.before(Timestamp.from(Instant.now())))
             throw new TimeoutNotValidException();
-        for (int i = 0; i < memberIds.size(); i++) {
+        for (String memberId : memberIds) {
             Token t = new Token();
             t.setId(UUID.randomUUID().toString());
             t.setTeamId(dto.getId());
             t.setStatus(false);
             t.setCourseId(courseId);
-            t.setStudent(studentRepository.getOne(memberIds.get(i)));
+            t.setStudent(studentRepository.getOne(memberId));
             t.setExpiryDate(timeout);
-            //t.setExpiryDate(Timestamp.from(Instant.now().plus(5000, ChronoUnit.MILLIS))); for debug
-            //t.setExpiryDate(Timestamp.from(Instant.now().plus(1, ChronoUnit.HOURS))); //MODIFICARE
             tokenRepository.saveAndFlush(t);
-            sendMessage(memberIds.get(i)+"@studenti.polito.it",
+            sendMessage(memberId + "@studenti.polito.it",
                     "Join the Team",
-                    "You have been added to the Team "+dto.getName()+"\n\n"
-                          /*  + "Accept the registration on:\n\n http://localhost:8080/API/notification/confirm/"+ t.getId()+
-                            "\n \n" +
-                            "or refuse registration at the following link:\n\n http://localhost:8080/API/notification/reject/"+t.getId()*/);
+                    "You have been added to the Team " + dto.getName() + "\n\n");
         }
         Token t = new Token();
         t.setId(UUID.randomUUID().toString());
@@ -128,7 +121,7 @@ public class NotificationServiceImpl implements NotificationService{
                 return t;
             }else{
                 tokenRepository.deleteById(token);
-                return null;
+                return Optional.empty();
             }
         }
         return t;

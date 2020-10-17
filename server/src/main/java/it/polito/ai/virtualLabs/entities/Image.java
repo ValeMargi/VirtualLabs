@@ -7,10 +7,6 @@ import javax.persistence.*;
 @MappedSuperclass
 public  class Image {
 
-   // @Id
-   // @GeneratedValue(strategy = GenerationType.AUTO)
-   // @Column(name = “id”, updatable = false, nullable = false)
-   // private Long id;
     private String nameFile;
     private String type;
     @Column(name = "picByte", length = 16777215)

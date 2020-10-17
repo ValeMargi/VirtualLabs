@@ -2,7 +2,6 @@ package it.polito.ai.virtualLabs.entities;
 
 import com.opencsv.bean.CsvBindByName;
 import lombok.*;
-import org.apache.commons.beanutils.PropertyUtilsBean;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

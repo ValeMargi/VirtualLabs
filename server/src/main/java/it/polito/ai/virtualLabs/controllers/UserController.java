@@ -66,6 +66,8 @@ public class UserController {
     @PostMapping("/addUser")
     public Optional<UserDTO> registerUser(@RequestPart("file") @Valid @NotNull MultipartFile file, @RequestPart("registerData") Map<String, String> registerData) throws IOException {
         /*Controllare se fare lowerCase*/
+        if(file.isEmpty() || file.getContentType()==null)
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided for the avatar profile is type "+file.getContentType()+" not valid");
@@ -79,7 +81,6 @@ public class UserController {
         } else if (!jwtUserDetailsService.checkUsernameInUserRepo(registerData.get("email"))) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User with email" + registerData.get("email") + "  already present");
         } else try {
-            //for id check
              int index = registerData.get("email").indexOf("@");
              String id = registerData.get("email").substring(0, index);
             if(!id.equals(registerData.get("id")))
@@ -118,25 +119,12 @@ public class UserController {
 
         if (authenticationService.confirmRegistration((token))) {
             headers.setLocation(URI.create("http://localhost:4200/register/confirm/" + token));
-            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
         }
         else {
             headers.setLocation(URI.create("http://localhost:4200/register/expired/" + token));
-            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
         }
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
-
-  /*  private SimpleMailMessage constructEmail(String subject, String body, UserDAO user) {
-        final SimpleMailMessage email = new SimpleMailMessage();
-        email.setSubject(subject);
-        email.setText(body);
-        email.setTo(user.getId());
-        return email;
-    }
-
-    private String getAppUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-    }*/
 
     @PostMapping("/user/resetPassword")
     @ResponseStatus(HttpStatus.OK)
@@ -166,15 +154,14 @@ public class UserController {
         String result = authenticationService.validatePasswordResetToken(token);
         HttpHeaders headers = new HttpHeaders();
 
-        if (result == null) {
+        if(result == null) {
             headers.setLocation(URI.create("http://localhost:4200/user/password-reset?token=" + token));
-            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
         }
         else {
             String message = messageSource.getMessage("auth.message." + result, null, locale);
             headers.setLocation(URI.create("http://localhost:4200/user/password-reset?error=" + message));
-            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
         }
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
     /**

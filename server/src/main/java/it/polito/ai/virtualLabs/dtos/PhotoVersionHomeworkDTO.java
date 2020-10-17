@@ -2,8 +2,6 @@ package it.polito.ai.virtualLabs.dtos;
 
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
-
-
 @Data
 public class PhotoVersionHomeworkDTO extends RepresentationModel<PhotoVersionHomeworkDTO> {
     private String timestamp;

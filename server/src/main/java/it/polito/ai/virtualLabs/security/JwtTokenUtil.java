@@ -30,11 +30,6 @@ public class JwtTokenUtil implements Serializable {
     static final String CLAIM_KEY_FIRSTNAME = "firstname";
     static final String CLAIM_KEY_NAME = "name";
     static final String CLAIM_KEY_ID = "id";
-  //  static final String CLAIM_KEY_PHOTO = "photo";
-
-    static final String CLAIM_KEY_PHOTO_NAME = "photoName";
-    static final String CLAIM_KEY_PHOTO_TYPE = "photoType";
-    static final String CLAIM_KEY_PHOTO_BYTE = "photoPicByte";
 
     @Autowired
     VLService vlService;
@@ -79,7 +74,6 @@ public class JwtTokenUtil implements Serializable {
                 claims.put(CLAIM_KEY_FIRSTNAME, userDAO.getStudent().getFirstName());
                 claims.put(CLAIM_KEY_NAME, userDAO.getStudent().getName());
                 claims.put(CLAIM_KEY_ID, userDAO.getStudent().getId());
-
             }
         }catch(ImageSizeException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());

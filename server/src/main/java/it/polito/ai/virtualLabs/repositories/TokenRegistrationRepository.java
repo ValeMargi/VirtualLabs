@@ -6,7 +6,6 @@ import java.security.Timestamp;
 import java.util.List;
 
 public interface TokenRegistrationRepository extends JpaRepository<TokenRegistration, String> {
-    List<TokenRegistration> findAllByExpiryDateBefore(Timestamp t);
 
 
 }

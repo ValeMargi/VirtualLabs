@@ -8,6 +8,6 @@ import org.springframework.hateoas.RepresentationModel;
 public class TeamDTO extends RepresentationModel<TeamDTO> {
     private Long id;
     private  String name, creatorId;
-    private int status,maxVpcuLeft, diskSpaceLeft, ramLeft, runningInstances, totInstances;
+    private int status,maxVcpuLeft, diskSpaceLeft, ramLeft, runningInstances, totInstances;
 
 }

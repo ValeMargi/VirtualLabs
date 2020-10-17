@@ -195,10 +195,10 @@ public class StudentController {
      * @param input: nel body della richiesta vengono inviati gli id dei membri del team che divenntano owner della VM
      */
     @PostMapping("/{courseName}/{VMid}/addOwner")
-    public void addOwner(  @PathVariable String courseName, @PathVariable Long VMid,@RequestBody String[] input) {
+    public boolean addOwner(  @PathVariable String courseName, @PathVariable Long VMid,@RequestBody String[] input) {
         try {
             List<String> membersId = Arrays.asList(input);
-            vlService.addOwner(VMid, courseName, membersId);
+            return  vlService.addOwner(VMid, courseName, membersId);
         } catch (VMNotFoundException | CourseNotFoundException | StudentNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p){
@@ -232,9 +232,9 @@ public class StudentController {
      * @param VMid: riceve dal path l'id della VM da attiavare
      */
     @GetMapping("/{courseName}/{VMid}/activateVM")
-    public void activateVM(  @PathVariable String courseName, @PathVariable Long VMid) {
+    public boolean activateVM(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
-            vlService.activateVM(VMid);
+            return vlService.activateVM(VMid);
         } catch (VMNotFoundException   e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p){
@@ -251,9 +251,9 @@ public class StudentController {
      * @param VMid: riceve dal path l'id della VM da disattiavare
      */
     @GetMapping("/{courseName}/{VMid}/disableVM")
-    public void disableVM(  @PathVariable String courseName, @PathVariable Long VMid) {
+    public boolean disableVM(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
-            vlService.disableVM(VMid);
+            return vlService.disableVM(VMid);
         } catch (VMNotFoundException   e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p) {
@@ -268,9 +268,9 @@ public class StudentController {
      * @param VMid: riceve dal path l'id della VM da rimuovere
      */
     @GetMapping("/{courseName}/{VMid}/removeVM")
-    public void removeVM(  @PathVariable String courseName, @PathVariable Long VMid) {
+    public boolean removeVM(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
-            vlService.removeVM(VMid);
+            return  vlService.removeVM(VMid);
         } catch (VMNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p) {
@@ -287,20 +287,20 @@ public class StudentController {
      * @param file
      */
     @PostMapping("/{courseName}/{VMid}/use")
-    public void useVM( @PathVariable String courseName, @PathVariable Long VMid,
+    public boolean useVM( @PathVariable String courseName, @PathVariable Long VMid,
                        @RequestPart("file") @Valid @NotNull MultipartFile file) {
+        if(file.isEmpty() || file.getContentType()==null)
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
         try{
-            //Date date= new Date(System.currentTimeMillis());
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
-
             PhotoVMDTO photoVMDTO = new PhotoVMDTO();
             photoVMDTO.setNameFile(file.getOriginalFilename());
             photoVMDTO.setType(file.getContentType());
             photoVMDTO.setPicByte(vlService.compressZLib(file.getBytes()));
-            vlService.useVM(VMid, timestamp.toString(), photoVMDTO);
+            return vlService.useVM(VMid, timestamp.toString(), photoVMDTO);
         }catch (  VMNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch (VMnotEnabledException | ImageSizeException e){
@@ -350,8 +350,10 @@ public class StudentController {
      * @throws IOException
      */
     @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/uploadHomework")
-    public void uploadVersionHomework(@PathVariable String courseName, @PathVariable Long assignmentId,
+    public boolean uploadVersionHomework(@PathVariable String courseName, @PathVariable Long assignmentId,
                                       @PathVariable Long homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file ) throws IOException {
+        if(file.isEmpty() || file.getContentType()==null)
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
@@ -363,7 +365,7 @@ public class StudentController {
             photoVersionHomeworkDTO.setType(file.getContentType());
             photoVersionHomeworkDTO.setPicByte(vlService.compressZLib(file.getBytes()));
             photoVersionHomeworkDTO.setTimestamp(timestamp.toString());
-            vlService.uploadVersionHomework(homeworkId,photoVersionHomeworkDTO);
+            return vlService.uploadVersionHomework(homeworkId,photoVersionHomeworkDTO);
         }catch(ImageSizeException | HomeworkIsPermanentException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch (HomeworkNotFoundException | VMNotFoundException | TeamNotFoundException e){

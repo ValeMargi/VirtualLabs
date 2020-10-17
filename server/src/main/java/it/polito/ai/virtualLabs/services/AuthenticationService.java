@@ -1,7 +1,6 @@
 package it.polito.ai.virtualLabs.services;
 
 import it.polito.ai.virtualLabs.dtos.*;
-import it.polito.ai.virtualLabs.entities.Image;
 import it.polito.ai.virtualLabs.entities.TokenRegistration;
 import it.polito.ai.virtualLabs.entities.UserDAO;
 
@@ -18,5 +17,5 @@ public interface AuthenticationService {
     boolean confirmRegistration(String token);
     Optional<TokenRegistration> checkTokenValidity(String token);
     void activateUser(String userId);
-    public boolean checkIfValidOldPassword(UserDAO user, final String oldPassword);
+    boolean checkIfValidOldPassword(UserDAO user, final String oldPassword);
     }

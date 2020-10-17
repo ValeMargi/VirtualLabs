@@ -10,7 +10,6 @@ import java.util.List;
 //@ToString(exclude = {"homeworks", "photoAssignment"}) //l
 //@EqualsAndHashCode(exclude = {"homeworks","photoAssignment"})
 
-
 public class Assignment {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)

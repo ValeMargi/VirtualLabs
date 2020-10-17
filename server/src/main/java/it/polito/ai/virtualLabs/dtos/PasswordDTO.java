@@ -1,30 +1,11 @@
 package it.polito.ai.virtualLabs.dtos;
 
+import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 
+@Data
 public class PasswordDTO extends RepresentationModel<PasswordDTO> {
-    private String oldPassword;
-
-    private  String token;
-
-   // @ValidPassword
-    private String newPassword;
-
-    public String getOldPassword() {
-        return oldPassword;
-    }
-
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
+    private String oldPassword, token, newPassword;
 
     public String getToken() {
         return token;

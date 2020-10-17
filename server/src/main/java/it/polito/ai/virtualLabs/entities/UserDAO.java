@@ -15,7 +15,6 @@ import javax.persistence.*;
 public class UserDAO {
     @Id
     @Column
-    //@Email ?? errore capire il perche'
     private String id;
     @Column
     @JsonIgnore

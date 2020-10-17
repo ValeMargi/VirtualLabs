@@ -184,6 +184,8 @@ public class CourseController {
      */
     @PostMapping("/{courseName}/enrollMany")
     public List<StudentDTO> enrollStudents(@PathVariable String courseName, @RequestPart("file") MultipartFile file){
+        if(file.isEmpty() || file.getContentType()==null)
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("text/csv") && !file.getContentType().equals("application/vnd.ms-excel"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not text/csv");
         else
@@ -242,26 +244,6 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-
-    /**
-     * Metodo: POST
-     * @param courseName: riceve dal path il nome del corso
-     * @param homeworkId: riceve dal path l'id dell'elaborata di cui si vuole modificare lo stato
-     * @param status: valore che può essere LETTO, CONSEGNATO, RIVISTO
-     */
-    //@PostMapping("/{courseName}/{homeworkId}")
-   /* public void updateStatusHomework(@PathVariable String courseName,@PathVariable Long homeworkId, @RequestParam String status) {
-        try{
-            vlService.updateStatusHomework(homeworkId, status );
-        } catch (HomeworkNotFoundException   e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch(PermissionDeniedException e){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }
-    }
-*/
-
-
 
     /**
      * Metodo:GET

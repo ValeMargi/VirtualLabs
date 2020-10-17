@@ -36,12 +36,6 @@ public class Professor {
     private UserDAO userDAO;
 
 
-    public void removeCourse(Course c){
-        if(c!=null && courses.contains(c)){
-            courses.remove(c);
-            c.getProfessors().remove(this);
-        }
-    }
 
     public  void setPhotoProfessor(AvatarProfessor a){
         if( a!= null && a!=photoProfessor){
@@ -56,11 +50,11 @@ public class Professor {
             c.setProfessor(this);
         }
     }
-//CONTROLLARE, FUNZIONE SIMILE removeCourse
-    public void removeCourses(Course c){
+    public void removeCourse(Course c){
         if(c!=null && courses.contains(c)){
             courses.remove(c);
             c.removeProfessor(this);
         }
     }
+
 }

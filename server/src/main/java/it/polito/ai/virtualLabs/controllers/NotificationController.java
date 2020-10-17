@@ -7,7 +7,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +39,7 @@ public class NotificationController {
                     break;
             }
 
-            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
+            return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
         }catch (TeamNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -58,7 +57,7 @@ public class NotificationController {
                 headers.setLocation(URI.create("http://localhost:4200/team/reject/" + token));
             }
 
-            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
+            return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
         }catch(TeamNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

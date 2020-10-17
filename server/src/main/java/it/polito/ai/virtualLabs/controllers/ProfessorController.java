@@ -83,6 +83,8 @@ public class ProfessorController {
     @PostMapping("/{courseName}/addModel")
     public CourseDTO addModelVM( @PathVariable String courseName,  @RequestPart("file") @Valid @NotNull MultipartFile file,
                                  @RequestPart("modelVM") Map<String, Object> input) {
+        if(file.isEmpty() || file.getContentType()==null)
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
@@ -211,8 +213,10 @@ public class ProfessorController {
      * @throws IOException
      */
     @PostMapping("/{courseName}/addAssignment")
-    public void addAssignment(@PathVariable String courseName, @RequestPart("file") @Valid @NotNull MultipartFile file,
+    public boolean addAssignment(@PathVariable String courseName, @RequestPart("file") @Valid @NotNull MultipartFile file,
                               @RequestPart("assignment")  Map<String, Object> input ) throws IOException {
+        if(file.isEmpty() || file.getContentType()==null)
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
@@ -232,7 +236,7 @@ public class ProfessorController {
             photoAssignmentDTO.setType(file.getContentType());
             photoAssignmentDTO.setPicByte(vlService.compressZLib(file.getBytes()));
             photoAssignmentDTO.setTimestamp( timestamp.toString());
-            vlService.addAssignment(assignmentDTO, photoAssignmentDTO, courseName);
+            return vlService.addAssignment(assignmentDTO, photoAssignmentDTO, courseName);
         }catch ( CourseNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(ImageSizeException | AssignmentAlreadyExistException e){
@@ -329,10 +333,12 @@ public class ProfessorController {
      * @throws IOException
      */
     @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/{versionHMid}/uploadCorrection")
-    public void uploadCorrection(@PathVariable String courseName, @PathVariable Long assignmentId,
+    public boolean uploadCorrection(@PathVariable String courseName, @PathVariable Long assignmentId,
                                  @PathVariable Long homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file,
                                  @RequestPart("permanent") @NotNull String permanent, @PathVariable Long versionHMid,
                                  @RequestPart("grade") String grade) throws IOException {
+        if(file.isEmpty() || file.getContentType()==null)
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
@@ -345,7 +351,7 @@ public class ProfessorController {
             photoCorrectionDTO.setType(file.getContentType());
             photoCorrectionDTO.setPicByte(  vlService.compressZLib(file.getBytes()));
             photoCorrectionDTO.setTimestamp(timestamp.toString());
-            vlService.uploadCorrection(homeworkId, versionHMid, photoCorrectionDTO, Boolean.parseBoolean(permanent), grade);
+            return vlService.uploadCorrection(homeworkId, versionHMid, photoCorrectionDTO, Boolean.parseBoolean(permanent), grade);
 
         }catch ( HomeworkNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

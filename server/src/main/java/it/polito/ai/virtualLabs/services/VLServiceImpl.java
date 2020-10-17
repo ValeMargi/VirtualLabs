@@ -776,7 +776,7 @@ public class VLServiceImpl implements VLService{
     public List<TeamDTO> getTeamForCourse(String courseName){
         try{
             Course course =courseRepository.getOne(courseName);
-            return  course.getTeams().stream().map(t-> modelMapper.map(t, TeamDTO.class)).collect(Collectors.toList());
+            return  course.getTeams().stream().filter(t-> t.getStatus()==1).map(t-> modelMapper.map(t, TeamDTO.class)).collect(Collectors.toList());
         }catch(EntityNotFoundException enfe){
             throw new CourseNotFoundException();
         }

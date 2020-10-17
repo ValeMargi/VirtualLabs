@@ -16,7 +16,7 @@ public class Course {
     private String acronym;
     @Id
     private String name;
-    private int min, max; //min e max nei teams
+    private int min, max; //about teams
     private boolean enabled;
 
     //ModelVM
@@ -30,17 +30,12 @@ public class Course {
 
    // @ToString.Exclude
     //@HashCodeExclude
-    @ManyToMany(mappedBy = "courses") //(fetch = FetchType.EAGER) default
+    @ManyToMany(mappedBy = "courses")
     List<Professor> professors = new ArrayList<>();
 
     @OneToMany(mappedBy = "courseAssignment")
     private List<Assignment> assignments = new ArrayList<>();
 
-   /* @OneToOne //(fetch = FetchType.EAGER) default
-    @JoinColumn(name="modelVm_id")
-    ModelVM modelVM;
-
-    */
    @OneToMany(mappedBy = "course")
    private List<VM> vms = new ArrayList<>();
 
@@ -75,7 +70,6 @@ public class Course {
         return false;
     }
 
-    /*Gestire rimozione professore dal corso*/
     public void setProfessor(Professor  p){
         if(p!=null && !professors.contains(p)) {
             professors.add(p);

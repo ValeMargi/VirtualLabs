@@ -2,7 +2,6 @@ package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.*;
 
-import it.polito.ai.virtualLabs.entities.AvatarStudent;
 import it.polito.ai.virtualLabs.entities.UserDAO;
 import it.polito.ai.virtualLabs.dtos.ProfessorDTO;
 import it.polito.ai.virtualLabs.exceptions.*;
@@ -14,13 +13,10 @@ import it.polito.ai.virtualLabs.services.NotificationService;
 import it.polito.ai.virtualLabs.services.VLService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +25,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.net.URI;
-import java.sql.Timestamp;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -58,9 +53,6 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    private JavaMailSender mailSender;
 
     @Autowired
     private MessageSource messageSource;
@@ -134,7 +126,7 @@ public class UserController {
         }
     }
 
-    private SimpleMailMessage constructEmail(String subject, String body, UserDAO user) {
+  /*  private SimpleMailMessage constructEmail(String subject, String body, UserDAO user) {
         final SimpleMailMessage email = new SimpleMailMessage();
         email.setSubject(subject);
         email.setText(body);
@@ -144,14 +136,14 @@ public class UserController {
 
     private String getAppUrl(HttpServletRequest request) {
         return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-    }
+    }*/
 
     @PostMapping("/user/resetPassword")
     @ResponseStatus(HttpStatus.OK)
-    public boolean resetPassword(HttpServletRequest request,
-                                         @RequestBody String userId) {
-        UserDAO user = userRepository.findById(userId).get();
-        if (user != null) {
+    public boolean resetPassword(HttpServletRequest request, @RequestBody String userId) {
+        Optional<UserDAO> ouser = userRepository.findById(userId);
+        if (ouser.isPresent()) {
+            UserDAO user = ouser.get();
             String token = UUID.randomUUID().toString();
             authenticationService.createPasswordResetTokenForUser(user, token);
             String email = null;
@@ -218,8 +210,9 @@ public class UserController {
     @PostMapping("/user/updatePassword")
     @ResponseBody
     public boolean changeUserPassword(final Locale locale, @RequestBody Map<String, String> input) {
-        final UserDAO user = userRepository.findById(( SecurityContextHolder.getContext().getAuthentication().getName())).get();
-        if( user !=null) {
+        Optional<UserDAO> ouser = userRepository.findById(SecurityContextHolder.getContext().getAuthentication().getName());
+        if( ouser.isPresent()) {
+            UserDAO user = ouser.get();
             if (!authenticationService.checkIfValidOldPassword(user, input.get("oldPassword"))) {
                 throw new InvalidOldPasswordException();
             }

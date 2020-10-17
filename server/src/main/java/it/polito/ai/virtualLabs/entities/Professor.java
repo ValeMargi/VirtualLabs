@@ -1,11 +1,7 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.apache.commons.lang3.builder.HashCodeExclude;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +24,11 @@ public class Professor {
     @JoinTable(name="professor_course",
             joinColumns = @JoinColumn(name="professor_id"),
             inverseJoinColumns = @JoinColumn(name="course_name"))
-   // @ManyToMany(mappedBy = "professors")
     private List<Course> courses = new ArrayList<>();
 
     //@HashCodeExclude
    // @ToString.Exclude
-    @OneToOne //(fetch = FetchType.EAGER) default
+    @OneToOne
     @JoinColumn(name="image_id")
     AvatarProfessor photoProfessor;
 
@@ -61,7 +56,7 @@ public class Professor {
             c.setProfessor(this);
         }
     }
-
+//CONTROLLARE, FUNZIONE SIMILE removeCourse
     public void removeCourses(Course c){
         if(c!=null && courses.contains(c)){
             courses.remove(c);

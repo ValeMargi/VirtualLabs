@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
 
-import java.sql.Timestamp;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

@@ -10,14 +10,13 @@ import java.util.List;
 @Data
 @Entity
 public class Homework {
-    //@Id @GeneratedValue(generator="optimized-sequence")
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
     private  String status;
     private Boolean permanent; //false può essere  ancora modificato
     private String grade;
 
-    @ManyToOne //(fetch = FetchType.EAGER) default
+    @ManyToOne
     @JoinColumn(name="student_id")
     Student  student;
 

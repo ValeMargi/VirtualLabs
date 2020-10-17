@@ -1,21 +1,9 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
-import org.springframework.ui.Model;
-
 import javax.persistence.*;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.DataFormatException;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
 
 @Data
-//@Entity
-//@Table(name = "image_table")
 @MappedSuperclass
 public  class Image {
 
@@ -42,7 +30,7 @@ public  class Image {
 
     }
 
-    public Image(){};
+    public Image(){}
 
 
 

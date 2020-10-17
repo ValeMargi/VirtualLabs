@@ -17,8 +17,8 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/API/professors")
 public class ProfessorController {
@@ -29,7 +29,7 @@ public class ProfessorController {
 
     @GetMapping({"", "/"})
     public List<ProfessorDTO> getAll(){
-        return vlService.getAllProfessors().stream().map(p-> ModelHelper.enrich(p)).collect(Collectors.toList());
+        return vlService.getAllProfessors().stream().map(ModelHelper::enrich).collect(Collectors.toList());
     }
 
 
@@ -65,7 +65,7 @@ public class ProfessorController {
     public List<CourseDTO> getCoursesForProfessor(@PathVariable String professorId){
         try{
             return vlService.getCoursesForProfessor(professorId).stream()
-                    .map(c-> ModelHelper.enrich(c)).collect(Collectors.toList());
+                    .map(ModelHelper::enrich).collect(Collectors.toList());
         }catch(ProfessorNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -106,11 +106,9 @@ public class ProfessorController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }catch(ImageSizeException e){
+        }catch(ImageSizeException | ModelVMAlreadytPresentException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }catch(ModelVMAlreadytPresentException e){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }catch(IOException e){
+        } catch(IOException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
@@ -224,7 +222,6 @@ public class ProfessorController {
         try {
             AssignmentDTO assignmentDTO = new AssignmentDTO();
             assignmentDTO.setAssignmentName(input.get("assignmentName").toString());
-            //Date date= new Date(System.currentTimeMillis());
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
 
             assignmentDTO.setReleaseDate(timestamp.toString());
@@ -238,12 +235,10 @@ public class ProfessorController {
             vlService.addAssignment(assignmentDTO, photoAssignmentDTO, courseName);
         }catch ( CourseNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch(ImageSizeException e){
+        }catch(ImageSizeException | AssignmentAlreadyExistException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }catch (AssignmentAlreadyExistException e){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -354,13 +349,10 @@ public class ProfessorController {
 
         }catch ( HomeworkNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch(ImageSizeException e){
+        }catch(ImageSizeException | HomeworkIsPermanentException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }catch(HomeworkIsPermanentException e){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-
         }
     }
 

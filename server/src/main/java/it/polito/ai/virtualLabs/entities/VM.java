@@ -1,18 +1,16 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.ui.Model;
+
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
 public class VM{
-    //@Id @GeneratedValue(generator="optimized-sequence")
+
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
     private String nameVM;

@@ -4,8 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
-import java.sql.Timestamp;
-
 @Data
 @NoArgsConstructor
 public class ProfessorDTO extends RepresentationModel<ProfessorDTO> {

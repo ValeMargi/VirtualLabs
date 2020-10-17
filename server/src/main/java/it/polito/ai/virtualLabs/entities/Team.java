@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @Data
 public class Team {
-    //@Id @GeneratedValue(generator="optimized-sequence")
+
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private  String name, creatorId;
@@ -22,7 +22,7 @@ public class Team {
             inverseJoinColumns = @JoinColumn(name="student_id"))
     List<Student> members = new ArrayList<>();
 
-    @ManyToOne //(fetch = FetchType.EAGER) default
+    @ManyToOne
     @JoinColumn(name="course_id")
     Course course;
 

@@ -1,14 +1,8 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -20,20 +14,15 @@ import java.util.List;
 public class Assignment {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    //@Id
-    //@GeneratedValue(generator="optimized-sequence")
     private  Long id;
     private  String nameAssignment;
     private String releaseDate, expiration;
 
-
-
-
-    @ManyToOne //(fetch = FetchType.EAGER) default
+    @ManyToOne
     @JoinColumn(name="course_id")
     Course courseAssignment;
 
-    @OneToOne //(fetch = FetchType.EAGER) default
+    @OneToOne
     @JoinColumn(name="image_id")
     PhotoAssignment photoAssignment;
 

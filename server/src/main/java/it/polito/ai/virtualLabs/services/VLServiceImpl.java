@@ -256,8 +256,8 @@ public class VLServiceImpl implements VLService{
             throw new CourseNotFoundException();
         }else if(!course.get().isEnabled()) {
             throw new CourseDisabledException();
-        }else if(!getProfessorsForCourse(courseName).stream()
-                                                    .anyMatch(p ->p.getId()
+        }else if(getProfessorsForCourse(courseName).stream()
+                                                    .noneMatch(p ->p.getId()
                                                     .equals(SecurityContextHolder.getContext().getAuthentication().getName())))
             throw new PermissionDeniedException();
         else {
@@ -285,8 +285,8 @@ public class VLServiceImpl implements VLService{
             throw new CourseNotFoundException();
         }else if(!course.get().isEnabled()){
             throw new CourseDisabledException();
-        }else if(!getProfessorsForCourse(courseName).stream()
-                .anyMatch(p ->p.getId()
+        }else if(getProfessorsForCourse(courseName).stream()
+                .noneMatch(p ->p.getId()
                         .equals(SecurityContextHolder.getContext().getAuthentication().getName())))
             throw new PermissionDeniedException();
         else{
@@ -321,7 +321,7 @@ public class VLServiceImpl implements VLService{
                             } else {
                                 List<VM> vmOwner = VMstudent.stream().filter(vm -> vm.getOwnersVM().contains(student)).collect(Collectors.toList());
                                 vmOwner.stream().forEach(vm -> {
-                                    vm.getMembersVM().stream().forEach(stu -> vm.addStudentToOwnerList(stu));
+                                    vm.getMembersVM().stream().forEach(vm::addStudentToOwnerList);
                                     vm.removeStudentToOwnerList(student);
                                     vm.removeStudentToMemberList(student);
                                 });
@@ -335,7 +335,7 @@ public class VLServiceImpl implements VLService{
                             homeworkRepository.deleteAll(homeworkStudent);
                         } else {
                             // rimuovo token delle proposal
-                            List<Team> teamsStudent = teamRepository.findAllById(tokenRepository.findAllByStudent(student).stream().map(token -> token.getTeamId()).collect(Collectors.toList()));
+                            List<Team> teamsStudent = teamRepository.findAllById(tokenRepository.findAllByStudent(student).stream().map(Token::getTeamId).collect(Collectors.toList()));
                             for (Team t : teamsStudent) {
                                 tokenRepository.deleteFromTokenByTeamId(t.getId());
                                 evictTeam(t.getId());
@@ -1279,7 +1279,7 @@ public class VLServiceImpl implements VLService{
         if(oc.isPresent()){
             Course c = oc.get();
             if(c.getProfessors().stream().anyMatch(p->p.getId().equals(professor))){
-                if( !c.getAssignments().stream().anyMatch(a->a.getNameAssignment().equals(assignmentDTO.getAssignmentName()))) {
+                if(c.getAssignments().stream().noneMatch(a->a.getNameAssignment().equals(assignmentDTO.getAssignmentName()))) {
                     Assignment assignment= modelMapper.map(assignmentDTO, Assignment.class);
                     PhotoAssignment photoAssignment = modelMapper.map(photoAssignmentDTO, PhotoAssignment.class);
                     assignment.setCourseAssignment(c);
@@ -1530,7 +1530,7 @@ public class VLServiceImpl implements VLService{
             PhotoVersionHomework p =op.get();
             Homework h = p.getHomework();
             if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("professor"))) {
-                if (!h.getAssignment().getCourseAssignment().getProfessors().stream().anyMatch(pr -> pr.getId().equals(auth)))
+                if (h.getAssignment().getCourseAssignment().getProfessors().stream().noneMatch(pr -> pr.getId().equals(auth)))
                     throw new PermissionDeniedException();
             }else {
                 if (!h.getStudent().getId().equals(auth))
@@ -1635,7 +1635,7 @@ public class VLServiceImpl implements VLService{
             PhotoCorrection p =op.get();
             Homework h = p.getHomework();
             if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("professor"))) {
-                if (!h.getAssignment().getCourseAssignment().getProfessors().stream().anyMatch(pr -> pr.getId().equals(auth)))
+                if (h.getAssignment().getCourseAssignment().getProfessors().stream().noneMatch(pr -> pr.getId().equals(auth)))
                     throw new PermissionDeniedException();
             }else {
                 if (!h.getStudent().getId().equals(auth))

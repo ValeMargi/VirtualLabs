@@ -28,7 +28,7 @@ public class CourseController {
 
     @GetMapping({"", "/"})
     public List<CourseDTO> all(){
-        return vlService.getAllCourses().stream().map(c-> ModelHelper.enrich(c)).collect(Collectors.toList());
+        return vlService.getAllCourses().stream().map(ModelHelper::enrich).collect(Collectors.toList());
     }
 
     /**
@@ -99,12 +99,10 @@ public class CourseController {
     public boolean removeCourse(@PathVariable String courseName){
         try{
             return vlService.removeCourse(courseName);
-        }catch(CourseNotFoundException e){
+        }catch(CourseNotFoundException | ProfessorNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }catch (ProfessorNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
@@ -145,7 +143,7 @@ public class CourseController {
     @PostMapping({"/{courseName}/addProfessors"})
     public List<ProfessorDTO> addProfessorsToCourse(@RequestBody String[] professorsId, @PathVariable String courseName){
         try{
-            return vlService.addProfessorsToCourse(courseName, Arrays.asList(professorsId)).stream().map(p-> ModelHelper.enrich(p)).collect(Collectors.toList());
+            return vlService.addProfessorsToCourse(courseName, Arrays.asList(professorsId)).stream().map(ModelHelper::enrich).collect(Collectors.toList());
         }catch(CourseNotFoundException | ProfessorNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
@@ -230,7 +228,7 @@ public class CourseController {
     @GetMapping("/{courseName}/enrolled")
     public List<StudentDTO> enrolledStudents(@PathVariable  String courseName){
         try {
-            return vlService.getEnrolledStudents(courseName).stream().map(s -> ModelHelper.enrich(s)).collect(Collectors.toList());
+            return vlService.getEnrolledStudents(courseName).stream().map(ModelHelper::enrich).collect(Collectors.toList());
         }catch(CourseNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

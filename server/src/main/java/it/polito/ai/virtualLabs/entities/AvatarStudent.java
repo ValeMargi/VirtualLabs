@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Entity(name = "AvatarStudent")
 public class AvatarStudent  extends Image{
 
-   // @Id @GeneratedValue(generator="optimized-sequence")
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
 

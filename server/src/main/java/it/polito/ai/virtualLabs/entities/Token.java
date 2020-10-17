@@ -18,7 +18,7 @@ public class Token {
     private Timestamp expiryDate;
     private Boolean status; //false: in attesa, true:accettato
 
-    @ManyToOne //(fetch = FetchType.EAGER) default
+    @ManyToOne
     @JoinColumn(name="student_id")
     Student  student;
 

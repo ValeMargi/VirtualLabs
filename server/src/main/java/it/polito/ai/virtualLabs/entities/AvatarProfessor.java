@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import javax.persistence.*;
 
@@ -15,13 +14,11 @@ import javax.persistence.*;
 @Entity(name = "AvatarProfessor")
 public class AvatarProfessor extends Image{
 
-    //@Id @GeneratedValue(generator="optimized-sequence")
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
 
 
     @OneToOne(mappedBy = "photoProfessor")
-
     private Professor professor;
 
     public  void setProfessor(Professor p){

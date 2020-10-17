@@ -4,14 +4,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
 @Entity(name = "PhotoCorrection")
 public class PhotoCorrection extends  Image{
 
-   // @Id @GeneratedValue(generator="optimized-sequence")
    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
 

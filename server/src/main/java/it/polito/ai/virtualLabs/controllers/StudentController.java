@@ -1,7 +1,6 @@
 package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.*;
-import it.polito.ai.virtualLabs.entities.Student;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,7 +27,7 @@ public class StudentController {
 
     @GetMapping({"", "/"})
     public List<StudentDTO> all() {
-        return vlService.getAllStudents().stream().map(s -> ModelHelper.enrich(s)).collect(Collectors.toList());
+        return vlService.getAllStudents().stream().map(ModelHelper::enrich).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -64,7 +62,7 @@ public class StudentController {
     @GetMapping("/{studentId}/courses")
     public List<CourseDTO> getCourses(@PathVariable String studentId) {
         try {
-            return  vlService.getCoursesForStudent(studentId).stream().map(c-> ModelHelper.enrich(c)).collect(Collectors.toList());
+            return  vlService.getCoursesForStudent(studentId).stream().map(ModelHelper::enrich).collect(Collectors.toList());
 
         } catch (StudentNotFoundException cnfe) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, studentId);
@@ -181,11 +179,9 @@ public class StudentController {
             return  vlService.addVM(vmdto, courseName);
         }catch (CourseNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch( ModelVMAlreadytPresentException | ResourcesVMNotRespectedException | VMduplicatedException | CourseDisabledException e){
+        }catch( ModelVMAlreadytPresentException | ResourcesVMNotRespectedException | VMduplicatedException | CourseDisabledException | ImageSizeException e){
             throw new    ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }catch(ImageSizeException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }catch(PermissionDeniedException p){
+        } catch(PermissionDeniedException p){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, p.getMessage());
         }
     }
@@ -307,11 +303,9 @@ public class StudentController {
             vlService.useVM(VMid, timestamp.toString(), photoVMDTO);
         }catch (  VMNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch (VMnotEnabledException e){
+        }catch (VMnotEnabledException | ImageSizeException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }catch(ImageSizeException e){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }catch(PermissionDeniedException e){
+        } catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }catch (IOException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -370,14 +364,12 @@ public class StudentController {
             photoVersionHomeworkDTO.setPicByte(vlService.compressZLib(file.getBytes()));
             photoVersionHomeworkDTO.setTimestamp(timestamp.toString());
             vlService.uploadVersionHomework(homeworkId,photoVersionHomeworkDTO);
-        }catch(ImageSizeException e){
+        }catch(ImageSizeException | HomeworkIsPermanentException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch (HomeworkNotFoundException | VMNotFoundException | TeamNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }catch (HomeworkIsPermanentException e){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 

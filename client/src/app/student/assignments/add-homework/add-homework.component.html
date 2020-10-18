@@ -4,22 +4,21 @@
 
         <!--Nome Elaborato-->
         <mat-form-field class="form-group">
-        <input type="text" id="name" class="form-control" placeholder="Nome" [formControl]="form.name" matInput required minlength="3">
+        <input type="text" #name class="form-control" placeholder="Nome" [formControl]="form.name" matInput required minlength="3">
         <mat-error *ngIf="form.name.invalid">{{getErrorMessage()}}</mat-error>
         </mat-form-field><br><br>
 
         <!--Data Elaborato-->
         <mat-form-field class="form-group">
-        <input type="date" id="date" placeholder="Data pubblicazione" name="currentDate" [ngModel]="currentDate | date:'yyyy-MM-dd'" matInput readonly required>
+        <input type="date" #date placeholder="Data pubblicazione" name="currentDate" [ngModel]="currentDate | date:'yyyy-MM-dd'" matInput readonly required>
         </mat-form-field><br>
 
          <!--File-->
-        <input type="file" id="file" (change)="onFileSelected($event)" [formControl] = "form.file" accept="image/*" required>
+        <input type="file" #file (change)="addHomeworkImage($event)" [formControl] = "form.file" accept="image/*" required>
         <mat-error *ngIf="form.file.invalid">{{getErrorMessage()}}</mat-error>
 
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button mat-raised-button color="accent" (click)="close()">Annulla</button>
-    <button mat-button mat-raised-button color="primary" >Inserisci</button>
+    <button mat-button mat-raised-button color="primary" (click)="AddHomework(name.value,date.value)">Inserisci</button>
 </mat-dialog-actions>
-

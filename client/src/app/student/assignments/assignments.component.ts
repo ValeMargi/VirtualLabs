@@ -61,11 +61,13 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
   setTable() {
     this.dataAssignments = new MatTableDataSource<Assignment>(this.assignments);
+    this.dataHomeworks = new MatTableDataSource<Homework>(this.homeworks);
 
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.assignments = changes.assignments.currentValue;
+    //this.homeworks = changes.homeworks.currentValue;
     this.manageAssVisibility();
     this.setTable();
 

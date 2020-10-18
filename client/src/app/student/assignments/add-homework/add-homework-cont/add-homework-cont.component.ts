@@ -22,9 +22,8 @@ export class AddHomeworkContComponent implements OnInit {
   }
 
   addAssignment(content: any) {
-    let homeworkVersion: HomeworkVersion = content.version;
     let file: File = content.file;
-
+    let homeworkVersion: HomeworkVersion = content.version;
 
     this.studentService.addHomework(this.courseService.currentCourse.getValue().name, file, homeworkVersion).subscribe(
       (data) => {

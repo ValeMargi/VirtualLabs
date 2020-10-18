@@ -1,10 +1,12 @@
 import { Homework } from './../../../models/homework.model';
-import { Component,OnInit,AfterViewInit } from '@angular/core';
+import { Component,OnInit,AfterViewInit, Output, EventEmitter} from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
 import { CourseService } from 'src/app/services/course.service';
 import { ActivatedRoute } from '@angular/router';
+import { HomeworkVersion } from '../../../models/homework-version.model'
+import { AnyARecord } from 'dns';
 
 @Component({
   selector: 'app-add-homework',
@@ -14,6 +16,13 @@ import { ActivatedRoute } from '@angular/router';
 export class AddHomeworkComponent implements OnInit, AfterViewInit {
 
   //public HOMEWORKS: Homeworks[] = [];
+  selectedPhoto: File;
+  name;
+  date;
+  currentDate;
+  oneWeek;
+
+  @Output('create') create = new EventEmitter<any>();
 
   form = {
   name : new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -28,7 +37,6 @@ export class AddHomeworkComponent implements OnInit, AfterViewInit {
     }
   }
 
-  currentDate; oneWeek;
   constructor(private matDialogRef: MatDialogRef<AddHomeworkComponent>,
               private studentService: StudentService,
               private courseService: CourseService,
@@ -46,23 +54,19 @@ export class AddHomeworkComponent implements OnInit, AfterViewInit {
     console.log("Inserimento Annullato");
     this.matDialogRef.close();
   }
-/*
-  addHomework() {
 
-    this.studentService.addHomework.subscribe(
-      (data) => {
-        if (this.HOMEWORKS.length == 0) {
-          let array: Homeworks[] = new Array();
-          array.push(data);
-          this.HOMEWORKS = array;
-        }
-        else {
-          this.HOMEWORKS.push(data);
-        }
-      }
-    );
-    this.matDialogRef.close();
-  }*/
+  AddHomework(name: string, date: string) {
+    let homework = new HomeworkVersion(-1, name, date);
+
+    if (this.selectedPhoto != null) {
+      this.create.emit({homework: homework, file: this.selectedPhoto});
+      console.log("Homework aggiunto");
+    }
+  }
+
+  addHomeworkImage(imageInput) {
+    this.selectedPhoto = imageInput.target.files[0];
+  }
 
   onFileSelected(event){
     console.log(event);

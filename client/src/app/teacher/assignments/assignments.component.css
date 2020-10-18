@@ -1,35 +1,37 @@
-.assContainer {
-    width: 100%;
-    overflow: hidden; 
+.mat-table{
+  margin:2%;
+  width: 90%;
 }
 
-.container1 {
-    float: left;
-    width: 30%;
+.iconButton:hover{
+  background-color:#001ea34d;
 }
 
-.container2 {
-    float: right;
-    width: 60%;
-    margin-right: 2%;
+.row:active{
+  background-color:#281fa846;
+  color: white;
+}
+.row:hover{
+  background-color:#001ea34d;
+  color: white;
 }
 
-.assignments {
-    border: 1px solid gray;
-    border-radius: 8px;
-    margin-top: 1%;
-    margin-left: 2%;
-    margin-right: 5%;
+.card {
+  width: 90%;
+  margin-left: 2%;
+  margin-top: 2%;
 }
 
-h1 {
-    font-weight: bold; 
-    margin: 1em;
+.buttonText{
+  margin-left:45%;
 }
 
-h3 {
-    text-align: center;
+.tableContainer {
+    overflow: hidden;
 }
+
+
+
 
 .create {
     margin: 1em;

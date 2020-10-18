@@ -1,10 +1,10 @@
-import { Homework } from './../../models/homework.model';
 import { Component, OnInit, Input,Output, AfterViewInit, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { AssignmentsContComponent } from './assignments-cont/assignments-cont.component';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { Assignment } from 'src/app/models/assignment.model';
+import { Homework } from './../../models/homework.model';
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
 import { Student } from 'src/app/models/student.model';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -33,13 +33,14 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   @Output() public HOMEWORK: Homework;
   @Output() public ASSIGNMENTS: Assignment;
 
-  tableVisibility: boolean = true;
+  tableVisibility: boolean = false;
   tableAssignmetsVisibility: boolean =true;
   tableHomeworkVisibility: boolean = false;
 
   buttonHomeworkVisibility:boolean = false;
 
   panelOpenState = false;
+  titolo: string;
 
   length = 5;
   pageSize = 5;
@@ -54,9 +55,8 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
-    this.tableVisibility = false;
     this.setTable();
-    //this.manageAssVisibility();
+    this.manageAssVisibility();
   }
 
   setTable() {
@@ -66,11 +66,10 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     this.assignments = changes.assignments.currentValue;
+    this.manageAssVisibility();
     this.setTable();
 
   }
-
-  titolo: string;
 
   openHomeworkTable(ass:Assignment){
       this.tableAssignmetsVisibility = false;
@@ -84,14 +83,15 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
     this.tableAssignmetsVisibility = true;
 
   }
-  manageAssVisibility() {
-    if (this.assignments.length > 0) {
-      this.tableAssignmetsVisibility = true;
+
+    manageAssVisibility() {
+      if (this.assignments.length > 0) {
+        this.tableAssignmetsVisibility = true;
+      }
+      else {
+        this.tableAssignmetsVisibility = false;
+      }
     }
-    else {
-      this.tableAssignmetsVisibility = false;
-    }
-  }
 
   openDialogHomework() {
     const dialogRef = this.matDialog.open(AddHomeworkContComponent,{ id: 'dialogHomework'});

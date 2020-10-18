@@ -1,30 +1,105 @@
-<h1>Elaborati degli studenti</h1>
-<!-- Bottone Crea Consegna -->
-<div class="button-request" align="right">
-    <button mat-button  align ="end" mat-raised-button color="primary" (click)="openDialogAss()">
-        <mat-icon>assignment</mat-icon>Crea consegna </button>
-</div>
+<!--Consegne Docenti-->
+<mat-card class="card" *ngIf="tableAssignmetsVisibility">
+  <mat-card-header>
 
-<div class="assContainer" *ngIf="assVisibility">
-    <div class="container1">
-        <div class="assignments">
-            <mat-selection-list [multiple]="false">
-                <mat-list-option *ngFor="let ass of assignments" [value]="ass" (click)="showHomeworks(ass)"> 
-                    {{ ass.assignmentName }}    
-                </mat-list-option>
-            </mat-selection-list>
-        </div>
+    <mat-card-title>
+      <mat-icon>sticky_note_2</mat-icon>
+      Consegne</mat-card-title>
+    <mat-card-subtitle>Seleziona una consegna</mat-card-subtitle>
+    <!-- Bottone Crea Consegna -->
+      <div class="button-request" align="right">
+        <button mat-button  align ="end" mat-raised-button color="primary" (click)="openDialogAss()">
+            <mat-icon>assignment</mat-icon>Crea consegna </button>
+      </div>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <div class="noAss" *ngIf="!tableAssignmetsVisibility">
+      <h3>Ancora nessuna consegna</h3>
     </div>
 
-    <button mat-button mat-raised-button color="primary" *ngIf="tableVisibility" (click)="openDialogImage()">
-        <mat-icon>text_format</mat-icon>Visualizza testo</button>
 
-    <div class="container2">
-        <router-outlet></router-outlet>
-        <app-homeworks-cont class="tableContainer" [assignment]="ASSIGNMENT" *ngIf="false"> 
-        </app-homeworks-cont>
+    <div class="tableAssignments">
+      <table #table mat-table [dataSource]="dataAssignments" matSort class="tableAssignments">
+        <tr mat-header-row *matHeaderRowDef="AssignmentsColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: AssignmentsColumns" (click)="openHomeworkTable(row)" class="row"></tr>
+
+        <!--Titolo della Consegna-->
+        <ng-container matColumnDef="assignmentName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Titolo </th>
+          <td mat-cell *matCellDef="let row"> <strong>{{ row.assignmentName }} </strong></td>
+        </ng-container>
+
+        <!--Data di Rilascio-->
+        <ng-container matColumnDef="releaseDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Rilasciata </th>
+          <td mat-cell *matCellDef="let row"> {{ row.releaseDate }} </td>
+        </ng-container>
+
+         <!--Data di scadenza-->
+         <ng-container matColumnDef="expiration">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Scadenza </th>
+          <td mat-cell *matCellDef="let row"> {{ row.expiration }} </td>
+        </ng-container>
+
+         <!--Visualizza Testo-->
+         <ng-container matColumnDef="showAssignment">
+          <th mat-header-cell *matHeaderCellDef> </th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-button class="buttonText" color="primary" (click)="openDialogImage(row)">
+              <mat-icon>article</mat-icon>Visualizza Testo
+            </button>
+        </ng-container>
+
+        </table>
     </div>
-</div>
-<div class="noAss" *ngIf="!assVisibility">
-    <h3>Ancora nessuna consegna</h3>
-</div>
+  </mat-card-content>
+</mat-card>
+
+<!--Elaborati Studenti-->
+<mat-card class="card" *ngIf="tableHomeworkVisibility">
+  <mat-card-header >
+   <mat-card-title>
+    <button class="iconButton" mat-icon-button color="primary" (click)="backAssignmetsTable()">
+      <mat-icon>arrow_back</mat-icon></button>
+    Elaborati </mat-card-title>
+   <mat-card-subtitle>Titolo: {{titolo}}</mat-card-subtitle>
+  </mat-card-header>
+
+<mat-card-content>
+
+  <div class="tableContainer" >
+    <table #table mat-table [dataSource]="dataHomeworks" matSort class="matTable">
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Matricola </th>
+            <td mat-cell *matCellDef="let row">  </td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cognome </th>
+            <td mat-cell *matCellDef="let row">  </td>
+        </ng-container>
+        <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+            <td mat-cell *matCellDef="let row">  </td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato </th>
+            <td mat-cell *matCellDef="let row">  </td>
+        </ng-container>
+        <ng-container matColumnDef="timestamp">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Timestamp </th>
+            <td mat-cell *matCellDef="let row">  </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="HomeworkColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: HomeworkColumns"></tr>
+    </table>
+
+    <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+  </div>
+
+</mat-card-content>
+</mat-card>
+
+

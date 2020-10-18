@@ -20,7 +20,7 @@ export class ViewImageContComponent implements OnInit {
               private courseService: CourseService) { }
 
   ngOnInit(): void {
-    let type: string = this.data.type; //type can be: assignment, version, correction, vm  
+    let type: string = this.data.type; //type can be: assignment, version, correction, vm
     let course: string = this.courseService.currentCourse.getValue().name;
 
     switch(type) {
@@ -59,7 +59,7 @@ export class ViewImageContComponent implements OnInit {
         let assignmentId: number = this.data.assignmentId;
         let homeworkId: number = this.data.homeworkId;
         let versionId: number = this.data.versionId;
-        
+
         this.courseService.getVersionHM(course, assignmentId, homeworkId, versionId).subscribe(
           (data) => {
             this.TIMESTAMP = data.timestamp;
@@ -98,7 +98,7 @@ export class ViewImageContComponent implements OnInit {
         let vmId: number = this.data.vmId;
 
         if (isTeacher) {
-          
+
         }
         else {
           this.studentService.getVMForStudent(course, vmId).subscribe(

@@ -21,34 +21,75 @@ import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-
   styleUrls: ['./assignments.component.css']
 })
 export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
-  
+
+  @ViewChild('table') table: MatTable<Element>;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+
   @Input() public assignments: Assignment[] = [];
   @Output() public ASSIGNMENT: Assignment;
 
-  tableVisibility: boolean = false;
-  assVisibility: boolean = false;
+  HomeworkColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
+  AssignmentsColumns: string[] = ['assignmentName', 'releaseDate','expiration','showAssignment'];
 
-  constructor(private matDialog: MatDialog, private router: Router, private route: ActivatedRoute) { }
+  dataAssignments = new MatTableDataSource<Assignment>();
+  dataHomeworks = new MatTableDataSource<Homework>();
+
+  tableVisibility: boolean = true;
+  tableAssignmetsVisibility: boolean =true;
+  tableHomeworkVisibility: boolean = false;
+
+  buttonHomeworkVisibility:boolean = false;
+
+  panelOpenState = false;
+  titolo: string;
+
+  length = 5;
+  pageSize = 5;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+
+  constructor(private matDialog: MatDialog,
+              private router: Router,
+              private route: ActivatedRoute) { }
 
   ngAfterViewInit(): void {
   }
 
   ngOnInit(): void {
-    //this.tableVisibility = false;
     this.manageAssVisibility();
+    this.setTable();
+  }
+  setTable() {
+    this.dataAssignments = new MatTableDataSource<Assignment>(this.assignments);
+
+  }
+
+  openHomeworkTable(ass:Assignment){
+    this.tableAssignmetsVisibility = false;
+    this.tableHomeworkVisibility = true;
+
+     this.titolo = ass.assignmentName;
+  }
+
+  backAssignmetsTable(){
+    this.tableHomeworkVisibility = false;
+    this.tableAssignmetsVisibility = true;
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.assignments = changes.assignments.currentValue;
     this.manageAssVisibility();
+    this.setTable();
   }
 
   manageAssVisibility() {
     if (this.assignments.length > 0) {
-      this.assVisibility = true;
+      this.tableAssignmetsVisibility = true;
     }
     else {
-      this.assVisibility = false;
+      this.tableAssignmetsVisibility = false;
     }
   }
 
@@ -71,7 +112,8 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
     this.matDialog.open(CreateAssignmentContComponent, dialogConfig);
   }
 
-  openDialogImage() {
+
+  openDialogImage(ass: Assignment) {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = false;
@@ -81,7 +123,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
         title: 'AssignmentText',
         isTeacher: true,
         type: "assignment",
-        assignmentId: this.ASSIGNMENT.id
+        assignmentId: ass.id
     };
 
     this.matDialog.open(ViewImageContComponent, dialogConfig);

@@ -1,7 +1,15 @@
-<h1>Elenco studenti iscritti al corso</h1>
+<!--Elenco studenti iscritti al corso-->
+<mat-card class="card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>school</mat-icon>
+      Elenco studenti iscritti al corso</mat-card-title>
+      <mat-card-subtitle></mat-card-subtitle>
+    </mat-card-header>
+ <mat-card-content>
 
-<!--Aggiungi Studente-->
-<form style="margin-left: 2em;">
+  <!--Aggiungi Studente-->
+  <form style="margin-left: 2em;">
     <mat-form-field class="matForm">
         <input #input type="search" placeholder="Aggiungi studente" aria-label="Student"
                 matInput
@@ -20,9 +28,11 @@
     <button class="button" color="primary" mat-button mat-raised-button (click)="hiddenfileinput.click()">Aggiungi da CSV</button>
     <button class="button" color="primary" mat-button mat-raised-button>
         <mat-icon aria-label="" (click)=deleteStudent()>delete</mat-icon>
-        </button>
-</form>
-<div class="tableContainer" *ngIf="tableVisibility"> 
+    </button>
+  </form>
+
+  <!--Tabella Studenti-->
+  <div class="tableContainer" *ngIf="tableVisibility">
     <table #table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef><mat-checkbox #checkall (change)="selectAll($event.checked)"
@@ -50,11 +60,14 @@
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        
+
         </table>
         <mat-paginator  class="paginator"  [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>
 
-</div>
-<div class="noStudents" *ngIf="!tableVisibility">
-    <h3>Nessuno studente in questo corso</h3>
-</div>
+  </div>
+
+
+  </mat-card-content>
+</mat-card>
+
+

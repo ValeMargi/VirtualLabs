@@ -2,18 +2,23 @@
     width: 100%;
 }
 
+.card {
+  width: 90%;
+  margin-left: 2%;
+  margin-top: 2%;
+}
+.mat-table{
+  margin:2%;
+  width: 90%;
+}
+
 .matForm {
     width: 40%;
 }
 
-h1 {
-    font-weight: bold; 
-    margin: 1em;
-}
-
 .tableContainer {
     margin: 2em;
-} 
+}
 
 .noStudents {
     width: 100%;

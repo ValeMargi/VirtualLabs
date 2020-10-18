@@ -41,7 +41,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
 
   myControl = new FormControl();
   selectedCSV: File;
-  
+
   filteredOptions: Observable<Student[]>;
   studentToAdd : Student = null;
 
@@ -49,7 +49,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  tableVisibility: boolean = false;
+  tableVisibility: boolean = true;
   addDisabled: boolean = true;
 
   @Output('enroll') toInsert = new EventEmitter<Student>()
@@ -63,7 +63,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.manageTableVisibility();
+    //this.manageTableVisibility();
     this.setTable();
     this.studentToAdd = null;
     this.selectedStudents.clear();
@@ -85,18 +85,18 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
       this.students = new Array();
     }
 
-    this.manageTableVisibility();
+    //this.manageTableVisibility();
     this.setTable();
   }
 
-  manageTableVisibility() {
+ /* manageTableVisibility() {
     if (this.students.length > 0) {
       this.tableVisibility = true;
     }
     else {
       this.tableVisibility = false;
     }
-  }
+  }*/
 
   setTable() {
     this.dataSource = new MatTableDataSource<Student>(this.students);
@@ -108,7 +108,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   private _filter(value: string): Student[] {
     const filterValue = value.toLowerCase();
 
-    return this.options.filter(option => 
+    return this.options.filter(option =>
       (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
   }
 
@@ -147,7 +147,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
     return this.dataSource.data.length == this.selectedStudents.selected.length;
   }
 
-  onSearchChange(searchValue: string) {  
+  onSearchChange(searchValue: string) {
     if (searchValue.length > 0) {
       this.addDisabled = false;
     }
@@ -180,11 +180,11 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   addStudentCSV(file) {
     this.selectedCSV = file.target.files[0]
     this.toInsertCSV.emit(this.selectedCSV);
-  
+
     /*const reader = new FileReader();
     reader.readAsDataURL(this.selectedPhoto);
-    reader.onload = (_event) => { 
-      let csv = reader.result; 
+    reader.onload = (_event) => {
+      let csv = reader.result;
     }*/
   }
 

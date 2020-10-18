@@ -1,12 +1,7 @@
-import { Homework } from './../../../models/homework.model';
 import { Component,OnInit,AfterViewInit, Output, EventEmitter} from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { StudentService } from 'src/app/services/student.service';
-import { CourseService } from 'src/app/services/course.service';
-import { ActivatedRoute } from '@angular/router';
+import { FormControl, Validators } from '@angular/forms';
 import { HomeworkVersion } from '../../../models/homework-version.model'
-import { AnyARecord } from 'dns';
 
 @Component({
   selector: 'app-add-homework',
@@ -37,11 +32,7 @@ export class AddHomeworkComponent implements OnInit, AfterViewInit {
     }
   }
 
-  constructor(private matDialogRef: MatDialogRef<AddHomeworkComponent>,
-              private studentService: StudentService,
-              private courseService: CourseService,
-              private route: ActivatedRoute) { }
-
+  constructor(private matDialogRef: MatDialogRef<AddHomeworkComponent>) { }
   ngAfterViewInit() {}
 
   ngOnInit(): void {

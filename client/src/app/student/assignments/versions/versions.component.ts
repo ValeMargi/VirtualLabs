@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
-import { HomeworksComponent } from '../homeworks/homeworks.component';
 import { HomeworkCorrection } from 'src/app/models/homework-correction.model';
 @Component({
   selector: 'app-versions',
@@ -12,7 +11,7 @@ export class VersionsComponent implements OnInit, OnChanges {
   @Input() public versions: HomeworkVersion[] = [];
   @Input() public corrections: HomeworkCorrection[] = [];
 
-  constructor(private homeworkComponent: HomeworksComponent) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
@@ -22,8 +21,6 @@ export class VersionsComponent implements OnInit, OnChanges {
     this.corrections = changes.corrections.currentValue;
   }
 
-  back() {
-    this.homeworkComponent.versionsVisibility = false;
-  }
+
 
 }

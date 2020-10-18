@@ -1,9 +1,8 @@
-import { Component, OnInit, AfterViewChecked, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Assignment } from 'src/app/models/assignment.model';
-import { TeacherService } from 'src/app/services/teacher.service';
-import { CourseService } from 'src/app/services/course.service';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-create-assignment',
@@ -12,7 +11,6 @@ import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms'
 })
 export class CreateAssignmentComponent implements OnInit, AfterViewInit {
   CreateAssignmentForm: FormGroup;
-
   selectedPhoto: File;
   currentDate;
   oneWeek;
@@ -20,20 +18,11 @@ export class CreateAssignmentComponent implements OnInit, AfterViewInit {
   @Output('create') create = new EventEmitter<any>();
 
   constructor(
-    private matDialogRef: MatDialogRef<CreateAssignmentComponent>, 
-    private formBuilder: FormBuilder) { 
-
-      this.CreateAssignmentForm = this.formBuilder.group({
-        /*name : new FormControl('', [Validators.required]),
-        currentDate : new FormControl('', [Validators.required]),
-        expire : new FormControl('', [Validators.required, Validators.min(this.currentDate)]),
-        image: new FormControl('', Validators.required)*/
-      });
+    private matDialogRef: MatDialogRef<CreateAssignmentComponent>,
+    private formBuilder: FormBuilder) {
     }
 
-  ngAfterViewInit() {
-
-  }
+  ngAfterViewInit() {}
 
   ngOnInit(): void {
     this.currentDate = new Date();

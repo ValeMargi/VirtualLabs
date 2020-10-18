@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output} from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import { Homework } from 'src/app/models/homework.model';
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
 import { StudentService } from 'src/app/services/student.service';
@@ -17,11 +17,9 @@ export class AddHomeworkContComponent implements OnInit {
                private studentService: StudentService,
                private courseService: CourseService) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
 
-  }
-
-  addAssignment(content: any) {
+  addHomework(content: any) {
     let file: File = content.file;
     let homeworkVersion: HomeworkVersion = content.version;
 
@@ -34,9 +32,5 @@ export class AddHomeworkContComponent implements OnInit {
         console.log("Errore nel caricamento dell'homework");
       }
     );
-
-
   }
-
-
 }

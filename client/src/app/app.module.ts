@@ -65,8 +65,6 @@ import { AddCourseContComponent } from './teacher/add-course/add-course-cont.com
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { FooterComponent } from './footer/footer.component';
 import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.component';
-import { HomeworksContComponent as HomeworksContComponentStudent } from './student/assignments/homeworks/homeworks-cont/homeworks-cont.component';
-import { HomeworksComponent as HomeworksComponentStudent } from './student/assignments/homeworks/homeworks.component';
 import { VersionsComponent as VersionsComponentStudent } from './student/assignments/versions/versions.component';
 import { VersionsContComponent as VersionsContComponentStudent } from './student/assignments/versions/versions-cont/versions-cont.component';
 import { RegisterSuccessComponent } from './register-success/register-success.component';
@@ -125,8 +123,6 @@ import { ChangePasswordContComponent } from './change-password/change-password-c
     ForgotPasswordComponent,
     FooterComponent,
     UserNotAllowedComponent,
-    HomeworksComponentStudent,
-    HomeworksContComponentStudent,
     VersionsComponentStudent,
     VersionsContComponentStudent,
     RegisterSuccessComponent,

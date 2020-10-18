@@ -755,7 +755,7 @@ public class VLServiceImpl implements VLService{
             Map<String, Object> m = new HashMap<>();
             m.put("teamName", team.getName());
             m.put("creator", stu.getFirstName()+" "+stu.getName()+" "+ stu.getId());
-            String currentToken = stu.getTokens().stream().filter(t-> t.getTeamId().equals(teamId)).findFirst().get().getId();
+            String currentToken = s.getTokens().stream().filter(t-> t.getTeamId().equals(teamId)).findFirst().get().getId();
             m.put("tokenId", currentToken);
             Map<String, Object> m2= new HashMap<>();
             for(Token token: tokenRepository.findAllByTeamId(teamId).stream()

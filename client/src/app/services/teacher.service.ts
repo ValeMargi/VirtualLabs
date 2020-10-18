@@ -10,6 +10,7 @@ import { PhotoAssignment } from '../models/photo-assignment.model';
 import { Homework } from '../models/homework.model';
 import { HomeworkVersion } from '../models/homework-version.model';
 import { HomeworkCorrection } from '../models/homework-correction.model';
+import { PhotoVM } from '../models/photo-vm.model';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,10 @@ export class TeacherService {
       type: "application/json" }));
 
     return this.http.post<Course>(`${this.API_PROFESSORS}/${courseName}/update`, data);
+  }
+
+  getVMForProfessor(courseName: string, vmId: number) {
+    return this.http.get<PhotoVM>(`${this.API_PROFESSORS}/VM/${courseName}/${vmId}`);
   }
 
   allVMforCourse(courseName: string) {

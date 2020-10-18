@@ -14,7 +14,6 @@ import { CourseService } from 'src/app/services/course.service';
 export class AddCourseContComponent implements OnInit {
 
   @Output() ALL_TEACHERS: Teacher[] = [];
-  @Input() teachersToAdd: Teacher[] = [];
 
   constructor(public matDialog: MatDialog, 
     private dialogRef: MatDialogRef<AddCourseDialogComponent>, 
@@ -38,13 +37,14 @@ export class AddCourseContComponent implements OnInit {
   addCourse(content: any) {
     let course: Course = content.course;
     let file: File = content.file;
+    let ids: string[] = content.ids;
 
     if (course.min < 0 || course.max <= 0 || course.name.length == 0 || course.acronym.length == 0) {
       window.alert("Controllare che i dati inseriti siano validi e riprovare");
       return;
     }
 
-    this.courseService.addCourse(course, this.teachersToAdd.map(teacher => teacher.id)).subscribe(
+    this.courseService.addCourse(course, ids).subscribe(
       (data) => {
         this.courseService.setCurrentCourse(course);
         

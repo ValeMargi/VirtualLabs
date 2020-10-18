@@ -67,10 +67,12 @@ export class EditProfileContComponent implements OnInit {
     )
   }
 
-  changePassword(password: Map<string, string>) {
+  changePassword(content: any) {
     this.PWD_OK = false;
+    let oldPassword: string = content.oldPassword;
+    let newPassword: string = content.newPassword;
     
-    this.authService.changeUserPassword(password).subscribe(
+    this.authService.changeUserPassword(oldPassword, newPassword).subscribe(
       (data) => {
         if (data == false) {
           window.alert("Errore nel cambio password, si prega di riprovare");

@@ -114,8 +114,8 @@ register(firstName: string, name: string, id: string, email: string, password: s
 
   let userJson = { "firstName": firstName,
                   "name": name, 
-                  "id": id, 
-                  "email": email, 
+                  "id": id.toLowerCase(), 
+                  "email": email.toLowerCase(), 
                   "password": password 
                 };
 

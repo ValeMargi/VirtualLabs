@@ -150,9 +150,9 @@ export class AuthService {
                 {"token": token, "newPassword": newPassword});
   }
 
-  changeUserPassword(newPassword: Map<string, string>) {
-    //Map<Vecchia Password, Nuova Password>
-    return this.http.post<boolean>(`${this.API_AUTH}/user/updatePassword`, newPassword);
+  changeUserPassword(oldPassword: string, newPassword: string) {
+    return this.http.post<boolean>(`${this.API_AUTH}/user/updatePassword`, 
+                {"oldPassword": oldPassword, "newPassword": newPassword});
   }
 
   changeAvatar(file: File) {

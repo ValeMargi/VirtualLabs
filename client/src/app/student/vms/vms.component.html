@@ -1,22 +1,21 @@
 <!--Macchine virtuali-->
-<mat-card class="card" *ngIf="vmVisibility">
-  <mat-card-header>
+<mat-card class="card">
+  <mat-card-header *ngIf="!noTeamVisibility">
 
     <mat-card-title>
       <mat-icon>video_label</mat-icon>
       Macchine virtuali
     </mat-card-title>
-    <mat-card-subtitle>Gruppo: </mat-card-subtitle>
+    <!--<mat-card-subtitle>Gruppo: </mat-card-subtitle>-->
 
        <!-- Bottone crea Vm -->
-  <button class="button-request" mat-raised-button color="primary" (click)="openCreateVmsDialog()" *ngIf="!noTeamVisibility">
-    <mat-icon>add_to_queue</mat-icon>
-    Nuova Vm</button>
+    <button class="button-request" mat-raised-button color="primary" (click)="openCreateVmsDialog()">
+      <mat-icon>add_to_queue</mat-icon>
+      Nuova Vm</button>
   </mat-card-header>
 
   <mat-card-content>
-
-    <div class="vmsContainer" >
+    <div class="vmsContainer" *ngIf="vmVisibility">
       <div class="vmsOwner">
 
       <div class="tableContainer">
@@ -35,7 +34,9 @@
               </ng-container>
               <ng-container matColumnDef="link">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Collegamento </th>
-                  <td mat-cell *matCellDef="let row"> n/a </td>
+                  <td mat-cell *matCellDef="let row"> 
+                    <button mat-stroked-button (click)=openVM(row)>Apri VM</button>
+                  </td>
               </ng-container>
               <ng-container matColumnDef="swithOnOff">
                   <th mat-header-cell *matHeaderCellDef> </th>
@@ -59,11 +60,9 @@
           </table>
           <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
           </mat-paginator>
-
+        </div>
       </div>
-      </div>
-  </div>
-
+    </div>
   </mat-card-content>
 </mat-card>
 

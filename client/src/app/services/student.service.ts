@@ -76,9 +76,8 @@ export class StudentService {
     return this.http.get<PhotoAssignment>(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getAssignment`)
   }
 
-  addVM(courseName: string, file: File, vm: VM) {
+  addVM(courseName: string, vm: VM) {
     let data: FormData = new FormData();
-    data.append("file", file, file.name);
     data.append("VM", new Blob([JSON.stringify(vm)], {
       type: "application/json" }));
 
@@ -86,7 +85,7 @@ export class StudentService {
   }
 
   addOwner(courseName: string, VMId: number, membersId: string[]) {
-    return this.http.post(`${this.API_STUDENTS}/${courseName}/${VMId}/addOwner`, membersId);
+    return this.http.post<boolean>(`${this.API_STUDENTS}/${courseName}/${VMId}/addOwner`, membersId);
   }
 
   getOwners(courseName: string, teamId: number, vmId: number) {
@@ -94,22 +93,22 @@ export class StudentService {
   }
 
   activateVM(courseName: string, VMId: number) {
-    return this.http.get(`${this.API_STUDENTS}/${courseName}/${VMId}/activateVM`);
+    return this.http.get<boolean>(`${this.API_STUDENTS}/${courseName}/${VMId}/activateVM`);
   }
 
   disableVM(courseName: string, VMId: number) {
-    return this.http.get(`${this.API_STUDENTS}/${courseName}/${VMId}/disableVM`);
+    return this.http.get<boolean>(`${this.API_STUDENTS}/${courseName}/${VMId}/disableVM`);
   }
 
   removeVM(courseName: string, VMId: number) {
-    return this.http.get(`${this.API_STUDENTS}/${courseName}/${VMId}/removeVM`);
+    return this.http.get<boolean>(`${this.API_STUDENTS}/${courseName}/${VMId}/removeVM`);
   }
 
   useVM(courseName: string, VMId: number, file: File) {
     let data: FormData = new FormData();
     data.append("file", file, file.name);
 
-    return this.http.post(`${this.API_STUDENTS}/${courseName}/${VMId}/useVM`, data);
+    return this.http.post<boolean>(`${this.API_STUDENTS}/${courseName}/${VMId}/use`, data);
   }
 
   updateVMresources(courseName: string, VMId: number, vm: VM) {

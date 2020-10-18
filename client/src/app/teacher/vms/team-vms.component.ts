@@ -5,6 +5,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { VM } from 'src/app/models/vm.model';
 import { VMOwners } from 'src/app/models/vm-owners.model';
 import { Student } from 'src/app/models/student.model';
+import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-team-vms',
@@ -27,7 +29,7 @@ export class TeamVmsComponent implements OnInit, OnChanges {
 
   VMsVisibility: boolean = false;
 
-  constructor() { }
+  constructor(private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.manageTable();
@@ -73,8 +75,26 @@ export class TeamVmsComponent implements OnInit, OnChanges {
     return str;
   }
 
-  openVM() {
+  openVM(vm: VM) {
+    if (vm.status == "off") {
+      window.alert("La VM deve essere accesa per essere avviata");
+      return;
+    }
 
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+        id: 1,
+        title: 'Launch',
+        type: 'vm',
+        vmId: vm.id,
+        isTeacher: true
+    };
+
+    this.dialog.open(ViewImageContComponent, dialogConfig);
   }
 
 }

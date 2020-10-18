@@ -28,10 +28,10 @@ export class AddCourseDialogComponent implements OnInit {
   filteredOptions: Observable<Teacher[]>;
 
   selectedPhoto: File;
+  private teacherSelected: Teacher;
+  private teachersToAdd: Teacher[] = [];
 
   @Input() allTeachers: Teacher[] = [];
-  teacherSelected: Teacher;
-  @Output('teachers') teachersToAdd: BehaviorSubject<Teacher[]> = new BehaviorSubject<Teacher[]>([]);
   @Output('add') add = new EventEmitter<any>();
 
   constructor(private cont: AddCourseContComponent,
@@ -47,7 +47,6 @@ export class AddCourseDialogComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    this.dataSource.sort = this.sort;
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),
@@ -79,19 +78,21 @@ export class AddCourseDialogComponent implements OnInit {
   }
 
   addTeacher() {
-    if (this.teacherSelected != null && !this.teachersToAdd.getValue().includes(this.teacherSelected)) {
-      this.teachersToAdd.getValue().push(this.teacherSelected);
-      this.dataSource = new MatTableDataSource<Teacher>(this.teachersToAdd.getValue());
+    if (this.teacherSelected != null && !this.teachersToAdd.includes(this.teacherSelected)) {
+      this.teachersToAdd.push(this.teacherSelected);
+      this.dataSource = new MatTableDataSource<Teacher>(this.teachersToAdd);
+      this.dataSource.sort = this.sort;
       this.tableVisibility = true;
     }
   }
 
   deleteTeacher(teacher: Teacher) {
-    if (teacher != null && this.teachersToAdd.getValue().includes(teacher)) {
-      this.teachersToAdd.getValue().splice(this.teachersToAdd.getValue().indexOf(teacher));
-      this.dataSource = new MatTableDataSource<Teacher>(this.teachersToAdd.getValue());
+    if (teacher != null && this.teachersToAdd.includes(teacher)) {
+      this.teachersToAdd.splice(this.teachersToAdd.indexOf(teacher));
+      this.dataSource = new MatTableDataSource<Teacher>(this.teachersToAdd);
+      this.dataSource.sort = this.sort;
 
-      if (this.teachersToAdd.getValue().length == 0) {
+      if (this.teachersToAdd.length == 0) {
         this.tableVisibility = false;
       }
     }
@@ -109,7 +110,7 @@ export class AddCourseDialogComponent implements OnInit {
 
     let course = new Course(name.toLowerCase().split(' ').join('-'), acronym, min, max, 1, 4, 100, 8, 10, 10);
     
-    this.add.emit({course: course, file: this.selectedPhoto});
+    this.add.emit({course: course, file: this.selectedPhoto, ids: this.teachersToAdd.map(t => t.id)});
   }
 
 }

@@ -45,19 +45,19 @@ export class VmsContComponent implements OnInit {
                     this.VMs = array;
                   }, 
                   (error) => {
-                    console.log("Impossibile ottenere gli owners");
+                    window.alert("Impossibile ottenere gli owners");
                   }
                 );
               });
             },
             (error) => {
-              console.log("Impossibile reperire le VM per il team")
+              window.alert("Impossibile reperire le VM per il team");
             }
           );
         }
       },
       (error) => {
-        console.log("Impossibile reperire il team dello studente")
+        window.alert("Impossibile reperire il team dello studente");
       }
     );
 
@@ -81,14 +81,16 @@ export class VmsContComponent implements OnInit {
   activateVM(vmId: number) {
     this.studentService.activateVM(this.courseService.currentCourse.getValue().name, vmId).subscribe(
       (data) => {
-        this.VMs.forEach(vm => {
-          if (vm.id == vmId) {
-            vm.status = "on";
-          }
-        })
+        if (data) {
+          this.VMs.forEach(vm => {
+            if (vm.id == vmId) {
+              vm.status = "on";
+            }
+          });
+        }
       },
       (error) => {
-        console.log("Impossibile attivare la VM");
+        window.alert("Impossibile attivare la VM");
       }
     )
   }
@@ -96,14 +98,16 @@ export class VmsContComponent implements OnInit {
   disableVM(vmId: number) {
     this.studentService.disableVM(this.courseService.currentCourse.getValue().name, vmId).subscribe(
       (data) => {
-        this.VMs.forEach(vm => {
-          if (vm.id == vmId) {
-            vm.status = "off";
-          }
-        })
+        if (data) {
+          this.VMs.forEach(vm => {
+            if (vm.id == vmId) {
+              vm.status = "off";
+            }
+          });
+        }
       },
       (error) => {
-        console.log("Impossibile spegnere la VM");
+        window.alert("Impossibile spegnere la VM");
       }
     )
   }

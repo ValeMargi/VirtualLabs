@@ -8,9 +8,8 @@ import { VM } from 'src/app/models/vm.model';
   styleUrls: ['./create-vms.component.css']
 })
 export class CreateVmsComponent implements OnInit {
-  selectedPhoto: File;
 
-  @Output('create') create = new EventEmitter<any>();
+  @Output('create') create = new EventEmitter<VM>();
 
   constructor(private matDialogRef: MatDialogRef<CreateVmsComponent>) { }
 
@@ -30,20 +29,12 @@ export class CreateVmsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-
   close() {
     this.matDialogRef.close();
   }
 
-  addAssImage(imageInput) {
-    this.selectedPhoto = imageInput.target.files[0];
-  }
-
   createVM(vcpu: number, diskSpace: number, ram: number, name: string) {
     let vm = new VM(-1, vcpu, diskSpace, ram, "", name, "");
-
-    if (this.selectedPhoto != null) {
-      this.create.emit({vm: vm, file: this.selectedPhoto});
-    }
+    this.create.emit(vm);
   }
 }

@@ -18,7 +18,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
   @Input() avatar_ok: boolean;
   @Input() pwd_ok: boolean;
   @Output('avatar') changeAvatar = new EventEmitter<any>();
-  @Output('password') changePassword = new EventEmitter<Map<string, string>>();
+  @Output('password') changePassword = new EventEmitter<any>();
 
   selectedPhoto: File;
   actualPassword: string;
@@ -74,14 +74,11 @@ export class EditProfileComponent implements OnInit, OnChanges {
       if (actualPwd == pwd) {
         window.alert("La nuova password deve essere diversa");
       }
-      else if (pwd == pwd2) {
+      else if (pwd != pwd2) {
         window.alert("Conferma nuova password non corretta");
       }
       else {
-        let map = new Map<string, string>();
-        map.set(actualPwd, pwd);
-
-        this.changePassword.emit(map);
+        this.changePassword.emit({oldPassword: actualPwd, newPassword: pwd});
       }
     }
 

@@ -10,6 +10,7 @@ import { StudentService } from 'src/app/services/student.service';
 import { VMOwners } from 'src/app/models/vm-owners.model';
 import { Student } from 'src/app/models/student.model';
 import { ManageVmContComponent } from './manage-vm/manage-vm-cont/manage-vm-cont.component';
+import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
 @Component({
   selector: 'app-vms-student',
   templateUrl: './vms.component.html',
@@ -54,7 +55,7 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
       this.vms = changes.vms.currentValue;
     }
 
-    //this.manageViews();
+    this.manageViews();
   }
 
   manageViews() {
@@ -161,10 +162,28 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
 
   openCreateVmsDialog() {
     const dialogRef = this.dialog.open(CreateVmsContComponent,{ id: 'dialogCreateVms'});
+  }
 
-    //dialogRef.afterClosed().subscribe(result => {
-      //console.log(`Dialog result: ${result}`);
-    //});
+  openVM(vm: VM) {
+    if (vm.status == "off") {
+      window.alert("La VM deve essere accesa per essere avviata");
+      return;
+    }
+
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+        id: 1,
+        title: 'Launch',
+        type: 'vm',
+        vmId: vm.id,
+        isTeacher: false
+    };
+
+    this.dialog.open(ViewImageContComponent, dialogConfig);
   }
 
 }

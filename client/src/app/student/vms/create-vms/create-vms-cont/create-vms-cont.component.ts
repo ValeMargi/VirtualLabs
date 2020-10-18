@@ -20,12 +20,8 @@ export class CreateVmsContComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  createVM(content: any) {
-    let file: File = content.file;
-    let vm: VM = content.vm;
-    console.log(vm);
-
-    this.studentService.addVM(this.courseService.currentCourse.getValue().name, file, vm).subscribe(
+  createVM(vm: VM) {
+    this.studentService.addVM(this.courseService.currentCourse.getValue().name, vm).subscribe(
       (data) => {
         this.matDialogRef.close();
         this.studentService.vmCreation.emit(new VMOwners(data.id, data.numVcpu, data.diskSpace, data.ram, data.status, data.nameVM, data.timestamp, [this.studentService.currentStudent]));

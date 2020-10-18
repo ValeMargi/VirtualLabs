@@ -13,6 +13,8 @@ export class ViewImageContComponent implements OnInit {
   PHOTO: any;
   TITLE: string;
   TIMESTAMP: string;
+  VMSTUDENT: boolean = false;
+  QUERYING: boolean = false;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               private teacherService: TeacherService,
@@ -98,9 +100,20 @@ export class ViewImageContComponent implements OnInit {
         let vmId: number = this.data.vmId;
 
         if (isTeacher) {
+          this.VMSTUDENT = false;
 
+          this.teacherService.getVMForProfessor(course, vmId).subscribe(
+            (data) => {
+              this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
+            },
+            (error) => {
+              window.alert("Impossibile ottenere la schermata della VM");
+            }
+          );
         }
         else {
+          this.VMSTUDENT = true;
+
           this.studentService.getVMForStudent(course, vmId).subscribe(
             (data) => {
               this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
@@ -116,6 +129,31 @@ export class ViewImageContComponent implements OnInit {
         break;
       }
     }
+  }
+
+  useVM(file: File) {
+    this.QUERYING = true;
+
+    this.studentService.useVM(this.courseService.currentCourse.getValue().name, this.data.vmId, file).subscribe(
+      (data) => {
+        if (data) {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = (_event) => { 
+            this.PHOTO = reader.result; 
+          }
+        }
+        else {
+          window.alert("Impossibile utilizzare la VM, riprovare");
+        }
+
+        this.QUERYING = false;
+      },
+      (error) => {
+        window.alert("Errore nell'utilizzo della VM, riprovare");
+        this.QUERYING = false;
+      }
+    );
   }
 
 }

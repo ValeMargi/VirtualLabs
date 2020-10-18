@@ -19,7 +19,7 @@ export class AddHomeworkContComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  addHomework(content: any) {
+  addVersionH(content: any) {
     let file: File = content.file;
     let homeworkVersion: HomeworkVersion = content.version;
 
@@ -27,6 +27,7 @@ export class AddHomeworkContComponent implements OnInit {
       (data) => {
         this.matDialogRef.close();
         this.studentService.homeworkCreation.emit(homeworkVersion);
+        console.log("Caricamento della Version-homework Completato");
       },
       (error) => {
         console.log("Errore nel caricamento dell'homework");

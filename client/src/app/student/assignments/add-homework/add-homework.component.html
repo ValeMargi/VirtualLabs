@@ -14,11 +14,11 @@
         </mat-form-field><br>
 
          <!--File-->
-        <input type="file" #file (change)="addHomeworkImage($event)" [formControl] = "form.file" accept="image/*" required>
+        <input type="file" #file (change)="addVersionImage($event)" [formControl] = "form.file" accept="image/*" required>
         <mat-error *ngIf="form.file.invalid">{{getErrorMessage()}}</mat-error>
 
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button mat-raised-button color="accent" (click)="close()">Annulla</button>
-    <button mat-button mat-raised-button color="primary" (click)="AddHomework(name.value,date.value)">Inserisci</button>
+    <button mat-button mat-raised-button color="primary" (click)="AddVersion(name.value,date.value)">Inserisci</button>
 </mat-dialog-actions>

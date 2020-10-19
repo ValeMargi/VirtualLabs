@@ -1227,7 +1227,7 @@ public class VLServiceImpl implements VLService{
     }
     /* GetPhotoVMforProfessor*/
 
-    @PreAuthorize("hasAuthority('student')")
+    @PreAuthorize("hasAuthority('professor')")
     @Override
     public PhotoVMDTO getVMforProfessor( String courseId, Long VMid) {
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();

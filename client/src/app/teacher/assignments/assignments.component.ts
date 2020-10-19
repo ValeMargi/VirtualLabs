@@ -13,6 +13,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { VersionsComponent } from './versions.component';
 import { HomeworksComponent } from './homeworks.component';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
 
 @Component({
@@ -36,14 +37,10 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
   dataAssignments = new MatTableDataSource<Assignment>();
   dataHomeworks = new MatTableDataSource<Homework>();
 
-  tableVisibility: boolean = true;
-  tableAssignmetsVisibility: boolean =true;
+  assTableVisibility: boolean = true;
+  tableAssignmentsVisibility: boolean =true;
   tableHomeworkVisibility: boolean = false;
-
   buttonHomeworkVisibility:boolean = false;
-
-  panelOpenState = false;
-  titolo: string;
 
   length = 5;
   pageSize = 5;
@@ -51,7 +48,8 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
 
   constructor(private matDialog: MatDialog,
               private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute, 
+              private location: Location) { }
 
   ngAfterViewInit(): void {
   }
@@ -60,22 +58,16 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
     this.manageAssVisibility();
     this.setTable();
   }
+
   setTable() {
     this.dataAssignments = new MatTableDataSource<Assignment>(this.assignments);
-
   }
 
-  openHomeworkTable(ass:Assignment){
-    this.tableAssignmetsVisibility = false;
-    this.tableHomeworkVisibility = true;
-
-     this.titolo = ass.assignmentName;
-  }
-
-  backAssignmetsTable(){
+  backAssignmetsTable() {
     this.tableHomeworkVisibility = false;
-    this.tableAssignmetsVisibility = true;
-
+    this.tableAssignmentsVisibility = true;
+    this.assTableVisibility = true;
+    this.location.back();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -86,16 +78,17 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
 
   manageAssVisibility() {
     if (this.assignments.length > 0) {
-      this.tableAssignmetsVisibility = true;
+      this.tableAssignmentsVisibility = true;
     }
     else {
-      this.tableAssignmetsVisibility = false;
+      this.tableAssignmentsVisibility = false;
     }
   }
 
   showHomeworks(ass: Assignment) {
-    this.tableVisibility = true;
     this.ASSIGNMENT = ass;
+    this.assTableVisibility = false;
+    this.tableHomeworkVisibility = true;
     this.router.navigate([ass.id, 'homeworks'], { relativeTo: this.route });
   }
 

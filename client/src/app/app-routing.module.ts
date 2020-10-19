@@ -76,9 +76,9 @@ const routes: Routes = [
               path: ':courses/assignments',
               component: AssignmentsContComponentTeacher,
               children: [
-                { path: ':idH/homeworks', component: HomeworksContComponentTeacher,
+                { path: ':idA/homeworks', component: HomeworksContComponentTeacher,
                   children: [
-                    { path: ':idV/versions', component: VersionsContComponentTeacher }
+                    { path: ':idH/versions', component: VersionsContComponentTeacher }
                     ],
                 }
               ],  

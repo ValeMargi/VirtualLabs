@@ -3,6 +3,7 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { Homework } from 'src/app/models/homework.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-homeworks',
@@ -26,7 +27,8 @@ export class HomeworksComponent implements OnInit, OnChanges {
   versionsVisibility: boolean = false;
   tableVisibility: boolean = false;
 
-  constructor() { }
+  constructor(private router: Router,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.manageTableVisibility();
@@ -59,6 +61,7 @@ export class HomeworksComponent implements OnInit, OnChanges {
   showHistory(homework: Homework) {
     this.versionsVisibility = true;
     this.HOMEWORK = homework;
+    this.router.navigate([homework.id, 'versions'], { relativeTo: this.route });
   }
 
 }

@@ -3,6 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Assignment } from 'src/app/models/assignment.model';
 
 import { FormGroup, FormBuilder } from '@angular/forms';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-create-assignment',
@@ -39,10 +40,17 @@ export class CreateAssignmentComponent implements OnInit, AfterViewInit {
   }
 
   createAss(name: string, release: string, expire: string) {
-    let assignment = new Assignment(-1, name, release, expire);
-
-    if (this.selectedPhoto != null) {
-      this.create.emit({assignment: assignment, file: this.selectedPhoto});
+    if (name == null || name.length == 0) {
+      window.alert("Inserire un nome per la consegna");
     }
+    else if (this.selectedPhoto == null) {
+      window.alert("Inserire un'immagine per la consegna");
+    }
+
+    let res = expire.split("-");
+    let date = new Date(Number.parseInt(res[0]), Number.parseInt(res[1]) - 1, Number.parseInt(res[2]), 23, 59, 59, 999);
+    let assignment = new Assignment(-1, name, release, moment(date).format("YYYY-MM-DD HH:mm:ss.SSS"));
+
+    this.create.emit({assignment: assignment, file: this.selectedPhoto});
   }
 }

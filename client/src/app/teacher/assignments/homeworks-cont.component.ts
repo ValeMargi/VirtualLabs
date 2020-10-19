@@ -24,13 +24,19 @@ export class HomeworksContComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route$ = this.route.params.subscribe(params => {
-      this.teacherService.allHomework(this.courseService.currentCourse.getValue().name, params.idH).subscribe(
+      let idA = params.idA;
+
+      if (idA == null) {
+        return;
+      }
+
+      this.teacherService.allHomework(this.courseService.currentCourse.getValue().name, idA).subscribe(
         (data) => {
           console.log(data)
           this.HOMEWORKS = data;
         },
         (error) => {
-          console.log("Impossibile ottenere gli homeworks");
+          window.alert("Impossibile ottenere gli homeworks");
         }
       );
     });

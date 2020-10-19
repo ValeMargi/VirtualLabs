@@ -27,7 +27,7 @@ export class CreateAssignmentContComponent implements OnInit {
         this.teacherService.assCreation.emit(assignment);
       }, 
       (error) => {
-        console.log("Errore nella creazione della consegna");
+        window.alert("Errore nella creazione della consegna");
       }
     );
   }

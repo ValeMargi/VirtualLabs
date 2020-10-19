@@ -104,7 +104,7 @@ export class TeacherService {
     data.append("permanent", permanent.toString());
     data.append("grade", grade);
 
-    return this.http.post(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/${versionHMid}/uploadCorrection`, data);
+    return this.http.post<boolean>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/${versionHMid}/uploadCorrection`, data);
   }
 
 

@@ -1,29 +1,40 @@
-<button mat-button (click)="back()">
-    <mat-icon>arrow_back</mat-icon>
-</button>
-<div class="vr-container"> 
-    <div class="versions-corrections">
-        <div class="versions">
-            <h3>Versioni elaborato</h3>
-            <mat-selection-list [multiple]="false">
-                <mat-list-option *ngFor="let ver of versions" [value]="ver"> 
-                    {{ ver.timestamp }}    
-                </mat-list-option>
-            </mat-selection-list>
-        </div>
-        <div class="separator"></div> 
-        <div class="corrections">
-            <h3>Revisioni</h3>
-            <mat-selection-list [multiple]="false">
-                <mat-list-option *ngFor="let rev of corrections" [value]="rev"> 
-                    {{ rev.timestamp }}    
-                </mat-list-option>
-            </mat-selection-list>
-        </div>
-    </div>
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            <button mat-icon-button color="primary" (click)="back()">
+                <mat-icon>close</mat-icon>
+            </button>
+            Versioni elaborato
+        </mat-card-title>
+    </mat-card-header>
+  
+    <mat-card-content>
+        <div class="vr-container"> 
+            <div class="versions-corrections">
+                <div class="versions">
+                    <h3>Versioni</h3>
+                    <mat-selection-list [multiple]="false">
+                        <mat-list-option *ngFor="let ver of versions" [value]="ver"> 
+                            {{ ver.timestamp }}    
+                        </mat-list-option>
+                    </mat-selection-list>
+                </div>
+                <div class="separator"></div> 
+                <div class="corrections">
+                    <h3>Revisioni</h3>
+                    <mat-selection-list [multiple]="false">
+                        <mat-list-option *ngFor="let rev of corrections" [value]="rev"> 
+                            {{ rev.timestamp }}    
+                        </mat-list-option>
+                    </mat-selection-list>
+                </div>
+            </div>
 
-
-    <button mat-button class="upload">
-        <mat-icon>cloud_upload</mat-icon>Carica revisione
-    </button>
-</div>
+            <input #hiddenfileinput class="inputfile" type="file" accept="image/*" (change)="uploadCorrection($event)">
+            <button mat-stroked-button class="upload" 
+                *ngIf="!homework.permanent && homework.status != 'NULL' && homework.status != 'LETTO'" (click)="hiddenfileinput.click()">
+                <mat-icon>cloud_upload</mat-icon> Carica revisione
+            </button>
+        </div>
+    </mat-card-content>
+</mat-card>

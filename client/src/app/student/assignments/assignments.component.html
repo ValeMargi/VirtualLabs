@@ -56,8 +56,8 @@
        <mat-card-subtitle>Titolo: {{titolo}}</mat-card-subtitle>
 
         <!-- Bottone Inserisci elaborato -->
-        <div class="button-request">
-          <button mat-raised-button color="primary" (click)="openDialogHomework()" class="create" >
+        <div class="button-request" *ngIf=assId>
+          <button mat-raised-button color="primary" (click)="openDialogHomework(assId)" class="create" >
           <mat-icon>post_add</mat-icon> Inserisci elaborato
            </button>
          </div>

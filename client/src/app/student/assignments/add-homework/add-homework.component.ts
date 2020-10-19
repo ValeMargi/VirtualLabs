@@ -1,3 +1,4 @@
+import { Homework } from './../../../models/homework.model';
 import { HomeworkVersion } from './../../../models/homework-version.model';
 import { Component,OnInit,AfterViewInit, Output, EventEmitter} from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -12,6 +13,7 @@ export class AddHomeworkComponent implements OnInit, AfterViewInit {
   selectedPhoto: File;
   currentDate;
   oneWeek;
+  public assId: number;
 
   @Output('create') create = new EventEmitter<any>();
 
@@ -41,11 +43,14 @@ export class AddHomeworkComponent implements OnInit, AfterViewInit {
     this.matDialogRef.close();
   }
 
-  AddVersion(name: string, date: string) {
+  AddVersion(name: string, date: string, assId:number) {
+    let homework = new Homework(-1,"NULL",true,"");
     let version = new HomeworkVersion(-1, name, date);
 
+    this.assId = assId;
+
     if (this.selectedPhoto != null) {
-      this.create.emit({version: version, file: this.selectedPhoto});
+      this.create.emit({homework:homework,version: version, file: this.selectedPhoto});
       console.log("Homework aggiunto");
     }
   }

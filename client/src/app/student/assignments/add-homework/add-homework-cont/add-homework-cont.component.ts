@@ -1,4 +1,5 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Assignment } from './../../../../models/assignment.model';
+import { Component, OnInit, Input,Output} from '@angular/core';
 import { Homework } from 'src/app/models/homework.model';
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
 import { StudentService } from 'src/app/services/student.service';
@@ -12,6 +13,22 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class AddHomeworkContComponent implements OnInit {
 
   @Input() homeworkToAdd: Homework[] = [];
+  assId: number;
+
+  @Output() public HOMEWORK: Homework;
+  getHomework( ){
+    this.studentService.getHomework(this.courseService.currentCourse.getValue().name,this.assId).subscribe(
+      (data) => {
+        this.matDialogRef.close();
+        console.log("Homework caricato!");
+      },
+      (error) => {
+        console.log("Errore nel caricamento dell'homework");
+      }
+    );
+  }
+
+
 
   constructor(private matDialogRef: MatDialogRef<AddHomeworkContComponent>,
                private studentService: StudentService,
@@ -19,11 +36,11 @@ export class AddHomeworkContComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  addVersionH(content: any) {
+  addVersionH(content: any ) {
     let file: File = content.file;
     let homeworkVersion: HomeworkVersion = content.version;
 
-    this.studentService.addHomework(this.courseService.currentCourse.getValue().name, file, homeworkVersion).subscribe(
+    this.studentService.uploadVersionHomework(this.courseService.currentCourse.getValue().name,this.assId, this.getHomework().id,file).subscribe(
       (data) => {
         this.matDialogRef.close();
         this.studentService.homeworkCreation.emit(homeworkVersion);
@@ -34,4 +51,10 @@ export class AddHomeworkContComponent implements OnInit {
       }
     );
   }
+
+
+
+
+
+
 }

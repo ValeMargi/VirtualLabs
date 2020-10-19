@@ -55,15 +55,6 @@ export class StudentService {
     return this.http.get<boolean>(`${this.API_STUDENTS}/VM/${courseName}/${VMId}/owner`);
   }
 
-  addHomework(courseName: string, file: File, homework: HomeworkVersion) {
-    let data: FormData = new FormData();
-    data.append("file", file, file.name);
-    data.append("homework", new Blob([JSON.stringify(homework)], {
-      type: "application/json" }));
-
-    return this.http.post(`${this.API_STUDENTS}/${courseName}/addHomework`, data);
-  }
-
   allAssignments(courseName: string) {
     return this.http.get<Assignment[]>(`${this.API_STUDENTS}/${courseName}/assignment`).pipe(map(ass => ass || []));
   }

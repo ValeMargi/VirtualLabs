@@ -41,6 +41,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
 
   panelOpenState = false;
   titolo: string;
+  public assId: number;
 
   length = 5;
   pageSize = 5;
@@ -76,7 +77,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   openHomeworkTable(ass:Assignment){
       this.tableAssignmetsVisibility = false;
       this.tableHomeworkVisibility = true;
-
+      this.assId = ass.id;
        this.titolo = ass.assignmentName;
   }
 
@@ -95,12 +96,13 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
       }
     }
 
-  openDialogHomework() {
+  openDialogHomework(assId:number) {
     const dialogRef = this.matDialog.open(AddHomeworkContComponent,{ id: 'dialogHomework'});
     const dialogConfig = new MatDialogConfig();
 
     dialogRef.disableClose = false;
     dialogConfig.autoFocus = true;
+    dialogRef.componentInstance.assId = assId;
 
     dialogConfig.data = {
         id: 1,

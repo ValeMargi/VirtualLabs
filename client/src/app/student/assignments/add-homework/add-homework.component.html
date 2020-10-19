@@ -1,4 +1,5 @@
 <h2 mat-dialog-title>Inserisci elaborato</h2>
+<h3>{{assId}}</h3>
 
 <mat-dialog-content>
 
@@ -20,5 +21,5 @@
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button mat-raised-button color="accent" (click)="close()">Annulla</button>
-    <button mat-button mat-raised-button color="primary" (click)="AddVersion(name.value,date.value)">Inserisci</button>
+    <button mat-button mat-raised-button color="primary" (click)="AddVersion(name.value,date.value,assId)">Inserisci</button>
 </mat-dialog-actions>

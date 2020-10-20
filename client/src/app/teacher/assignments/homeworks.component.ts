@@ -4,6 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { Homework } from 'src/app/models/homework.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Student } from 'src/app/models/student.model';
+import { HomeworkStudent } from 'src/app/models/homework-student.model';
 
 @Component({
   selector: 'app-homeworks',
@@ -16,14 +18,15 @@ export class HomeworksComponent implements OnInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   displayedColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
-  dataSource = new MatTableDataSource<Homework>();
+  dataSource = new MatTableDataSource<HomeworkStudent>();
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  @Input() public homeworks: Homework[] = [];
-  @Output() public HOMEWORK: Homework;
+  @Input() homeworkStudents: HomeworkStudent[];
+  @Output() HOMEWORK: Homework;
 
+  homeworksToShow: any[] = [];
   versionsVisibility: boolean = false;
   tableVisibility: boolean = false;
 
@@ -36,21 +39,25 @@ export class HomeworksComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.homeworks = changes.homeworks.currentValue;
+    if (changes.homeworkStudents != null) {
+      this.homeworkStudents = changes.homeworkStudents.currentValue;
+      console.log(this.homeworkStudents)
+    }
+
     this.manageTableVisibility();
     this.manageTable();
   }
 
   manageTable() {
     this.versionsVisibility = false;
-    this.dataSource = new MatTableDataSource<Homework>(this.homeworks);
+    this.dataSource = new MatTableDataSource<HomeworkStudent>(this.homeworkStudents);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.length = this.homeworks.length;
+    this.length = this.homeworkStudents.length;
   }
 
   manageTableVisibility() {
-    if (this.homeworks.length > 0) {
+    if (this.homeworkStudents.length > 0) {
       this.tableVisibility = true;
     }
     else {
@@ -58,8 +65,9 @@ export class HomeworksComponent implements OnInit, OnChanges {
     }
   }
 
-  showHistory(homework: Homework) {
+  showHistory(hws: HomeworkStudent) {
     this.versionsVisibility = true;
+    let homework = new Homework(hws.idHW, hws.status, hws.permanent, hws.grade, hws.timestamp);
     this.HOMEWORK = homework;
     this.router.navigate([homework.id, 'versions'], { relativeTo: this.route });
   }

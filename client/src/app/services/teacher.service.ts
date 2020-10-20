@@ -86,7 +86,7 @@ export class TeacherService {
   }
 
   allHomework(courseName: string, assignmentId: number) {
-    return this.http.get<Homework[]>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/allHomework`).pipe(map(homeworks => homeworks || []));
+    return this.http.get<any[]>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/allHomework`).pipe(map(homeworks => homeworks || []));
   }
 
   getVersionsHMForProfessor(courseName: string, assignmentId: number, homeworkId: number) {
@@ -97,7 +97,7 @@ export class TeacherService {
     return this.http.get<HomeworkCorrection[]>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/getCorrections`).pipe(map(corrections => corrections || []));
   }
 
-  uploadCorrection(courseName: string, assignmentId: number, homeworkId: number, versionHMid, file: File, permanent: boolean, grade: string) {
+  uploadCorrection(courseName: string, assignmentId: number, homeworkId: number, versionHMid: number, file: File, permanent: boolean, grade: string) {
     let data: FormData = new FormData();
     data.append("file", file, file.name);
     //grade e permanent vanno di pari passo => se permanent = false, metto grade = -1

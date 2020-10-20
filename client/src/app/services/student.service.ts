@@ -119,7 +119,6 @@ export class StudentService {
 
   getHomework(courseName: string, assignmentId: number) {
     return this.http.get<Homework>(`${this.API_STUDENTS}/${courseName}/${assignmentId}/getHomework`);
-
   }
 
   getVersionsHMForStudent(courseName: string, assignmentId: number) {

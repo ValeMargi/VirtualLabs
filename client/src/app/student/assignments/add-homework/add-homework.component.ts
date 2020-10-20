@@ -44,7 +44,7 @@ export class AddHomeworkComponent implements OnInit, AfterViewInit {
   }
 
   AddVersion(name: string, date: string, assId:number) {
-    let homework = new Homework(-1,"NULL",true,"");
+    let homework = new Homework(-1, "NULL", false, "", null);
     let version = new HomeworkVersion(-1, name, date);
 
     this.assId = assId;

@@ -28,6 +28,7 @@ export class VersionsComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.homework != null) {
       this.homework = changes.homework.currentValue;
+      console.log(this.homework)
     }
 
     if (changes.version != null) {

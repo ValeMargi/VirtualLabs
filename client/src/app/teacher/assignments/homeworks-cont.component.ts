@@ -5,6 +5,8 @@ import { TeacherService } from 'src/app/services/teacher.service';
 import { CourseService } from 'src/app/services/course.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { Student } from 'src/app/models/student.model';
+import { HomeworkStudent } from 'src/app/models/homework-student.model';
 
 @Component({
   selector: 'app-homeworks-cont',
@@ -15,8 +17,8 @@ export class HomeworksContComponent implements OnInit, OnDestroy {
 
   private route$: Subscription;
 
-  @Input() public assignment: Assignment;
-  @Output() public HOMEWORKS: Homework[] = [];
+  @Input() assignment: Assignment;
+  @Output() HOMEWORKS_STUDENTS: HomeworkStudent[] = [];
 
   constructor(private teacherService: TeacherService,
               private courseService: CourseService,
@@ -32,11 +34,18 @@ export class HomeworksContComponent implements OnInit, OnDestroy {
 
       this.teacherService.allHomework(this.courseService.currentCourse.getValue().name, idA).subscribe(
         (data) => {
-          console.log(data)
-          this.HOMEWORKS = data;
+          let tmp: HomeworkStudent[] = [];
+          data.forEach(element => {
+            let homework: Homework = element.Homework;
+            let student: Student = element.Student;
+            let hws: HomeworkStudent = new HomeworkStudent(student.id, student.firstName, student.name, student.email, homework.id, homework.status, homework.permanent, homework.grade, homework.timestamp);
+            tmp.push(hws);
+          });
+
+          this.HOMEWORKS_STUDENTS = tmp;
         },
         (error) => {
-          window.alert("Impossibile ottenere gli homeworks");
+          window.alert("Errore nel reperire gli homeworks");
         }
       );
     });

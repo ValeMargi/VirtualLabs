@@ -286,13 +286,14 @@ public class ProfessorController {
      * Authority: Docente
      * @param courseName: riceve dal path il nome del corso di cui si vuole elencare gli elaborati per una certa consegna con id pari a assignmentId
      * @param assignmentId: riceve dal path l'id della consegna
-     * @return: ritorna la lista di elaborati svolti dagli studenti per la consegna indicata
+     * @return: ritorna una lista di Map<String,Object>
+     *          (chiave= "Homework", valore=HomeworkDTO; chiave="Student", valore = StudentDTO)
      */
     @GetMapping("/{courseName}/{assignmentId}/allHomework")
-    public List<HomeworkDTO> allHomework(@PathVariable String courseName, @PathVariable Long assignmentId) {
+    public List<Map<String, Object>> allHomework(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.allHomework(courseName, assignmentId);
-        } catch (CourseNotFoundException  | ProfessorNotFoundException  e) {
+        } catch (CourseNotFoundException  | ProfessorNotFoundException | StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -305,7 +306,7 @@ public class ProfessorController {
      * @param homeworkId
      * @return : ritorna una lista di Map<String,Object>
      *           (chiave= "id", valore=versionHomeworkId; chiave="timestamp", valore="timestamp")
-     *           di versioni di Homerwork per la consegna con assignmentId indicato e per il corso con courseName indicato
+     *           di versioni di Homework per la consegna con assignmentId indicato e per il corso con courseName indicato
      */
     @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/getVersions")
     public List<Map<String, Object>> getVersionsHWForProfessor(@PathVariable String courseName, @PathVariable Long assignmentId, @PathVariable Long homeworkId) {

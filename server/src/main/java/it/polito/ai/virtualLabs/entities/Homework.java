@@ -15,6 +15,7 @@ public class Homework {
     private  String status;
     private Boolean permanent; //false può essere  ancora modificato
     private String grade;
+    private String timestamp;
 
     @ManyToOne
     @JoinColumn(name="student_id")

@@ -1350,6 +1350,8 @@ public class VLServiceImpl implements VLService{
                                 .get().getId()).get();
                         if(homework.getStatus().equals("NULL")){
                             homework.setStatus("LETTO");
+                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                            homework.setTimestamp(timestamp.toString());
                         }
                         PhotoAssignment pa = a.getPhotoAssignment();
                         Optional<PhotoAssignment> photoAssignment = photoAssignmentRepository.findById(pa.getId());
@@ -1403,6 +1405,7 @@ public class VLServiceImpl implements VLService{
                                 h.setStatus("CONSEGNATO");
                                 PhotoVersionHomework photoVersionHomework = modelMapper.map(photoVersionHomeworkDTO, PhotoVersionHomework.class);
                                 h.setPhotoVersionHomework(photoVersionHomework);
+                                h.setTimestamp(photoVersionHomework.getTimestamp());
                                 homeworkRepository.saveAndFlush(h);
                                 photoVersionHMRepository.saveAndFlush(photoVersionHomework);
                                 return true;
@@ -1432,14 +1435,26 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public  List<HomeworkDTO> allHomework(String courseName, Long assignmentId){ //AGGIUNTA 28/07
+    public List<Map<String, Object>> allHomework(String courseName, Long assignmentId){ //AGGIUNTA 28/07
         Optional<Course> oc= courseRepository.findById(courseName);
         if(oc.isPresent()){
             Course c = oc.get();
             if(c.getProfessors().stream().anyMatch(p->p.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))) {
                Optional<Assignment> assignment = c.getAssignments().stream().filter(a->a.getId().equals(assignmentId)).findFirst();
                 if(assignment.isPresent()) {
-                    return assignment.get().getHomeworks().stream().map(h->modelMapper.map(h,HomeworkDTO.class)).collect(Collectors.toList());
+                    List<Homework> homeworkList = assignment.get().getHomeworks();
+                    List<Map<String,Object>> ret = new ArrayList<>();
+                    for ( Homework h : homeworkList ) {
+                        Map<String,Object> m = new HashMap<>();
+                        HomeworkDTO hdto = modelMapper.map(h,HomeworkDTO.class);
+                        if(h.getStudent()==null)
+                            throw new StudentNotFoundException();
+                        StudentDTO sdto = modelMapper.map(h.getStudent(),StudentDTO.class);
+                        m.put("Homework", hdto);
+                        m.put("Student", sdto);
+                        ret.add(m);
+                    }
+                    return ret;
                 }else throw new AssignmentNotFoundException();
             }else throw new PermissionDeniedException();
 
@@ -1565,6 +1580,7 @@ public class VLServiceImpl implements VLService{
                         if(grade==null) throw new GradeNotValidException();
                         h.setGrade(grade);
                     }
+                    h.setTimestamp(photoCorrection.getTimestamp());
                     photoCorrectionRepository.saveAndFlush(photoCorrection);
                     return true;
                 }else throw new HomeworkVersionIdNotFoundException();

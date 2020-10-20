@@ -9,5 +9,6 @@ public class HomeworkDTO extends RepresentationModel<HomeworkDTO> {
     private  String status;
     private boolean permanent;
     private String grade;
+    private String timestamp;
 
 }

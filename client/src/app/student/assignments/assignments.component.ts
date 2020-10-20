@@ -78,7 +78,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
       this.tableAssignmetsVisibility = false;
       this.tableHomeworkVisibility = true;
       this.assId = ass.id;
-       this.titolo = ass.assignmentName;
+      this.titolo = ass.assignmentName;
   }
 
   backAssignmetsTable(){

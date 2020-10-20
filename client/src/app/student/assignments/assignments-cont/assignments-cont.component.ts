@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { AuthService } from '../../../auth/auth.service';
 import { Homework } from 'src/app/models/homework.model';
 import { Assignment } from 'src/app/models/assignment.model';
@@ -12,8 +12,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AssignmentsContComponent implements OnInit {
 
-  public HOMEWORKS: Homework[] = []
-  public ASSIGNMENTS: Assignment[] = []
+  @Output() HOMEWORK: Homework;
+  public ASSIGNMENTS: Assignment[] = [];
 
   constructor(private studentService: StudentService,
               private courseService: CourseService,
@@ -32,6 +32,19 @@ export class AssignmentsContComponent implements OnInit {
         console.log("Impossibile ottenere gli assignments");
       }
     );
+
   }
 
+
+  gethomework(ass:Assignment){
+    this.studentService.getHomework(this.courseService.currentCourse.getValue().name, ass.id).subscribe(
+      (data) =>  {
+        this.HOMEWORK = data;
+      },
+      (error) => {
+        console.log("Impossibile ottenere Homework");
+      }
+    );
+
+  }
 }

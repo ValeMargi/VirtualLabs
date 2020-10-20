@@ -12,23 +12,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class AddHomeworkContComponent implements OnInit {
 
-  @Input() homeworkToAdd: Homework[] = [];
+  @Input() homework: Homework;
   assId: number;
-
-  @Output() public HOMEWORK: Homework;
-  getHomework( ){
-    this.studentService.getHomework(this.courseService.currentCourse.getValue().name,this.assId).subscribe(
-      (data) => {
-        this.matDialogRef.close();
-        console.log("Homework caricato!");
-      },
-      (error) => {
-        console.log("Errore nel caricamento dell'homework");
-      }
-    );
-  }
-
-
 
   constructor(private matDialogRef: MatDialogRef<AddHomeworkContComponent>,
                private studentService: StudentService,
@@ -40,21 +25,23 @@ export class AddHomeworkContComponent implements OnInit {
     let file: File = content.file;
     let homeworkVersion: HomeworkVersion = content.version;
 
-    this.studentService.uploadVersionHomework(this.courseService.currentCourse.getValue().name,this.assId, this.getHomework().id,file).subscribe(
+    this.studentService.getHomework(this.courseService.currentCourse.getValue().name,this.assId).subscribe(
       (data) => {
-        this.matDialogRef.close();
-        this.studentService.homeworkCreation.emit(homeworkVersion);
-        console.log("Caricamento della Version-homework Completato");
+        this.homework = data;
+        this.studentService.uploadVersionHomework(this.courseService.currentCourse.getValue().name,this.assId, this.homework.id,file).subscribe(
+          (data) => {
+            this.matDialogRef.close();
+            this.studentService.homeworkCreation.emit(homeworkVersion);
+            console.log("Caricamento della Version-homework Completato");
+          },
+          (error) => {
+            console.log("Errore nel caricamento dell'homework");
+          }
+        );
       },
-      (error) => {
-        console.log("Errore nel caricamento dell'homework");
+      (error) =>{
+        console.log("Homework non caricato")
       }
     );
   }
-
-
-
-
-
-
 }

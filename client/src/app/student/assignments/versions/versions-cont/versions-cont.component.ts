@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, Input } from '@angular/core';
 import { Student } from 'src/app/models/student.model';
+import { Homework } from 'src/app/models/homework.model'
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
 import { HomeworkCorrection } from 'src/app/models/homework-correction.model';
 import { StudentService } from 'src/app/services/student.service';
@@ -18,6 +19,9 @@ export class VersionsContComponent implements OnInit {
   @Output() public VERSIONS: HomeworkVersion[] = [];
   @Output() public CORRECTIONS: HomeworkCorrection[] = [];
 
+
+  @Output() public hw: Homework;
+
   constructor(private studentService: StudentService,
               private courseService: CourseService,
               private route: ActivatedRoute) { }
@@ -25,13 +29,23 @@ export class VersionsContComponent implements OnInit {
   ngOnInit(): void {
     //this.route.params.subscribe( params => console.log(params));
 
+    this.studentService.getHomework(this.courseService.currentCourse.getValue().name, this.assignment.id).subscribe(
+      (data) => {
+        this.hw = data;
+      },
+      (error) => {
+        console.log("Impossibile ottenere le versioni");
+      }
+    );
+
+
     this.studentService.getVersionsHMForStudent(this.courseService.currentCourse.getValue().name, this.assignment.id).subscribe(
       (data) => {
         this.VERSIONS = data;
       },
       (error) => {
         console.log("Impossibile ottenere le versioni");
-      }                                          
+      }
     );
 
     this.studentService.getCorrectionsHMForStudent(this.courseService.currentCourse.getValue().name, this.assignment.id).subscribe(

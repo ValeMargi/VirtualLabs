@@ -17,7 +17,7 @@ export class TeamsContComponent implements OnInit {
               private courseService: CourseService ) { }
 
   @Output() public TEAMS: Team[] = [];
-  @Output() public REQUEST: Request[] = [];
+
 
   @Output() public StudentInTeam: Student[] = [];
 
@@ -38,32 +38,25 @@ export class TeamsContComponent implements OnInit {
         }
       );
 
-      this.teamService.getMembersTeam(this.teamService.currentTeam.id).subscribe(
-        (data) => {
-          this.Members = data;
-        },
-        (error) => {
-          console.log("Membri non caricato");
-        }
-      );
+      this.studentInTeam();
+
   }
 
   studentInTeam(){
     this.StudentInTeam.forEach(element => {
         if(element.id == this.studentService.currentStudent.id){
-          this.teamService.getTeamForStudent(this.courseService.currentCourse.getValue().name, this.studentService.currentStudent.id)
-          .subscribe(
+          this.teamService.getMembersTeam(this.teamService.currentTeam.id).subscribe(
             (data) => {
-              this.team = data;
+              this.Members = data;
             },
             (error) => {
-              console.log("Errore nel caricare il Team dello studente");
+              console.log("Membri non caricato");
             }
           );
         }
         else{
 
-          this.teamService.getProposal(this.courseService.currentCourse.getValue().name)
+          this.teamService.getProposals(this.courseService.currentCourse.getValue().name)
           .subscribe(
             (data) => {
               this.proposal = data;

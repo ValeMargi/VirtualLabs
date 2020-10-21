@@ -23,23 +23,9 @@ public class NotificationController {
 
     @GetMapping("/confirm/{token}")
     @ResponseBody
-    public ResponseEntity<Void> confirmationPage(@PathVariable String token) {
-        HttpHeaders headers = new HttpHeaders();
-
+    public int confirmationPage(@PathVariable String token) {
         try {
-            switch (notificationService.confirm(token)) {
-                case 0:
-                    headers.setLocation(URI.create("http://localhost:4200/team/not-valid/" + token));
-                    break;
-                case 1:
-                    headers.setLocation(URI.create("http://localhost:4200/team/confirm/" + token));
-                    break;
-                case 2:
-                    headers.setLocation(URI.create("http://localhost:4200/team/create/" + token));
-                    break;
-            }
-
-            return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+            return notificationService.confirm(token);
         }catch (TeamNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -47,17 +33,9 @@ public class NotificationController {
 
     @GetMapping("/reject/{token}")
     @ResponseBody
-    public ResponseEntity<Void> rejectionPage(@PathVariable String token) {
-        HttpHeaders headers = new HttpHeaders();
-
+    public int rejectionPage(@PathVariable String token) {
         try {
-            if (notificationService.reject(token) == 0) {
-                headers.setLocation(URI.create("http://localhost:4200/team/not-valid/" + token));
-            } else {
-                headers.setLocation(URI.create("http://localhost:4200/team/reject/" + token));
-            }
-
-            return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+            return notificationService.reject(token);
         }catch(TeamNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

@@ -5,6 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { map } from 'rxjs/operators';
 import { Student } from '../models/student.model';
 import { VM } from '../models/vm.model';
+import { Proposal } from '../models/proposal.model';
 
 
 @Injectable({
@@ -17,13 +18,13 @@ export class TeamService {
   API_TEAMS = "http://localhost:8080/API/teams";
   currentTeam: Team;
 
-  proposeTeam(courseName: string, teamMap: Map<string, string[]>) {
-    //nella mappa le chiavi sono nameTeam e membersId
-    return this.http.post<Team>(`${this.API_TEAMS}/${courseName}/proposeTeam`, teamMap);
+  proposeTeam(courseName: string, nameTeam: string, timeout: string, membersId: string[]) {
+    return this.http.post<Team>(`${this.API_TEAMS}/${courseName}/proposeTeam`, 
+    { "nameTeam": nameTeam, "timeout": timeout, "membersId": membersId });  
   }
 
-  getProposal(courseName: string) {
-    return this.http.get<any[]>(`${this.API_TEAMS}/${courseName}/getProposal`).pipe(map(proposal => proposal || []));
+  getProposals(courseName: string) {
+    return this.http.get<Proposal[]>(`${this.API_TEAMS}/${courseName}/getProposals`).pipe(map(proposals => proposals || []));
   }
 
   getTeamsForCourse(courseName: string) {
@@ -56,6 +57,16 @@ export class TeamService {
   //Ritorna una array di VM per un determinato corso e team
   getAllVMTeam(courseName: string, teamId: number) {
     return this.http.get<VM[]>(`${this.API_TEAMS}/${courseName}/${teamId}/getVM`).pipe(map(vms => vms || []));
+  }
+
+  confirm(token: string) {
+    //0 = non valido, 1 = conferma, 2 = creato
+    return this.http.get<number>(`http://localhost:8080/API/notification/confirm/${token}`);
+  }
+
+  refuse(token: string) {
+    //0 = non valido, 1 = respinto
+    return this.http.get<number>(`http://localhost:8080/API/notification/reject/${token}`);
   }
 
 }

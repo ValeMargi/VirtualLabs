@@ -1,1 +1,2 @@
-<app-teams [teams]="TEAMS"></app-teams>
+<app-teams [team]="TEAM" [proposals]="PROPOSALS"
+            (accept)="acceptProposal($event)" (refuse)="refuseProposal($event)"></app-teams>

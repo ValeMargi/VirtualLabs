@@ -5,6 +5,7 @@ import { Component, Input, OnInit, Output } from '@angular/core';
 import { Team } from '../../../models/team.model';
 import { Student } from 'src/app/models/student.model';
 import { Course } from 'src/app/models/course.model';
+import { Proposal } from 'src/app/models/proposal.model';
 @Component({
   selector: 'app-teams-cont',
   templateUrl: '../teams-cont/teams-cont.component.html',
@@ -16,60 +17,69 @@ export class TeamsContComponent implements OnInit {
               private teamService: TeamService,
               private courseService: CourseService ) { }
 
-  @Output() public TEAMS: Team[] = [];
-
-
-  @Output() public StudentInTeam: Student[] = [];
+  @Output() TEAM: Team;
+  @Output() PROPOSALS: Proposal[];
+  @Output() StudentInTeam: Student[] = [];
 
   public Members: Student[] = [];
 
-  public team: Team;
-
-  public proposal: any[];
-
   ngOnInit(): void {
-
+    
       this.teamService.getStudentsInTeams(this.courseService.currentCourse.getValue().name).subscribe(
         (data) => {
-          this.StudentInTeam = data;
+          //this.StudentInTeam = data;
+          this.studentInTeam(data);
         },
         (error) => {
           console.log("Studenti del team non caricato");
         }
       );
 
-      this.studentInTeam();
+  }
+
+  studentInTeam(students: Student[]) {
+    if (students.length > 0) {
+      students.forEach(element => {
+          if (element.id == this.studentService.currentStudent.id) {
+            this.teamService.getMembersTeam(this.teamService.currentTeam.id).subscribe(
+              (data) => {
+                this.Members = data;
+                console.log(data)
+              },
+              (error) => {
+                console.log("Membri non caricato");
+              }
+            );
+          }
+          else{
+            this.getProposals();
+          }
+      });
+    }
+    else {
+      this.getProposals();
+    }
 
   }
 
-  studentInTeam(){
-    this.StudentInTeam.forEach(element => {
-        if(element.id == this.studentService.currentStudent.id){
-          this.teamService.getMembersTeam(this.teamService.currentTeam.id).subscribe(
-            (data) => {
-              this.Members = data;
-            },
-            (error) => {
-              console.log("Membri non caricato");
-            }
-          );
-        }
-        else{
+  getProposals() {
+    this.teamService.getProposals(this.courseService.currentCourse.getValue().name).subscribe(
+      (data) => {
+        this.PROPOSALS = data;
+        console.log(data)
+      },
+      (error) => {
+        window.alert("Errore nel caricare le proposte per lo studente");
+      }
+    );
+  }
 
-          this.teamService.getProposals(this.courseService.currentCourse.getValue().name)
-          .subscribe(
-            (data) => {
-              this.proposal = data;
-            },
-            (error) => {
-              console.log("Errore nel caricare le proposte per lo studente");
-            }
-          );
+  acceptProposal(token: string) {
+    this.teamService.confirm(token);
+  }
 
-
-        }
-    });
-
+  refuseProposal(token: string) {
+    this.teamService.refuse(token);
   }
 
 }

@@ -11,6 +11,7 @@ import { MatInput } from '@angular/material/input';
 import { MatTableDataSource } from '@angular/material/table';
 import { CourseService } from 'src/app/services/course.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-request-team-dialog',
@@ -30,6 +31,7 @@ export class RequestTeamDialogComponent implements AfterViewInit,OnInit,OnChange
 
   @Output('enroll') toInsert = new EventEmitter<Student>()
   @Output('remove') toRemove = new EventEmitter<Student[]>()
+  @Output('propose') propose = new EventEmitter<any>();
 
   displayedColumns: string[] = ['select','matricola', 'cognome', 'nome'];
   dataSource = new MatTableDataSource<Student>();
@@ -41,7 +43,8 @@ export class RequestTeamDialogComponent implements AfterViewInit,OnInit,OnChange
 
   form = {
     name : new FormControl('', [Validators.required, Validators.minLength(3)]),
-    date : new FormControl('', [Validators.required])
+    date : new FormControl('', [Validators.required]),
+    members: new FormControl('', [Validators.required])
   }
 
   constructor(
@@ -164,40 +167,45 @@ export class RequestTeamDialogComponent implements AfterViewInit,OnInit,OnChange
   }
 
 
-selectAll(isChecked) {
-  this.dataSource.data.forEach(s => this.selectStudent(isChecked, s));
-}
-
-
-onSearchChange(searchValue: string) {
-  if (searchValue.length > 0) {
-    this.addDisabled = false;
+  selectAll(isChecked) {
+    this.dataSource.data.forEach(s => this.selectStudent(isChecked, s));
   }
-  else {
-    this.addDisabled = true;
+
+
+  onSearchChange(searchValue: string) {
+    if (searchValue.length > 0) {
+      this.addDisabled = false;
+    }
+    else {
+      this.addDisabled = true;
+    }
   }
-}
 
-deleteStudent() {
-  if (this.selectedStudents.selected.length > 0) {
-    this.toRemove.emit(this.selectedStudents.selected);
+  deleteStudent() {
+    if (this.selectedStudents.selected.length > 0) {
+      this.toRemove.emit(this.selectedStudents.selected);
+    }
   }
-}
 
-addStudent() {
-  if (this.studentToAdd != null) {
+  addStudent() {
+    if (this.studentToAdd != null) {
 
-    var add = true;
+      var add = true;
 
-    this.students.forEach(student => {
-      if (student.id == this.studentToAdd.id)
-        add = false;
-    });
+      this.students.forEach(student => {
+        if (student.id == this.studentToAdd.id)
+          add = false;
+      });
 
-    if (add)
-      this.toInsert.emit(this.studentToAdd);
+      if (add)
+        this.toInsert.emit(this.studentToAdd);
+    }
   }
-}
 
+  proposeTeam(nameTeam: string, days: string, members: string) {
+    let timeout: string = moment(new Date().setDate(new Date().getDate() + Number.parseInt(days))).format("YYYY-MM-DD HH:mm:ss.SSS");
+    let membersId: string[] = members.split(",");
+    this.propose.emit({teamName: nameTeam, timeout: timeout, membersId: membersId});
+  }
 
 }

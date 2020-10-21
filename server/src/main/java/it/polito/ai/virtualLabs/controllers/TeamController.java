@@ -40,6 +40,7 @@ public class TeamController {
             String nameTeam = object.get("nameTeam").toString();
             Timestamp timeout = Timestamp.valueOf(object.get("timeout").toString());
             List<String> membersId= (List<String>)object.get("membersId");
+            membersId.forEach(member -> member = member.trim());
             return vlService.proposeTeam(courseName, nameTeam, membersId, timeout);
         } catch (  CourseNotFoundException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());

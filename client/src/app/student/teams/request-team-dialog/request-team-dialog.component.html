@@ -1,82 +1,34 @@
 <h1 mat-dialog-title><strong>Composizione Gruppo</strong></h1>
 <mat-dialog-content class="mat-typography" >
 
-
       <!--Nome Gruppo-->
       <mat-form-field class="gruppo">
             <mat-label>Gruppo</mat-label>
             <mat-icon matSuffix>group</mat-icon>
-            <input matInput required [formControl]="form.name" placeholder="Nome gruppo" required>
+            <input #nameTeam matInput required [formControl]="form.name" placeholder="Nome gruppo" required>
             <mat-error *ngIf="form.name.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field><br>
 
       <!--Durata Richieste-->
       <mat-form-field class="data">
-        <mat-select required placeholder="Durata richieste" [formControl]="form.date" required>
-            <mat-option value="1-sett">1 settimana</mat-option>
-            <mat-option value="2-sett">2 settimana</mat-option>
+        <mat-select #timeout required placeholder="Durata richieste" [formControl]="form.date" required>
+            <mat-option value="7">1 settimana</mat-option>
+            <mat-option value="14">2 settimana</mat-option>
           </mat-select>
           <mat-error *ngIf="form.date.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field> <br>
 
-      <!--Richiesta studenti-->
-      <mat-form-field class="matForm">
-         <input #input type="search" placeholder="Inserisci studente" aria-label="Student"
-              matInput
-              (input)="onSearchChange($event.target.value)"
-              [formControl]="myControl"
-              [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onStudentSelected($event.option.value)">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-            {{option.name}} {{option.firstName}} ({{option.id}})
-           </mat-option>
-       </mat-autocomplete>
-      </mat-form-field>
-
-      <!--Bottoni Aggiungi rimuovi studente-->
-      <button class="button" color="primary" mat-button mat-raised-button [disabled]="addDisabled" (click)="addStudent()"><mat-icon>add</mat-icon>Aggiungi</button>
-      <button class="button" color="primary" mat-button mat-raised-button aria-label="" (click)=deleteStudent()> <mat-icon>delete</mat-icon>Rimuovi</button>
-
-      <!--Tabella studenti-->
-      <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-        <!--Checkbox-->
-        <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef><mat-checkbox #checkall (change)="selectAll($event.checked)"
-            [checked]="selectedStudents.hasValue() && allSelected()"
-            [indeterminate]="selectedStudents.hasValue() && !allSelected()"></mat-checkbox></th>
-          <td mat-cell *matCellDef="let row"><mat-checkbox #checksingle (change)="selectStudent($event.checked, row)"
-            (click)="$event.stopPropagation()"
-            [checked]="selectedStudents.isSelected(row)"></mat-checkbox></td>
-          </ng-container>
-
-        <!--Matricola-->
-        <ng-container matColumnDef="matricola">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Matricola </th>
-            <td mat-cell *matCellDef="let row">{{row.id}}  </td>
-        </ng-container>
-
-        <!--Cognome-->
-        <ng-container matColumnDef="cognome">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome  </th>
-            <td mat-cell *matCellDef="let row"> {{row.firstName}}  </td>
-        </ng-container>
-
-        <!--Nome-->
-        <ng-container matColumnDef="nome">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato </th>
-            <td mat-cell *matCellDef="let row">{{row.name}}   </td>
-        </ng-container>
-
-      </table>
+      <mat-form-field class="gruppo">
+        <mat-label>Inserire le matricole degli invitati separate da una virgola</mat-label>
+        <input #members matInput required [formControl]="form.name" placeholder="Matricole" required>
+        <mat-error *ngIf="form.name.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field><br>
+      
 </mat-dialog-content>
 
 
-<mat-dialog-actions align="end">
+<mat-dialog-actions>
   <button mat-button mat-raised-button color="warn" mat-dialog-close>Anulla</button>
-  <button mat-button mat-raised-button color="primary" [mat-dialog-close]="true" cdkFocusInitial>Salva</button>
+  <button mat-button mat-raised-button color="primary" (click)="proposeTeam(nameTeam.value, timeout.value, members.value)" cdkFocusInitial>Crea</button>
 </mat-dialog-actions>
 

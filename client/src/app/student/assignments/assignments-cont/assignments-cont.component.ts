@@ -4,7 +4,7 @@ import { Homework } from 'src/app/models/homework.model';
 import { Assignment } from 'src/app/models/assignment.model';
 import { StudentService } from 'src/app/services/student.service';
 import { CourseService } from 'src/app/services/course.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-assignments-cont',
   templateUrl: './assignments-cont.component.html',
@@ -17,12 +17,13 @@ export class AssignmentsContComponent implements OnInit {
 
   constructor(private studentService: StudentService,
               private courseService: CourseService,
+              private router: Router,
               private route: ActivatedRoute) {
 
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe( params => console.log(params));
+    //this.route.params.subscribe( params => console.log(params));
 
     this.studentService.allAssignments(this.courseService.currentCourse.getValue().name).subscribe(
       (data) =>  {
@@ -35,14 +36,13 @@ export class AssignmentsContComponent implements OnInit {
 
   }
 
-
-  gethomework(ass:Assignment){
+  getHomework(ass: Assignment) {
     this.studentService.getHomework(this.courseService.currentCourse.getValue().name, ass.id).subscribe(
       (data) =>  {
         this.HOMEWORK = data;
       },
       (error) => {
-        console.log("Impossibile ottenere Homework");
+        window.alert("Errore ottenimento Homework");
       }
     );
 

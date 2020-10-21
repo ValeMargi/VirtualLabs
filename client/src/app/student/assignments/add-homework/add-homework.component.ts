@@ -11,11 +11,10 @@ import { FormControl, Validators } from '@angular/forms';
 export class AddHomeworkComponent implements OnInit, AfterViewInit {
   Version: HomeworkVersion[];
   selectedPhoto: File;
-  currentDate;
-  oneWeek;
-  public assId: number;
+  //currentDate;
+  //oneWeek;
 
-  @Output('create') create = new EventEmitter<any>();
+  @Output('create') create = new EventEmitter<File>();
 
   form = {
     name : new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -34,24 +33,21 @@ export class AddHomeworkComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {}
 
   ngOnInit(): void {
-    this.currentDate = new Date();
-    this.oneWeek = new Date(this.currentDate);
-    this.oneWeek.setDate(this.oneWeek.getDate() + 7);
+    //this.currentDate = new Date();
+    //this.oneWeek = new Date(this.currentDate);
+    //this.oneWeek.setDate(this.oneWeek.getDate() + 7);
   }
 
   close() {
     this.matDialogRef.close();
   }
 
-  AddVersion(name: string, date: string, assId:number) {
-    let homework = new Homework(-1, "NULL", false, "", null);
-    let version = new HomeworkVersion(-1, name, date);
-
-    this.assId = assId;
-
+  addVersion() {
     if (this.selectedPhoto != null) {
-      this.create.emit({homework:homework,version: version, file: this.selectedPhoto});
-      console.log("Homework aggiunto");
+      this.create.emit(this.selectedPhoto);
+    }
+    else {
+      window.alert("Inserire foto versione");
     }
   }
 

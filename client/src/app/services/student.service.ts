@@ -114,7 +114,7 @@ export class StudentService {
     let data: FormData = new FormData();
     data.append("file", file, file.name);
 
-    return this.http.post(`${this.API_STUDENTS}/${courseName}/${assignmentId}/${homeworkId}/uploadHomework`, data);
+    return this.http.post<HomeworkVersion>(`${this.API_STUDENTS}/${courseName}/${assignmentId}/${homeworkId}/uploadHomework`, data);
   }
 
   getHomework(courseName: string, assignmentId: number) {

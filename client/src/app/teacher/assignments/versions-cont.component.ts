@@ -45,7 +45,6 @@ export class VersionsContComponent implements OnInit, OnDestroy {
           console.log("Errore nel reperire le versioni");
         }                                          
       );
-
       this.teacherService.getCorrectionsHMForProfessor(this.courseService.currentCourse.getValue().name, this.idA, this.homework.id).subscribe(
         (data) => {
           this.CORRECTIONS = data;
@@ -55,14 +54,33 @@ export class VersionsContComponent implements OnInit, OnDestroy {
         }
       );
     });
+
+    this.teacherService.corrUpload.subscribe(
+      (data) => {
+        let corr: HomeworkCorrection = data.corr;
+        let permanent: boolean = data.permanent;
+
+        if (permanent) {
+          this.HOMEWORK.permanent = permanent;
+        }
+
+        if (this.CORRECTIONS.length == 0) {
+          let array: HomeworkCorrection[] = new Array();
+          array.push(corr);
+          this.CORRECTIONS = array;
+        }
+        else {
+          this.CORRECTIONS.push(corr);
+        }
+      }, 
+      (error) => {
+
+      }
+    );
   }
 
   ngOnDestroy() {
     this.route$.unsubscribe();
-  }
-
-  uploadCorrection(file: File) {
-    //this.teacherService.uploadCorrection(this.courseService.currentCourse.getValue().name, this.idA, this.homework.id, -1, file, )
   }
 
 }

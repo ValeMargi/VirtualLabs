@@ -10,7 +10,6 @@
 
 <mat-dialog-actions>
   <button mat-button mat-raised-button color="warn" (click)="close()">Chiudi</button>
-  <button mat-button mat-raised-button color="primary" *ngIf="VMStudent">Usa VM
-    <input class="inputfile" type="file" name="pic" accept="image/*" (change)="onFileChanged($event)">
-  </button>
+  <button mat-button mat-raised-button color="primary" *ngIf="VMStudent" (click)="hiddenfileinput.click()">Usa VM</button>
+  <input #hiddenfileinput class="inputfile" type="file" name="pic" accept="image/*" (change)="onFileChanged($event)">
 </mat-dialog-actions>

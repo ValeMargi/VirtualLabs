@@ -21,26 +21,22 @@ export class AddHomeworkContComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  addVersionH(content: any ) {
-    let file: File = content.file;
-    let homeworkVersion: HomeworkVersion = content.version;
-
-    this.studentService.getHomework(this.courseService.currentCourse.getValue().name,this.assId).subscribe(
+  addVersionH(file: File) {
+    this.studentService.getHomework(this.courseService.currentCourse.getValue().name, this.assId).subscribe(
       (data) => {
         this.homework = data;
-        this.studentService.uploadVersionHomework(this.courseService.currentCourse.getValue().name,this.assId, this.homework.id,file).subscribe(
+        this.studentService.uploadVersionHomework(this.courseService.currentCourse.getValue().name, this.assId, this.homework.id, file).subscribe(
           (data) => {
             this.matDialogRef.close();
-            this.studentService.homeworkCreation.emit(homeworkVersion);
-            console.log("Caricamento della Version-homework Completato");
+            this.studentService.homeworkCreation.emit(data);
           },
           (error) => {
-            console.log("Errore nel caricamento dell'homework");
+            window.alert("Errore nel caricamento dell'homework");
           }
         );
       },
       (error) =>{
-        console.log("Homework non caricato")
+        window.alert("Errore nel reperire l'homework")
       }
     );
   }

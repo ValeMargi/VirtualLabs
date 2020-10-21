@@ -1,4 +1,4 @@
-import { Component, OnInit, Input,Output, AfterViewInit, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input,Output, AfterViewInit, ViewChild, OnChanges, SimpleChanges, OnDestroy, EventEmitter } from '@angular/core';
 import { AssignmentsContComponent } from './assignments-cont/assignments-cont.component';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -11,13 +11,14 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {AddHomeworkContComponent } from './add-homework/add-homework-cont/add-homework-cont.component'
 import { Router, ActivatedRoute } from '@angular/router';
 import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-assignments-student',
   templateUrl: './assignments.component.html',
   styleUrls: ['./assignments.component.css']
 })
-export class AssignmentsComponent implements AfterViewInit, OnInit {
+export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy {
   @ViewChild('table') table: MatTable<Element>;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -26,29 +27,28 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   AssignmentsColumns: string[] = ['assignmentName', 'releaseDate','expiration','showAssignment'];
 
   dataAssignments = new MatTableDataSource<Assignment>();
-  dataHomeworks = new MatTableDataSource<Homework>();
 
-  @Input() public homeworks: Homework[] = [];
-  @Input() public assignments: Assignment[] = [];
-  @Output() public HOMEWORK: Homework;
-  @Output() public ASSIGNMENTS: Assignment;
+  @Input() homework: Homework;
+  @Input() assignments: Assignment[] = [];
+  @Output() HOMEWORK: Homework;
+  @Output() ASSIGNMENT: Assignment;
+  @Output('versions') versions = new EventEmitter<Assignment>()
 
   tableVisibility: boolean = false;
-  tableAssignmetsVisibility: boolean =true;
-  tableHomeworkVisibility: boolean = false;
+  versionsVisibility: boolean = false;
 
   buttonHomeworkVisibility:boolean = false;
 
   panelOpenState = false;
   titolo: string;
   public assId: number;
+  private route$: Subscription
 
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  constructor(private cont: AssignmentsContComponent,
-              private router: Router,
+  constructor(private router: Router,
               private route: ActivatedRoute,
               private matDialog: MatDialog) { }
 
@@ -58,43 +58,55 @@ export class AssignmentsComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.setTable();
     this.manageAssVisibility();
+
+    this.route$ = this.route.params.subscribe(params => {
+      let id = params.id;
+      console.log(id)
+
+      if (id == undefined) {
+        this.versionsVisibility = false;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.route$.unsubscribe();
   }
 
   setTable() {
     this.dataAssignments = new MatTableDataSource<Assignment>(this.assignments);
-    this.dataHomeworks = new MatTableDataSource<Homework>(this.homeworks);
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.assignments = changes.assignments.currentValue;
-    //this.homeworks = changes.homeworks.currentValue;
+    if (changes.assignments != null) {
+      this.assignments = changes.assignments.currentValue;
+    }
+
+    if (changes.homework != null && this.ASSIGNMENT != null) {
+      this.homework = changes.homework.currentValue;
+      this.HOMEWORK = this.homework;
+      this.router.navigate([this.ASSIGNMENT.id, 'versions'], { relativeTo: this.route })
+    }
+
     this.manageAssVisibility();
     this.setTable();
-
   }
 
-  openHomeworkTable(ass:Assignment){
-      this.tableAssignmetsVisibility = false;
-      this.tableHomeworkVisibility = true;
-      this.assId = ass.id;
-      this.titolo = ass.assignmentName;
+  showVersions(ass: Assignment) {
+    this.versions.emit(ass);
+    this.versionsVisibility = true;
+    this.ASSIGNMENT = ass;
+    //this.router.navigate([ass.id, 'versions'], { relativeTo: this.route });
   }
 
-  backAssignmetsTable(){
-    this.tableHomeworkVisibility = false;
-    this.tableAssignmetsVisibility = true;
-
-  }
-
-    manageAssVisibility() {
-      if (this.assignments.length > 0) {
-        this.tableAssignmetsVisibility = true;
-      }
-      else {
-        this.tableAssignmetsVisibility = false;
-      }
+  manageAssVisibility() {
+    /*if (this.assignments.length > 0) {
+      this.tableAssignmetsVisibility = true;
     }
+    else {
+      this.tableAssignmetsVisibility = false;
+    }*/
+  }
 
   openDialogHomework(assId:number) {
     const dialogRef = this.matDialog.open(AddHomeworkContComponent,{ id: 'dialogHomework'});

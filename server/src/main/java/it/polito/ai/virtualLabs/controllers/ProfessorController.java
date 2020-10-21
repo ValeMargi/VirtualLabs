@@ -334,7 +334,7 @@ public class ProfessorController {
      * @throws IOException
      */
     @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/{versionHMid}/uploadCorrection")
-    public boolean uploadCorrection(@PathVariable String courseName, @PathVariable Long assignmentId,
+    public PhotoCorrectionDTO uploadCorrection(@PathVariable String courseName, @PathVariable Long assignmentId,
                                  @PathVariable Long homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file,
                                  @RequestPart("permanent") @NotNull String permanent, @PathVariable Long versionHMid,
                                  @RequestPart("grade") String grade) throws IOException {

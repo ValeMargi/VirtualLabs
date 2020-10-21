@@ -1,18 +1,6 @@
 <h2 mat-dialog-title>Inserisci elaborato</h2>
-<h3>{{assId}}</h3>
 
 <mat-dialog-content>
-
-        <!--Nome Elaborato-->
-        <mat-form-field class="form-group">
-        <input type="text" #name class="form-control" placeholder="Nome" [formControl]="form.name" matInput required minlength="3">
-        <mat-error *ngIf="form.name.invalid">{{getErrorMessage()}}</mat-error>
-        </mat-form-field><br><br>
-
-        <!--Data Elaborato-->
-        <mat-form-field class="form-group">
-        <input type="date" #date placeholder="Data pubblicazione" name="currentDate" [ngModel]="currentDate | date:'yyyy-MM-dd'" matInput readonly required>
-        </mat-form-field><br>
 
          <!--File-->
         <input type="file" #file (change)="addVersionImage($event)" [formControl] = "form.file" accept="image/*" required>
@@ -21,5 +9,5 @@
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button mat-raised-button color="accent" (click)="close()">Annulla</button>
-    <button mat-button mat-raised-button color="primary" (click)="AddVersion(name.value,date.value,assId)">Inserisci</button>
+    <button mat-button mat-raised-button color="primary" (click)="addVersion()">Inserisci</button>
 </mat-dialog-actions>

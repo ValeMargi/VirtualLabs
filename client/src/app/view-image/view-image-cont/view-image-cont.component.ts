@@ -31,8 +31,12 @@ export class ViewImageContComponent implements OnInit {
         let isTeacher: boolean = this.data.isTeacher;
 
         if (isTeacher) {
+          console.log("passo di qua")
+          console.log(course)
+          console.log(assignmentId)
           this.teacherService.getPhotoAssignment(course, assignmentId).subscribe(
             (data) => {
+              console.log(data)
               this.TIMESTAMP = data.timestamp;
               this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
             },

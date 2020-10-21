@@ -80,6 +80,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import { ForgotPasswordContComponent } from './forgot-password/forgot-password-cont/forgot-password-cont.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ChangePasswordContComponent } from './change-password/change-password-cont/change-password-cont.component';
+import { UploadCorrectionContComponent } from './teacher/assignments/upload-correction/upload-correction-cont/upload-correction-cont.component';
+import { UploadCorrectionComponent } from './teacher/assignments/upload-correction/upload-correction.component';
 
 @NgModule({
   declarations: [
@@ -135,7 +137,9 @@ import { ChangePasswordContComponent } from './change-password/change-password-c
     LoginContComponent,
     ForgotPasswordContComponent,
     ChangePasswordComponent,
-    ChangePasswordContComponent
+    ChangePasswordContComponent,
+    UploadCorrectionContComponent,
+    UploadCorrectionComponent
   ],
   imports: [
     BrowserModule,

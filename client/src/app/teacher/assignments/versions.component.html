@@ -15,24 +15,32 @@
                     <h3>Versioni</h3>
                     <mat-selection-list [multiple]="false">
                         <mat-list-option *ngFor="let ver of versions" [value]="ver"> 
-                            {{ ver.timestamp }}    
+                            <div style="display: flex;">
+                                <div (click)="openVersionImage(ver)">{{ ver.timestamp }}</div>
+                           
+                                <button (click)="showCorrections(ver)">
+                                    <mat-icon>keyboard_arrow_right</mat-icon>
+                                </button>
+                            </div>
                         </mat-list-option>
                     </mat-selection-list>
                 </div>
                 <div class="separator"></div> 
-                <div class="corrections">
+                <div class="corrections" *ngIf="corrVisibility">
                     <h3>Revisioni</h3>
                     <mat-selection-list [multiple]="false">
-                        <mat-list-option *ngFor="let rev of corrections" [value]="rev"> 
-                            {{ rev.timestamp }}    
+                        <mat-list-option *ngFor="let cor of corrsToShow" [value]="cor" (click)="openCorrectionImage(cor)"> 
+                            {{ cor.timestamp }}    
                         </mat-list-option>
                     </mat-selection-list>
+                    <div *ngIf="corrsToShow.length == 0">
+                    <h4>Nessuna correzione per questa versione</h4>
+                    </div>
                 </div>
             </div>
-
-            <input #hiddenfileinput class="inputfile" type="file" accept="image/*" (change)="uploadCorrection($event)">
+            
             <button mat-stroked-button class="upload" 
-                *ngIf="!homework.permanent && homework.status != 'NULL' && homework.status != 'LETTO'" (click)="hiddenfileinput.click()">
+                *ngIf="!homework.permanent && homework.status != 'NULL' && homework.status != 'LETTO'" (click)="uploadCorrection()">
                 <mat-icon>cloud_upload</mat-icon> Carica revisione
             </button>
         </div>

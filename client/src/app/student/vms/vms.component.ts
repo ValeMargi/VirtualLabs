@@ -97,8 +97,8 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
       return;
     }
 
-    if (vm.status == "off") {
-      window.alert("La VM deve essere accesa per apportare modifiche");
+    if (vm.status == "on") {
+      window.alert("La VM deve essere spenta per apportare modifiche");
       return;
     }
 

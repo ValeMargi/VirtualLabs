@@ -23,6 +23,7 @@ export class TeacherService {
   currentAvatar: any;
 
   assCreation: EventEmitter<Assignment> = new EventEmitter<Assignment>();
+  corrUpload: EventEmitter<any> = new EventEmitter<any>();
   
   constructor(private http: HttpClient) { }
 
@@ -104,7 +105,7 @@ export class TeacherService {
     data.append("permanent", permanent.toString());
     data.append("grade", grade);
 
-    return this.http.post<boolean>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/${versionHMid}/uploadCorrection`, data);
+    return this.http.post<HomeworkCorrection>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/${homeworkId}/${versionHMid}/uploadCorrection`, data);
   }
 
 

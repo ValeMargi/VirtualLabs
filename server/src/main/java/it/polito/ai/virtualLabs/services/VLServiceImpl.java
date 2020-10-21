@@ -1083,7 +1083,7 @@ public class VLServiceImpl implements VLService{
                     PhotoVM p = photoVMRepository.getOne(vm.getPhotoVM().getId());
                     p.setNameFile(photoVMDTO.getNameFile());
                     p.setType(photoVMDTO.getType());
-                    p.setPicByte(compressZLib(photoVMDTO.getPicByte()));
+                    p.setPicByte(photoVMDTO.getPicByte());
                     vm.setTimestamp(timestamp);
                     return true;
                 }else throw new VMnotEnabledException();
@@ -1393,7 +1393,7 @@ public class VLServiceImpl implements VLService{
     /*SERVICE ELABORATI*/
     @PreAuthorize("hasAuthority('student')")
     @Override //uploadHomework
-    public boolean uploadVersionHomework (Long homeworkId, PhotoVersionHomeworkDTO photoVersionHomeworkDTO) { //CourseId preso dal pathVariable
+    public PhotoVersionHomeworkDTO uploadVersionHomework (Long homeworkId, PhotoVersionHomeworkDTO photoVersionHomeworkDTO) { //CourseId preso dal pathVariable
         String student = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Student> os = studentRepository.findById(student);
         if (os.isPresent()) {
@@ -1412,7 +1412,7 @@ public class VLServiceImpl implements VLService{
                                 h.setTimestamp(photoVersionHomework.getTimestamp());
                                 homeworkRepository.saveAndFlush(h);
                                 photoVersionHMRepository.saveAndFlush(photoVersionHomework);
-                                return true;
+                                return modelMapper.map(photoVersionHomework, PhotoVersionHomeworkDTO.class);
                             }else throw new VMNotFoundException();
                         }else throw new TeamNotFoundException();
                     } else throw new HomeworkIsPermanentException();
@@ -1565,7 +1565,7 @@ public class VLServiceImpl implements VLService{
     /*Metodo per consegnare correzione*/
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public boolean uploadCorrection(Long homeworkId, Long versionHMid,
+    public PhotoCorrectionDTO uploadCorrection(Long homeworkId, Long versionHMid,
                                     PhotoCorrectionDTO photoCorrectionDTO,Boolean permanent, String grade) {
         Optional<Homework> oh = homeworkRepository.findById(homeworkId);
         String professorAuth = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -1581,12 +1581,12 @@ public class VLServiceImpl implements VLService{
                     h.setStatus("RIVISTO");
                     h.setPermanent(permanent);
                     if(permanent) {
-                        if(grade==null) throw new GradeNotValidException();
+                        if(grade==null || Integer.getInteger(grade) < 0 || Integer.getInteger(grade) > 30) throw new GradeNotValidException();
                         h.setGrade(grade);
                     }
                     h.setTimestamp(photoCorrection.getTimestamp());
                     photoCorrectionRepository.saveAndFlush(photoCorrection);
-                    return true;
+                    return modelMapper.map(photoCorrection, PhotoCorrectionDTO.class);
                 }else throw new HomeworkVersionIdNotFoundException();
 
             }else throw  new PermissionDeniedException();

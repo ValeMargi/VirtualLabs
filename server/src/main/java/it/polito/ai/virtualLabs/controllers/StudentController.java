@@ -350,7 +350,7 @@ public class StudentController {
      * @throws IOException
      */
     @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/uploadHomework")
-    public boolean uploadVersionHomework(@PathVariable String courseName, @PathVariable Long assignmentId,
+    public PhotoVersionHomeworkDTO uploadVersionHomework(@PathVariable String courseName, @PathVariable Long assignmentId,
                                       @PathVariable Long homeworkId, @RequestPart("file") @Valid @NotNull MultipartFile file ) throws IOException {
         if(file.isEmpty() || file.getContentType()==null)
             throw new ResponseStatusException(HttpStatus.CONFLICT);

@@ -54,13 +54,15 @@ public class TeamController {
 
         }
     }
-    //TO DO vedere  eccezioni
+
     @GetMapping("/{courseName}/getProposals")
     public List<Map<String, Object>> getProposal(@PathVariable String courseName) {
         try {
             return vlService.getProposals(courseName);
         }catch(StudentWaitingTeamCreationException | StudentAlreadyInTeamException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }catch (TeamNotFoundException | StudentNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 

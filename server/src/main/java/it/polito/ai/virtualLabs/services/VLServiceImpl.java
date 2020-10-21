@@ -750,8 +750,12 @@ public class VLServiceImpl implements VLService{
 
         List<Map<String, Object>> l = new ArrayList<>();
         for( Long teamId : teamList) {
-            Team team= teamRepository.getOne(teamId);
-            Student stu = studentRepository.getOne(team.getCreatorId());
+            Optional<Team> oteam= teamRepository.findById(teamId);
+            if(!oteam.isPresent()) throw new TeamNotFoundException();
+            Team team = oteam.get();
+            Optional<Student> ostu = studentRepository.findById(team.getCreatorId());
+            if(!ostu.isPresent()) throw new StudentNotFoundException();
+            Student stu= ostu.get();
             Map<String, Object> m = new HashMap<>();
             m.put("teamName", team.getName());
             m.put("creator", stu.getFirstName()+" "+stu.getName()+" "+ stu.getId());
@@ -964,7 +968,7 @@ public class VLServiceImpl implements VLService{
                     PhotoVM photoVM = new PhotoVM();
                     photoVM.setNameFile(photoModelVM.getNameFile());
                     photoVM.setType(photoModelVM.getType());
-                    photoVM.setPicByte(compressZLib(photoModelVM.getPicByte()));
+                    photoVM.setPicByte(photoModelVM.getPicByte());
 
                     vm.setPhotoVM(photoVM);
                     vm.addStudentToOwnerList(s);

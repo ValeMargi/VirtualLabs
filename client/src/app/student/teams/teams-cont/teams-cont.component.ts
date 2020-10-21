@@ -27,15 +27,6 @@ export class TeamsContComponent implements OnInit {
 
   ngOnInit(): void {
 
-      this.teamService.getTeamForStudent(this.courseService.currentCourse.getValue().name, this.studentService.currentStudent.id).subscribe(
-        (data) => {
-          this.team = data;
-        },
-        (error) => {
-          console.log("Teams non caricato");
-        }
-      );
-
       this.teamService.getStudentsInTeams(this.courseService.currentCourse.getValue().name).subscribe(
         (data) => {
           this.StudentInTeam = data;
@@ -53,17 +44,48 @@ export class TeamsContComponent implements OnInit {
           console.log("Membri non caricato");
         }
       );
+  }
 
-    /*
-    this.teamService.proposeTeam(this.courseService.currentCourse.getValue().name,Map<this.teamService.currentTeam.name,> ).subscribe(
-        (data) => {
-          this.team = data;
-        },
-        (error) => {
-          console.log("Proposte non caricate");
+  studentInTeam(){
+    this.StudentInTeam.forEach(element => {
+        if(element.id == this.studentService.currentStudent.id){
+          this.teamService.getTeamForStudent(this.courseService.currentCourse.getValue().name, this.studentService.currentStudent.id)
+          .subscribe(
+            (data) => {
+              this.team = data;
+            },
+            (error) => {
+              console.log("Errore nel caricare il Team dello studente");
+            }
+          );
         }
-      );
-*/
+        else{
+          /*
+          this.teamService.(this.courseService.currentCourse.getValue().name, this.studentService.currentStudent.id)
+          .subscribe(
+            (data) => {
+              this.team = data;
+            },
+            (error) => {
+              console.log("Errore nel caricare il Team dello studente");
+            }
+          );
+          */
+          /*
+          //Proporre un Team
+          this.teamService.proposeTeam(this.courseService.currentCourse.getValue().name,Map<this.teamService.currentTeam.name,> )
+          .subscribe(
+              (data) => {
+                this.team = data;
+              },
+              (error) => {
+                console.log("Errore nel caricameto delle richieste");
+              }
+            );
+          */
+        }
+    });
+
   }
 
 }

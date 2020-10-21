@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { Student } from '../models/student.model';
 import { VM } from '../models/vm.model';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,10 +22,15 @@ export class TeamService {
     return this.http.post<Team>(`${this.API_TEAMS}/${courseName}/proposeTeam`, teamMap);
   }
 
+  getProposal(courseName: string) {
+    return this.http.get<any[]>(`${this.API_TEAMS}/${courseName}/getProposal`).pipe(map(proposal => proposal || []));
+  }
+
   getTeamsForCourse(courseName: string) {
     return this.http.get<Team[]>(`${this.API_TEAMS}/${courseName}/forCourse`).pipe(map(teams => teams || []));
   }
 
+  //Get dei membri di team
   getMembersTeam(teamId: number) {
     return this.http.get<Student[]>(`${this.API_TEAMS}/${teamId}/members`).pipe(map(students => students || []));
   }
@@ -37,14 +43,17 @@ export class TeamService {
     return this.http.get<Team>(`${this.API_TEAMS}/${courseId}/${studentId}/team`);
   }
 
+  //Get studenti che appartengono ad un team nel corso specificato
   getStudentsInTeams(courseName: string) {
     return this.http.get<Student[]>(`${this.API_TEAMS}/${courseName}/inTeam`).pipe(map(students => students || []));
   }
 
+  //Studenti che non appartengono ancora ad un Team
   getAvailableStudents(courseName: string) {
     return this.http.get<Student[]>(`${this.API_TEAMS}/${courseName}/notInTeam`).pipe(map(students => students || []));
   }
 
+  //Ritorna una array di VM per un determinato corso e team
   getAllVMTeam(courseName: string, teamId: number) {
     return this.http.get<VM[]>(`${this.API_TEAMS}/${courseName}/${teamId}/getVM`).pipe(map(vms => vms || []));
   }

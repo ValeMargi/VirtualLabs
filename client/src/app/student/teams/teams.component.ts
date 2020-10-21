@@ -1,3 +1,4 @@
+import { StudentService } from 'src/app/services/student.service';
 import { Component, OnInit, Input, AfterViewInit, ViewChild} from '@angular/core';
 import { MatTable, MatTableDataSource } from '@angular/material/table'
 import{ Team } from '../../models/team.model';
@@ -35,7 +36,9 @@ export class TeamsComponent implements AfterViewInit,OnInit {
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  constructor(private cont: TeamsContComponent, public dialog: MatDialog) { }
+  constructor(private cont: TeamsContComponent,
+              public dialog: MatDialog,
+              private studentService: StudentService) { }
 
   openRequestDialog() {
     const dialogRef = this.dialog.open(RequestTeamDialogComponent,{width: '600px', id: 'dialogRequest'});
@@ -54,5 +57,7 @@ export class TeamsComponent implements AfterViewInit,OnInit {
   ngOnInit(): void {
     this.dataSourceTeam.sort = this.sort;
   }
+
+
 
 }

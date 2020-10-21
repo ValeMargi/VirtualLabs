@@ -1147,7 +1147,7 @@ public class VLServiceImpl implements VLService{
             VM vm = ovm.get();
             if (vm.getOwnersVM().stream().map(Student::getId).collect(Collectors.toList()).contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
                 Team t = teamRepository.getOne(vm.getTeam().getId());
-                if(t.getVms().stream().anyMatch(v->v.getNameVM().equals(vmdto.getNameVM())))
+                if(t.getVms().stream().anyMatch(v->v.getNameVM().equals(vmdto.getNameVM()) && !v.getId().equals(vmdto.getId())))
                     throw new VMduplicatedException();
                if(!vm.getStatus().equals("off") ) throw new VMnotOffException();
                 if (

@@ -25,6 +25,8 @@ export class TeamsContComponent implements OnInit {
 
   public team: Team;
 
+  public proposal: any[];
+
   ngOnInit(): void {
 
       this.teamService.getStudentsInTeams(this.courseService.currentCourse.getValue().name).subscribe(
@@ -60,29 +62,18 @@ export class TeamsContComponent implements OnInit {
           );
         }
         else{
-          /*
-          this.teamService.(this.courseService.currentCourse.getValue().name, this.studentService.currentStudent.id)
+
+          this.teamService.getProposal(this.courseService.currentCourse.getValue().name)
           .subscribe(
             (data) => {
-              this.team = data;
+              this.proposal = data;
             },
             (error) => {
-              console.log("Errore nel caricare il Team dello studente");
+              console.log("Errore nel caricare le proposte per lo studente");
             }
           );
-          */
-          /*
-          //Proporre un Team
-          this.teamService.proposeTeam(this.courseService.currentCourse.getValue().name,Map<this.teamService.currentTeam.name,> )
-          .subscribe(
-              (data) => {
-                this.team = data;
-              },
-              (error) => {
-                console.log("Errore nel caricameto delle richieste");
-              }
-            );
-          */
+
+
         }
     });
 

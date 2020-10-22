@@ -28,7 +28,7 @@ export class AddHomeworkContComponent implements OnInit {
         this.studentService.uploadVersionHomework(this.courseService.currentCourse.getValue().name, this.assId, this.homework.id, file).subscribe(
           (data) => {
             this.matDialogRef.close();
-            this.studentService.homeworkCreation.emit(data);
+            this.studentService.verUpload.emit(data);
           },
           (error) => {
             window.alert("Errore nel caricamento dell'homework");

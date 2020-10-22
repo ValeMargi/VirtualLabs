@@ -11,7 +11,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const accessToken = localStorage.getItem('token');
     if (accessToken && this.authService.isLoggedIn()) {
       const cloned = request.clone({headers: request.headers.set('Authorization', 'Bearer ' + accessToken)});
-      console.log('AuthInterceptor accessToken found: ' + JSON.stringify(accessToken));
+      //console.log('AuthInterceptor accessToken found: ' + JSON.stringify(accessToken));
       return next.handle(cloned);
     } else {
       console.log('AuthInterceptor accessToken not found');

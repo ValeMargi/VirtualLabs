@@ -46,8 +46,9 @@
   </mat-card-content>
 </mat-card>
 
-<app-versions-cont-student *ngIf="versionsVisibility" [homework]="HOMEWORK"></app-versions-cont-student>
-
+<router-outlet>
+  <app-versions-cont-student *ngIf="false" [homework]="HOMEWORK"></app-versions-cont-student>
+</router-outlet>
 
 
 

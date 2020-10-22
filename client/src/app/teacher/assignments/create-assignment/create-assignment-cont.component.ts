@@ -24,7 +24,7 @@ export class CreateAssignmentContComponent implements OnInit {
     this.teacherService.addAssignment(this.courseService.currentCourse.getValue().name, file, assignment).subscribe(
       (data) => {
         this.matDialogRef.close();
-        this.teacherService.assCreation.emit(assignment);
+        this.teacherService.assCreation.emit(data);
       }, 
       (error) => {
         window.alert("Errore nella creazione della consegna");

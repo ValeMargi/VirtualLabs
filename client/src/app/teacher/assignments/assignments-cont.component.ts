@@ -35,14 +35,13 @@ export class AssignmentsContComponent implements OnInit {
 
     this.teacherService.assCreation.subscribe(
       (data) => {
-        if (this.ASSIGNMENTS.length == 0) {
-          let array: Assignment[] = new Array();
-          array.push(data);
-          this.ASSIGNMENTS = array;
-        }
-        else {
-          this.ASSIGNMENTS.push(data);
-        }
+        let array: Assignment[] = this.ASSIGNMENTS;
+        this.ASSIGNMENTS = new Array();
+        array.push(data);
+
+        array.forEach(ass => {
+          this.ASSIGNMENTS.push(ass);
+        });
       }, 
       (error) => {
 

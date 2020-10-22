@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ViewChild, AfterViewInit } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { LoginDialogComponent } from './login/login-dialog.component';
 import { AuthService } from './auth/auth.service';
 import { MatButton } from '@angular/material/button';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { RegisterDialogComponent } from './register/register-dialog.component';
 import { AddCourseDialogComponent } from './teacher/add-course/add-course-dialog.component';
 import { StudentsContComponent } from './teacher/students/students-cont.component';
@@ -31,6 +31,7 @@ import { VersionsContComponent as VersionsContComponentTeacher } from './teacher
 import { VersionsComponent as VersionsComponentTeacher } from './teacher/assignments/versions.component';
 import { RegisterContComponent } from './register/register-cont/register-cont.component';
 import { LoginContComponent } from './login/login-cont/login-cont.component';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 
 @Component({
@@ -39,7 +40,7 @@ import { LoginContComponent } from './login/login-cont/login-cont.component';
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent implements AfterViewInit, OnInit {
+export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild('btLogin') btLogin: MatButton;
   @ViewChild('btLogout') btLogout: MatButton;
@@ -52,15 +53,16 @@ export class AppComponent implements AfterViewInit, OnInit {
   registerSuccess: boolean = true;
   courseSelected: string = "";
   role: string = "";
-
   courses: Course[] = [];
+  route$: Subscription;
   
   constructor(private matDialog: MatDialog, 
               private courseService:  CourseService,     
               private teacherService: TeacherService,  
               private studentService: StudentService,   
               private authService: AuthService, 
-              private router: Router) {
+              private router: Router,
+              private route: ActivatedRoute) {
     
   }
 
@@ -155,6 +157,11 @@ export class AppComponent implements AfterViewInit, OnInit {
         else {
           this.homeVisibility = false;
 
+          /*this.route$ = this.route.params.subscribe(params => {
+            this.courseName = params.courses;
+            console.log(this.courseName)
+          });*/
+
           if (this.courseService.currentCourse.getValue().name == "" && this.router.url.match("course")) {
             this.courseService.currentCourse.getValue().name = this.router.url.split("/")[3];
           }
@@ -175,37 +182,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     );
   }
 
-  setRoutes() {
-    for (let c of this.courses) {
-      this.courseSelected = this.setCourseForRoute(c.name);
-      let path: string = "teacher/course/" + this.courseSelected;
-      this.router.config.push({ path: path + "/students", component: StudentsContComponent});
-      this.router.config.push({ path: path + "/vms", component: VmsContComponentTeacher });
-      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentTeacher,
-      children: [
-        { path: '/:id/homeworks', component: HomeworksContComponentTeacher,
-          children: [
-            { path: '/:id/versions', component: VersionsContComponentTeacher }
-            ],
-        }
-        ],  
-      });
-
-      path = "student/course/" + this.courseSelected;
-      this.router.config.push({ path: path + "/teams", component: TeamsContComponent });
-      this.router.config.push({ path: path + "/vms", component: VmsContComponentStudent });
-      this.router.config.push({ path: path + "/assignments", component: AssignmentsContComponentStudent,
-      /*children: [
-        { path: '/:id/homeworks', component: HomeworksContComponentStudent,
-          children: [
-            { path: '/:id/versions', component: VersionsContComponentStudent }
-            ],
-        }
-        ],  */
-      });
-    }
-
-    this.router.config.push({ path: '**', redirectTo: 'page-not-found' });
+  ngOnDestroy() {
+    this.route$.unsubscribe();
   }
 
   setCourses() {
@@ -213,7 +191,6 @@ export class AppComponent implements AfterViewInit, OnInit {
       this.studentService.getCourses(this.studentService.currentStudent.id).subscribe(
         (data) => {
           this.courses = data;
-          //this.setRoutes();
         },
         (error) => {
 
@@ -224,7 +201,6 @@ export class AppComponent implements AfterViewInit, OnInit {
       this.teacherService.getCoursesForProfessor(this.teacherService.currentTeacher.id).subscribe(
         (data) => {
           this.courses = data;
-          //this.setRoutes();
         },
         (error) => {
 
@@ -250,7 +226,6 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    //dialogConfig.height = '70%';
 
     dialogConfig.data = {
         id: 1,
@@ -350,10 +325,6 @@ export class AppComponent implements AfterViewInit, OnInit {
       res2 = value.split("-").join(' ');
     }
 
-    /*for (var n of res2) {
-      name += n.charAt(0).toUpperCase() + n.slice(1);
-    }*/
-
     name = res2.charAt(0).toUpperCase() + res2.slice(1);
 
     return name;
@@ -403,6 +374,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.courseService.removeCourse(this.courseService.currentCourse.getValue().name).subscribe(
       (data) => {
         this.courses.splice(this.courses.indexOf(this.courseService.currentCourse.getValue()));
+        this.router.navigateByUrl("home");
       }, 
       (error) => {
         console.log("Errore nell'eliminazione del corso");

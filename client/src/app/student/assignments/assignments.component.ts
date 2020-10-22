@@ -9,7 +9,7 @@ import { HomeworkVersion } from 'src/app/models/homework-version.model';
 import { Student } from 'src/app/models/student.model';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {AddHomeworkContComponent } from './add-homework/add-homework-cont/add-homework-cont.component'
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
 import { Subscription } from 'rxjs/internal/Subscription';
 
@@ -34,7 +34,6 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
   @Output() ASSIGNMENT: Assignment;
   @Output('versions') versions = new EventEmitter<Assignment>()
 
-  tableVisibility: boolean = false;
   versionsVisibility: boolean = false;
 
   buttonHomeworkVisibility:boolean = false;
@@ -59,18 +58,29 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
     this.setTable();
     this.manageAssVisibility();
 
-    this.route$ = this.route.params.subscribe(params => {
-      let id = params.id;
-      console.log(id)
+    //console.log(+this.route.snapshot.paramMap.get('idV'));
 
+    this.route$ = this.route.paramMap.subscribe((params: ParamMap) => {
+        const id = +params.get('idV');
+        console.log(id)
+      });
+
+    /*this.route$ = this.route.paramMap.subscribe(params: ParamMap => {
+      let id = params.get('idV');
+      console.log(id)
+      
       if (id == undefined) {
         this.versionsVisibility = false;
       }
-    });
+      else {
+        this.versionsVisibility = true;
+      }
+
+    });*/
   }
 
   ngOnDestroy() {
-    this.route$.unsubscribe();
+    //this.route$.unsubscribe();
   }
 
   setTable() {
@@ -85,7 +95,13 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
     if (changes.homework != null && this.ASSIGNMENT != null) {
       this.homework = changes.homework.currentValue;
       this.HOMEWORK = this.homework;
-      this.router.navigate([this.ASSIGNMENT.id, 'versions'], { relativeTo: this.route })
+
+      if (this.HOMEWORK.status == "NULL") {
+        window.alert("Leggere prima la consegna");
+      }
+      else {
+        this.router.navigate([this.ASSIGNMENT.id, 'versions'], { relativeTo: this.route });
+      }
     }
 
     this.manageAssVisibility();
@@ -94,7 +110,6 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
 
   showVersions(ass: Assignment) {
     this.versions.emit(ass);
-    this.versionsVisibility = true;
     this.ASSIGNMENT = ass;
     //this.router.navigate([ass.id, 'versions'], { relativeTo: this.route });
   }

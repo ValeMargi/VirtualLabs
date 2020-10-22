@@ -1360,8 +1360,11 @@ public class VLServiceImpl implements VLService{
                         PhotoAssignment pa = a.getPhotoAssignment();
                         Optional<PhotoAssignment> photoAssignment = photoAssignmentRepository.findById(pa.getId());
                         if (photoAssignment.isPresent()) {
-                            pa.setPicByte(decompressZLib(pa.getPicByte()));
-                            return modelMapper.map(pa, PhotoAssignmentDTO.class);
+                            PhotoAssignmentDTO paDTO = modelMapper.map(pa, PhotoAssignmentDTO.class);
+                            paDTO.setPicByte(decompressZLib(paDTO.getPicByte()));
+                            return paDTO;
+                            //pa.setPicByte(decompressZLib(pa.getPicByte()));
+                            //return modelMapper.map(pa, PhotoAssignmentDTO.class);
                         } else throw new PhotoAssignmentNotFoundException();
                     } else throw new PermissionDeniedException();
                 } else throw new AssignmentNotFoundException();

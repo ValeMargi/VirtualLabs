@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
 import { CourseService } from 'src/app/services/course.service';
@@ -14,6 +14,8 @@ export class UploadCorrectionContComponent implements OnInit {
   versions: HomeworkVersion[];
   assId: number;
   hwId: number;
+
+  @Output() QUERYING: boolean;
  
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               private teacherService: TeacherService,
@@ -21,12 +23,14 @@ export class UploadCorrectionContComponent implements OnInit {
               private dialogRef: MatDialogRef<UploadCorrectionContComponent>) { }
 
   ngOnInit(): void {
+    this.QUERYING = false;
     this.versions = this.data.versions;
     this.assId = this.data.assId;
     this.hwId = this.data.hwId;
   }
 
   uploadCorrection(content: any) {
+    this.QUERYING = true;
     let file: File = content.file;
     let grade: string = content.grade;
     let version = new HomeworkVersion(-1, "1980-01-01 00:00:00.000", "");
@@ -47,10 +51,12 @@ export class UploadCorrectionContComponent implements OnInit {
 
     this.teacherService.uploadCorrection(this.courseService.currentCourse.getValue().name, this.assId, this.hwId, version.id, file, permanent, grade).subscribe(
       (data) => {
+        this.QUERYING = false;
         this.dialogRef.close();
         this.teacherService.corrUpload.emit({corr: data, permanent: permanent});
       },
       (error) => {
+        this.QUERYING = false;
         window.alert("Errore nel caricamento della correzione");
       }
     )

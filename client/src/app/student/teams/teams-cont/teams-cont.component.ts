@@ -74,11 +74,50 @@ export class TeamsContComponent implements OnInit {
   }
 
   acceptProposal(token: string) {
-    this.teamService.confirm(token);
+    console.log(token)
+    this.teamService.confirm(token).subscribe(
+      (data) => {
+        switch(data) {
+          case 0: {
+            window.alert("Token non valido");
+            break;
+          }
+          case 1: {
+            window.alert("Richiesta accettata con successo. Attendere gli altri membri");
+            this.PROPOSALS = new Array();
+            break;
+          }
+          case 2: {
+            this.PROPOSALS = new Array();
+            break;
+          }
+        }
+      },
+      (error) => {
+        window.alert("Errore accettazione richiesta");
+      }
+    );
   }
 
   refuseProposal(token: string) {
-    this.teamService.refuse(token);
+    this.teamService.refuse(token).subscribe(
+      (data) => {
+        switch(data) {
+          case 0: {
+            window.alert("Token non valido");
+            break;
+          }
+          case 1: {
+            window.alert("Richiesta rifiutata con successo");
+            this.PROPOSALS = new Array();
+            break;
+          }
+        }
+      },
+      (error) => {
+        window.alert("Errore rifiuto richiesta");
+      }
+    );
   }
 
 }

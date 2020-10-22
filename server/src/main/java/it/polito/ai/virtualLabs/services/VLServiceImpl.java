@@ -1291,6 +1291,8 @@ public class VLServiceImpl implements VLService{
                     for(Student s: c.getStudents()){
                         Homework h = new Homework();
                         h.setStatus("NULL");
+                        h.setTimestamp("NULL");
+                        h.setGrade("-1");
                         h.setAssignment(assignment);
                         h.setStudentForHomework(s);
                         h.setPermanent(false);
@@ -1584,7 +1586,7 @@ public class VLServiceImpl implements VLService{
                     h.setStatus("RIVISTO");
                     h.setPermanent(permanent);
                     if(permanent) {
-                        if(grade==null || Integer.getInteger(grade) < 0 || Integer.getInteger(grade) > 30) throw new GradeNotValidException();
+                        if(grade==null || Integer.parseInt(grade) < 0 || Integer.parseInt(grade) > 30) throw new GradeNotValidException();
                         h.setGrade(grade);
                     }
                     h.setTimestamp(photoCorrection.getTimestamp());

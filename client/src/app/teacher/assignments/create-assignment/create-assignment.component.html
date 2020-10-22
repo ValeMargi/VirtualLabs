@@ -30,7 +30,8 @@ Selezionare immagine della consegna
 
 </form>
 </mat-dialog-content>
-
+<br>
+<mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
 <mat-dialog-actions>
     <button mat-button (click)="close()">Annulla</button>
     <button mat-button mat-raised-button color="primary" (click)="createAss(name.value, release.value, expire.value)">Crea</button>

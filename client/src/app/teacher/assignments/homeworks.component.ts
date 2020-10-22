@@ -17,7 +17,7 @@ export class HomeworksComponent implements OnInit, OnChanges {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
+  displayedColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp', 'grade'];
   dataSource = new MatTableDataSource<HomeworkStudent>();
   length = 5;
   pageSize = 5;
@@ -46,6 +46,15 @@ export class HomeworksComponent implements OnInit, OnChanges {
 
     this.manageTableVisibility();
     this.manageTable();
+  }
+
+  getGrade(row: HomeworkStudent) {
+    if (row.grade == null || row.grade == "-1") {
+      return "Da valutare";
+    }
+    else {
+      return row.grade;
+    }
   }
 
   manageTable() {

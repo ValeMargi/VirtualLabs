@@ -5,7 +5,8 @@
     <br><br>
     <input type="file" accept="image/*" (change)="onFileChanged($event)">
 </mat-dialog-content>
-
+<br>
+<mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
 <mat-dialog-actions>
     <button mat-button mat-raised-button color="warn" (click)="close()">Annulla</button>
     <button mat-button mat-raised-button color="primary" (click)="uploadCorrection(grade.value)">Carica</button>

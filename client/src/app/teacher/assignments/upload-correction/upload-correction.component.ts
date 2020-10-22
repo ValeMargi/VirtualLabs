@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -9,6 +9,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class UploadCorrectionComponent implements OnInit {
   private selectedPhoto: File;
 
+  @Input() querying: boolean;
   @Output('upload') upload = new EventEmitter<any>();
 
   constructor(private matDialoRef: MatDialogRef<UploadCorrectionComponent>) { }

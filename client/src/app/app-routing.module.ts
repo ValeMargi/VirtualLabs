@@ -48,7 +48,7 @@ const routes: Routes = [
               path: ':courses/assignments',
               component: AssignmentsContComponentStudent,
               children: [
-                { path: ':idV/versions', component: VersionsContComponentStudent
+                { path: ':idA/versions', component: VersionsContComponentStudent
                 }
               ],
             },

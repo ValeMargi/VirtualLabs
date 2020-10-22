@@ -31,9 +31,9 @@ export class VersionsContComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route$ = this.route.params.subscribe(params => {
-      this.id = params.idV;
+      this.id = params.idA;
 
-      console.log(params.idV)
+      console.log(params.idA)
 
       if (this.id == null) {
         return;

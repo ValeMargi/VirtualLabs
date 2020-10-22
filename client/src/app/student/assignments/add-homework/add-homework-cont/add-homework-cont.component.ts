@@ -13,29 +13,38 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class AddHomeworkContComponent implements OnInit {
 
   @Input() homework: Homework;
+  @Output() QUERYING: boolean;
   assId: number;
 
   constructor(private matDialogRef: MatDialogRef<AddHomeworkContComponent>,
                private studentService: StudentService,
                private courseService: CourseService) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.QUERYING = false;
+  }
 
   addVersionH(file: File) {
+    this.QUERYING = true;
+
     this.studentService.getHomework(this.courseService.currentCourse.getValue().name, this.assId).subscribe(
       (data) => {
         this.homework = data;
         this.studentService.uploadVersionHomework(this.courseService.currentCourse.getValue().name, this.assId, this.homework.id, file).subscribe(
           (data) => {
+            console.log(data)
+            this.QUERYING = false;
             this.matDialogRef.close();
             this.studentService.verUpload.emit(data);
           },
           (error) => {
+            this.QUERYING = false;
             window.alert("Errore nel caricamento dell'homework");
           }
         );
       },
       (error) =>{
+        this.QUERYING = false;
         window.alert("Errore nel reperire l'homework")
       }
     );

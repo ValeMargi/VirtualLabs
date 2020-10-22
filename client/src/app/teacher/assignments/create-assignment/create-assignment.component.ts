@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Assignment } from 'src/app/models/assignment.model';
 
@@ -16,6 +16,7 @@ export class CreateAssignmentComponent implements OnInit, AfterViewInit {
   currentDate;
   oneWeek;
 
+  @Input() querying: boolean;
   @Output('create') create = new EventEmitter<any>();
 
   constructor(

@@ -417,7 +417,6 @@ public class StudentController {
      * Authority: Studente
      * @param courseName
      * @param assignmentId
-     * @param homeworkId
      * @return ritorna la lista di correzioni di Homerwork per la consegna con assignmentId indicato e per il courso con courseName indicato
      */
     @GetMapping("/{courseName}/{assignmentId}/getCorrections")

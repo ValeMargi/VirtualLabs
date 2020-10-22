@@ -64,14 +64,13 @@ export class VersionsContComponent implements OnInit, OnDestroy {
           this.HOMEWORK.permanent = permanent;
         }
 
-        if (this.CORRECTIONS.length == 0) {
-          let array: HomeworkCorrection[] = new Array();
-          array.push(corr);
-          this.CORRECTIONS = array;
-        }
-        else {
-          this.CORRECTIONS.push(corr);
-        }
+        let array: HomeworkCorrection[] = this.CORRECTIONS;
+        this.CORRECTIONS = new Array();
+        array.push(corr);
+
+        array.forEach(cor => {
+          this.CORRECTIONS.push(cor);
+        });
       }, 
       (error) => {
 

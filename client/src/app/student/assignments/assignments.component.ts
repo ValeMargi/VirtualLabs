@@ -58,15 +58,15 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
     this.setTable();
     this.manageAssVisibility();
 
-    //console.log(+this.route.snapshot.paramMap.get('idV'));
+    //console.log(+this.route.snapshot.paramMap.get('idA'));
 
     this.route$ = this.route.paramMap.subscribe((params: ParamMap) => {
-        const id = +params.get('idV');
+        const id = +params.get('idA');
         console.log(id)
       });
 
     /*this.route$ = this.route.paramMap.subscribe(params: ParamMap => {
-      let id = params.get('idV');
+      let id = params.get('idA');
       console.log(id)
       
       if (id == undefined) {
@@ -121,25 +121,6 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
     else {
       this.tableAssignmetsVisibility = false;
     }*/
-  }
-
-  openDialogHomework(assId:number) {
-    const dialogRef = this.matDialog.open(AddHomeworkContComponent,{ id: 'dialogHomework'});
-    const dialogConfig = new MatDialogConfig();
-
-    dialogRef.disableClose = false;
-    dialogConfig.autoFocus = true;
-    dialogRef.componentInstance.assId = assId;
-
-    dialogConfig.data = {
-        id: 1,
-        title: 'Assignment'
-    };
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-
   }
 
   openDialogImage(ass: Assignment) {

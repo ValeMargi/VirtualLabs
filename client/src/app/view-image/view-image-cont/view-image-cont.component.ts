@@ -1,4 +1,5 @@
 import { Component, Inject, Input, OnInit, Output } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CourseService } from 'src/app/services/course.service';
 import { StudentService } from 'src/app/services/student.service';
@@ -19,7 +20,8 @@ export class ViewImageContComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               private teacherService: TeacherService,
               private studentService: StudentService,
-              private courseService: CourseService) { }
+              private courseService: CourseService,
+              private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     let type: string = this.data.type; //type can be: assignment, version, correction, vm
@@ -31,14 +33,11 @@ export class ViewImageContComponent implements OnInit {
         let isTeacher: boolean = this.data.isTeacher;
 
         if (isTeacher) {
-          console.log("passo di qua")
-          console.log(course)
-          console.log(assignmentId)
           this.teacherService.getPhotoAssignment(course, assignmentId).subscribe(
             (data) => {
               console.log(data)
               this.TIMESTAMP = data.timestamp;
-              this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
+              this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
             },
             (error) => {
               window.alert("Impossibile ottenere il testo dell'assignment");
@@ -49,7 +48,7 @@ export class ViewImageContComponent implements OnInit {
           this.studentService.getAssignment(course, assignmentId).subscribe(
             (data) => {
               this.TIMESTAMP = data.timestamp;
-              this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
+              this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
             },
             (error) => {
               window.alert("Impossibile ottenere il testo dell'assignment");
@@ -69,7 +68,7 @@ export class ViewImageContComponent implements OnInit {
         this.courseService.getVersionHM(course, assignmentId, homeworkId, versionId).subscribe(
           (data) => {
             this.TIMESTAMP = data.timestamp;
-            this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
+            this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
           },
           (error) => {
             window.alert("Impossibile ottenere la versione dell'homework");
@@ -88,7 +87,7 @@ export class ViewImageContComponent implements OnInit {
         this.courseService.getCorrectionHM(course, assignmentId, homeworkId, correctionId).subscribe(
           (data) => {
             this.TIMESTAMP = data.timestamp;
-            this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
+            this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
           },
           (error) => {
             window.alert("Impossibile ottenere la correzione dell'homework");
@@ -108,7 +107,7 @@ export class ViewImageContComponent implements OnInit {
 
           this.teacherService.getVMForProfessor(course, vmId).subscribe(
             (data) => {
-              this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
+              this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
             },
             (error) => {
               window.alert("Impossibile ottenere la schermata della VM");
@@ -120,7 +119,7 @@ export class ViewImageContComponent implements OnInit {
 
           this.studentService.getVMForStudent(course, vmId).subscribe(
             (data) => {
-              this.PHOTO = 'data:' + data.type + ';base64,' + data.picByte;
+              this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
             },
             (error) => {
               window.alert("Impossibile ottenere la schermata della VM");

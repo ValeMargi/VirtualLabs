@@ -21,13 +21,12 @@ export class TeamsContComponent implements OnInit {
   @Output() PROPOSALS: Proposal[];
   @Output() StudentInTeam: Student[] = [];
 
-  public Members: Student[] = [];
+  @Output() MEMBERS: Student[] = [];
 
   ngOnInit(): void {
-    
       this.teamService.getStudentsInTeams(this.courseService.currentCourse.getValue().name).subscribe(
         (data) => {
-          //this.StudentInTeam = data;
+          this.StudentInTeam = data;
           this.studentInTeam(data);
         },
         (error) => {
@@ -43,7 +42,7 @@ export class TeamsContComponent implements OnInit {
           if (element.id == this.studentService.currentStudent.id) {
             this.teamService.getMembersTeam(this.teamService.currentTeam.id).subscribe(
               (data) => {
-                this.Members = data;
+                this.MEMBERS = data;
                 console.log(data)
               },
               (error) => {

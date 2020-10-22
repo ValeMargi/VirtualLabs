@@ -9,6 +9,7 @@ import {RequestTeamDialogComponent} from './request-team-dialog/request-team-dia
 import {MatDialog,MatDialogConfig} from '@angular/material/dialog';
 import { RequestTeamDialogContComponent } from './request-team-dialog/request-team-dialog-cont/request-team-dialog-cont.component';
 import { Proposal } from 'src/app/models/proposal.model';
+import { Student } from 'src/app/models/student.model';
 
 @Component({
   selector: 'app-teams',
@@ -22,8 +23,8 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   //Table Team
-  displayedColumnsTeam: string[] = ['id', 'name', 'status'];
-  dataSourceTeam = new MatTableDataSource<Team>();
+  displayedColumnsTeam: string[] = ['id', 'name', 'surname'];
+  dataSourceTeam = new MatTableDataSource<Student>();
   tableTeamVisibility:boolean = true;
 
   //Table Request
@@ -33,6 +34,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
   @Input() public team: Team;
   @Input() public proposals: Proposal[] = [];
+  @Input() public members: Student[] = [];
 
   @Output('accept') accept = new EventEmitter<string>();
   @Output('refuse') refuse = new EventEmitter<string>();
@@ -66,6 +68,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.team != null) {
       this.team = changes.team.currentValue;
+      this.setTableTeam();
     }
 
     if (changes.proposals != null) {
@@ -79,6 +82,14 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     this.dataSourceProposals.paginator = this.paginator;
     this.dataSourceProposals.sort = this.sort;
     this.length = this.proposals.length;
+  }
+
+
+  setTableTeam(){
+    this.dataSourceTeam = new MatTableDataSource<Student>(this.members);
+    this.dataSourceTeam.paginator = this.paginator;
+    this.dataSourceTeam.sort = this.sort;
+    this.length = this.members.length;
   }
 
   acceptProposal(token: string) {

@@ -1,9 +1,9 @@
 <body>
     <div *ngIf="success">
-        <h1>Registrazione su VirtualLabs avvenuta con successo</h1>
+        <h1><strong>Registrazione su VirtualLabs avvenuta con successo</strong> <mat-icon>check</mat-icon></h1>
         <h2>Puoi ora effettuare il login</h2>
     </div>
     <div *ngIf="!success">
-        <h1>Registrazione fallita, token scaduto</h1>
+        <h1><strong>Registrazione fallita, token scaduto</strong></h1>
     </div>
  </body>

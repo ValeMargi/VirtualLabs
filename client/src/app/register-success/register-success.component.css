@@ -5,9 +5,21 @@ h1 {
     color: rgb(12, 184, 49);
     font-size: xx-large;
     font: bold;
+    text-shadow: 1px 0 0 rgb(0, 0, 0), -1px 0 0 rgb(0, 0, 0), 0 1px 0 rgb(0, 0, 0), 0 -1px 0 rgb(0, 0, 0), 1px 1px rgb(0, 0, 0), -1px -1px 0 rgb(0, 0, 0), 1px -1px 0 rgb(0, 0, 0), -1px 1px 0 rgb(0, 0, 0);
 }
 
 h2 {
     text-align:center;
     text-decoration: solid;
+    text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background-image: url("undraw_programmer_imem.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position-y: center;
 }

@@ -55,24 +55,27 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   role: string = "";
   courses: Course[] = [];
   route$: Subscription;
-  
-  constructor(private matDialog: MatDialog, 
-              private courseService:  CourseService,     
-              private teacherService: TeacherService,  
-              private studentService: StudentService,   
-              private authService: AuthService, 
+
+  LoginSuccess: boolean = false;
+
+  constructor(private matDialog: MatDialog,
+              private courseService:  CourseService,
+              private teacherService: TeacherService,
+              private studentService: StudentService,
+              private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute) {
-    
+
   }
 
   ngAfterViewInit(): void {
     this.authService.userLogged.subscribe(ok => {
       if (ok && this.authService.isLoggedIn()) {
         this.loginVisibility = false;
+        this.LoginSuccess = true;
 
         this.role = localStorage.getItem("role");
-        
+
         if (this.role == "student") {
           this.teacherVisibility = false;
         }
@@ -150,7 +153,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) { 
+      if (event instanceof NavigationEnd) {
         if (event.urlAfterRedirects == "/home") {
           this.homeVisibility = true;
         }
@@ -175,7 +178,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
           this.courses.push(data);
           this.router.navigateByUrl(this.getRouteWithCourse(data));
         }
-      }, 
+      },
       (error) => {
 
       }
@@ -230,7 +233,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     dialogConfig.data = {
         id: 1,
         title: 'Login'
-      
+
     };
 
     this.matDialog.open(LoginContComponent, dialogConfig);
@@ -290,14 +293,14 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   get activeTab() {
     if (this.router.url.length <= 1)
       return "";
-      
+
     let res = this.router.url.split("/");
 
     if (res[4] == null)
       return 0;
 
     if (res[4].match("students") || res[4].match("teams")) {
-      return 0; 
+      return 0;
     }
     else if (res[4].match("vms")) {
       return 1;
@@ -313,7 +316,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   getCourseName(value: string) {
     if (value.length <= 1)
       return "";
-      
+
     let res = value.split("/");
     let res2;
     var name = "";
@@ -375,7 +378,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       (data) => {
         this.courses.splice(this.courses.indexOf(this.courseService.currentCourse.getValue()));
         this.router.navigateByUrl("home");
-      }, 
+      },
       (error) => {
         console.log("Errore nell'eliminazione del corso");
       }
@@ -394,6 +397,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       (error) => {
         console.log("Impossibile abilitare/disabilitare il corso");
       }
-    ) 
+    )
   }
 }

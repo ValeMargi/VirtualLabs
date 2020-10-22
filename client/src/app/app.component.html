@@ -17,9 +17,9 @@
     <button #btRegister mat-button *ngIf="loginVisibility" (click)="openDialogRegister()"><mat-icon>portrait</mat-icon>Registrati</button>
   </mat-toolbar>
 
-  <mat-toolbar *ngIf="!homeVisibility && !notFoundVisibility">
+  <mat-toolbar *ngIf="!homeVisibility && !notFoundVisibility && LoginSuccess" >
     <mat-toolbar-row>
-      <span style="color:rgb(228, 18, 140)">{{ courseName }}</span>
+      <span style="color:rgb(228, 18, 140)" >{{ courseName }}</span>
       <mat-divider></mat-divider>
       <div class="button-request" align="right">
       <button mat-button mat-raised-button color="primary" *ngIf="teacherVisibility" (click)="enableCourse()">
@@ -66,7 +66,7 @@
     </mat-sidenav>
 
     <mat-sidenav-content *ngIf="!homeVisibility">
-      <nav mat-tab-nav-bar *ngIf="teacherVisibility">
+      <nav mat-tab-nav-bar *ngIf="teacherVisibility && LoginSuccess">
         <a mat-tab-link [active]="activeTab == 0" [routerLink]="[getRoute(0)]">Studenti
 
         </a>
@@ -80,7 +80,7 @@
         </a>
       </nav>
 
-      <nav mat-tab-nav-bar *ngIf="!teacherVisibility">
+      <nav mat-tab-nav-bar *ngIf="!teacherVisibility  && LoginSuccess">
         <a mat-tab-link [active]="activeTab == 0" [routerLink]="[getRoute(0)]">Gruppi
 
         </a>

@@ -66,7 +66,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
     //this.manageTableVisibility();
     this.setTable();
     this.studentToAdd = null;
-    this.selectedStudents.clear();
+    //this.selectedStudents.clear();
 
     this.filteredOptions = this.myControl.valueChanges
       .pipe(

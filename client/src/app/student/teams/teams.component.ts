@@ -5,8 +5,7 @@ import{ Team } from '../../models/team.model';
 import{ TeamsContComponent } from './teams-cont/teams-cont.component'
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import {RequestTeamDialogComponent} from './request-team-dialog/request-team-dialog.component'
-import {MatDialog,MatDialogConfig} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import { RequestTeamDialogContComponent } from './request-team-dialog/request-team-dialog-cont/request-team-dialog-cont.component';
 import { Proposal } from 'src/app/models/proposal.model';
 import { Student } from 'src/app/models/student.model';
@@ -60,16 +59,11 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngAfterViewInit(): void {
-    /*this.dataSourceTeam.paginator = this.paginator;
-    this.dataSourceTeam.sort = this.sort;
-    this.length = this.teams.length; */
+    this.setTableProposals();
+    this.setTableTeam();
   }
 
   ngOnInit(): void {
-    this.dataSourceTeam.sort = this.sort;
-    this.setTableProposals();
-    this.setTableTeam();
-
   }
 
   ngOnChanges(changes: SimpleChanges) {

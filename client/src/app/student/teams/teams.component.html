@@ -73,8 +73,13 @@
 
               <ng-container matColumnDef="students">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef> Studenti Invitati </th>
-                <td *matCellDef="let row">  {{row.students.student}}</td>
+                <td *matCellDef="let row">
+                  <div *ngFor="let stud of row.students.student" >
+                    {{stud}}
+                  </div>
+                </td>
               </ng-container>
+
 
 
               <ng-container matColumnDef="choice">

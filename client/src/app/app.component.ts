@@ -95,6 +95,10 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         this.router.navigateByUrl("home");
       }
     });
+
+    if(this.loginVisibility == false){
+      this.LoginSuccess = true;
+    }
   }
 
   ngOnInit() {

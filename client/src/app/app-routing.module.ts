@@ -50,8 +50,8 @@ const routes: Routes = [
               children: [
                 { path: ':idV/versions', component: VersionsContComponentStudent
                 }
-              ],  
-            },            
+              ],
+            },
             {
               path: ':courses/teams',
               component: TeamsContComponent,
@@ -81,7 +81,7 @@ const routes: Routes = [
                     { path: ':idH/versions', component: VersionsContComponentTeacher }
                     ],
                 }
-              ],  
+              ],
             },
             {
               path: ':courses/students',
@@ -95,7 +95,7 @@ const routes: Routes = [
               ]
             }
           ]
-        }            
+        }
     ]
   },
   { path: '', redirectTo: 'home', pathMatch: 'full' }

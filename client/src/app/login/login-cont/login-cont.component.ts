@@ -18,6 +18,7 @@ export class LoginContComponent implements OnInit {
     let password = content.password;
 
     this.authService.login(email.value.toString(), password.value.toString());
+    
   }
 
 }

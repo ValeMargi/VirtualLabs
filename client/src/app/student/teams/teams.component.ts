@@ -39,6 +39,10 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   @Output('accept') accept = new EventEmitter<string>();
   @Output('refuse') refuse = new EventEmitter<string>();
 
+
+  lengthProposals: number;
+  lengthMembers: number;
+
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
@@ -58,11 +62,14 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   ngAfterViewInit(): void {
     /*this.dataSourceTeam.paginator = this.paginator;
     this.dataSourceTeam.sort = this.sort;
-    this.length = this.teams.length;*/
+    this.length = this.teams.length; */
   }
 
   ngOnInit(): void {
     this.dataSourceTeam.sort = this.sort;
+    this.setTableProposals();
+    this.setTableTeam();
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -81,7 +88,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     this.dataSourceProposals = new MatTableDataSource<Proposal>(this.proposals);
     this.dataSourceProposals.paginator = this.paginator;
     this.dataSourceProposals.sort = this.sort;
-    this.length = this.proposals.length;
+    this.lengthProposals = this.proposals.length;
   }
 
 
@@ -89,7 +96,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     this.dataSourceTeam = new MatTableDataSource<Student>(this.members);
     this.dataSourceTeam.paginator = this.paginator;
     this.dataSourceTeam.sort = this.sort;
-    this.length = this.members.length;
+    this.lengthMembers = this.members.length;
   }
 
   acceptProposal(token: string) {

@@ -73,6 +73,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       if (ok && this.authService.isLoggedIn()) {
         this.loginVisibility = false;
         this.LoginSuccess = true;
+        this.router.navigate(['/home']);
 
         this.role = localStorage.getItem("role");
 
@@ -96,9 +97,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     });
 
-    if(this.loginVisibility == false){
-      this.LoginSuccess = true;
-    }
   }
 
   ngOnInit() {
@@ -121,6 +119,8 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
       if (this.authService.isLoggedIn()) {
         this.loginVisibility = false;
+        this.LoginSuccess = true;
+        this.router.navigate(['/home']);
 
         if (this.role.match("student")) {
           this.teacherVisibility = false;
@@ -375,6 +375,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   setCurrentCourse(course: Course) {
     this.courseService.currentCourse.next(course);
+
   }
 
   deleteCourse() {

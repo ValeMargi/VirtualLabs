@@ -28,7 +28,7 @@ export class StudentService {
   currentAvatar: File;
 
   vmCreation: EventEmitter<VMOwners> = new EventEmitter<VMOwners>();
-  homeworkCreation: EventEmitter<HomeworkVersion> = new EventEmitter<HomeworkVersion>();
+  verUpload: EventEmitter<HomeworkVersion> = new EventEmitter<HomeworkVersion>();
 
   all() {
     return this.http.get<Student[]>(`${this.API_STUDENTS}`).pipe(map(students => students || []));

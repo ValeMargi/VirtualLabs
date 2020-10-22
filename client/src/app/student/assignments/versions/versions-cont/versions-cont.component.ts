@@ -61,6 +61,21 @@ export class VersionsContComponent implements OnInit, OnDestroy {
         }
       );
     });
+
+    this.studentService.verUpload.subscribe(
+      (data) => {
+        let array: HomeworkVersion[] = this.VERSIONS;
+        this.VERSIONS = new Array();
+        array.push(data);
+
+        array.forEach(ass => {
+          this.VERSIONS.push(ass);
+        });
+      },
+      (error) => {
+
+      }
+    );
   }
 
   ngOnDestroy() {

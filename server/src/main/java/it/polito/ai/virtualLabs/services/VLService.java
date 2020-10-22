@@ -62,7 +62,7 @@ public interface VLService {
     boolean isOwner(  Long VMid);
     List<StudentDTO> getOwnersForProfessor(Long VMid);
     List<StudentDTO> getOwnersForStudent(Long VMid);
-    boolean addAssignment(AssignmentDTO assignmentDTO, PhotoAssignmentDTO photoAssignmentDTO, String courseId);
+    AssignmentDTO addAssignment(AssignmentDTO assignmentDTO, PhotoAssignmentDTO photoAssignmentDTO, String courseId);
     PhotoAssignmentDTO getAssignmentStudent( Long assignmentId);
     PhotoAssignmentDTO getAssignmentProfessor(Long assignmentId );
     List<AssignmentDTO> allAssignmentStudent(  String courseId);

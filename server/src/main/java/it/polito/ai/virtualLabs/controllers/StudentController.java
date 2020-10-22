@@ -421,7 +421,7 @@ public class StudentController {
      * @return ritorna la lista di correzioni di Homerwork per la consegna con assignmentId indicato e per il courso con courseName indicato
      */
     @GetMapping("/{courseName}/{assignmentId}/getCorrections")
-    public List<Map<String, Object>> getCorrectionsForStudent(@PathVariable String courseName, @PathVariable Long assignmentId, @PathVariable Long homeworkId) {
+    public List<Map<String, Object>> getCorrectionsForStudent(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.getCorrectionsForStudent(assignmentId);
         } catch (  HomeworkNotFoundException e) {

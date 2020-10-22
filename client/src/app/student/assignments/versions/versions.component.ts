@@ -15,17 +15,18 @@ export class VersionsComponent implements OnInit, OnChanges {
   @Input() versions: HomeworkVersion[] = [];
   @Input() corrections: HomeworkCorrection[] = [];
 
-  constructor(private location: Location) { }
+  constructor(private location: Location,
+              ) { }
 
   ngOnInit(): void {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.versions != null) {
+    if (changes.versions != undefined) {
       this.versions = changes.versions.currentValue;
     }
 
-    if (changes.versions != null) {
+    if (changes.versions != undefined) {
       this.corrections = changes.corrections.currentValue;
     }
   }

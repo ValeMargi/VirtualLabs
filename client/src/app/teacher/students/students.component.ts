@@ -81,22 +81,19 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
     if (changes.students != null) {
       this.students = changes.students.currentValue;
     }
-    else {
-      this.students = new Array();
-    }
 
-    //this.manageTableVisibility();
+    this.manageTableVisibility();
     this.setTable();
   }
 
- /* manageTableVisibility() {
+  manageTableVisibility() {
     if (this.students.length > 0) {
       this.tableVisibility = true;
     }
     else {
       this.tableVisibility = false;
     }
-  }*/
+  }
 
   setTable() {
     this.dataSource = new MatTableDataSource<Student>(this.students);
@@ -157,6 +154,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   deleteStudent() {
+    console.log(this.selectedStudents.selected)
     if (this.selectedStudents.selected.length > 0) {
       this.toRemove.emit(this.selectedStudents.selected);
     }

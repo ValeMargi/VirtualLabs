@@ -1277,7 +1277,7 @@ public class VLServiceImpl implements VLService{
     /*SERVICE CONSEGNA*/
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public boolean addAssignment( AssignmentDTO assignmentDTO,PhotoAssignmentDTO photoAssignmentDTO,  String courseId) { //CourseId preso dal pathVariable
+    public AssignmentDTO addAssignment( AssignmentDTO assignmentDTO,PhotoAssignmentDTO photoAssignmentDTO,  String courseId) { //CourseId preso dal pathVariable
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Course> oc = courseRepository.findById(courseId);
         if(oc.isPresent()){
@@ -1298,10 +1298,10 @@ public class VLServiceImpl implements VLService{
                     }
                     assignmentRepository.save(assignment);
                     photoAssignmentRepository.save(photoAssignment);
+                    return modelMapper.map(assignment, AssignmentDTO.class);
                 }else throw new AssignmentAlreadyExistException();
             }else throw new PermissionDeniedException();
         }else throw new CourseNotFoundException();
-        return true;
     }
 
     /*Metodo per ritornare le consegne di un dato corso*/

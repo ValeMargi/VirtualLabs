@@ -213,7 +213,7 @@ public class ProfessorController {
      * @throws IOException
      */
     @PostMapping("/{courseName}/addAssignment")
-    public boolean addAssignment(@PathVariable String courseName, @RequestPart("file") @Valid @NotNull MultipartFile file,
+    public AssignmentDTO addAssignment(@PathVariable String courseName, @RequestPart("file") @Valid @NotNull MultipartFile file,
                               @RequestPart("assignment")  Map<String, Object> input ) throws IOException {
         if(file.isEmpty() || file.getContentType()==null)
             throw new ResponseStatusException(HttpStatus.CONFLICT);

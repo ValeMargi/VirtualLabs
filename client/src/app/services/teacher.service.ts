@@ -75,7 +75,7 @@ export class TeacherService {
     data.append("assignment", new Blob([JSON.stringify(assignment)], {
       type: "application/json" }));
 
-    return this.http.post(`${this.API_PROFESSORS}/${courseName}/addAssignment`, data);
+    return this.http.post<Assignment>(`${this.API_PROFESSORS}/${courseName}/addAssignment`, data);
   }
 
   allAssignments(courseName: string) {

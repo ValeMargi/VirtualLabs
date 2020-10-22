@@ -85,16 +85,21 @@ export class StudentsContComponent implements OnInit {
   removeStudents(students: Student[]) {
     this.courseService.deleteStudentsFromCourse(this.courseService.currentCourse.getValue().name, students.map(student => student.id)).subscribe(
       (data) => {
+        let array: Student[] = [];
+        array = this.STUDENTS_ENROLLED;
+
         data.forEach(student => {
-          this.STUDENTS_ENROLLED.forEach(s => {
+          array.forEach(s => {
             if (s.id == student.id) {
-              this.STUDENTS_ENROLLED.splice(this.STUDENTS_ENROLLED.indexOf(s));
+              array.splice(array.indexOf(s));
             }
           })
         });
+
+        this.STUDENTS_ENROLLED = array;
       },
       (error) => { 
-        console.log("Rimozione studenti non avvenuta");
+        window.alert("Rimozione studenti non avvenuta");
        }
     );
   }

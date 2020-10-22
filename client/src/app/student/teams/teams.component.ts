@@ -48,7 +48,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
               private studentService: StudentService) { }
 
   openRequestDialog() {
-    const dialogRef = this.dialog.open(RequestTeamDialogContComponent,{width: '600px', id: 'dialogRequest'});
+    const dialogRef = this.dialog.open(RequestTeamDialogContComponent,{ id: 'dialogRequest'});
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

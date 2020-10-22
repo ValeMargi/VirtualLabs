@@ -15,7 +15,7 @@ export class RequestTeamDialogContComponent implements OnInit {
               private matDialogRef: MatDialogRef<RequestTeamDialogContComponent>) { }
 
   ngOnInit(): void {
-    
+
   }
 
   proposeTeam(content: any) {
@@ -30,7 +30,8 @@ export class RequestTeamDialogContComponent implements OnInit {
         this.matDialogRef.close();
       },
       (error) =>{
-        window.alert("Errore creazione proposta team");
+        console.log(error);
+        window.alert(error.error.message);
       }
     );
   }

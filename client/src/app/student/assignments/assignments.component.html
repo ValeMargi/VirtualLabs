@@ -1,5 +1,5 @@
 <!--Consegne Docenti-->
-<mat-card class="card" *ngIf="!versionsVisibility">
+<mat-card class="card" *ngIf="!versionsVisibility && tableAssignmentsVisibility">
   <mat-card-header>
 
     <mat-card-title>
@@ -44,6 +44,13 @@
         </table>
     </div>
   </mat-card-content>
+</mat-card>
+
+<mat-card class="card" *ngIf="!versionsVisibility && !tableAssignmentsVisibility">
+  <mat-card-header>
+     <mat-card-title>Nessuna consegna per questo corso</mat-card-title>
+     <mat-card-subtitle>Il professore caricherà delle consegne durante il corso</mat-card-subtitle>
+   </mat-card-header>
 </mat-card>
 
 <router-outlet>

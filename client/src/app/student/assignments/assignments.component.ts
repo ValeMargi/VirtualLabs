@@ -35,13 +35,12 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
   @Output('versions') versions = new EventEmitter<Assignment>()
 
   versionsVisibility: boolean = false;
-
+  tableAssignmentsVisibility: boolean = false;
   buttonHomeworkVisibility:boolean = false;
 
   panelOpenState = false;
   titolo: string;
   public assId: number;
-  private route$: Subscription
 
   length = 5;
   pageSize = 5;
@@ -57,30 +56,10 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
   ngOnInit(): void {
     this.setTable();
     this.manageAssVisibility();
-
-    //console.log(+this.route.snapshot.paramMap.get('idA'));
-
-    this.route$ = this.route.paramMap.subscribe((params: ParamMap) => {
-        const id = +params.get('idA');
-        console.log(id)
-      });
-
-    /*this.route$ = this.route.paramMap.subscribe(params: ParamMap => {
-      let id = params.get('idA');
-      console.log(id)
-      
-      if (id == undefined) {
-        this.versionsVisibility = false;
-      }
-      else {
-        this.versionsVisibility = true;
-      }
-
-    });*/
   }
 
   ngOnDestroy() {
-    //this.route$.unsubscribe();
+    
   }
 
   setTable() {
@@ -100,6 +79,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
         window.alert("Leggere prima la consegna");
       }
       else {
+        this.versionsVisibility = true;
         this.router.navigate([this.ASSIGNMENT.id, 'versions'], { relativeTo: this.route });
       }
     }
@@ -111,16 +91,15 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
   showVersions(ass: Assignment) {
     this.versions.emit(ass);
     this.ASSIGNMENT = ass;
-    //this.router.navigate([ass.id, 'versions'], { relativeTo: this.route });
   }
 
   manageAssVisibility() {
-    /*if (this.assignments.length > 0) {
-      this.tableAssignmetsVisibility = true;
+    if (this.assignments.length > 0) {
+      this.tableAssignmentsVisibility = true;
     }
     else {
-      this.tableAssignmetsVisibility = false;
-    }*/
+      this.tableAssignmentsVisibility = false;
+    }
   }
 
   openDialogImage(ass: Assignment) {

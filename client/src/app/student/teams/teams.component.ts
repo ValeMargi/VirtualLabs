@@ -64,13 +64,19 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.teamName = this.team.name;
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
+
     if (changes.team != null) {
       this.team = changes.team.currentValue;
-      this.setTableTeam();
+      this.teamName = this.team.name;
+
+        if (changes.members != null) {
+          this.members = changes.members.currentValue;
+          this.setTableTeam();
+        }
     }
 
     if (changes.proposals != null) {

@@ -5,6 +5,12 @@
       <mat-icon>close</mat-icon></button>
             Versioni elaborato
         </mat-card-title>
+
+        <button mat-raised-button color="primary" class="upload" *ngIf="homework != null && !homework.permanent && homework.status != 'NULL'"
+        (click)="uploadVersion()">
+        <mat-icon>cloud_upload</mat-icon> Carica versione
+        </button>
+
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content>
@@ -45,9 +51,6 @@
                 </div>
             </div>
         </div>
-        <button mat-raised-button color="primary" class="upload" *ngIf="homework != null && !homework.permanent && homework.status != 'NULL'"
-                (click)="uploadVersion()">
-            <mat-icon>cloud_upload</mat-icon> Carica versione
-        </button>
+
     </mat-card-content>
 </mat-card>

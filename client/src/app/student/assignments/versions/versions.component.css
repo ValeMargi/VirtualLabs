@@ -9,18 +9,18 @@
   color:#3F51B5;
 }
 
-
 .versions-corrections {
     display: flex;
     justify-content: center;
 }
 
 .noVersions {
-    text-align: center;
+  text-align: center;
 }
 
 .vr-container {
-    text-align: center;
+  text-align: center;
+  align-content: center;
 }
 
 .mat-list-option{
@@ -31,16 +31,16 @@
 }
 
 .versions {
-    margin-right: 10%;
+  margin-right: 10%;
 }
 
 .corrections {
-    margin-left: 10%;
+  margin-left: 10%;
 }
 
 .upload {
-    display: inline-block;
-    margin-top: 1em;
+  display: inline-block;
+  margin-top: 1em;
 }
 
 .inputfile {

@@ -80,7 +80,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
       }
       else {
         this.versionsVisibility = true;
-        this.router.navigate([this.ASSIGNMENT.id, 'versions'], { relativeTo: this.route });
+        this.router.navigate([this.ASSIGNMENT.id, 'versions'], { relativeTo: this.route, state: {homework: this.homework} });
       }
     }
 

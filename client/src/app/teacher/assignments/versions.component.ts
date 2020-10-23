@@ -53,6 +53,15 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
 
     if (changes.corrections != null) {
       this.corrections = changes.corrections.currentValue;
+
+      this.corrsToShow = [];
+      if (this.corrVisibility && this.showedId != -1) {
+        this.corrections.forEach(cor => {
+          if (cor.versionId == this.showedId) {
+            this.corrsToShow.push(cor);
+          }
+        });
+      }
     }
   }
 

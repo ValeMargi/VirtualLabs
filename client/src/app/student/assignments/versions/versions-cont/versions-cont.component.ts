@@ -15,7 +15,6 @@ import { Subscription } from 'rxjs/internal/Subscription';
   styleUrls: ['./versions-cont.component.css']
 })
 export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() homework: Homework;
   @Output() HOMEWORK: Homework;
   @Output() VERSIONS: HomeworkVersion[] = [];
   @Output() CORRECTIONS: HomeworkCorrection[] = [];
@@ -35,8 +34,8 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
         return;
       }
 
-      if (this.homework != null) {
-        this.HOMEWORK = this.homework;
+      if (history.state != null) {
+        this.HOMEWORK = history.state.homework;
       }
 
       let courseName: string = this.courseService.currentCourse.getValue().name;
@@ -77,11 +76,7 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.homework != undefined) {
-      this.homework = changes.homework.currentValue;
-      this.HOMEWORK = this.homework;
-      console.log(this.homework)
-    }
+    
   }
 
   ngOnDestroy() {

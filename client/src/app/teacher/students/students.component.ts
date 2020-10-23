@@ -35,6 +35,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   displayedColumns: string[] = ['select', 'id', 'name', 'firstName', 'team'];
   @Input() students: Student[];
   @Input() options: Student[];
+  @Input() studentsToRemove: Student[];
   dataSource = new MatTableDataSource<Student>();
 
   selectedStudents = new SelectionModel<Student>(true, []);
@@ -43,7 +44,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   selectedCSV: File;
 
   filteredOptions: Observable<Student[]>;
-  studentToAdd : Student = null;
+  studentToAdd: Student = null;
 
   length = 5;
   pageSize = 5;
@@ -76,14 +77,22 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+
     //this.options = changes.options.currentValue;
+    this.manageTableVisibility();
+    this.setTable();
 
     if (changes.students != null) {
+      console.log("cambio students")
       this.students = changes.students.currentValue;
     }
 
-    this.manageTableVisibility();
-    this.setTable();
+    if (changes.studentsToRemove != null) {
+      console.log("DAI")
+      this.studentsToRemove = changes.studentsToRemove.currentValue;
+    }
+
+
   }
 
   manageTableVisibility() {
@@ -154,9 +163,11 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   deleteStudent() {
-    console.log(this.selectedStudents.selected)
+
+    console.log(this.selectedStudents.selected);
     if (this.selectedStudents.selected.length > 0) {
       this.toRemove.emit(this.selectedStudents.selected);
+      this.dataSource._updateChangeSubscription();
     }
   }
 
@@ -164,7 +175,6 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
     if (this.studentToAdd != null) {
 
       var add = true;
-
       this.students.forEach(student => {
         if (student.id == this.studentToAdd.id)
           add = false;

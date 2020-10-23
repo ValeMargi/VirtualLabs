@@ -1,2 +1,7 @@
-<app-students [students]="STUDENTS_ENROLLED" [options]="ALL_STUDENTS"
-(enroll)="enrollStudent($event)" (CSV)="enrollStudentCSV($event)" (remove)="removeStudents($event)"></app-students>
+<app-students
+[students]="STUDENTS_ENROLLED"
+[options]="ALL_STUDENTS"
+[studentsToRemove]="STUDENTS_REMOVE"
+(enroll)="enrollStudent($event)"
+(CSV)="enrollStudentCSV($event)"
+(remove)="removeStudents($event)"></app-students>

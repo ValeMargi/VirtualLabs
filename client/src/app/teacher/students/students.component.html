@@ -26,8 +26,8 @@
     <input #hiddenfileinput class="inputfile" type="file" accept=".csv" (change)="addStudentCSV($event)">
     <button class="button" color="primary" mat-button mat-raised-button [disabled]="addDisabled" (click)="addStudent()">Aggiungi</button>
     <button class="button" color="primary" mat-button mat-raised-button (click)="hiddenfileinput.click()">Aggiungi da CSV</button>
-    <button class="button" color="primary" mat-button mat-raised-button>
-        <mat-icon aria-label="" (click)=deleteStudent()>delete</mat-icon>
+    <button class="button" color="primary" mat-button mat-raised-button (click)="deleteStudent()">
+        <mat-icon>delete</mat-icon>
     </button>
   </form>
 
@@ -35,9 +35,12 @@
   <div class="tableContainer" *ngIf="tableVisibility">
     <table #table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef><mat-checkbox #checkall (change)="selectAll($event.checked)"
-                                [checked]="selectedStudents.hasValue() && allSelected()"
-                                [indeterminate]="selectedStudents.hasValue() && !allSelected()"></mat-checkbox></th>
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox #checkall (change)="selectAll($event.checked)"
+                                      [checked]="selectedStudents.hasValue() && allSelected()"
+                                      [indeterminate]="selectedStudents.hasValue() && !allSelected()">
+              </mat-checkbox>
+            </th>
             <td mat-cell *matCellDef="let row"><mat-checkbox #checksingle (change)="selectStudent($event.checked, row)"
                                 (click)="$event.stopPropagation()"
                                 [checked]="selectedStudents.isSelected(row)"></mat-checkbox></td>

@@ -41,6 +41,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
   lengthProposals: number;
   lengthMembers: number;
+  teamName: string;
 
   length = 5;
   pageSize = 5;
@@ -59,10 +60,11 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngAfterViewInit(): void {
+
   }
 
   ngOnInit(): void {
-    
+    this.teamName = this.team.name;
   }
 
   ngOnChanges(changes: SimpleChanges) {

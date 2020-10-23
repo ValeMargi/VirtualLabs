@@ -10,14 +10,19 @@ body {
 
 h1 {
     padding-top: 20%;
+
     text-align:top;
     text-decoration: solid;
     color: rgb(23, 3, 204);
     font-size: xx-large;
     font: bold;
+    text-shadow: 2px 0 0 rgb(255, 255, 255), 2px 0 0 rgb(255, 255, 255), 0 2px 0 rgb(255, 255, 255), 0 2px 0 rgb(255, 255, 255), 2px 2px rgb(255, 255, 255), 2px 2px 0 rgb(255, 255, 255), 2px -2px 0 rgb(255, 255, 255), -2px 2px 0 rgb(255, 255, 255);
+
 }
 
 h2 {
     text-align:top;
     text-decoration: solid;
+    text-shadow: 2px 0 0 rgb(255, 255, 255), 2px 0 0 rgb(255, 255, 255), 0 2px 0 rgb(255, 255, 255), 0 2px 0 rgb(255, 255, 255), 2px 2px rgb(255, 255, 255), 2px 2px 0 rgb(255, 255, 255), 2px -2px 0 rgb(255, 255, 255), -2px 2px 0 rgb(255, 255, 255);
+
 }

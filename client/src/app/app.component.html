@@ -3,7 +3,7 @@
 <head>
   <title>VirtualLabs</title>
 </head>
-<body>
+<body class="Wall">
 
   <mat-toolbar color="primary">
     <button mat-button *ngIf="!loginVisibility" (click)=toggleForMenuClick()>
@@ -17,10 +17,11 @@
     <button #btRegister mat-button *ngIf="loginVisibility" (click)="openDialogRegister()"><mat-icon>portrait</mat-icon>Registrati</button>
   </mat-toolbar>
 
-  <mat-toolbar *ngIf="!homeVisibility && !notFoundVisibility && LoginSuccess" >
+  <mat-toolbar class="toolbarCourse" *ngIf="!homeVisibility && !notFoundVisibility && LoginSuccess" >
     <mat-toolbar-row>
-      <span style="color:rgb(228, 18, 140)" >{{ courseName }}</span>
-      <mat-divider></mat-divider>
+
+      <span class="NomeCorso" style="color:rgb(228, 18, 140)" >{{ courseName }}</span>
+
       <div class="button-request" align="right">
       <button mat-button mat-raised-button color="primary" *ngIf="teacherVisibility" (click)="enableCourse()">
         Abilita/Disabilita

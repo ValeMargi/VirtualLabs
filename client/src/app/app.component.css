@@ -1,8 +1,16 @@
-.mat-sidenav-container { 
-    margin: 20px; 
-    height: 80%; 
+.mat-sidenav-container {
+    margin: 0.7%;
+    height: 80.8%;
 }
 
+.toolbarCourse{
+  background-color: #3f51b53a;
+}
+
+.NomeCorso{
+  text-shadow:-1px 1px 0 rgb(0, 0, 0);
+  margin-left: 2%;
+}
 .sidenav {
     width: 25%;
     background-image: url(teaching.png);

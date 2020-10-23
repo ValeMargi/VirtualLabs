@@ -3,6 +3,10 @@
     justify-content: center;
 }
 
+.noVersions {
+    text-align: center;
+}
+
 .vr-container {
     text-align: center;
 }
@@ -17,7 +21,8 @@
 
 .separator { 
     border-left: 3px solid black; 
-    height: 10em; 
+    min-height: 3em; 
+    height: auto;
     left: 50%; 
 } 
 

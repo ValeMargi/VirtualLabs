@@ -7,6 +7,10 @@
     text-align: center;
 }
 
+.noVersions {
+    text-align: center;
+}
+
 .versions {
     margin-right: 10%;
 }
@@ -17,7 +21,8 @@
 
 .separator { 
     border-left: 3px solid black; 
-    height: 10em; 
+    min-height: 3em;
+    height: auto; 
     left: 50%; 
 } 
 

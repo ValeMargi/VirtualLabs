@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Student } from 'src/app/models/student.model';
 import { Homework } from 'src/app/models/homework.model'
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
@@ -14,9 +14,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
   templateUrl: './versions-cont.component.html',
   styleUrls: ['./versions-cont.component.css']
 })
-export class VersionsContComponent implements OnInit, OnDestroy {
-
-  //@Input() assignment: Assignment;
+export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
   @Input() homework: Homework;
   @Output() HOMEWORK: Homework;
   @Output() VERSIONS: HomeworkVersion[] = [];
@@ -33,13 +31,13 @@ export class VersionsContComponent implements OnInit, OnDestroy {
     this.route$ = this.route.params.subscribe(params => {
       this.id = params.idA;
 
-      console.log(params.idA)
-
       if (this.id == null) {
         return;
       }
 
-      this.HOMEWORK = this.homework;
+      if (this.homework != null) {
+        this.HOMEWORK = this.homework;
+      }
 
       let courseName: string = this.courseService.currentCourse.getValue().name;
 
@@ -76,6 +74,14 @@ export class VersionsContComponent implements OnInit, OnDestroy {
 
       }
     );
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.homework != undefined) {
+      this.homework = changes.homework.currentValue;
+      this.HOMEWORK = this.homework;
+      console.log(this.homework)
+    }
   }
 
   ngOnDestroy() {

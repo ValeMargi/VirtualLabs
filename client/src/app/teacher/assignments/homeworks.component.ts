@@ -41,7 +41,6 @@ export class HomeworksComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.homeworkStudents != null) {
       this.homeworkStudents = changes.homeworkStudents.currentValue;
-      console.log(this.homeworkStudents)
     }
 
     this.manageTableVisibility();

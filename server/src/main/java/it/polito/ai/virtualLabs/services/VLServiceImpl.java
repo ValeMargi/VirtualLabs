@@ -98,8 +98,9 @@ public class VLServiceImpl implements VLService{
         /*Per controllare scadenza elaborati*/
         for(Assignment a: assignmentRepository.findAll()){
             if(a.getExpiration().compareTo(now.toString())<=0){
-                a.getHomeworks().forEach(h-> h.setPermanent(true));
-                assignmentRepository.saveAndFlush(a);
+                assignmentExpiredSetPermanentHW(a);
+                //a.getHomeworks().forEach(h-> h.setPermanent(true));
+               // assignmentRepository.saveAndFlush(a);
             }
         }
 
@@ -119,6 +120,18 @@ public class VLServiceImpl implements VLService{
 
     }
 
+    //METODO AGGIUNTO 23/10
+    @Override
+    public void assignmentExpiredSetPermanentHW(Assignment a){
+        List<Homework> homeworks = a.getHomeworks();
+        for(Homework h: homeworks){
+            h.setPermanent(true);
+            homeworkRepository.save(h);
+        }
+        assignmentRepository.saveAndFlush(a);
+
+
+    }
 
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override

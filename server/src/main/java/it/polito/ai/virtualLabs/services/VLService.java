@@ -80,4 +80,5 @@ public interface VLService {
     PhotoCorrectionDTO getCorrectionHW(Long correctionId);
      byte[] compressZLib(byte[] data);
      byte[] decompressZLib(byte[] data);
+    void assignmentExpiredSetPermanentHW(Assignment a);
 }

@@ -25,7 +25,7 @@ public class Assignment {
     @JoinColumn(name="image_id")
     PhotoAssignment photoAssignment;
 
-    //fetch = FetchType.EAGER,
+    // AGGIUNTO 23/10 fetch = FetchType.EAGER,
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "assignment")
     private List<Homework> homeworks= new ArrayList<>();
 

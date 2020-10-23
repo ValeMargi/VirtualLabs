@@ -74,9 +74,11 @@
               <ng-container matColumnDef="students">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef> Studenti Invitati </th>
                 <td *matCellDef="let row">
-                  <div *ngFor="let stud of row.students; let i = Index" >
-                    {{stud[i].student}}
-                  </div>
+                  <ng-container *ngFor="let i of row.students">
+                    ∎ {{i.student}}
+                    <br/>
+                  </ng-container>
+
                 </td>
               </ng-container>
 

@@ -26,8 +26,8 @@ export class TeamsContComponent implements OnInit {
   ngOnInit(): void {
       this.teamService.getStudentsInTeams(this.courseService.currentCourse.getValue().name).subscribe(
         (data) => {
-          this.StudentInTeam = data;
-          this.studentInTeam(data);
+          //this.StudentInTeam = data;
+          this.membersInTeam(data);
         },
         (error) => {
           console.log("Studenti del team non caricato");
@@ -36,7 +36,7 @@ export class TeamsContComponent implements OnInit {
 
   }
 
-  studentInTeam(students: Student[]) {
+  membersInTeam(students: Student[]) {
     if (students.length > 0) {
       students.forEach(element => {
           if (element.id == this.studentService.currentStudent.id) {

@@ -1,14 +1,5 @@
-<!-- Bottone Composizione gruppo -->
-<div class="button-request" *ngIf="lengthProposals > 0 && lengthMembers > 0">
-  <button mat-raised-button color="primary" (click)="openRequestDialog()" >
-     <mat-icon>playlist_add</mat-icon>
-     Nuovo gruppo</button>
- </div>
-
-
-
 <!--Non appartieni a un gruppo e non ha richieste-->
-<mat-card class="card" *ngIf="lengthProposals == 0 && lengthMembers == 0">
+<mat-card class="card" *ngIf="lengthProposals == 0 && (lengthMembers == 0 || team == null)">
   <mat-card-header>
      <mat-card-title>Non è stato trovato alcun gruppo e richieste</mat-card-title>
      <mat-card-subtitle>Crea un nuovo gruppo e Invia le richieste ai tuoi colleghi</mat-card-subtitle>

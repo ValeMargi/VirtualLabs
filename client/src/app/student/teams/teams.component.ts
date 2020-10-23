@@ -39,17 +39,15 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   @Output('refuse') refuse = new EventEmitter<string>();
 
 
-  lengthProposals: number;
-  lengthMembers: number;
+  lengthProposals: number = 0;
+  lengthMembers: number = 0;
   teamName: string;
 
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  constructor(private cont: TeamsContComponent,
-              public dialog: MatDialog,
-              private studentService: StudentService) { }
+  constructor(private dialog: MatDialog) { }
 
   openRequestDialog() {
     const dialogRef = this.dialog.open(RequestTeamDialogContComponent,{ id: 'dialogRequest'});
@@ -71,17 +69,23 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
     if (changes.team != null) {
       this.team = changes.team.currentValue;
-      this.teamName = this.team.name;
 
-        if (changes.members != null) {
-          this.members = changes.members.currentValue;
-          this.setTableTeam();
-        }
+      if (this.team != null) {
+        this.teamName = this.team.name;
+      }
+    }
+
+    if (changes.members != null) {
+      this.members = changes.members.currentValue;
+      this.setTableTeam();
     }
 
     if (changes.proposals != null) {
       this.proposals = changes.proposals.currentValue;
-      this.setTableProposals();
+
+      if (this.proposals != null) {
+        this.setTableProposals();
+      }
     }
   }
 
@@ -91,7 +95,6 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     this.dataSourceProposals.sort = this.sort;
     this.lengthProposals = this.proposals.length;
   }
-
 
   setTableTeam(){
     this.dataSourceTeam = new MatTableDataSource<Student>(this.members);

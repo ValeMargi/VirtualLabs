@@ -1,3 +1,27 @@
+.title{
+  color:#3F51B5;
+}
+.mat-list-option{
+  padding: 0 0px;
+}
+.bt-rev{
+  padding-right:0.5%;
+}
+
+.iconClose:hover{
+  background-color:#001ea34d;
+}
+
+.mat-list-option:active{
+  background-color:#281fa846;
+  color: black;
+}
+.mat-list-option:hover{
+  background-color:#001ea34d;
+  color: black;
+}
+
+
 .versions-corrections {
     display: flex;
     justify-content: center;
@@ -19,12 +43,12 @@
     margin-left: 10%;
 }
 
-.separator { 
-    border-left: 3px solid black; 
+.separator {
+    border-left: 3px solid black;
     min-height: 3em;
-    height: auto; 
-    left: 50%; 
-} 
+    height: auto;
+    left: 50%;
+}
 
 .upload {
     display: inline-block;

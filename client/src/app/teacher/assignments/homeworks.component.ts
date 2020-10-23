@@ -17,7 +17,7 @@ export class HomeworksComponent implements OnInit, OnChanges {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp', 'grade'];
+  displayedColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp', 'grade','version'];
   dataSource = new MatTableDataSource<HomeworkStudent>();
   length = 5;
   pageSize = 5;
@@ -28,6 +28,7 @@ export class HomeworksComponent implements OnInit, OnChanges {
 
   homeworksToShow: any[] = [];
   versionsVisibility: boolean = false;
+  homeworksVisibility: boolean = true;
   tableVisibility: boolean = false;
 
   constructor(private router: Router,
@@ -74,6 +75,7 @@ export class HomeworksComponent implements OnInit, OnChanges {
   }
 
   showHistory(hws: HomeworkStudent) {
+    this.homeworksVisibility = false;
     this.versionsVisibility = true;
     let homework = new Homework(hws.idHW, hws.status, hws.permanent, hws.grade, hws.timestamp);
     this.HOMEWORK = homework;

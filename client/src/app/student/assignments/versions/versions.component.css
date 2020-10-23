@@ -38,13 +38,6 @@
     margin-left: 10%;
 }
 
-.separator {
-    border-left: 3px solid black;
-    min-height: 3em;
-    height: auto;
-    left: 50%;
-}
-
 .upload {
     display: inline-block;
     margin-top: 1em;

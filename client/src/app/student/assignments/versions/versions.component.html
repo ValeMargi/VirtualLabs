@@ -1,3 +1,4 @@
+
 <mat-card class="cardVersion">
   <mat-card-header class="header">
    <mat-card-title>
@@ -6,7 +7,7 @@
             Versioni elaborato
         </mat-card-title>
     </mat-card-header>
-
+    <mat-divider></mat-divider>
     <mat-card-content>
         <div class="noVersions" *ngIf="versions.length == 0">
             <h4>Nessuna versione per questo homework</h4>
@@ -14,15 +15,17 @@
         <div class="vr-container" *ngIf="versions.length > 0">
             <div class="versions-corrections">
                 <div class="versions">
-                    <h3>Versioni</h3>
+                  <br/>
+                    <h3 class="title"><strong>Versioni</strong></h3>
+                    <mat-divider></mat-divider>
                     <mat-selection-list [multiple]="false">
                         <mat-list-option *ngFor="let ver of versions" [value]="ver">
                           <mat-divider></mat-divider>
                             <div style="display: flex;">
                                 <div style="text-align: center; vertical-align: middle;" (click)="openVersionImage(ver)">{{ ver.timestamp }}</div>
 
-                                <button mat-button (click)="showCorrections(ver)">
-                                    <mat-icon>keyboard_arrow_right</mat-icon>
+                                <button class="bt-rev" mat-flat-button color="primary" (click)="showCorrections(ver)">
+                                    Revisioni <mat-icon>keyboard_arrow_right</mat-icon>
                                 </button>
                             </div>
                         </mat-list-option>

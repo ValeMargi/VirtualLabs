@@ -439,11 +439,8 @@ public class VLServiceImpl implements VLService{
 
                 return professors.stream().map(pro-> modelMapper.map(pro, ProfessorDTO.class)).collect(Collectors.toList());
 
+            }
         }
-
-
-
-    }
     }
 
 
@@ -758,7 +755,7 @@ public class VLServiceImpl implements VLService{
             Student stu= ostu.get();
             Map<String, Object> m = new HashMap<>();
             m.put("teamName", team.getName());
-            m.put("creator", stu.getFirstName()+" "+stu.getName()+" "+ stu.getId());
+            m.put("creator", stu.getName()+" "+ stu.getFirstName()+" "+"("+stu.getId()+")");
             Optional<Token> otoken = s.getTokens().stream().filter(t-> t.getTeamId().equals(teamId)).findFirst();
             if(!otoken.isPresent()) throw new TokenNotFoundException();
             Token tokenStudent = otoken.get();
@@ -770,7 +767,7 @@ public class VLServiceImpl implements VLService{
             for(Token token: tokenRepository.findAllByTeamId(teamId).stream()
                     .filter(t->!t.getStudent().equals(s) && !t.getStudent().equals(stu)).collect(Collectors.toList())){
                 Map<String, Object> m2= new HashMap<>();
-                m2.put("student", token.getStudent().getFirstName()+" "+token.getStudent().getName()+" "+token.getStudent().getId());
+                m2.put("student", token.getStudent().getName()+" "+token.getStudent().getFirstName()+" "+"("+token.getStudent().getId()+")");
                 m2.put("status", token.getStatus());
                 l2.add(m2);
             }
@@ -1348,7 +1345,7 @@ public class VLServiceImpl implements VLService{
     /*Metodo per ritornare la consegna di un dato corso*/
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public PhotoAssignmentDTO getAssignmentStudent( Long assignmentId ) { //CourseId preso dal pathVariable
+    public PhotoAssignmentDTO getAssignmentStudent( Long assignmentId ) {
         String student = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Student> os = studentRepository.findById(student);
         if (os.isPresent()) {
@@ -1382,7 +1379,7 @@ public class VLServiceImpl implements VLService{
     /*Metodo per ritornare la consegna di un dato corso*/
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public PhotoAssignmentDTO getAssignmentProfessor(Long assignmentId ) { //CourseId preso dal pathVariable
+    public PhotoAssignmentDTO getAssignmentProfessor(Long assignmentId ) {
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Professor> op = professorRepository.findById(professor);
         if(op.isPresent()){
@@ -1404,7 +1401,7 @@ public class VLServiceImpl implements VLService{
     /*SERVICE ELABORATI*/
     @PreAuthorize("hasAuthority('student')")
     @Override //uploadHomework
-    public PhotoVersionHomeworkDTO uploadVersionHomework (Long homeworkId, PhotoVersionHomeworkDTO photoVersionHomeworkDTO) { //CourseId preso dal pathVariable
+    public PhotoVersionHomeworkDTO uploadVersionHomework (Long homeworkId, PhotoVersionHomeworkDTO photoVersionHomeworkDTO) {
         String student = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Student> os = studentRepository.findById(student);
         if (os.isPresent()) {
@@ -1423,7 +1420,9 @@ public class VLServiceImpl implements VLService{
                                 h.setTimestamp(photoVersionHomework.getTimestamp());
                                 homeworkRepository.saveAndFlush(h);
                                 photoVersionHMRepository.saveAndFlush(photoVersionHomework);
-                                return modelMapper.map(photoVersionHomework, PhotoVersionHomeworkDTO.class);
+                                PhotoVersionHomeworkDTO photoVersionHomeworkDTO1 = modelMapper.map(photoVersionHomework, PhotoVersionHomeworkDTO.class);
+                                photoVersionHomeworkDTO1.setPicByte(decompressZLib(photoVersionHomeworkDTO1.getPicByte()));
+                                return photoVersionHomeworkDTO1;
                             }else throw new VMNotFoundException();
                         }else throw new TeamNotFoundException();
                     } else throw new HomeworkIsPermanentException();
@@ -1450,7 +1449,7 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public List<Map<String, Object>> allHomework(String courseName, Long assignmentId){ //AGGIUNTA 28/07
+    public List<Map<String, Object>> allHomework(String courseName, Long assignmentId){
         Optional<Course> oc= courseRepository.findById(courseName);
         if(oc.isPresent()){
             Course c = oc.get();
@@ -1472,10 +1471,7 @@ public class VLServiceImpl implements VLService{
                     return ret;
                 }else throw new AssignmentNotFoundException();
             }else throw new PermissionDeniedException();
-
-
         }else throw new CourseNotFoundException();
-
     }
 
     /**
@@ -1502,7 +1498,6 @@ public class VLServiceImpl implements VLService{
                     m.put("nameFile", v.getNameFile());
                     l.add(m);
                 }
-
                 return l;
             }else throw  new PermissionDeniedException();
         }else throw new HomeworkNotFoundException();
@@ -1566,7 +1561,9 @@ public class VLServiceImpl implements VLService{
                 if (!h.getStudent().getId().equals(auth))
                     throw new PermissionDeniedException();
             }
-            return modelMapper.map(op.get(), PhotoVersionHomeworkDTO.class);
+            PhotoVersionHomeworkDTO photoVersionHomeworkDTO = modelMapper.map(op.get(), PhotoVersionHomeworkDTO.class);
+            photoVersionHomeworkDTO.setPicByte(decompressZLib(photoVersionHomeworkDTO.getPicByte()));
+            return photoVersionHomeworkDTO;
         }else throw new PhotoVersionHMNotFoundException();
 
     }
@@ -1597,7 +1594,9 @@ public class VLServiceImpl implements VLService{
                     }
                     h.setTimestamp(photoCorrection.getTimestamp());
                     photoCorrectionRepository.saveAndFlush(photoCorrection);
-                    return modelMapper.map(photoCorrection, PhotoCorrectionDTO.class);
+                    PhotoCorrectionDTO photoCorDTO = modelMapper.map(photoCorrection, PhotoCorrectionDTO.class);
+                    photoCorDTO.setPicByte(decompressZLib(photoCorDTO.getPicByte()));
+                    return photoCorDTO;
                 }else throw new HomeworkVersionIdNotFoundException();
 
             }else throw  new PermissionDeniedException();
@@ -1670,7 +1669,9 @@ public class VLServiceImpl implements VLService{
                 if (!h.getStudent().getId().equals(auth))
                     throw new PermissionDeniedException();
             }
-            return modelMapper.map(op.get(), PhotoCorrectionDTO.class);
+            PhotoCorrectionDTO photoCorrectionDTO = modelMapper.map(p, PhotoCorrectionDTO.class);
+            photoCorrectionDTO.setPicByte(decompressZLib(photoCorrectionDTO.getPicByte()));
+            return photoCorrectionDTO;
         }else throw new PhotoCorrectionNotFoundException();
 
     }

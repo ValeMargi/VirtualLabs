@@ -25,8 +25,8 @@ public class Assignment {
     @JoinColumn(name="image_id")
     PhotoAssignment photoAssignment;
 
-
-    @OneToMany(mappedBy = "assignment")
+    //fetch = FetchType.EAGER,
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "assignment")
     private List<Homework> homeworks= new ArrayList<>();
 
 

@@ -81,6 +81,7 @@ public class VLServiceImpl implements VLService{
     /*To check if the tokens contained in the repository have expired,
      if so, they are removed from the repository and the corresponding
      Team in the repository Team is removed.*/
+    @Transactional
     @Scheduled(initialDelay = 1000, fixedRate = 20000)
     public void run(){
         Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -117,6 +118,7 @@ public class VLServiceImpl implements VLService{
         }
 
     }
+
 
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override

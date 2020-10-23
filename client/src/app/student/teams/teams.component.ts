@@ -22,7 +22,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   //Table Team
-  displayedColumnsTeam: string[] = ['id', 'name', 'surname'];
+  displayedColumnsTeam: string[] = ['id', 'name', 'firstName'];
   dataSourceTeam = new MatTableDataSource<Student>();
   tableTeamVisibility:boolean = true;
 
@@ -59,11 +59,10 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngAfterViewInit(): void {
-    this.setTableProposals();
-    this.setTableTeam();
   }
 
   ngOnInit(): void {
+    
   }
 
   ngOnChanges(changes: SimpleChanges) {

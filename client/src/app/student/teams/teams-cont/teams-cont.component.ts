@@ -34,13 +34,19 @@ export class TeamsContComponent implements OnInit {
         }
       );
 
+      this.teamService.getTeamForStudent(this.courseService.currentCourse.getValue().name,this.studentService.currentStudent.id).subscribe(
+          (data) =>{
+            this.TEAM = data;
+          }
+      );
+
   }
 
   membersInTeam(students: Student[]) {
     if (students.length > 0) {
       students.forEach(element => {
           if (element.id == this.studentService.currentStudent.id) {
-            this.teamService.getMembersTeam(this.teamService.currentTeam.id).subscribe(
+            this.teamService.getMembersTeam(this.TEAM.id).subscribe(
               (data) => {
                 this.MEMBERS = data;
                 console.log(data)
@@ -49,9 +55,6 @@ export class TeamsContComponent implements OnInit {
                 console.log("Membri non caricato");
               }
             );
-          }
-          else{
-            this.getProposals();
           }
       });
     }

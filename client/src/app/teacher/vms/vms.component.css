@@ -1,3 +1,9 @@
+.card {
+    width: 90%;
+    margin-left: 2%;
+    margin-top: 2%;
+}
+
 .vmsContainer {
     width: 100%;
     overflow: hidden; 
@@ -20,17 +26,6 @@
     margin-right: 2%;
 }
 
-h1 {
-    font-weight: bold; 
-    margin: 1em;
-}
-
 .matTable {
     width: 100%;
-}
-
-.noTeams {
-    width: 100%;
-    text-align: center;
-    margin-top: 10%;
 }

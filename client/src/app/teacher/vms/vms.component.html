@@ -1,22 +1,27 @@
-<h1>Macchine virtuali degli studenti</h1>
+<mat-card class="card">
+    <mat-card-header>
+        <mat-card-title>Macchine virtuali degli studenti</mat-card-title>
+        <mat-card-subtitle *ngIf="!teamsVisibility">Nessun team in questo corso</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="teamsVisibility">Selezionare un team</mat-card-subtitle>
 
-<!-- Bottone Modello Vm -->
-<div class="button-request" align="right">
-    <button mat-button  align ="end" mat-raised-button color="primary" (click)="openDialogModel()">
-        <mat-icon>desktop_windows</mat-icon>Modifica modello VM
-    </button>
-</div>
+        <!-- Bottone Modello Vm -->
+        <div class="button-request" align="right">
+            <button mat-button  align ="end" mat-raised-button color="primary" (click)="openDialogModel()">
+                <mat-icon>desktop_windows</mat-icon>Modifica modello VM
+            </button>
+        </div>
+    </mat-card-header>
 
-<div class="vmsContainer" *ngIf="teamsVisibility">
-    <div class="teamsContainer">
-        <mat-selection-list [multiple]="false">
-            <mat-list-option *ngFor="let team of teams" [value]="team" (click)="selectTeam(team)"> 
-                {{ team.name }} </mat-list-option>
-        </mat-selection-list>
-    </div>
-    <router-outlet></router-outlet>
-    <app-team-vms-cont class="tableContainer" [team]="TEAM" *ngIf="teamVMsVisibility"></app-team-vms-cont> 
-</div>
-<div class="noTeams" *ngIf="!teamsVisibility">
-    <h3>Nessun team in questo corso</h3>
-</div>
+    <mat-card-content>
+        <div class="vmsContainer" *ngIf="teamsVisibility">
+            <div class="teamsContainer">
+                <mat-selection-list [multiple]="false">
+                    <mat-list-option *ngFor="let team of teams" [value]="team" (click)="selectTeam(team)"> 
+                        {{ team.name }} </mat-list-option>
+                </mat-selection-list>
+            </div>
+            <router-outlet></router-outlet>
+            <app-team-vms-cont class="tableContainer" [team]="TEAM" *ngIf="teamVMsVisibility"></app-team-vms-cont> 
+        </div>
+    </mat-card-content>
+</mat-card>

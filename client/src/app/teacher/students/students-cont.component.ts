@@ -32,7 +32,7 @@ export class StudentsContComponent implements OnInit {
         this.ALL_STUDENTS = data;
       },
       (error) => { 
-        console.log("studenti non reperiti");
+        window.alert("studenti non reperiti");
        } 
       );
 
@@ -53,7 +53,7 @@ export class StudentsContComponent implements OnInit {
         this.STUDENTS_ENROLLED = data;
       },
       (error) => { 
-        console.log("studenti iscritti non reperiti");
+        window.alert("studenti iscritti non reperiti");
        } 
       );
   }
@@ -64,7 +64,7 @@ export class StudentsContComponent implements OnInit {
         this.STUDENTS_ENROLLED = this.STUDENTS_ENROLLED.concat(student);
       },
       (error) => { 
-        console.log("studente non aggiunto");
+        window.alert("studente non aggiunto");
       } 
       );
   }
@@ -77,7 +77,7 @@ export class StudentsContComponent implements OnInit {
         });
       },
       (error) => {
-        console.log("Studenti non aggiunti");
+        window.alert("Studenti non aggiunti");
       }
     )
   }

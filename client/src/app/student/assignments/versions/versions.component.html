@@ -1,26 +1,26 @@
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>
-            <button mat-icon-button color="primary" (click)="back()">
-                <mat-icon>close</mat-icon>
-            </button>
+<mat-card class="cardVersion">
+  <mat-card-header class="header">
+   <mat-card-title>
+     <button class = "iconClose" mat-icon-button color="primary" (click)="back()">
+      <mat-icon>close</mat-icon></button>
             Versioni elaborato
         </mat-card-title>
     </mat-card-header>
-  
+
     <mat-card-content>
         <div class="noVersions" *ngIf="versions.length == 0">
             <h4>Nessuna versione per questo homework</h4>
         </div>
-        <div class="vr-container" *ngIf="versions.length > 0"> 
+        <div class="vr-container" *ngIf="versions.length > 0">
             <div class="versions-corrections">
                 <div class="versions">
                     <h3>Versioni</h3>
                     <mat-selection-list [multiple]="false">
-                        <mat-list-option *ngFor="let ver of versions" [value]="ver"> 
+                        <mat-list-option *ngFor="let ver of versions" [value]="ver">
+                          <mat-divider></mat-divider>
                             <div style="display: flex;">
                                 <div style="text-align: center; vertical-align: middle;" (click)="openVersionImage(ver)">{{ ver.timestamp }}</div>
-                           
+
                                 <button mat-button (click)="showCorrections(ver)">
                                     <mat-icon>keyboard_arrow_right</mat-icon>
                                 </button>
@@ -28,12 +28,13 @@
                         </mat-list-option>
                     </mat-selection-list>
                 </div>
-                <div class="separator"></div> 
+                <mat-divider [vertical]="true"></mat-divider>
                 <div class="corrections" *ngIf="corrVisibility">
-                    <h3>Revisioni</h3>
+                  <br/>
+                    <h3 class="title"><strong>Revisioni</strong></h3>
                     <mat-selection-list [multiple]="false">
-                        <mat-list-option *ngFor="let cor of corrsToShow" [value]="cor" (click)="openCorrectionImage(cor)"> 
-                            {{ cor.timestamp }}    
+                        <mat-list-option *ngFor="let cor of corrsToShow" [value]="cor" (click)="openCorrectionImage(cor)">
+                            {{ cor.timestamp }}
                         </mat-list-option>
                     </mat-selection-list>
                     <div *ngIf="corrsToShow.length == 0">

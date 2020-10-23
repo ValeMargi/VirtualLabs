@@ -759,17 +759,23 @@ public class VLServiceImpl implements VLService{
             Map<String, Object> m = new HashMap<>();
             m.put("teamName", team.getName());
             m.put("creator", stu.getFirstName()+" "+stu.getName()+" "+ stu.getId());
-            String currentToken = s.getTokens().stream().filter(t-> t.getTeamId().equals(teamId)).findFirst().get().getId();
+            Optional<Token> otoken = s.getTokens().stream().filter(t-> t.getTeamId().equals(teamId)).findFirst();
+            if(!otoken.isPresent()) throw new TokenNotFoundException();
+            Token tokenStudent = otoken.get();
+            String currentToken = tokenStudent.getId();
             m.put("tokenId", currentToken);
-            Map<String, Object> m2= new HashMap<>();
+            // se status==true, proposta già accettata
+            m.put("status", tokenStudent.getStatus());
+            List<Map<String, Object>> l2 = new ArrayList<>();
             for(Token token: tokenRepository.findAllByTeamId(teamId).stream()
                     .filter(t->!t.getStudent().equals(s) && !t.getStudent().equals(stu)).collect(Collectors.toList())){
+                Map<String, Object> m2= new HashMap<>();
                 m2.put("student", token.getStudent().getFirstName()+" "+token.getStudent().getName()+" "+token.getStudent().getId());
                 m2.put("status", token.getStatus());
+                l2.add(m2);
             }
-            m.put("students", m2);
+            m.put("students", l2);
             l.add(m);
-
         }
         return l;
     }

@@ -11,6 +11,7 @@
   text-shadow:-1px 1px 0 rgb(0, 0, 0);
   margin-left: 2%;
 }
+
 .sidenav {
     width: 25%;
     background-image: url(teaching.png);
@@ -26,11 +27,6 @@
 
 .mat-tab-link {
     opacity: 1;
-}
-
-
-.button-request {
-    margin: 1%;
 }
 
 .noCourses {

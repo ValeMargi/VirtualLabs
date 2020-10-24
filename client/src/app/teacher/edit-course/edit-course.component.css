@@ -1,0 +1,12 @@
+.content {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+}
+
+.actions {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    margin-bottom: 1em;
+}

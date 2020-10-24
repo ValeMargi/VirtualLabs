@@ -15,20 +15,20 @@
     <mat-error *ngIf="AddCourseForm.get('acronym').hasError('required')">L'acronimo deve avere almeno 2 lettere</mat-error>
   </mat-form-field><br><br>
   
-  <!--Massimo Iscrizioni-->
+  <!--Massimo Membri-->
   <mat-form-field>
-    <input #max class="input" type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput max="250" value="250" required>
-    <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di iscrizioni</mat-error>
-    <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('min')">Gli iscritti devono essere minimo 10</mat-error>
-    <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('max')">Gli iscritti devono essere massimo 250</mat-error>
+    <input #max class="input" type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput max="10" min="2" required>
+    <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di membri</mat-error>
+    <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('min')">Un gruppo non può avere meno di 2 membri</mat-error>
+    <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
   </mat-form-field><br><br>
   
-  <!--Minimo Iscrizioni-->
+  <!--Minimo Membri-->
   <mat-form-field>
-    <input #min class="input" type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="10" value="10" required>
-    <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero massimo di iscrizioni</mat-error>
-    <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('min')">Gli iscritti devono essere minimo 10</mat-error>
-    <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('max')">Gli iscritti devono essere massimo 250</mat-error>
+    <input #min class="input" type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="2" max="10" required>
+    <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero minimo di membri</mat-error>
+    <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('min')">Un gruppo non può avere meno di 2 membri</mat-error>
+    <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
   </mat-form-field><br><br>
 
   <!--Foto iniziale VM-->

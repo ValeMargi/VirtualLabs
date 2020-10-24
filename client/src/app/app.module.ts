@@ -82,6 +82,8 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { ChangePasswordContComponent } from './change-password/change-password-cont/change-password-cont.component';
 import { UploadCorrectionContComponent } from './teacher/assignments/upload-correction/upload-correction-cont/upload-correction-cont.component';
 import { UploadCorrectionComponent } from './teacher/assignments/upload-correction/upload-correction.component';
+import { EditCourseContComponent } from './teacher/edit-course/edit-course-cont/edit-course-cont.component';
+import { EditCourseComponent } from './teacher/edit-course/edit-course.component';
 
 @NgModule({
   declarations: [
@@ -139,7 +141,9 @@ import { UploadCorrectionComponent } from './teacher/assignments/upload-correcti
     ChangePasswordComponent,
     ChangePasswordContComponent,
     UploadCorrectionContComponent,
-    UploadCorrectionComponent
+    UploadCorrectionComponent,
+    EditCourseContComponent,
+    EditCourseComponent
   ],
   imports: [
     BrowserModule,

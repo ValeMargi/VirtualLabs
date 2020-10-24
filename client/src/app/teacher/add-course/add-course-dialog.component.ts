@@ -35,14 +35,20 @@ export class AddCourseDialogComponent implements OnInit {
   @Output('add') add = new EventEmitter<any>();
 
   constructor(private cont: AddCourseContComponent,
-     private courseService: CourseService,
      private formBuilder: FormBuilder) { 
 
       this.AddCourseForm = this.formBuilder.group({
         name : new FormControl('', [Validators.required, Validators.minLength(3)]),
         acronym : new FormControl('', [Validators.required, Validators.minLength(2)]),
-        max_iscrizioni : new FormControl('', [Validators.required, Validators.min(10),Validators.max(250)]),
-        min_iscrizioni : new FormControl('', [Validators.required, Validators.min(10),Validators.max(250)]),
+        max_iscrizioni : new FormControl('', [Validators.required, Validators.min(2), Validators.max(10)]),
+        min_iscrizioni : new FormControl('', [Validators.required, Validators.min(2), Validators.max(10)]),
+      });
+
+      this.AddCourseForm.setValue({
+        name: "",
+        acronym: "",
+        max_iscrizioni : 4,
+        min_iscrizioni : 2
       });
      }
 
@@ -105,6 +111,10 @@ export class AddCourseDialogComponent implements OnInit {
   addCourse(name: string, acronym: string, min: number, max: number) {
     if (this.selectedPhoto == null || name == null || acronym == null || min == null || max == null) {
       window.alert("Controllare di aver inserito tutti i dati richiesti e riprovare");
+      return;
+    }
+    else if (!this.AddCourseForm.valid) {
+      window.alert("Controllare che i dati inseriti rispettino tutti i vincoli");
       return;
     }
 

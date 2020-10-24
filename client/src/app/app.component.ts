@@ -32,6 +32,7 @@ import { VersionsComponent as VersionsComponentTeacher } from './teacher/assignm
 import { RegisterContComponent } from './register/register-cont/register-cont.component';
 import { LoginContComponent } from './login/login-cont/login-cont.component';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { EditCourseContComponent } from './teacher/edit-course/edit-course-cont/edit-course-cont.component';
 
 
 @Component({
@@ -378,30 +379,18 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   }
 
-  deleteCourse() {
-    this.courseService.removeCourse(this.courseService.currentCourse.getValue().name).subscribe(
-      (data) => {
-        this.courses.splice(this.courses.indexOf(this.courseService.currentCourse.getValue()));
-        this.router.navigateByUrl("home");
-      },
-      (error) => {
-        console.log("Errore nell'eliminazione del corso");
-      }
-    )
-  }
+  openCourseEdit() {
+    const dialogConfig = new MatDialogConfig();
 
-  enableCourse() {
-    let course = this.courseService.currentCourse.getValue();
-    let enabled = (course.enabled) == 0 ? false : true;
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "35%";
 
-    this.courseService.enableCourse(course.name, !enabled).subscribe(
-      (data) => {
-        course.enabled = (!enabled) ? 1 : 0;
-        this.courseService.setCurrentCourse(course);
-      },
-      (error) => {
-        console.log("Impossibile abilitare/disabilitare il corso");
-      }
-    )
+    dialogConfig.data = {
+        id: 1,
+        title: 'CourseEdit'
+    };
+
+    this.matDialog.open(EditCourseContComponent, dialogConfig);
   }
 }

@@ -17,7 +17,6 @@ export class CourseService {
 
   currentCourse = new BehaviorSubject<Course>(new Course("", "", -1, -1, 0, -1, -1, -1, -1, -1));
   currentCourse$ = this.currentCourse.asObservable();
-  //currentCourse: Course = new Course("", "", -1, -1, false, -1, -1, -1, -1, -1);
 
   constructor(private http: HttpClient) {}
 
@@ -51,15 +50,15 @@ export class CourseService {
   }
 
   removeCourse(courseName: string) {
-    return this.http.delete(`${this.API_COURSES}/${courseName}/remove`);
+    return this.http.delete<boolean>(`${this.API_COURSES}/${courseName}/remove`);
   }
 
   modifyCourse(courseName: string, course: Course) {
-    return this.http.post<Course>(`${this.API_COURSES}/${courseName}/modify`, course);
+    return this.http.post<boolean>(`${this.API_COURSES}/${courseName}/modify`, course);
   }
 
   addProfessorsToCourse(courseName: string, teachersId: string[]) {
-    return this.http.post(`${this.API_COURSES}/${courseName}/addProfessor`, teachersId);
+    return this.http.post<Teacher[]>(`${this.API_COURSES}/${courseName}/addProfessor`, teachersId);
   }
 
   enrollOne(courseName: string, studentId: string) {

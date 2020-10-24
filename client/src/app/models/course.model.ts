@@ -22,5 +22,4 @@ export class Course {
         this.runningInstances = runningInstances;
         this.totInstances = totInstances;
     }
-    
 }

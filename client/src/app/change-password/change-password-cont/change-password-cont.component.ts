@@ -45,6 +45,8 @@ export class ChangePasswordContComponent implements OnInit, OnDestroy {
       return;
     }
 
+    console.log(password)
+
     this.authService.savePassword(this.token, password).subscribe(
       (data) => {
         if (data) {

@@ -38,8 +38,9 @@ export class ChangePasswordComponent implements OnInit, OnChanges {
     else if (newPass != passR) {
       window.alert("Le 2 password devono coincidere");
     }
-
-    this.change.emit(newPass);
+    else {
+      this.change.emit(newPass);
+    }
   }
 
 }

@@ -283,6 +283,8 @@ public class VLServiceImpl implements VLService{
                 Homework h = new Homework();
                 h.setAssignment(a);
                 h.setStatus("NULL");
+                h.setTimestamp("NULL");
+                h.setGrade("-1");
                 h.setStudent(s);
                 homeworkRepository.saveAndFlush(h);
             }

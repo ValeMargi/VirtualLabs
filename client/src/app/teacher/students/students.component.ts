@@ -32,12 +32,14 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   @ViewChild('checksingle') checksingle: MatCheckbox;
   @ViewChild('input') input: MatInput
 
-  displayedColumns: string[] = ['select', 'id', 'name', 'firstName', 'team'];
   @Input() students: Student[];
   @Input() options: Student[];
-  @Input() studentsToRemove: Student[];
-  dataSource = new MatTableDataSource<Student>();
+  @Output('enroll') toInsert = new EventEmitter<Student>()
+  @Output('CSV') toInsertCSV = new EventEmitter<File>();
+  @Output('remove') toRemove = new EventEmitter<Student[]>()
 
+  displayedColumns: string[] = ['select', 'id', 'name', 'firstName', 'team'];
+  dataSource = new MatTableDataSource<Student>();
   selectedStudents = new SelectionModel<Student>(true, []);
 
   myControl = new FormControl();
@@ -52,10 +54,6 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
 
   tableVisibility: boolean = true;
   addDisabled: boolean = true;
-
-  @Output('enroll') toInsert = new EventEmitter<Student>()
-  @Output('CSV') toInsertCSV = new EventEmitter<File>();
-  @Output('remove') toRemove = new EventEmitter<Student[]>()
 
   constructor() {}
 
@@ -77,22 +75,16 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
-    //this.options = changes.options.currentValue;
-    this.manageTableVisibility();
-    this.setTable();
-
     if (changes.students != null) {
-      console.log("cambio students")
       this.students = changes.students.currentValue;
     }
 
-    if (changes.studentsToRemove != null) {
-      console.log("DAI")
-      this.studentsToRemove = changes.studentsToRemove.currentValue;
+    if (changes.options != null) {
+      this.options = changes.options.currentValue;
     }
 
-
+    this.manageTableVisibility();
+    this.setTable();
   }
 
   manageTableVisibility() {
@@ -163,11 +155,10 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   deleteStudent() {
-
-    console.log(this.selectedStudents.selected);
     if (this.selectedStudents.selected.length > 0) {
       this.toRemove.emit(this.selectedStudents.selected);
       this.dataSource._updateChangeSubscription();
+      this.selectedStudents.clear();
     }
   }
 

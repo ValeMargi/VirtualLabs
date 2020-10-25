@@ -41,7 +41,7 @@
   <mat-form-field class="matForm">
     <input #input type="search" placeholder="Aggiungi professore" matInput [formControl]="myControl" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onTeacherSelected($event.option.value)">
-        <mat-option *ngFor="let option of allTeachers" [value]="option">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
             {{option.name}} {{option.firstName}} ({{option.id}})
         </mat-option>
         </mat-autocomplete>

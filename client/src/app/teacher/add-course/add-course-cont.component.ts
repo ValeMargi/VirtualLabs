@@ -15,17 +15,13 @@ export class AddCourseContComponent implements OnInit {
 
   @Output() ALL_TEACHERS: Teacher[] = [];
 
-  constructor(public matDialog: MatDialog, 
-    private dialogRef: MatDialogRef<AddCourseDialogComponent>, 
-    private teacherService: TeacherService,
-    private courseService: CourseService) { }
+  constructor(private dialogRef: MatDialogRef<AddCourseDialogComponent>, 
+              private teacherService: TeacherService,
+              private courseService: CourseService) { }
 
   ngOnInit(): void {
     this.teacherService.all().subscribe(
       (data) => {
-        console.log(data)
-        console.log(this.teacherService.currentTeacher)
-        data.splice(data.indexOf(this.teacherService.currentTeacher));
         this.ALL_TEACHERS = data;
       },
       (error) => {
@@ -53,13 +49,12 @@ export class AddCourseContComponent implements OnInit {
             this.close();
           },
           (error) => {
-            console.log("Modello VM non creato");
+            window.alert("Errore aggiunta modello VM");
           }
         );
       },
       (error) => {
-        console.log(error);
-        console.log("Corso non aggiunto");
+        window.alert("Errore aggiunta corso");
       }
     );
   }

@@ -23,7 +23,7 @@ export class EditCourseComponent implements OnInit, OnChanges {
   myControl = new FormControl();
   filteredOptions: Observable<Teacher[]>;
   private teacherSelected: Teacher;
-  private teachersToAdd: Teacher[] = [];
+  teachersToAdd: Teacher[] = [];
 
   @Input() allTeachers: Teacher[] = [];
   @Input() teachersInCourse: Teacher[] = [];
@@ -67,10 +67,6 @@ export class EditCourseComponent implements OnInit, OnChanges {
       });
     }
 
-    if (changes.allTeachers != null) {
-      this.allTeachers = changes.allTeachers.currentValue;
-    }
-
     if (changes.teachersInCourse != null) {
       this.teachersInCourse = changes.teachersInCourse.currentValue;
       this.dataSource = new MatTableDataSource<Teacher>(this.teachersInCourse);
@@ -91,7 +87,8 @@ export class EditCourseComponent implements OnInit, OnChanges {
     const filterValue = value.toLowerCase();
 
     return this.allTeachers.filter(option => 
-      (!this.teachersInCourse.includes(option) && (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue))));
+      (!this.teachersInCourse.map(t => t.id).includes(option.id)) &&
+      (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
   }
 
   displayFn(teacher: Teacher) {
@@ -111,19 +108,15 @@ export class EditCourseComponent implements OnInit, OnChanges {
       this.teachersToAdd.push(this.teacherSelected);
       this.dataSource = new MatTableDataSource<Teacher>(this.teachersInCourse);
       this.dataSource.sort = this.sort;
-      this.tableVisibility = true;
     }
   }
 
   deleteTeacher(teacher: Teacher) {
     if (teacher != null && this.teachersToAdd.includes(teacher)) {
+      this.teachersInCourse.splice(this.teachersInCourse.indexOf(teacher));
       this.teachersToAdd.splice(this.teachersToAdd.indexOf(teacher));
-      this.dataSource = new MatTableDataSource<Teacher>(this.teachersToAdd);
+      this.dataSource = new MatTableDataSource<Teacher>(this.teachersInCourse);
       this.dataSource.sort = this.sort;
-
-      if (this.teachersToAdd.length == 0) {
-        this.tableVisibility = false;
-      }
     }
   }
 

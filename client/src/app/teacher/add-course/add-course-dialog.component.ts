@@ -69,6 +69,7 @@ export class AddCourseDialogComponent implements OnInit {
     const filterValue = value.toLowerCase();
 
     return this.allTeachers.filter(option => 
+      (option.id != localStorage.getItem('currentId')) &&
       (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
   }
 

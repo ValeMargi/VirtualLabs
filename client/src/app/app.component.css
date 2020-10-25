@@ -8,7 +8,11 @@
 }
 
 .NomeCorso{
-  text-shadow:-1px 1px 0 rgb(0, 0, 0);
+  text-shadow:-1px 1px 0 rgb(190, 190, 190);
+  margin-left: 2%;
+}
+
+.settings{
   margin-left: 2%;
 }
 

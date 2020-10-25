@@ -85,6 +85,8 @@ import { UploadCorrectionComponent } from './teacher/assignments/upload-correcti
 import { EditCourseContComponent } from './teacher/edit-course/edit-course-cont/edit-course-cont.component';
 import { EditCourseComponent } from './teacher/edit-course/edit-course.component';
 
+import { CommonModule } from '@angular/common';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -170,7 +172,8 @@ import { EditCourseComponent } from './teacher/edit-course/edit-course.component
     MatCardModule,
     MatProgressBarModule,
     TextFieldModule,
-    MatExpansionModule
+    MatExpansionModule,
+    CommonModule
   ],
   entryComponents: [MatDialogModule, MatFormFieldModule],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],

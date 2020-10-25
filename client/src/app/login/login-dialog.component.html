@@ -4,7 +4,7 @@
 <mat-dialog-content><br>
 
    <!--LoginForm-->
-   <form [formGroup]="LoginForm">
+   <form [formGroup]="LoginForm" (submit)="login(email.value, password.value)">
 
     <!--Email-->
     <mat-form-field>
@@ -19,6 +19,12 @@
         <mat-error *ngIf="LoginForm.get('password').hasError('required')">Password obbligatoria</mat-error>
    </mat-form-field><br>
 
+
+   <div>
+    <button mat-button mat-raised-button color="warn" (click)="close()" class="btnAnnulla"> Annulla </button>
+    <button mat-button mat-raised-button color="primary" type = "submit" (click) = "login(email.value, password.value)"> Login </button>
+   </div>
+   <br/>
    <!--Register-->
     <div class="register"> Non sei registrato?
     <button mat-button mat-stroked-button (click)="openDialogRegister()">Registrati</button>
@@ -36,10 +42,3 @@
   <h3 id="error" style="color: red;">Username o password errati</h3>
 </div>
 </body>
-
-<mat-dialog-actions>
-  <button mat-button mat-raised-button color="warn" (click)="close()"> Annulla </button>
-  <button mat-button mat-raised-button color="primary" ngEnter="login(email.value, password.value)"(click)="login(email.value, password.value)"> Login </button>
-</mat-dialog-actions>
-<br>
-

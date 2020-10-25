@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.authService.userLogged.subscribe(
       (data) => {
         if (data == true) {
-          //this.askLoginVisibility = false;
+          this.askLoginVisibility = false;
 
           if(this.studentService.currentStudent != null){
               this.name = this.studentService.currentStudent.name;
@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
            }
         }
         else {
-          //this.askLoginVisibility = true;
+          this.askLoginVisibility = true;
         }
       },
       (error) => {

@@ -1,15 +1,15 @@
 <!--Non appartieni a un gruppo e non ha richieste-->
-<mat-card class="card" *ngIf="!myPropVisibility && lengthProposals == 0 && (lengthMembers == 0 || team == null)">
+<mat-card class="card" *ngIf="!myPropVisibility && (lengthMembers == 0 || team == null)">
   <mat-card-header>
-     <mat-card-title>Non è stato trovato alcun gruppo e richieste</mat-card-title>
-     <mat-card-subtitle>Crea un nuovo gruppo e Invia le richieste ai tuoi colleghi</mat-card-subtitle>
+     <mat-card-title>Non fai parte di nessun gruppo</mat-card-title>
+     <mat-card-subtitle>Crea un nuovo gruppo e invia le richieste ai tuoi colleghi</mat-card-subtitle>
    </mat-card-header>
    <!-- Bottone Composizione gruppo -->
-<div class="button-request" align="center">
-  <button mat-raised-button color="primary" (click)="openRequestDialog()" >
-     <mat-icon>playlist_add</mat-icon>
-     Nuovo gruppo</button>
- </div>
+  <div class="button-request" align="center">
+    <button mat-raised-button color="primary" (click)="openRequestDialog()" >
+      <mat-icon>playlist_add</mat-icon>
+      Nuovo gruppo</button>
+  </div>
 </mat-card>
 
 <!--Le mie Prposte-->

@@ -16,20 +16,8 @@
             <mat-error *ngIf="EditCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero minimo di membri</mat-error>
             <mat-error *ngIf="EditCourseForm.get('min_iscrizioni').hasError('min')">Un gruppo non può avere meno di 2 membri</mat-error>
             <mat-error *ngIf="EditCourseForm.get('min_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
-        </mat-form-field><br>
-
-        <!--Aggiunta Professore-->
-        <mat-form-field>
-            <input #input type="search" placeholder="Aggiungi professore" matInput [formControl]="myControl" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onTeacherSelected($event.option.value)">
-            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                {{option.name}} {{option.firstName}} ({{option.id}})
-            </mat-option>
-            </mat-autocomplete>
-        </mat-form-field>
-        <button mat-mini-fab color="primary" (click)="addTeacher()">
-            <mat-icon>add</mat-icon>
-        </button>
+        </mat-form-field><br><br>
+        <h3>Professori del corso</h3>
          <!--Tabella Docenti del Corso-->
         <div class="tableContainer" *ngIf="tableVisibility"> 
             <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
@@ -56,7 +44,19 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
             </table>
-        </div>
+        </div><br>
+        <!--Aggiunta Professore-->
+        <mat-form-field>
+            <input #input type="search" placeholder="Aggiungi professore" matInput [formControl]="myControl" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onTeacherSelected($event.option.value)">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                {{option.name}} {{option.firstName}} ({{option.id}})
+            </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <button mat-mini-fab color="primary" (click)="addTeacher()">
+            <mat-icon>add</mat-icon>
+        </button>
     </form>
     <br>
     <div class="actions">

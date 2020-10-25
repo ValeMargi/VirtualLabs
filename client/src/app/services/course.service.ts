@@ -58,7 +58,7 @@ export class CourseService {
   }
 
   addProfessorsToCourse(courseName: string, teachersId: string[]) {
-    return this.http.post<Teacher[]>(`${this.API_COURSES}/${courseName}/addProfessor`, teachersId);
+    return this.http.post<Teacher[]>(`${this.API_COURSES}/${courseName}/addProfessors`, teachersId);
   }
 
   enrollOne(courseName: string, studentId: string) {

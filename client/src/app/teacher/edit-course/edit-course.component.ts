@@ -30,6 +30,7 @@ export class EditCourseComponent implements OnInit, OnChanges {
   @Input() course: Course;
   @Output('enable') enable = new EventEmitter<void>();
   @Output('delete') delete = new EventEmitter<void>();
+  @Output('add') add = new EventEmitter<string[]>();
   @Output('edit') edit = new EventEmitter<any>();
 
   constructor(private matDialogRef: MatDialogRef<EditCourseComponent>,
@@ -129,6 +130,10 @@ export class EditCourseComponent implements OnInit, OnChanges {
   }
 
   editCourse(min: number, max: number) {
+    if (this.teachersToAdd.length > 0) {
+      this.add.emit(this.teachersToAdd.map(t => t.id));
+    }
+
     if (this.EditCourseForm.valid) {
       this.edit.emit({min: min, max: max});
     }

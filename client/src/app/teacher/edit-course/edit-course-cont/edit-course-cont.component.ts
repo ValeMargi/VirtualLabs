@@ -87,7 +87,20 @@ export class EditCourseContComponent implements OnInit {
       (error) => {
         window.alert("Errore nell'eliminazione del corso");
       }
-    )
+    );
+  }
+
+  addTeachers(teachers: string[]) {
+    this.courseService.addProfessorsToCourse(this.COURSE.name, teachers).subscribe(
+      (data) => {
+        if (data.length != teachers.length) {
+          window.alert("Alcuni professori non sono stati aggiunti");
+        }
+      },
+      (error) => {
+        window.alert("Errore aggiunta professori al corso");
+      }
+    );
   }
 
   editCourse(content: any) {

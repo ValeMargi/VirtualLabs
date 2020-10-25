@@ -57,6 +57,9 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   courses: Course[] = [];
   route$: Subscription;
 
+  name: string;
+  firstName: string;
+
   LoginSuccess: boolean = false;
 
   constructor(private matDialog: MatDialog,
@@ -98,10 +101,14 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     });
 
+    this.getUserName();
+
   }
 
   ngOnInit() {
     this.role = localStorage.getItem("role");
+
+    this.getUserName();
 
     if (this.router.url == "") {
       this.notFoundVisibility = true;
@@ -192,6 +199,31 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.route$.unsubscribe();
+  }
+
+  getUserName(){
+    this.authService.userLogged.subscribe(
+      (data) => {
+        if (data == true) {
+          //this.askLoginVisibility = false;
+
+          if(this.studentService.currentStudent != null){
+              this.name = this.studentService.currentStudent.name;
+              this.firstName = this.studentService.currentStudent.firstName;
+
+          }else if(this.teacherService.currentTeacher != null){
+              this.name = this.teacherService.currentTeacher.name;
+              this.firstName = this.teacherService.currentTeacher.firstName;
+           }
+        }
+        else {
+          //this.askLoginVisibility = true;
+        }
+      },
+      (error) => {
+
+      }
+    );
   }
 
   setCourses() {

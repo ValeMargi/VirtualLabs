@@ -48,6 +48,8 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   propsVisibility: boolean = false;
   myPropVisibility: boolean = false;
 
+  invitati: String[] = [];
+
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
@@ -87,6 +89,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
     if (changes.proposals != null) {
       this.proposals = changes.proposals.currentValue;
+      this.getInvitations();
 
       if (this.proposals != null) {
         this.setTableProposals();
@@ -102,17 +105,24 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     let text: string = '';
 
     this.myProposal.students.forEach(s => {
-      text += "- " + s.student + " -> ";
+      text += "[  " + s.student + " ➥ ";
 
       if (s.status == true) {
-        text += "Richiesta accettata <br/>";
+        text += "Richiesta accettata],";
       }
       else {
-        text += "In attesa di risposta <br/> ";
+        text += "In attesa di risposta], ";
       }
     });
 
-    return text;
+    let splitext = text.split(",");
+
+    splitext.forEach(element => {
+      this.invitati.push(element);
+    });
+
+
+    return this.invitati;
   }
 
   setTableProposals() {

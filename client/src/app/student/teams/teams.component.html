@@ -12,15 +12,22 @@
  </div>
 </mat-card>
 
+<!--Le mie Prposte-->
 <mat-card class="card" *ngIf="myPropVisibility">
   <mat-card-header>
       <mat-card-title>Le mie proposte</mat-card-title>
       <mat-card-subtitle>Il tuo team sarà creato non appena tutti gli invitati avranno accettato la proposta</mat-card-subtitle>
   </mat-card-header>
 
-  <mat-card-content>
-    Nome del tuo team: {{myProposal.teamName}}; <br>
-    Invitati nel team: <br>{{getInvitations()}}
+  <mat-card-content class="contMyProp">
+
+    <mat-card class="myProposal">
+      <mat-card-header>
+        <mat-card-title> <strong> ► Nome del tuo team:</strong> {{myProposal.teamName}} </mat-card-title>
+        <mat-card-subtitle> <strong>Invitati nel team:</strong> {{getInvitations()}}</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+
   </mat-card-content>
 </mat-card>
 

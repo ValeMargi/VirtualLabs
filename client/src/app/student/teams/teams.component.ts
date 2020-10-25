@@ -105,10 +105,10 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
       text += "- " + s.student + " -> ";
 
       if (s.status == true) {
-        text += "Richiesta accettata <br>";
+        text += "Richiesta accettata <br/>";
       }
       else {
-        text += "In attesa di risposta <br>";
+        text += "In attesa di risposta <br/> ";
       }
     });
 

@@ -1,15 +1,15 @@
 <h2 mat-dialog-title>Inserisci elaborato</h2>
 
-<mat-dialog-content>
+  <mat-dialog-content>
+    <!--File-->
+    <input type="file" #file (change)="addVersionImage($event)" [formControl] = "form.file" accept="image/*" required>
+    <mat-error *ngIf="form.file.invalid">{{getErrorMessage()}}</mat-error>
 
-         <!--File-->
-        <input type="file" #file (change)="addVersionImage($event)" [formControl] = "form.file" accept="image/*" required>
-        <mat-error *ngIf="form.file.invalid">{{getErrorMessage()}}</mat-error>
+  </mat-dialog-content><br>
 
-</mat-dialog-content>
-<br>
-<mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
-<mat-dialog-actions>
-    <button mat-button mat-raised-button color="accent" (click)="close()">Annulla</button>
-    <button mat-button mat-raised-button color="primary" (click)="addVersion()">Inserisci</button>
-</mat-dialog-actions>
+  <mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
+
+  <mat-dialog-actions>
+      <button mat-button mat-raised-button color="accent" (click)="close()">Annulla</button>
+      <button mat-button mat-raised-button color="primary" (click)="addVersion()">Inserisci</button>
+  </mat-dialog-actions>

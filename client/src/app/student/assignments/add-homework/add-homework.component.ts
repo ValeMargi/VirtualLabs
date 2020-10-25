@@ -1,6 +1,6 @@
 import { Homework } from './../../../models/homework.model';
 import { HomeworkVersion } from './../../../models/homework-version.model';
-import { Component,OnInit,AfterViewInit, Output, EventEmitter, Input, OnChanges, SimpleChanges} from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges} from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 @Component({
@@ -8,10 +8,10 @@ import { FormControl, Validators } from '@angular/forms';
   templateUrl: './add-homework.component.html',
   styleUrls: ['./add-homework.component.css']
 })
-export class AddHomeworkComponent implements OnInit, AfterViewInit, OnChanges {
+export class AddHomeworkComponent implements OnChanges {
   Version: HomeworkVersion[];
   selectedPhoto: File;
-  
+
   @Input() querying: boolean;
   @Output('create') create = new EventEmitter<File>();
 
@@ -29,13 +29,6 @@ export class AddHomeworkComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   constructor(private matDialogRef: MatDialogRef<AddHomeworkComponent>) { }
-  ngAfterViewInit() {}
-
-  ngOnInit(): void {
-    //this.currentDate = new Date();
-    //this.oneWeek = new Date(this.currentDate);
-    //this.oneWeek.setDate(this.oneWeek.getDate() + 7);
-  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.querying != undefined) {

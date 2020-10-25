@@ -24,8 +24,11 @@
     <mat-card class="myProposal">
       <mat-card-header>
         <mat-card-title> <strong> ► Nome del tuo team:</strong> {{myProposal.teamName}} </mat-card-title>
-        <div *ngFor="let item of invitati"> <strong>Invitati nel team:</strong> {{item}} <br></div>
+
       </mat-card-header>
+
+      <strong>Invitati nel team:</strong> 
+      <div *ngFor="let item of invitati">{{item}} <br></div>
     </mat-card>
 
   </mat-card-content>

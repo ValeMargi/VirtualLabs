@@ -39,7 +39,7 @@
 
 <mat-dialog-actions>
   <button mat-button mat-raised-button color="warn" (click)="close()"> Annulla </button>
-  <button mat-button mat-raised-button color="primary" ngEnter="login(email, password)"(click)="login(email, password)"> Login </button>
+  <button mat-button mat-raised-button color="primary" ngEnter="login(email.value, password.value)"(click)="login(email.value, password.value)"> Login </button>
 </mat-dialog-actions>
 <br>
 

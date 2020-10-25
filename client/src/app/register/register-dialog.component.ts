@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { LoginDialogComponent } from '../login/login-dialog.component';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { LoginContComponent } from '../login/login-cont/login-cont.component';
+import { Md5 } from 'ts-md5/dist/md5';
 
 
 @Component({
@@ -17,6 +18,9 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
   RegisterForm: FormGroup;
   selectedPhoto: File;
   previewPhoto: any;
+
+  private md5: Md5;
+
   @Input() querying: boolean;
 
   @Output('register') reg = new EventEmitter<any>(); 
@@ -24,8 +28,8 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
   constructor( 
     public matDialog: MatDialog, 
     public authService: AuthService, 
-    private dialogRef: MatDialogRef<RegisterDialogComponent>, 
-    private router: Router, 
+    private dialogRef: MatDialogRef<RegisterDialogComponent>,
+    private router: Router,
     private formBuilder: FormBuilder) {
 
     authService.userLogged.subscribe(ok => {
@@ -44,8 +48,8 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
       surname : new FormControl('', [Validators.required]),
       id : new FormControl('', [Validators.required]),
       email: new FormControl('',[Validators.email,this.emailDomainValidator]),
-      password: ['', [Validators.required,Validators.minLength(8)]],
-      confirmPassword: ['',[Validators.minLength(8)]],
+      password: ['', [Validators.required,Validators.minLength(8), Validators.maxLength(20)]],
+      confirmPassword: ['',[Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
     }, { validator: this.checkPasswords });
 
 }
@@ -111,12 +115,18 @@ register(firstName: string, name: string, id: string, email: string, password: s
     window.alert("Formato immagine non supportato");
     return;
   }
+  else if (!this.RegisterForm.valid) {
+    window.alert("Controllare che i dati inseriti rispettino tutti i vincoli e riprovare");
+    return;
+  }
+
+  this.md5 = new Md5();
 
   let userJson = { "firstName": firstName,
                   "name": name, 
                   "id": id.toLowerCase(), 
                   "email": email.toLowerCase(), 
-                  "password": password 
+                  "password": this.md5.start().appendStr(password).end().toString() 
                 };
 
   this.reg.emit({image: image, userJson: userJson});

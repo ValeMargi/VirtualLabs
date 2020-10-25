@@ -48,6 +48,7 @@
       <input #password type="password" placeholder="Password" formControlName="password" matInput required minlength="8">
       <mat-error *ngIf="RegisterForm.hasError('required', 'password')">Inserisci una password</mat-error>
       <mat-error *ngIf="RegisterForm.hasError('minlength','password')">Inserisci almeno 8 caratteri</mat-error>
+      <mat-error *ngIf="RegisterForm.hasError('maxlength','password')">Inserisci non più di 20 caratteri</mat-error>
       </mat-form-field><br>
 
       <!--ConfirmPassword-->
@@ -55,6 +56,7 @@
       <input #passwordRepeat type="password" placeholder="Ripeti password" formControlName="confirmPassword" matInput required minlength="8">
       <mat-error *ngIf="RegisterForm.hasError('notSame')"> Le due password non coincidono</mat-error>  
       <mat-error *ngIf="RegisterForm.get('confirmPassword').hasError('minlength')">Inserisci almeno 8 caratteri</mat-error>
+      <mat-error *ngIf="RegisterForm.get('confirmPassword').hasError('maxlength')">Inserisci non più di 20 caratteri</mat-error>
       </mat-form-field><br>
 
     </form>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
+import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
   selector: 'app-login-cont',
@@ -8,16 +9,20 @@ import { AuthService } from 'src/app/auth/auth.service';
 })
 export class LoginContComponent implements OnInit {
 
+  private md5: Md5;
+
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
   }
 
   login(content: any) {
-    let email = content.email;
-    let password = content.password;
+    let email: string = content.email;
+    let password: string = content.password;
 
-    this.authService.login(email.value.toString(), password.value.toString());
+    this.md5 = new Md5();
+
+    this.authService.login(email, this.md5.start().appendStr(password).end().toString());
     
   }
 

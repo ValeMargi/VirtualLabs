@@ -41,7 +41,7 @@ error: boolean = false;
 
       this.LoginForm = this.formBuilder.group({
         email: new FormControl('',[Validators.email,this.emailDomainValidator]),
-        password: ['', [Validators.required,Validators.minLength(8)]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
       });
   
   }
@@ -53,9 +53,9 @@ error: boolean = false;
       this.dialogRef.close();
   }
 
-  login(email, password) {
-    if (email.value.toString().length == 0 || password.value.toString().length == 0) {
-      this.error = true;
+  login(email: string, password:string) {
+    if (!this.LoginForm.valid) {
+      window.alert("Controllare che i dati inseriti siano validi e riprovare");
     }
     else {
       this.log.emit({email: email, password: password});

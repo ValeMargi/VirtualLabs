@@ -1,28 +1,28 @@
 <h1 mat-dialog-title><strong>Composizione Gruppo</strong></h1>
 <mat-dialog-content class="mat-typography" >
+  <form [formGroup]="CreateTeamForm">
+    <!--Nome Gruppo-->
+    <mat-form-field class="gruppo">
+          <mat-label>Gruppo</mat-label>
+          <mat-icon matSuffix>group</mat-icon>
+          <input #nameTeam matInput required formControlName="name" placeholder="Nome gruppo" required>
+          <mat-error *ngIf="CreateTeamForm.get('name').hasError('required')">Inserisci un nome per il gruppo</mat-error>
+    </mat-form-field><br>
 
-      <!--Nome Gruppo-->
-      <mat-form-field class="gruppo">
-            <mat-label>Gruppo</mat-label>
-            <mat-icon matSuffix>group</mat-icon>
-            <input #nameTeam matInput required [formControl]="form.name" placeholder="Nome gruppo" required>
-            <mat-error *ngIf="form.name.invalid">{{getErrorMessage()}}</mat-error>
-      </mat-form-field><br>
+    <!--Durata Richieste-->
+    <mat-form-field class="data">
+      <mat-select #timeout placeholder="Durata richieste" formControlName="date" [(value)]="defaultTimeout" required>
+        <mat-option [value]="option.value" *ngFor="let option of timeouts">{{ option.viewValue }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="CreateTeamForm.get('date').hasError('required')">Seleziona un timeout richiesta</mat-error>
+    </mat-form-field> <br>
 
-      <!--Durata Richieste-->
-      <mat-form-field class="data">
-        <mat-select #timeout placeholder="Durata richieste" [formControl]="form.date" [(value)]="defaultTimeout" required>
-          <mat-option [value]="option.value" *ngFor="let option of timeouts">{{ option.viewValue }}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="form.date.invalid">{{getErrorMessage()}}</mat-error>
-      </mat-form-field> <br>
-
-      <mat-form-field class="gruppo">
-        <mat-label>Inserire le matricole degli invitati separate da una virgola</mat-label>
-        <input #members matInput required [formControl]="form.name" placeholder="Matricole" required>
-        <mat-error *ngIf="form.name.invalid">{{getErrorMessage()}}</mat-error>
-      </mat-form-field><br>
-      
+    <mat-form-field class="gruppo">
+      <mat-label>Inserire le matricole degli invitati separate da una virgola</mat-label>
+      <input #members matInput required formControlName="members" placeholder="Matricole" required>
+      <mat-error *ngIf="CreateTeamForm.get('members').hasError('required')">Inserisci le matricole degli invitati separate da una virgola</mat-error>
+    </mat-form-field><br>
+  </form>
 </mat-dialog-content>
 
 

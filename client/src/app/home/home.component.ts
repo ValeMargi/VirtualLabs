@@ -28,6 +28,21 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.askLoginVisibility = true;
     }
 
+    this.authService.userLogged.subscribe(
+      (data) => {
+        if (data == true) {
+          this.askLoginVisibility = false;
+          //Alex scrivi qua
+        }
+        else {
+          this.askLoginVisibility = true;
+        }
+      },
+      (error) => {
+
+      }
+    );
+
     this.route$ = this.route.queryParams.subscribe(params => {
       let login = params['doLogin'];
 
@@ -42,7 +57,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    //dialogConfig.height = '70%';
 
     dialogConfig.data = {
         id: 1,

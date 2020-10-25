@@ -28,15 +28,13 @@ export class AuthService {
   }
   
   login(email: string, password: string) {
-    //console.log(email);
-    //console.log(password);
     this.http.post(`http://localhost:8080/login`,{
         "username": email,
         "password": password
       }
     ).subscribe(
       (authResult: any) => {
-        this.setSession(authResult, email, password);
+        this.setSession(authResult);
         shareReplay();
       },
       (error: any) => {
@@ -46,14 +44,9 @@ export class AuthService {
 
   }
 
-  private setSession(authResult, email, password) {
-    console.log("Loggato")
-    //console.log(JSON.stringify(authResult));
+  private setSession(authResult) {
     const tkn = JSON.parse(atob(authResult.token.split('.')[1]));
-    //console.log(atob(authResult.token.split('.')[1]));
-    //console.log(authResult.token);
     let token = jwt_decode(authResult.token);
-    console.log(token);
 
     let role = token.role;
 

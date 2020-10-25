@@ -128,8 +128,8 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
           this.studentService.getOne(localStorage.getItem('currentId')).subscribe(
             (data) => {
-              console.log("ottenuto studente");
               this.studentService.currentStudent = data.student;
+              this.authService.userLogged.emit(true);
               this.setCourses();
             },
             (error) => {
@@ -142,8 +142,8 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
           this.teacherService.getOne(localStorage.getItem('currentId')).subscribe(
             (data) => {
-              console.log("ottenuto prof");
               this.teacherService.currentTeacher = data.professor;
+              this.authService.userLogged.emit(true);
               this.setCourses();
             },
             (error) => {

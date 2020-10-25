@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthService } from 'src/app/auth/auth.service';
+import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
   selector: 'app-change-password-cont',
@@ -12,11 +13,12 @@ export class ChangePasswordContComponent implements OnInit, OnDestroy {
 
   private route$: Subscription;
   private token: string;
+  private md5: Md5;
 
   OK: boolean = false;
   ERROR: boolean = false;
   MSG: string;
-  
+
   constructor(private authService: AuthService,
               private route: ActivatedRoute) { }
 
@@ -45,9 +47,9 @@ export class ChangePasswordContComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log(password)
+    this.md5 = new Md5();
 
-    this.authService.savePassword(this.token, password).subscribe(
+    this.authService.savePassword(this.token, this.md5.start().appendStr(password).end().toString()).subscribe(
       (data) => {
         if (data) {
           this.OK = true;

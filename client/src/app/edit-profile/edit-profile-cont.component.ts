@@ -2,6 +2,7 @@ import { Component, OnInit, Output } from '@angular/core';
 import { TeacherService } from '../services/teacher.service';
 import { StudentService } from '../services/student.service';
 import { AuthService } from '../auth/auth.service';
+import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
   selector: 'app-edit-profile-cont',
@@ -10,19 +11,21 @@ import { AuthService } from '../auth/auth.service';
 })
 export class EditProfileContComponent implements OnInit {
 
+  private md5: Md5;
+
   @Output() CURRENT_USER: any;
   @Output() CURRENT_AVATAR: any;
   @Output() QUERYING: boolean = false;
   @Output() AVATAR_OK: boolean = false;
   @Output() PWD_OK: boolean = false;
 
-  constructor(private authService: AuthService, 
+  constructor(private authService: AuthService,
               private teacherService: TeacherService,
               private studentService: StudentService) { }
 
   ngOnInit() {
     this.CURRENT_USER = this.authService.getUserByRole();
-  
+
     let id = localStorage.getItem('currentId');
 
     if (this.authService.currentUser.role == "student") {
@@ -71,8 +74,11 @@ export class EditProfileContComponent implements OnInit {
     this.PWD_OK = false;
     let oldPassword: string = content.oldPassword;
     let newPassword: string = content.newPassword;
-    
-    this.authService.changeUserPassword(oldPassword, newPassword).subscribe(
+
+    this.md5 = new Md5();
+
+    this.authService.changeUserPassword(this.md5.start().appendStr(oldPassword).end().toString(),
+      this.md5.start().appendStr(newPassword).end().toString()).subscribe(
       (data) => {
         if (data == false) {
           window.alert("Errore nel cambio password, si prega di riprovare");

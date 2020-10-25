@@ -58,25 +58,19 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   constructor() {}
 
   ngAfterViewInit(): void {
-
+    
   }
 
   ngOnInit() {
-    //this.manageTableVisibility();
     this.setTable();
     this.studentToAdd = null;
-    //this.selectedStudents.clear();
-
-    this.filteredOptions = this.myControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value.name),
-        map(value => this._filter(value)));
+    this.setupFilter();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.students != null) {
       this.students = changes.students.currentValue;
+      this.setupFilter();
     }
 
     if (changes.options != null) {
@@ -103,10 +97,19 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
     this.length = this.students.length;
   }
 
+  setupFilter() {
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(value => this._filter(value)));
+  }
+
   private _filter(value: string): Student[] {
     const filterValue = value.toLowerCase();
 
     return this.options.filter(option =>
+      (!this.students.map(s => s.id).includes(option.id)) &&
       (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
   }
 
@@ -171,8 +174,10 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
           add = false;
       });
 
-      if (add)
+      if (add) {
         this.toInsert.emit(this.studentToAdd);
+        this.myControl.reset("");
+      }
     }
   }
 
@@ -188,7 +193,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   displayFn(student: Student) {
-    if (student != null)
+    if (student != null && student.name != null)
       return student.name.concat(" ", student.firstName, " (", student.id, ")");
     else
       return "";

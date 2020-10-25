@@ -89,10 +89,12 @@ export class StudentsContComponent implements OnInit {
         this.STUDENTS_ENROLLED = new Array();
 
         data.forEach(student => {
-          array.splice(array.indexOf(student));
+          array.forEach(s => {
+            if (student.id != s.id) {
+              this.STUDENTS_ENROLLED.push(s);
+            }
+          });
         });
-
-        array.forEach(s => this.STUDENTS_ENROLLED.push(s));
       },
       (error) => { 
         window.alert("Rimozione studenti non avvenuta");

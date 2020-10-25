@@ -26,7 +26,7 @@
     <input #hiddenfileinput class="inputfile" type="file" accept=".csv" (change)="addStudentCSV($event)">
     <button class="button" color="primary" mat-button mat-raised-button [disabled]="addDisabled" (click)="addStudent()">Aggiungi</button>
     <button class="button" color="primary" mat-button mat-raised-button (click)="hiddenfileinput.click()">Aggiungi da CSV</button>
-    <button class="button" color="primary" mat-button mat-raised-button (click)="deleteStudent()">
+    <button class="button" color="primary" mat-button mat-raised-button [disabled]="selectedStudents.selected.length == 0" (click)="deleteStudent()">
         <mat-icon>delete</mat-icon>
     </button>
   </form>

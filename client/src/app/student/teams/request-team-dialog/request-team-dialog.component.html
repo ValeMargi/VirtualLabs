@@ -11,11 +11,10 @@
 
       <!--Durata Richieste-->
       <mat-form-field class="data">
-        <mat-select #timeout required placeholder="Durata richieste" [formControl]="form.date" required>
-            <mat-option value="7">1 settimana</mat-option>
-            <mat-option value="14">2 settimana</mat-option>
-          </mat-select>
-          <mat-error *ngIf="form.date.invalid">{{getErrorMessage()}}</mat-error>
+        <mat-select #timeout placeholder="Durata richieste" [formControl]="form.date" [(value)]="defaultTimeout" required>
+          <mat-option [value]="option.value" *ngFor="let option of timeouts">{{ option.viewValue }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.date.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field> <br>
 
       <mat-form-field class="gruppo">

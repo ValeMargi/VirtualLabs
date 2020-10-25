@@ -8,6 +8,13 @@ import * as moment from 'moment';
 })
 export class RequestTeamDialogComponent implements OnInit{
 
+  timeouts = [
+    {value: "7", viewValue: "1 settimana"},
+    {value: "14", viewValue: "2 settimane"}
+  ];
+
+  defaultTimeout= this.timeouts[0].value;
+
   @Output('propose') propose = new EventEmitter<any>();
 
   form = {
@@ -30,7 +37,13 @@ export class RequestTeamDialogComponent implements OnInit{
 
   proposeTeam(nameTeam: string, days: string, members: string) {
     let timeout: string = moment(new Date().setDate(new Date().getDate() + Number.parseInt(days))).format("YYYY-MM-DD HH:mm:ss.SSS");
-    let membersId: string[] = members.split(",");
+    let membersToTrim: string[] = members.split(",");
+    let membersId: string[] = [];
+
+    membersToTrim.forEach(m => {
+      membersId.push(m.trim());
+    });
+    
     this.propose.emit({teamName: nameTeam, timeout: timeout, membersId: membersId});
   }
 

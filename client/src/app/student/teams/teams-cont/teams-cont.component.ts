@@ -40,7 +40,7 @@ export class TeamsContComponent implements OnInit, OnDestroy {
             this.membersInTeam();
           }
           else {
-            this.getProposals;
+            this.getProposals();
           }
         }
       );
@@ -74,7 +74,6 @@ export class TeamsContComponent implements OnInit, OnDestroy {
   }
 
   acceptProposal(token: string) {
-    console.log(token)
     this.teamService.confirm(token).subscribe(
       (data) => {
         switch(data) {

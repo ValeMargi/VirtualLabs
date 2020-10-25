@@ -9,6 +9,7 @@ import {MatDialog} from '@angular/material/dialog';
 import { RequestTeamDialogContComponent } from './request-team-dialog/request-team-dialog-cont/request-team-dialog-cont.component';
 import { Proposal } from 'src/app/models/proposal.model';
 import { Student } from 'src/app/models/student.model';
+import { strict } from 'assert';
 
 @Component({
   selector: 'app-teams',
@@ -30,6 +31,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   displayedColumnsRequest: string[] = ['teamName', 'creator', 'students', 'choice'];
   dataSourceProposals = new MatTableDataSource<Proposal>();
   tableRequestVisibility:boolean = true;
+  myProposal: Proposal;
 
   @Input() public team: Team;
   @Input() public proposals: Proposal[] = [];
@@ -42,6 +44,9 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   lengthProposals: number = 0;
   lengthMembers: number = 0;
   teamName: string;
+
+  propsVisibility: boolean = false;
+  myPropVisibility: boolean = false;
 
   length = 5;
   pageSize = 5;
@@ -89,11 +94,46 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     }
   }
 
+  getInvitations() {
+    if (this.myProposal == null) {
+      return '';
+    }
+
+    let text: string = '';
+
+    this.myProposal.students.forEach(s => {
+      text += "- " + s.student + " -> ";
+
+      if (s.status == true) {
+        text += "Richiesta accettata <br>";
+      }
+      else {
+        text += "In attesa di risposta <br>";
+      }
+    });
+
+    return text;
+  }
+
   setTableProposals() {
-    this.dataSourceProposals = new MatTableDataSource<Proposal>(this.proposals);
+    const props: Proposal[] = [];
+    this.myPropVisibility = false;
+
+    this.proposals.forEach(p => {
+      if (p.status) {
+        this.myProposal = p;
+        this.myPropVisibility = true;
+      }
+      else {
+        props.push(p);
+        this.propsVisibility = true;
+      }
+    });
+
+    this.dataSourceProposals = new MatTableDataSource<Proposal>(props);
     this.dataSourceProposals.paginator = this.paginator;
     this.dataSourceProposals.sort = this.sort;
-    this.lengthProposals = this.proposals.length;
+    this.lengthProposals = props.length;
   }
 
   setTableTeam(){

@@ -105,13 +105,13 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     let text: string = '';
 
     this.myProposal.students.forEach(s => {
-      text += "[  " + s.student + " ➥ ";
+      text += s.student + " ➥ ";
 
       if (s.status == true) {
         text += "Richiesta accettata],";
       }
       else {
-        text += "In attesa di risposta], ";
+        text += "In attesa di risposta, ";
       }
     });
 

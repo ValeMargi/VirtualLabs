@@ -37,8 +37,8 @@ export class EditCourseComponent implements OnInit, OnChanges {
               private formBuilder: FormBuilder) { 
 
     this.EditCourseForm = this.formBuilder.group({
-      max_iscrizioni : new FormControl('', [Validators.required, Validators.min(2), Validators.max(10)]),
-      min_iscrizioni : new FormControl('', [Validators.required, Validators.min(2), Validators.max(10)]),
+      max_iscrizioni : new FormControl('', [Validators.required, Validators.min(1), Validators.max(10)]),
+      min_iscrizioni : new FormControl('', [Validators.required, Validators.min(1), Validators.max(10)]),
     });
   }
 

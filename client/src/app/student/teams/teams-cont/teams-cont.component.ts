@@ -32,23 +32,44 @@ export class TeamsContComponent implements OnInit, OnDestroy {
       this.PROPOSALS = [];
       this.MEMBERS = [];
 
-      this.teamService.getTeamForStudent(courseName, this.studentService.currentStudent.id).subscribe(
-        (data) =>{
-          this.TEAM = data;
+      this.getTeam(courseName);
 
-          if (this.TEAM != null) {
-            this.membersInTeam();
-          }
-          else {
-            this.getProposals();
-          }
+      this.teamService.proposal.subscribe(
+        (data) => {
+          let array: Proposal[] = this.PROPOSALS;
+          this.PROPOSALS = new Array();
+          array.push(data);
+
+          array.forEach(prop => {
+            this.PROPOSALS.push(prop);
+          });
+        },
+        (error) => {
+
         }
-      );
+      )
     });
   }
 
   ngOnDestroy() {
     this.route$.unsubscribe();
+  }
+
+  getTeam(courseName: string) {
+    let studentId: string = localStorage.getItem('currentId');
+
+    this.teamService.getTeamForStudent(courseName, studentId).subscribe(
+      (data) =>{
+        this.TEAM = data;
+
+        if (this.TEAM != null) {
+          this.membersInTeam();
+        }
+        else {
+          this.getProposals();
+        }
+      }
+    );
   }
 
   membersInTeam() {
@@ -82,12 +103,12 @@ export class TeamsContComponent implements OnInit, OnDestroy {
             break;
           }
           case 1: {
-            window.alert("Richiesta accettata con successo. Attendere gli altri membri");
-            this.PROPOSALS = new Array();
+            this.getProposals();
             break;
           }
           case 2: {
             this.PROPOSALS = new Array();
+            this.getTeam(this.route.snapshot.params.courses);
             break;
           }
         }
@@ -107,8 +128,7 @@ export class TeamsContComponent implements OnInit, OnDestroy {
             break;
           }
           case 1: {
-            window.alert("Richiesta rifiutata con successo");
-            this.PROPOSALS = new Array();
+            this.getProposals();
             break;
           }
         }

@@ -40,8 +40,8 @@ export class AddCourseDialogComponent implements OnInit {
       this.AddCourseForm = this.formBuilder.group({
         name : new FormControl('', [Validators.required, Validators.minLength(3)]),
         acronym : new FormControl('', [Validators.required, Validators.minLength(2)]),
-        max_iscrizioni : new FormControl('', [Validators.required, Validators.min(2), Validators.max(10)]),
-        min_iscrizioni : new FormControl('', [Validators.required, Validators.min(2), Validators.max(10)]),
+        max_iscrizioni : new FormControl('', [Validators.required, Validators.min(1), Validators.max(10)]),
+        min_iscrizioni : new FormControl('', [Validators.required, Validators.min(1), Validators.max(10)]),
       });
 
       this.AddCourseForm.setValue({

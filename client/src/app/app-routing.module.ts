@@ -31,7 +31,6 @@ import { ChangePasswordContComponent } from './change-password/change-password-c
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'home?doLogin=true', component: HomeComponent },
   { path: 'page-not-found', component: PageNotFoundComponent },
   { path: 'register/:success/:token', component: RegisterSuccessComponent },
   { path: 'team/:success/:token', component: TeamPartecipationComponent },

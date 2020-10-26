@@ -15,19 +15,55 @@
         <mat-option [value]="option.value" *ngFor="let option of timeouts">{{ option.viewValue }}</mat-option>
       </mat-select>
       <mat-error *ngIf="CreateTeamForm.get('date').hasError('required')">Seleziona un timeout richiesta</mat-error>
-    </mat-form-field> <br>
+    </mat-form-field> <br><br>
+    <!--<input #timeout type="date" placeholder="Scadenza richiesta" name="oneWeek" formControlName="date" [ngModel]="oneWeek | date:'yyyy-MM-dd'" matInput required>-->
 
     <mat-form-field class="gruppo">
-      <mat-label>Inserire le matricole degli invitati separate da una virgola</mat-label>
-      <input #members matInput required formControlName="members" placeholder="Matricole" required>
-      <mat-error *ngIf="CreateTeamForm.get('members').hasError('required')">Inserisci le matricole degli invitati separate da una virgola</mat-error>
-    </mat-form-field><br>
+      <mat-label>Questo corso accetta da {{min}} a {{max}} partecipanti per team</mat-label>
+      <input #input type="search" placeholder="Aggiungi partecipante" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onStudentSelected($event.option.value)">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+              {{option.name}} {{option.firstName}} ({{option.id}})
+          </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <button mat-mini-fab color="primary" (click)="addStudent()">
+      <mat-icon>add</mat-icon>
+    </button>
+    <div class="tableContainer" *ngIf="tableVisibility"> 
+        <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cognome </th>
+                <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="firstName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+                <td mat-cell *matCellDef="let row"> {{row.firstName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
+              <td mat-cell *matCellDef="let row"> 
+                <button mat-button class="delete" (click)=deleteStudent(row)>
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+          </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+    </div><br>
   </form>
 </mat-dialog-content>
 
+<mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
 
 <mat-dialog-actions>
-  <button mat-button mat-raised-button color="warn" mat-dialog-close>Anulla</button>
-  <button mat-button mat-raised-button color="primary" (click)="proposeTeam(nameTeam.value, timeout.value, members.value)" cdkFocusInitial>Crea</button>
+  <button mat-raised-button color="warn" mat-dialog-close>Anulla</button>
+  <button mat-raised-button color="primary" [disabled]="querying" (click)="proposeTeam(nameTeam.value, timeout.value)" cdkFocusInitial>Crea</button>
 </mat-dialog-actions>
 

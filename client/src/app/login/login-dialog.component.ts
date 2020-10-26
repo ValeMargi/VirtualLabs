@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, Injectable, Output, EventEmitter } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RegisterDialogComponent } from '../register/register-dialog.component';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import {ForgotPasswordComponent} from '../forgot-password/forgot-password.component'
@@ -25,6 +25,7 @@ error: boolean = false;
       public authService: AuthService,
       private dialogRef: MatDialogRef<LoginDialogComponent>,
       private router: Router,
+      private route: ActivatedRoute,
       private formBuilder: FormBuilder) {
 
       this.LoginForm = this.formBuilder.group({
@@ -37,9 +38,12 @@ error: boolean = false;
   ngOnInit() {
     this.authService.userLogged.subscribe(ok => {
         if (ok && this.authService.isLoggedIn()) {
-          close();
-          if (this.router.url == "/")
+          if (this.route.snapshot.queryParams['doLogin'] == "true") {
+            this.dialogRef.close();
+          }
+          else {
             this.router.navigateByUrl("home");
+          }
         }
         else {
           this.error = true;

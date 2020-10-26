@@ -48,7 +48,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   propsVisibility: boolean = false;
   myPropVisibility: boolean = false;
 
-  invitati: String[] = [];
+  invited: string[] = [];
 
   length = 5;
   pageSize = 5;
@@ -89,12 +89,16 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
     if (changes.proposals != null) {
       this.proposals = changes.proposals.currentValue;
-      this.myPropVisibility = true;
-      this.getInvitations();
 
       if (this.proposals != null) {
         this.setTableProposals();
       }
+      else {
+        this.propsVisibility = false;
+        this.myPropVisibility = false;
+      }
+
+      this.getInvitations();
     }
   }
 
@@ -103,32 +107,42 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
       return '';
     }
 
-    let text: string = '';
+    this.invited = [];
 
     this.myProposal.students.forEach(s => {
-      text += s.student + " ➥ ";
+      let text: string = '';
+      text = text.concat(s.student + " ➥ ");
 
       if (s.status == true) {
-        text += "Richiesta accettata],";
+        text = text.concat("Richiesta accettata");
       }
       else {
-        text += "In attesa di risposta, ";
+        text = text.concat("In attesa di risposta");
       }
+
+      this.invited.push(text);
     });
 
-    let splitext = text.split(",");
-
-    splitext.forEach(element => {
-      this.invitati.push(element);
-    });
-
-
-    return this.invitati;
+    return this.invited;
   }
 
   setTableProposals() {
     const props: Proposal[] = [];
-    this.myPropVisibility = false;
+    
+    if (this.proposals.length == 0) {
+      this.propsVisibility = false;
+      this.myPropVisibility = false;
+    }
+    else if (this.proposals.length == 1) {
+      if (this.proposals[0].status) {
+        this.myPropVisibility = true;
+        this.propsVisibility = false;
+      }
+      else {
+        this.myPropVisibility = false;
+        this.propsVisibility = true;
+      }
+    }
 
     this.proposals.forEach(p => {
       if (p.status) {
@@ -137,6 +151,11 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
         this.getInvitations();
       }
       else {
+        if (p.students.length == 0) {
+          p.students = new Array(1);
+          p.students[0] = {student: "(Nessun altro partecipante)"}
+        }
+
         props.push(p);
         this.propsVisibility = true;
       }

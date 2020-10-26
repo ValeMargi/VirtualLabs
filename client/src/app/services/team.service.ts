@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Team } from '../models/team.model';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
@@ -16,11 +16,12 @@ export class TeamService {
   constructor(private http: HttpClient) {}
 
   API_TEAMS = "http://localhost:8080/API/teams";
-  currentTeam: Team;
+
+  proposal: EventEmitter<Proposal> = new EventEmitter<Proposal>();
 
   proposeTeam(courseName: string, nameTeam: string, timeout: string, membersId: string[]) {
-    return this.http.post<Team>(`${this.API_TEAMS}/${courseName}/proposeTeam`, 
-    { "nameTeam": nameTeam, "timeout": timeout, "membersId": membersId });  
+    return this.http.post<Proposal>(`${this.API_TEAMS}/${courseName}/proposeTeam`,
+    { "nameTeam": nameTeam, "timeout": timeout, "membersId": membersId });
   }
 
   getProposals(courseName: string) {

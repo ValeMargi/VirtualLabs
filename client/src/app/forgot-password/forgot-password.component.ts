@@ -51,8 +51,8 @@ export class ForgotPasswordComponent implements OnInit, OnChanges {
     this.dialogRef.close();
   }
 
-  resetPassword(email) {
-    this.reset.emit(email);
+  resetPassword(id: string) {
+    this.reset.emit(id);
   }
 
 

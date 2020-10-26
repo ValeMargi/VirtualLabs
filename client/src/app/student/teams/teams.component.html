@@ -28,7 +28,7 @@
       </mat-card-header>
 
       <strong>Invitati nel team:</strong> 
-      <div *ngFor="let item of invitati">{{item}} <br></div>
+      <div *ngFor="let item of invited">{{item}} <br></div>
     </mat-card>
 
   </mat-card-content>
@@ -85,7 +85,7 @@
           </ng-container>
 
           <ng-container matColumnDef="students">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef> Studenti Invitati </th>
+            <th mat-header-cell mat-sort-header *matHeaderCellDef> Altri partecipanti </th>
             <td *matCellDef="let row">
               <ng-container *ngFor="let i of row.students">
                 ∎ {{i.student}}

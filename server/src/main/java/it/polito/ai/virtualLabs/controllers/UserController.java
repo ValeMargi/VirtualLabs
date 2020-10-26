@@ -64,7 +64,7 @@ public class UserController {
     PasswordResetTokenRepository passwordTokenRepository;
 
     @PostMapping("/addUser")
-    public Optional<UserDTO> registerUser(@RequestPart("file") @Valid @NotNull MultipartFile file, @RequestPart("registerData") Map<String, String> registerData) throws IOException {
+    public Optional<UserDTO> registerUser(@RequestPart("file") @Valid @NotNull MultipartFile file, @Valid @RequestPart("registerData") Map<String, String> registerData) throws IOException {
         /*Controllare se fare lowerCase*/
         if(file.isEmpty() || file.getContentType()==null)
             throw new ResponseStatusException(HttpStatus.CONFLICT);

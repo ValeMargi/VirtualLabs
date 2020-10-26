@@ -685,9 +685,14 @@ public class VLServiceImpl implements VLService{
 
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public  TeamDTO proposeTeam(String courseId, String name, List<String> memberIds, Timestamp timeout){
+    public  Map<String,Object> proposeTeam(String courseId, String name, List<String> memberIds, Timestamp timeout){
         Optional<Course> course = courseRepository.findById(courseId);
         String creatorStudent = SecurityContextHolder.getContext().getAuthentication().getName();
+        //AGGIUNTO
+        Optional<Student> os = studentRepository.findById(creatorStudent);
+        if(!os.isPresent()) throw new StudentNotFoundException(); //PermissionDenied
+        Student creator = os.get();
+        //
         if( memberIds.contains(creatorStudent))
             throw new PermissionDeniedException();
 
@@ -744,7 +749,20 @@ public class VLServiceImpl implements VLService{
             notificationService.notifyTeam(modelMapper.map(team, TeamDTO.class), memberIds, creatorStudent,  courseId, timeout);
         }
 
-        return  modelMapper.map(team, TeamDTO.class);
+        Map<String, Object> map = new HashMap<>();
+        map.put("teamName", team.getName());
+        List<Map<String, Object>> l2 = new ArrayList<>();
+        for(Token token: tokenRepository.findAllByTeamId(team.getId()).stream()
+                .filter(t->!t.getStudent().equals(creator)).collect(Collectors.toList())){
+            Map<String, Object> m2= new HashMap<>();
+            m2.put("student", token.getStudent().getName()+" "+token.getStudent().getFirstName()+" "+"("+token.getStudent().getId()+")");
+            m2.put("status", token.getStatus());
+            l2.add(m2);
+        }
+        map.put("students", l2);
+
+
+        return map; // modelMapper.map(team, TeamDTO.class);
     }
     /*Metodo per ottenere le proposte di Team*/
     @PreAuthorize("hasAuthority('student')")

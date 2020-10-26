@@ -33,7 +33,7 @@ public class TeamController {
      * @return: ritorna il DTO del Team appena creato (Long id;String name;int status;)
      */
     @PostMapping("/{courseName}/proposeTeam")
-    public TeamDTO proposeTeam(@PathVariable String courseName, @RequestBody Map<String, Object> object) {
+    public Map<String,Object> proposeTeam(@PathVariable String courseName, @RequestBody Map<String, Object> object) {
         if ( !object.containsKey("nameTeam") ||  !object.containsKey("timeout") || !object.containsKey("membersId"))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
         try {

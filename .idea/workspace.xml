@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7ed07955-a639-419d-b16c-eac7f12e2dfe" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/VirtualLabs.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,10 +44,22 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/server" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.notifications" />
   </component>
   <component name="RunManager" selected="Spring Boot.VirtualLabsApplication">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="E2E Tests (ai20-lab05)" type="JavaScriptTestRunnerProtractor">
       <config-file value="$PROJECT_DIR$/client/e2e/protractor.conf.js" />
       <node-interpreter value="project" />
@@ -98,6 +107,8 @@
       <workItem from="1590605551375" duration="10847000" />
       <workItem from="1595221778325" duration="984000" />
       <workItem from="1602430323026" duration="27000" />
+      <workItem from="1603534051207" duration="21000" />
+      <workItem from="1603534403661" duration="96000" />
     </task>
     <servers />
   </component>
@@ -113,22 +124,26 @@
     </state>
     <state x="592" y="222" key="FileChooserDialogImpl/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222741323" />
     <state x="740" y="307" width="424" height="491" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1602430348245" />
-    <state width="1493" height="206" key="GridCell.Tab.0.bottom" timestamp="1595222762971">
-      <screen x="0" y="0" width="1536" height="834" />
+    <state width="1877" height="285" key="GridCell.Tab.0.bottom" timestamp="1603534499862">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1493" height="206" key="GridCell.Tab.0.bottom/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222762971" />
-    <state width="1493" height="206" key="GridCell.Tab.0.center" timestamp="1595222762971">
-      <screen x="0" y="0" width="1536" height="834" />
+    <state width="1877" height="285" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1603534499862" />
+    <state width="1877" height="285" key="GridCell.Tab.0.center" timestamp="1603534499862">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1493" height="206" key="GridCell.Tab.0.center/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222762971" />
-    <state width="1493" height="206" key="GridCell.Tab.0.left" timestamp="1595222762971">
-      <screen x="0" y="0" width="1536" height="834" />
+    <state width="1877" height="285" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1603534499862" />
+    <state width="1877" height="285" key="GridCell.Tab.0.left" timestamp="1603534499862">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1493" height="206" key="GridCell.Tab.0.left/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222762971" />
-    <state width="1493" height="206" key="GridCell.Tab.0.right" timestamp="1595222762971">
-      <screen x="0" y="0" width="1536" height="834" />
+    <state width="1877" height="285" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1603534499862" />
+    <state width="1877" height="285" key="GridCell.Tab.0.right" timestamp="1603534499862">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1493" height="206" key="GridCell.Tab.0.right/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222762971" />
+    <state width="1877" height="285" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1603534499862" />
     <state width="1493" height="206" key="GridCell.Tab.1.bottom" timestamp="1595222762971">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
@@ -149,5 +164,13 @@
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="349" y="160" key="IDE.errors.dialog/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595221856391" />
+    <state x="461" y="170" key="SettingsEditor" timestamp="1603534466291">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="461" y="170" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1603534466291" />
+    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup" timestamp="1603534450570">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1603534450570" />
   </component>
 </project>

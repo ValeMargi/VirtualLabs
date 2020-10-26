@@ -10,7 +10,7 @@ export class ChangePasswordComponent implements OnInit, OnChanges {
   @Input() ok: boolean;
   @Input() error: boolean;
   @Input() msg: string;
-  @Output('change') change = new EventEmitter<string>(); 
+  @Output('changePass') changePass = new EventEmitter<string>();
 
   constructor() { }
 
@@ -39,7 +39,7 @@ export class ChangePasswordComponent implements OnInit, OnChanges {
       window.alert("Le 2 password devono coincidere");
     }
     else {
-      this.change.emit(newPass);
+      this.changePass.emit(newPass);
     }
   }
 

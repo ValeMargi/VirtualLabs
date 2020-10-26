@@ -43,9 +43,11 @@ export class CreateAssignmentComponent implements OnInit, AfterViewInit {
   createAss(name: string, release: string, expire: string) {
     if (name == null || name.length == 0) {
       window.alert("Inserire un nome per la consegna");
+      return;
     }
     else if (this.selectedPhoto == null) {
       window.alert("Inserire un'immagine per la consegna");
+      return;
     }
 
     let res = expire.split("-");

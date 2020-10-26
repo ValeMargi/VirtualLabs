@@ -14,14 +14,14 @@ import { ForgotPasswordContComponent } from '../forgot-password/forgot-password-
   styleUrls: ['./login-dialog.component.css']
 })
 export class LoginDialogComponent implements OnInit {
-  
+
 LoginForm: FormGroup;
 error: boolean = false;
 
 @Output('login') log = new EventEmitter<any>();
 
   constructor(
-      public matDialog: MatDialog, 
+      public matDialog: MatDialog,
       public authService: AuthService,
       private dialogRef: MatDialogRef<LoginDialogComponent>,
       private router: Router,
@@ -29,12 +29,13 @@ error: boolean = false;
 
       authService.userLogged.subscribe(ok => {
         if (ok && authService.isLoggedIn()) {
-          this.dialogRef.close();
-          
+
+
           if (router.url == "/")
             router.navigateByUrl("home");
         }
         else {
+          window.alert("Email o password Errata/i");
           this.error = true;
         }
       });
@@ -43,7 +44,7 @@ error: boolean = false;
         email: new FormControl('',[Validators.email,this.emailDomainValidator]),
         password: ['', [Validators.required, Validators.minLength(8)]],
       });
-  
+
   }
 
   ngOnInit() {
@@ -64,7 +65,7 @@ error: boolean = false;
 
   openDialogRegister() {
     this.dialogRef.close();
-    
+
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = false;
@@ -80,7 +81,7 @@ error: boolean = false;
 
   openDialogForgotPassword() {
     this.dialogRef.close();
-    
+
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = false;
@@ -94,11 +95,11 @@ error: boolean = false;
     this.matDialog.open(ForgotPasswordContComponent, dialogConfig);
   }
 
-  emailDomainValidator(control: FormControl) { 
-    let email = control.value; 
-    if (email && email.indexOf("@") != -1) { 
-      let [_, domain] = email.split("@"); 
-      if (domain !== "studenti.polito.it" && domain !== "polito.it") { 
+  emailDomainValidator(control: FormControl) {
+    let email = control.value;
+    if (email && email.indexOf("@") != -1) {
+      let [_, domain] = email.split("@");
+      if (domain !== "studenti.polito.it" && domain !== "polito.it") {
         return {
           emailDomain: {
             parsedDomain: domain
@@ -106,7 +107,7 @@ error: boolean = false;
         }
       }
     }
-    return null; 
+    return null;
   }
 
 }

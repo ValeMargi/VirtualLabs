@@ -35,10 +35,11 @@ error: boolean = false;
   }
 
   ngOnInit() {
-    authService.userLogged.subscribe(ok => {
-        if (ok && authService.isLoggedIn()) {
-          if (router.url == "/")
-            router.navigateByUrl("home");
+    this.authService.userLogged.subscribe(ok => {
+        if (ok && this.authService.isLoggedIn()) {
+          close();
+          if (this.router.url == "/")
+            this.router.navigateByUrl("home");
         }
         else {
           this.error = true;
@@ -47,7 +48,7 @@ error: boolean = false;
   }
 
   close() {
-      this.dialogRef.close();
+    this.dialogRef.close();
   }
 
   login(email: string, password:string) {

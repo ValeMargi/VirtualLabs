@@ -22,6 +22,7 @@ export class ManageModelContComponent implements OnInit {
     this.teacherService.updateModelVM(modelvm.name, modelvm).subscribe(
       (data) => {
         this.courseService.currentCourse.next(modelvm);
+        window.alert("Modello modificato con successo")
       },
       (error) => {
         console.log("modello non aggiornato");

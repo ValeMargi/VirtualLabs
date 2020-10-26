@@ -20,9 +20,9 @@ export class ManageModelComponent implements OnInit {
   constructor(private teacherService: TeacherService,
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<ManageModelComponent>,
-    private courseService: CourseService) { 
+    private courseService: CourseService) {
 
-      
+
     }
 
   ngOnInit(): void {
@@ -44,7 +44,7 @@ export class ManageModelComponent implements OnInit {
    });
   }
 
-  saveModel(maxVcpu: number, maxDisk: number, ram: number, totInstances: number, runningInstances: number) {  
+  saveModel(maxVcpu: number, maxDisk: number, ram: number, totInstances: number, runningInstances: number) {
     this.modelvm.maxVcpu = Number(maxVcpu);
     this.modelvm.diskSpace = Number(maxDisk);
     this.modelvm.ram = Number(ram);
@@ -52,6 +52,7 @@ export class ManageModelComponent implements OnInit {
     this.modelvm.runningInstances = Number(runningInstances);
 
     this.update.emit(this.modelvm);
+    this.close();
   }
 
   close() {

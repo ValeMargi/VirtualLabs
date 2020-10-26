@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "users")
@@ -20,8 +18,6 @@ public class UserDAO {
     private String id;
     @Column
     @JsonIgnore
-    @Min(value = 8)
-    @Max(value=20)
     private String password;
     @Column
     private  String role;

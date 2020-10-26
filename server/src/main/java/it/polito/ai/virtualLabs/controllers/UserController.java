@@ -80,7 +80,9 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email " + registerData.get("email") + " not supported");
         } else if (!jwtUserDetailsService.checkUsernameInUserRepo(registerData.get("email"))) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User with email" + registerData.get("email") + "  already present");
-        } else try {
+        }else if(registerData.get("password").length()<8 || registerData.get("password").length()<20) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Password length should respect requirements");
+        }else try {
              int index = registerData.get("email").indexOf("@");
              String id = registerData.get("email").substring(0, index);
             if(!id.equals(registerData.get("id")))

@@ -89,6 +89,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
     if (changes.proposals != null) {
       this.proposals = changes.proposals.currentValue;
+      this.myPropVisibility = true;
       this.getInvitations();
 
       if (this.proposals != null) {

@@ -401,6 +401,12 @@ public class VLServiceImpl implements VLService{
                     addedStudents.add(st);
             }
            return addedStudents;
+        }catch(CourseNotFoundException e){
+            throw e;
+        }catch(CourseDisabledException e){
+            throw e;
+        }catch(StudentNotFoundException e){
+            throw e;
         }catch (RuntimeException exception){
             throw  new FormatFileNotValidException();
         }

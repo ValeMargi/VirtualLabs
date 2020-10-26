@@ -151,11 +151,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     professorRepository.deleteById(t.get().getUserId());
                 userRepository.deleteById(t.get().getUserId());
                 tokenRegistrationRepository.deleteById(token);
-                return null;
+                return Optional.empty();
             }
             return t;
         }
-        return null;
+        return Optional.empty();
    }
 
     @Override

@@ -1,5 +1,6 @@
 h2 {
     text-align: center;
+    font-size: 16pt;
 }
 
 .container {
@@ -10,6 +11,18 @@ h2 {
 .info {
     margin-left: 2em;
     margin-right: 1em;
+}
+
+.input{
+  font-size:12pt;
+}
+
+.input.placeholder{
+  font-size: 12pt;
+}
+
+.btnLogin{
+  margin-right:1em;
 }
 
 .avatar {

@@ -25,6 +25,7 @@ export class RegisterContComponent implements OnInit {
       (data) => {
         this.matDialogRef.close();
         this.QUERYING = false;
+        window.alert("Richiesta di registrazione avvenuta con successo. Controlla la tua posta per attivare l'account")
       },
       (error: any) => {
         this.QUERYING = false;

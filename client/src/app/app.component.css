@@ -7,6 +7,21 @@
   background-color: #3f51b53a;
 }
 
+.buttonS{
+  margin-left: 2%;
+
+}
+
+.buttonS:focus {
+  outline: none;
+  box-shadow: none;
+  background-color:  #3F51B5!important;
+}
+
+.mat-button ::ng-deep .mat-button-focus-overlay {
+  display: none;
+}
+
 .NomeCorso{
   text-shadow:-1px 1px 0 rgb(190, 190, 190);
   margin-left: 2%;

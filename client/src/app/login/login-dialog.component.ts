@@ -27,19 +27,6 @@ error: boolean = false;
       private router: Router,
       private formBuilder: FormBuilder) {
 
-      authService.userLogged.subscribe(ok => {
-        if (ok && authService.isLoggedIn()) {
-
-
-          if (router.url == "/")
-            router.navigateByUrl("home");
-        }
-        else {
-          window.alert("Email o password Errata/i");
-          this.error = true;
-        }
-      });
-
       this.LoginForm = this.formBuilder.group({
         email: new FormControl('',[Validators.email,this.emailDomainValidator]),
         password: ['', [Validators.required, Validators.minLength(8)]],
@@ -48,6 +35,15 @@ error: boolean = false;
   }
 
   ngOnInit() {
+    authService.userLogged.subscribe(ok => {
+        if (ok && authService.isLoggedIn()) {
+          if (router.url == "/")
+            router.navigateByUrl("home");
+        }
+        else {
+          this.error = true;
+        }
+      });
   }
 
   close() {

@@ -60,6 +60,7 @@ error: boolean = false;
     }
     else {
       this.log.emit({email: email, password: password});
+      this.close();
     }
   }
 

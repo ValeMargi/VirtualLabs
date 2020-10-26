@@ -128,7 +128,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       if (this.authService.isLoggedIn()) {
         this.loginVisibility = false;
         this.LoginSuccess = true;
-        this.router.navigate(['/home']);
+        //QUI: this.router.navigate(['/home']);
 
         if (this.role.match("student")) {
           this.teacherVisibility = false;

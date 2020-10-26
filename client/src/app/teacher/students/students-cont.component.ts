@@ -72,8 +72,12 @@ export class StudentsContComponent implements OnInit {
   enrollStudentCSV(file: File) {
     this.courseService.enrollStudents(this.courseService.currentCourse.getValue().name, file).subscribe(
       (data) => {
-        data.forEach(Student => {
-          this.STUDENTS_ENROLLED.push(Student);
+        let array: Student[] = this.STUDENTS_ENROLLED;
+        this.STUDENTS_ENROLLED = new Array();
+        data.forEach(s => array.push(s));
+
+        array.forEach(student => {
+          this.STUDENTS_ENROLLED.push(student);
         });
       },
       (error) => {

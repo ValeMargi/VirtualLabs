@@ -34,3 +34,8 @@ mat-dialog-actions {
 .input{
   font-size: 12pt;
 }
+
+.formField{
+  width: 90%;
+}
+

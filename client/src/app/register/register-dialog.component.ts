@@ -23,18 +23,18 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
 
   @Input() querying: boolean;
 
-  @Output('register') reg = new EventEmitter<any>(); 
+  @Output('register') reg = new EventEmitter<any>();
 
-  constructor( 
-    public matDialog: MatDialog, 
-    public authService: AuthService, 
+  constructor(
+    public matDialog: MatDialog,
+    public authService: AuthService,
     private dialogRef: MatDialogRef<RegisterDialogComponent>,
     private router: Router,
     private formBuilder: FormBuilder) {
 
     authService.userLogged.subscribe(ok => {
       if (ok && authService.isLoggedIn()) {
-        
+
         if (router.url == "/")
           router.navigateByUrl("home");
       }
@@ -54,11 +54,11 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
 
 }
 
-emailDomainValidator(control: FormControl) { 
-  let email = control.value; 
-  if (email && email.indexOf("@") != -1) { 
-    let [_, domain] = email.split("@"); 
-    if (domain !== "studenti.polito.it" && domain !== "polito.it") { 
+emailDomainValidator(control: FormControl) {
+  let email = control.value;
+  if (email && email.indexOf("@") != -1) {
+    let [_, domain] = email.split("@");
+    if (domain !== "studenti.polito.it" && domain !== "polito.it") {
       return {
         emailDomain: {
           parsedDomain: domain
@@ -66,7 +66,7 @@ emailDomainValidator(control: FormControl) {
       }
     }
   }
-  return null; 
+  return null;
 }
 
 checkPasswords(group: FormGroup) { // here we have the 'passwords' group
@@ -89,7 +89,7 @@ close() {
 
 openDialogLogin() {
   this.dialogRef.close();
-  
+
   const dialogConfig = new MatDialogConfig();
 
   dialogConfig.disableClose = false;
@@ -123,22 +123,30 @@ register(firstName: string, name: string, id: string, email: string, password: s
   this.md5 = new Md5();
 
   let userJson = { "firstName": firstName,
-                  "name": name, 
-                  "id": id.toLowerCase(), 
-                  "email": email.toLowerCase(), 
-                  "password": this.md5.start().appendStr(password).end().toString() 
+                  "name": name,
+                  "id": id.toLowerCase(),
+                  "email": email.toLowerCase(),
+                  "password": this.md5.start().appendStr(password).end().toString()
                 };
+
+  console.log(userJson.email.split("@",1));
+  let idEmail: string[];
+  idEmail = userJson.email.split("@",1);
+
+  if(userJson.id != idEmail[0]){
+    window.alert("La tua email non corrisponde alla matricola inserita");
+  }
 
   this.reg.emit({image: image, userJson: userJson});
 }
 
 onFileChanged(imageInput) {
   this.selectedPhoto = imageInput.target.files[0]
-  
+
   const reader = new FileReader();
   reader.readAsDataURL(this.selectedPhoto);
-  reader.onload = (_event) => { 
-    this.previewPhoto = reader.result; 
+  reader.onload = (_event) => {
+    this.previewPhoto = reader.result;
   }
 }
 

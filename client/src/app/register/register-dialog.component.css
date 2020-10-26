@@ -1,10 +1,17 @@
 h2 {
+  margin-top: 1%;
     text-align: center;
     font-size: 16pt;
 }
 
+.form{
+  margin-top: 2%;
+  width: 70%;
+}
+
 .container {
     display: flex;
+    height: 80%;
     justify-content: center;
 }
 
@@ -12,6 +19,7 @@ h2 {
     margin-left: 2em;
     margin-right: 1em;
 }
+
 
 .input{
   font-size:12pt;
@@ -27,10 +35,10 @@ h2 {
 
 .avatar {
     float: left;
-    max-width: 200px;
-    max-height: 200px;
-    margin-left: 1em;
-    margin-right: 2em;
+    max-width: 300px;
+    max-height: 300px;
+    margin-left: 10%;
+    margin-right: 3%;
     margin-top: 8em;
 }
 

@@ -27,7 +27,6 @@ export class RegisterContComponent implements OnInit {
         this.QUERYING = false;
       },
       (error: any) => {
-        window.alert("Errore nella registrazione");
         this.QUERYING = false;
       }
     );

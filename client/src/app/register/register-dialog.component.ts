@@ -19,6 +19,8 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
   selectedPhoto: File;
   previewPhoto: any;
 
+  avatarImg: boolean = true;
+
   private md5: Md5;
 
   @Input() querying: boolean;
@@ -146,6 +148,7 @@ onFileChanged(imageInput) {
   const reader = new FileReader();
   reader.readAsDataURL(this.selectedPhoto);
   reader.onload = (_event) => {
+    this.avatarImg = false;
     this.previewPhoto = reader.result;
   }
 }

@@ -33,11 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.getUserName();
     this.route$ = this.route.queryParams.subscribe(params => {
-      let login = params['doLogin'];
-
-      if (login == 'true') {
-        this.openDialogLogin();
-      }
+      
     });
   }
 

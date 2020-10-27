@@ -36,19 +36,7 @@ error: boolean = false;
   }
 
   ngOnInit() {
-    this.authService.userLogged.subscribe(ok => {
-        if (ok && this.authService.isLoggedIn()) {
-          if (this.route.snapshot.queryParams['doLogin'] == "true") {
-            this.dialogRef.close();
-          }
-          else {
-            this.router.navigateByUrl("home");
-          }
-        }
-        else {
-          this.error = true;
-        }
-      });
+    
   }
 
   close() {

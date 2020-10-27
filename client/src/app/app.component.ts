@@ -51,12 +51,12 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   role: string = "";
   courses: Course[] = [];
   route$: Subscription;
+  routeQueryParams$: Subscription;
 
   name: string;
   firstName: string;
 
   LoginSuccess: boolean = false;
-  routeQueryParams$: Subscription;
 
   constructor(private matDialog: MatDialog,
               private courseService:  CourseService,
@@ -65,23 +65,21 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
               private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute) {
-
-
-                this.routeQueryParams$ = route.queryParams.subscribe(params => {
-                  if(params['matdialog']){
-                    this.openDialogLogin();
-                  }
-                });
-
   }
 
   ngAfterViewInit(): void {
     this.getUserName();
+  }
+
+  ngOnInit() {
+    this.role = localStorage.getItem("role");
+
+    this.getUserName();
+
     this.authService.userLogged.subscribe(ok => {
       if (ok && this.authService.isLoggedIn()) {
         this.loginVisibility = false;
         this.LoginSuccess = true;
-        this.router.navigate(['/home']);
 
         this.role = localStorage.getItem("role");
 
@@ -95,24 +93,17 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         this.setCourses();
       }
       else {
-        localStorage.removeItem('token');
-        localStorage.removeItem('expires_at');
-        localStorage.removeItem('role');
         this.loginVisibility = true;
         this.homeVisibility = true;
         this.sidenav.close();
-        this.router.navigateByUrl("home");
       }
     });
 
-
-
-  }
-
-  ngOnInit() {
-    this.role = localStorage.getItem("role");
-
-    this.getUserName();
+    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
+      if (params['doLogin']) {
+        this.openDialogLogin();
+      }
+    });
 
     if (this.router.url == "") {
       this.notFoundVisibility = true;
@@ -263,6 +254,10 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     this.sidenav.toggle();
   }
 
+  routeToLogin() {
+    this.router.navigate([this.router.url], {queryParams: {doLogin : "true"}});
+  }
+
   openDialogLogin(): void {
     const dialogConfig = new MatDialogConfig();
 
@@ -275,15 +270,12 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
     };
 
-    //this.matDialog.open(LoginContComponent, dialogConfig);
+    const dialogRef = this.matDialog.open(LoginContComponent, dialogConfig);
 
-    const dialogRef = this.matDialog.open(LoginContComponent);
-
-/*
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.router.navigate(['.'], { relativeTo: this.route });
-    });*/
+      const queryParams = {}
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+    });
   }
 
   openDialogRegister() {
@@ -304,6 +296,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   logout() {
     this.authService.logout();
+    this.router.navigateByUrl("home");
   }
 
   openDialogCourse() {

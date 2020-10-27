@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean {
       
-      let url: string = state.url;
+      let url: string = state.url
       return this.checkLogin(url);
   }
 
@@ -29,7 +29,7 @@ export class AuthGuard implements CanActivate {
       let currentId = localStorage.getItem('currentId');
 
       if (role == null || role.length == 0 || currentId == null || currentId.length == 0) {
-        this.router.navigate([url, {queryParams: { doLogin: true }}]);
+        this.router.navigate([url], {queryParams: {doLogin : "true"}});
         return false;
       }
 
@@ -42,7 +42,7 @@ export class AuthGuard implements CanActivate {
       }
     }
     else {
-      this.router.navigate([url, {queryParams: { doLogin: true }}]);
+      this.router.navigate([url], {queryParams: {doLogin : "true"}});
       return false;
     }
   }

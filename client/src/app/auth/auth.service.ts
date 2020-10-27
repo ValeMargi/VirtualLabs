@@ -23,7 +23,9 @@ export class AuthService {
   
   currentUser: User;
 
-  constructor(private http: HttpClient, private teacherService: TeacherService, private studentService: StudentService) {
+  constructor(private http: HttpClient, 
+    private teacherService: TeacherService, 
+    private studentService: StudentService) {
     
   }
   

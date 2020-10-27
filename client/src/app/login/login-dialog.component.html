@@ -21,7 +21,7 @@
 
 
    <div>
-    <button mat-button mat-raised-button class="btnLogin"color="primary" type = "submit" routerLink="" [queryParams]="{matdialog: true}" (click) = "login(email.value, password.value)"> Login </button>
+    <button mat-button mat-raised-button class="btnLogin"color="primary" type = "submit" (click) = "login(email.value, password.value)"> Login </button>
     <button mat-button mat-raised-button color="warn" (click)="close()"> Annulla </button>
   </div>
    <br/>

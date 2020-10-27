@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs/internal/Subscription';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Md5 } from 'ts-md5/dist/md5';
@@ -11,7 +12,10 @@ export class LoginContComponent implements OnInit {
 
   private md5: Md5;
 
-  constructor(private authService: AuthService) { }
+
+  constructor(private authService: AuthService) {
+
+               }
 
   ngOnInit(): void {
   }
@@ -23,7 +27,8 @@ export class LoginContComponent implements OnInit {
     this.md5 = new Md5();
 
     this.authService.login(email, this.md5.start().appendStr(password).end().toString());
-    
+
+
   }
 
 }

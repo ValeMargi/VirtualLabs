@@ -58,7 +58,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   constructor() {}
 
   ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
+    this.setTable();
   }
 
   ngOnInit() {

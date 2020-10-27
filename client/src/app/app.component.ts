@@ -25,15 +25,10 @@ import { CourseService } from './services/course.service';
 import { Course } from './models/course.model';
 import { TeacherService } from './services/teacher.service';
 import { StudentService } from './services/student.service';
-import { HomeworksContComponent as HomeworksContComponentTeacher } from './teacher/assignments/homeworks-cont.component';
-import { HomeworksComponent as HomeworksComponentTeacher } from './teacher/assignments/homeworks.component';
-import { VersionsContComponent as VersionsContComponentTeacher } from './teacher/assignments/versions-cont.component';
-import { VersionsComponent as VersionsComponentTeacher } from './teacher/assignments/versions.component';
 import { RegisterContComponent } from './register/register-cont/register-cont.component';
 import { LoginContComponent } from './login/login-cont/login-cont.component';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { EditCourseContComponent } from './teacher/edit-course/edit-course-cont/edit-course-cont.component';
-
 
 @Component({
   selector: 'app-root',
@@ -61,6 +56,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   firstName: string;
 
   LoginSuccess: boolean = false;
+  routeQueryParams$: Subscription;
 
   constructor(private matDialog: MatDialog,
               private courseService:  CourseService,
@@ -70,6 +66,13 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
               private router: Router,
               private route: ActivatedRoute) {
 
+
+                this.routeQueryParams$ = route.queryParams.subscribe(params => {
+                  if(params['matdialog']){
+                    this.openDialogLogin();
+                  }
+                });
+
   }
 
   ngAfterViewInit(): void {
@@ -78,7 +81,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       if (ok && this.authService.isLoggedIn()) {
         this.loginVisibility = false;
         this.LoginSuccess = true;
-        //this.router.navigate(['/home']);
+        this.router.navigate(['/home']);
 
         this.role = localStorage.getItem("role");
 
@@ -116,6 +119,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     }
     else {
       this.notFoundVisibility = false;
+
 
       if (this.router.url == "/home") {
         this.homeVisibility = true;
@@ -259,7 +263,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     this.sidenav.toggle();
   }
 
-  openDialogLogin() {
+  openDialogLogin(): void {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = false;
@@ -271,7 +275,15 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
     };
 
-    this.matDialog.open(LoginContComponent, dialogConfig);
+    //this.matDialog.open(LoginContComponent, dialogConfig);
+
+    const dialogRef = this.matDialog.open(LoginContComponent);
+
+/*
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.router.navigate(['.'], { relativeTo: this.route });
+    });*/
   }
 
   openDialogRegister() {

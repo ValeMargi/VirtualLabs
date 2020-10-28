@@ -119,7 +119,7 @@ export class AddCourseDialogComponent implements OnInit {
       return;
     }
 
-    let course = new Course(name.toLowerCase().split(' ').join('-'), acronym, min, max, 1, 4, 100, 8, 10, 10);
+    let course = new Course(name.toLowerCase().split(' ').join('-'), acronym.toUpperCase(), min, max, 1, 4, 100, 8, 10, 10);
     
     this.add.emit({course: course, file: this.selectedPhoto, ids: this.teachersToAdd.map(t => t.id)});
   }

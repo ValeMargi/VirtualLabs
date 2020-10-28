@@ -18,6 +18,8 @@ export class CourseService {
   currentCourse = new BehaviorSubject<Course>(new Course("", "", -1, -1, 0, -1, -1, -1, -1, -1));
   currentCourse$ = this.currentCourse.asObservable();
 
+  courseRemove: EventEmitter<Course> = new EventEmitter<Course>();
+
   constructor(private http: HttpClient) {}
 
   API_COURSES = "http://localhost:8080/API/courses";

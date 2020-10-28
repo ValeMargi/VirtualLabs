@@ -116,7 +116,19 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.courseService.currentCourse.subscribe(
       (data) => {
-        if (this.courses.indexOf(data) < 0 && data.name != "") {
+        if (data == null || data.name == "") {
+          return;
+        }
+
+        let add: boolean = true;
+
+        this.courses.forEach(c => {
+          if (c.name == data.name) {
+            add = false;
+          }
+        });
+
+        if (add) {
           this.courses.push(data);
           this.router.navigateByUrl(this.getRouteWithCourse(data));
         }
@@ -124,6 +136,24 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       (error) => {
 
       }
+    );
+
+    this.courseService.courseRemove.subscribe(
+      (data) => {
+        let array: Course[] = this.courses;
+        this.courses = new Array();
+
+        array.forEach(c => {
+          if (c.name != data.name) {
+            this.courses.push(c);
+          }
+        });
+
+        this.courseService.setCurrentCourse(new Course("", "", -1, -1, 0, -1, -1, -1, -1, -1));
+        this.router.navigateByUrl("home");
+      },
+      (error) => {}
+
     );
 
     this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
@@ -403,8 +433,9 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   getCourseName(value: string) {
-    if (value.length <= 1)
+    if (value.length <= 1 || value.includes("home")) {
       return "";
+    }
 
     let res = value.split("/");
     let res2;

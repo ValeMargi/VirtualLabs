@@ -80,9 +80,13 @@ export class EditCourseContComponent implements OnInit {
   deleteCourse() {
     this.courseService.removeCourse(this.courseService.currentCourse.getValue().name).subscribe(
       (data) => {
-        //this.courses.splice(this.courses.indexOf(this.courseService.currentCourse.getValue()));
-        this.matDialogRef.close();
-        this.router.navigateByUrl("home");
+        if (data) {
+          this.courseService.courseRemove.emit(this.courseService.currentCourse.getValue());
+          this.matDialogRef.close();
+        }
+        else {
+          window.alert("Errore nell'eliminazione del corso");
+        }
       },
       (error) => {
         window.alert("Errore nell'eliminazione del corso");

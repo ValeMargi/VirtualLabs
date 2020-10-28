@@ -160,7 +160,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   deleteStudent() {
     if (this.selectedStudents.selected.length > 0) {
       this.toRemove.emit(this.selectedStudents.selected);
-      this.dataSource._updateChangeSubscription();
+      //this.dataSource._updateChangeSubscription();
       this.selectedStudents.clear();
     }
   }

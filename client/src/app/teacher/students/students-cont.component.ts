@@ -106,12 +106,20 @@ export class StudentsContComponent implements OnInit, OnDestroy {
         this.STUDENTS_ENROLLED = new Array();
 
         data.forEach(student => {
+          let remove: Student = null;
+
           array.forEach(s => {
-            if (student.id != s.id) {
-              this.STUDENTS_ENROLLED.push(s);
+            if (s.id == student.id) {
+              remove = s;
             }
           });
+
+          if (remove != null) {
+            array.splice(array.indexOf(remove), 1);
+          }
         });
+
+        array.forEach(s => this.STUDENTS_ENROLLED.push(s));
       },
       (error) => { 
         window.alert("Rimozione studenti non avvenuta");

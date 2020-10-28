@@ -28,6 +28,8 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
 
   dataAssignments = new MatTableDataSource<Assignment>();
 
+  @Input() hasTeam: boolean;
+  @Input() hasVM: boolean;
   @Input() homework: Homework;
   @Input() assignments: Assignment[] = [];
   @Output() HOMEWORK: Homework;
@@ -89,6 +91,16 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
   }
 
   showVersions(ass: Assignment) {
+    if (!this.hasTeam) {
+      window.alert("Bisogna essere in un team per accedere a questa sezione");
+      return;
+    }
+
+    if (!this.hasVM) {
+      window.alert("Il team deve avere almeno una VM per accedere a questa sessione");
+      return;
+    }
+
     this.versions.emit(ass);
     this.ASSIGNMENT = ass;
   }

@@ -136,7 +136,7 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
     dialogConfig.data = {
         title: 'CorrectionText',
         isTeacher: true,
-        type: "version",
+        type: "correction",
         assignmentId: this.idA,
         homeworkId: this.homework.id,
         correctionId: correction.id

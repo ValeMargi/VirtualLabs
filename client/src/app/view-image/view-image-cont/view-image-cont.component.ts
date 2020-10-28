@@ -35,7 +35,6 @@ export class ViewImageContComponent implements OnInit {
         if (isTeacher) {
           this.teacherService.getPhotoAssignment(course, assignmentId).subscribe(
             (data) => {
-              console.log(data)
               this.TIMESTAMP = data.timestamp;
               this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
             },

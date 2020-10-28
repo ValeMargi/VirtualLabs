@@ -101,7 +101,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        if (event.urlAfterRedirects.indexOf("home") >= 0) {
+        if (event.urlAfterRedirects.indexOf("home") == 1) {
           this.homeVisibility = true;
         }
         else {

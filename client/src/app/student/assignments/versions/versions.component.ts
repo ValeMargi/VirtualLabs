@@ -95,7 +95,7 @@ export class VersionsComponent implements OnInit, OnChanges {
 
     dialogConfig.data = {
         title: 'VersionText',
-        isTeacher: true,
+        isTeacher: false,
         type: "version",
         assignmentId: this.assId,
         homeworkId: this.homework.id,
@@ -113,8 +113,8 @@ export class VersionsComponent implements OnInit, OnChanges {
 
     dialogConfig.data = {
         title: 'CorrectionText',
-        isTeacher: true,
-        type: "version",
+        isTeacher: false,
+        type: "correction",
         assignmentId: this.assId,
         homeworkId: this.homework.id,
         correctionId: correction.id

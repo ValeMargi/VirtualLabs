@@ -17,23 +17,32 @@
         <!--Titolo della Consegna-->
         <ng-container matColumnDef="assignmentName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Titolo </th>
-          <td mat-cell *matCellDef="let row" (click)="showVersions(row)"> <strong>{{ row.assignmentName }} </strong></td>
+          <td mat-cell *matCellDef="let row"> <strong>{{ row.assignmentName }} </strong></td>
         </ng-container>
 
         <!--Data di Rilascio-->
         <ng-container matColumnDef="releaseDate">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Rilasciata </th>
-          <td mat-cell *matCellDef="let row" (click)="showVersions(row)"> {{ row.releaseDate }} </td>
+          <td mat-cell *matCellDef="let row"> {{ row.releaseDate }} </td>
         </ng-container>
 
           <!--Data di scadenza-->
-          <ng-container matColumnDef="expiration">
+        <ng-container matColumnDef="expiration">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Scadenza </th>
-          <td mat-cell *matCellDef="let row" (click)="showVersions(row)"> {{ row.expiration }} </td>
+          <td mat-cell *matCellDef="let row"> {{ row.expiration }} </td>
+        </ng-container>
+
+        <!--Visualizza Versioni-->
+        <ng-container matColumnDef="showVersions">
+          <th mat-header-cell *matHeaderCellDef> </th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-button class="buttonText" color="primary" (click)="showVersions(row)">
+              Visualizza Versioni
+            </button>
         </ng-container>
 
           <!--Visualizza Testo-->
-          <ng-container matColumnDef="showAssignment">
+        <ng-container matColumnDef="showAssignment">
           <th mat-header-cell *matHeaderCellDef> </th>
           <td mat-cell *matCellDef="let row">
             <button mat-button class="buttonText" color="primary" (click)="openDialogImage(row)">

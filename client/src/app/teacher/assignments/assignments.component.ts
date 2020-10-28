@@ -32,7 +32,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
   @Output() public ASSIGNMENT: Assignment;
 
   HomeworkColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
-  AssignmentsColumns: string[] = ['assignmentName', 'releaseDate','expiration','showAssignment'];
+  AssignmentsColumns: string[] = ['assignmentName', 'releaseDate','expiration','showAssignment', 'showHomeworks'];
 
   dataAssignments = new MatTableDataSource<Assignment>();
   dataHomeworks = new MatTableDataSource<Homework>();

@@ -7,15 +7,6 @@
   background-color:#001ea34d;
 }
 
-.row:active{
-  background-color:#281fa846;
-  color: white;
-}
-.row:hover{
-  background-color:#001ea34d;
-  color: white;
-}
-
 .card {
   width: 90%;
   margin-left: 2%;
@@ -27,11 +18,8 @@
 }
 
 .tableContainer {
-    overflow: hidden;
+  overflow: hidden;
 }
-
-
-
 
 .create {
     margin: 1em;

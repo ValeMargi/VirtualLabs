@@ -24,7 +24,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   HomeworkColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
-  AssignmentsColumns: string[] = ['assignmentName', 'releaseDate','expiration','showAssignment'];
+  AssignmentsColumns: string[] = ['assignmentName', 'releaseDate','expiration','showAssignment', 'showVersions'];
 
   dataAssignments = new MatTableDataSource<Assignment>();
 

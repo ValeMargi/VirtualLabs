@@ -44,7 +44,7 @@
         </mat-option>
         </mat-autocomplete>
         </mat-form-field>
-        <button mat-mini-fab color="primary" (click)="addStudent()">
+        <button mat-mini-fab color="primary" [disabled]="studentsToAdd.length == studentsInTeam.length - 1" (click)="addStudent()">
             <mat-icon>add</mat-icon>
         </button>
     </div>

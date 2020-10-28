@@ -50,22 +50,25 @@ export class ManageVmComponent implements OnInit {
       ram: this.vm.ram
     });
 
+    this.setupFilter();
+    this.dataSource = new MatTableDataSource<Student>(this.vm.owners);
+    this.dataSource.sort = this.sort;
+  }
+
+  setupFilter() {
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value.name),
         map(value => this._filter(value))
       );
-
-      this.dataSource = new MatTableDataSource<Student>(this.vm.owners);
-      this.dataSource.sort = this.sort;
   }
 
   _filter(value: string): Student[] {
     const filterValue = value.toLowerCase();
 
     return this.studentsInTeam.filter(option => 
-      (!this.vm.owners.map(s => s.id).includes(option.id)) &&
+      (!this.vm.owners.map(s => s.id).includes(option.id) && !this.studentsToAdd.includes(option)) &&
       (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
   }
 
@@ -86,6 +89,7 @@ export class ManageVmComponent implements OnInit {
       this.dataSource = new MatTableDataSource<Student>(this.vm.owners.concat(this.studentsToAdd));
       this.dataSource.sort = this.sort;
       this.myControl.reset("");
+      this.setupFilter();
     }
   }
 
@@ -94,6 +98,7 @@ export class ManageVmComponent implements OnInit {
       this.studentsToAdd.splice(this.studentsToAdd.indexOf(student), 1);
       this.dataSource = new MatTableDataSource<Student>(this.vm.owners.concat(this.studentsToAdd));
       this.dataSource.sort = this.sort;
+      this.setupFilter();
     }
   }
 

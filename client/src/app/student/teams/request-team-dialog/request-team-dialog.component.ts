@@ -56,13 +56,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.oneWeek = new Date();
     this.oneWeek.setDate(this.oneWeek.getDate() + 7);
-
-    this.filteredOptions = this.myControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value.name),
-        map(value => this._filter(value))
-      );
+    this.setupFiter();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -82,6 +76,15 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
     if (changes.availableStudents != null) {
       this.availableStudents = changes.availableStudents.currentValue;
     }
+  }
+
+  setupFiter() {
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(value => this._filter(value))
+      );
   }
 
   _filter(value: string): Student[] {
@@ -110,6 +113,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
       this.dataSource.sort = this.sort;
       this.tableVisibility = true;
       this.myControl.reset("");
+      this.setupFiter();
     }
   }
 
@@ -122,6 +126,8 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
       if (this.studentsToAdd.length == 0) {
         this.tableVisibility = false;
       }
+
+      this.setupFiter();
     }
   }
 

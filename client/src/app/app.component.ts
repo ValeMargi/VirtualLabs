@@ -105,6 +105,26 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     });
 
+    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
+      if (params['doRegister']) {
+        this.openDialogRegister();
+      }
+    });
+
+    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
+      if (params['myProfile']) {
+        this.openDialogProfile();
+      }
+    });
+
+    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
+      if (params['newCourse']) {
+        this.openDialogCourse();
+      }
+    });
+
+    //HERE
+
     if (this.router.url == "") {
       this.notFoundVisibility = true;
     }
@@ -258,6 +278,19 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     this.router.navigate([this.router.url], {queryParams: {doLogin : "true"}});
   }
 
+  routeToRegister() {
+    this.router.navigate([this.router.url], {queryParams: {doRegister : "true"}});
+  }
+
+  routeNewCourse() {
+    this.router.navigate([this.router.url], {queryParams: {newCourse : "true"}});
+
+  }
+
+  routeMyProfile() {
+    this.router.navigate([this.router.url], {queryParams: {myProfile : "true"}});
+  }
+
   openDialogLogin(): void {
     const dialogConfig = new MatDialogConfig();
 
@@ -291,7 +324,12 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         title: 'Register'
     };
 
-    this.matDialog.open(RegisterContComponent, dialogConfig);
+    const dialogRef = this.matDialog.open(RegisterContComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      const queryParams = {}
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+    });
   }
 
   logout() {
@@ -310,7 +348,12 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         title: 'AddCourse'
     };
 
-    this.matDialog.open(AddCourseContComponent, dialogConfig);
+    const dialogRef = this.matDialog.open(AddCourseContComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      const queryParams = {}
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+    });
   }
 
   openDialogProfile() {
@@ -324,7 +367,13 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         title: 'Profile'
     };
 
-    this.matDialog.open(EditProfileContComponent, dialogConfig);
+
+    const dialogRef = this.matDialog.open(EditProfileContComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      const queryParams = {}
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+    });
   }
 
   get courseName() {

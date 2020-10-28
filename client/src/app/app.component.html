@@ -11,7 +11,11 @@
     </button>
     <span routerLink="/home">VirtualLabs</span><mat-icon>developer_board</mat-icon>
     <span class="example-spacer"></span>
+<<<<<<< Updated upstream
     <button #btLogin class="buttonS" mat-button *ngIf="loginVisibility"  (click)="routeToLogin()"> <mat-icon>login</mat-icon> Login</button>
+=======
+    <button #btLogin class="buttonS" mat-button *ngIf="loginVisibility" routerLink="doLogin" [queryParams]="{dialog:true}"  (click)="openDialogLogin()"> <mat-icon>login</mat-icon> Login</button>
+>>>>>>> Stashed changes
     <button #btLogout class="buttonS" mat-button *ngIf="!loginVisibility" (click)="openDialogProfile()"> <mat-icon>face</mat-icon> {{firstName}} {{name}} - Profilo</button>
     <button #btLogout class="buttonS" mat-button *ngIf="!loginVisibility" (click)="logout()"><mat-icon>outbond</mat-icon>Logout</button>
     <button #btRegister class="buttonS" mat-button *ngIf="loginVisibility" (click)="openDialogRegister()"><mat-icon>portrait</mat-icon>Registrati</button>

@@ -22,9 +22,11 @@ export class TeamsContComponent implements OnInit, OnDestroy {
               private router: Router,
               private route: ActivatedRoute) { }
 
-  @Output() TEAM: Team;
-  @Output() PROPOSALS: Proposal[];
-  @Output() MEMBERS: Student[] = [];
+  TEAM: Team;
+  PROPOSALS: Proposal[];
+  MEMBERS: Student[] = [];
+
+  private processing: boolean = false;
 
   ngOnInit(): void {
     this.route$ = this.route.params.subscribe(params =>  {
@@ -71,7 +73,7 @@ export class TeamsContComponent implements OnInit, OnDestroy {
           this.membersInTeam();
         }
         else {
-          this.getProposals();
+          this.getProposals(courseName);
         }
       },
       (error) => {
@@ -91,63 +93,82 @@ export class TeamsContComponent implements OnInit, OnDestroy {
         this.MEMBERS = data;
       },
       (error) => {
-        window.alert("Errore caricamento membri");
+        window.alert(error.error.message);
       }
     );
   }
 
-  getProposals() {
-    this.teamService.getProposals(this.courseService.currentCourse.getValue().name).subscribe(
+  getProposals(courseName: string) {
+    this.teamService.getProposals(courseName).subscribe(
       (data) => {
         this.PROPOSALS = data;
       },
       (error) => {
-        window.alert("Errore nel caricare le proposte per lo studente");
+        window.alert(error.error.message);
       }
     );
   }
 
   acceptProposal(token: string) {
+    if (this.processing) {
+      return;
+    }
+
+    this.processing = true;
+
     this.teamService.confirm(token).subscribe(
       (data) => {
         switch(data) {
           case 0: {
             window.alert("Token non valido");
+            this.processing = false;
             break;
           }
           case 1: {
-            this.getProposals();
+            this.getProposals(this.route.snapshot.params.courses);
+            this.processing = false;
             break;
           }
           case 2: {
             this.PROPOSALS = new Array();
             this.getTeam(this.route.snapshot.params.courses);
+            this.processing = false;
             break;
           }
         }
       },
       (error) => {
-        window.alert("Errore accettazione richiesta");
+        window.alert(error.error.message);
+        this.processing = false;
       }
     );
   }
 
   refuseProposal(token: string) {
+    if (this.processing) {
+      return;
+    }
+
+    this.processing = true;
+
     this.teamService.refuse(token).subscribe(
       (data) => {
         switch(data) {
           case 0: {
             window.alert("Token non valido");
+            this.processing = false;
             break;
           }
           case 1: {
-            this.getProposals();
+            this.getProposals(this.route.snapshot.params.courses);
+            this.processing = false;
             break;
           }
         }
       },
       (error) => {
-        window.alert("Errore rifiuto richiesta");
+        window.alert(error.error.message);
+        this.processing = false;
       }
     );
   }

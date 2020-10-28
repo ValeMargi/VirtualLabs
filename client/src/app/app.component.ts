@@ -106,6 +106,10 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         }
         else {
           this.homeVisibility = false;
+
+          if (this.courseService.currentCourse.getValue().name == "" && this.router.url.match("course")) {
+            this.courseService.currentCourse.getValue().name = this.router.url.split("/")[3];
+          }
         }
       }
     });
@@ -163,8 +167,8 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
         if (this.role.match("student")) {
           this.teacherVisibility = false;
-
-          this.studentService.getOne(localStorage.getItem('currentId')).subscribe(
+          
+          /*this.studentService.getOne(localStorage.getItem('currentId')).subscribe(
             (data) => {
               this.studentService.currentStudent = data.student;
               this.authService.userLogged.emit(true);
@@ -173,12 +177,12 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
             (error) => {
               console.log("Impossibile ottenere lo studente");
             }
-          );
+          );*/
         }
         else {
           this.teacherVisibility = true;
 
-          this.teacherService.getOne(localStorage.getItem('currentId')).subscribe(
+          /*this.teacherService.getOne(localStorage.getItem('currentId')).subscribe(
             (data) => {
               this.teacherService.currentTeacher = data.professor;
               this.authService.userLogged.emit(true);
@@ -187,8 +191,10 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
             (error) => {
               console.log("Impossibile ottenere il professore");
             }
-          );
+          );*/
         }
+
+        this.authService.getUserByRole();
       }
       else {
         this.loginVisibility = true;
@@ -450,7 +456,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   setCurrentCourse(course: Course) {
     this.courseService.currentCourse.next(course);
-
   }
 
   openCourseEdit() {

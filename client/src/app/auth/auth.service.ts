@@ -93,6 +93,7 @@ export class AuthService {
         this.setUserByRole(token);
       }
 
+      this.userLogged.emit(true);
       return this.studentService.currentStudent;
     }
     else {
@@ -101,6 +102,7 @@ export class AuthService {
         this.setUserByRole(token);
       }
 
+      this.userLogged.emit(true);
       return this.teacherService.currentTeacher;
     }
   }

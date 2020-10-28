@@ -50,7 +50,7 @@ LoginForm: FormGroup;
       window.alert("Controllare che i dati inseriti siano validi e riprovare");
     }
     else {
-      this.log.emit({email: email, password: password});
+      this.log.emit({email: email.toLowerCase(), password: password});
     }
   }
 

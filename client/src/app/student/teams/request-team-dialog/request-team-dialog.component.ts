@@ -132,7 +132,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   }
 
   proposeTeam(nameTeam: string, expire: string) {
-    if (this.studentsToAdd.length < this.min || this.studentsToAdd.length > this.max) {
+    if (this.studentsToAdd.length + 1 < this.min || this.studentsToAdd.length + 1> this.max) {
       window.alert("Selezionare un numero di studenti compreso tra " + this.min + " e " + this.max);
     }
     else if (this.CreateTeamForm.valid) {

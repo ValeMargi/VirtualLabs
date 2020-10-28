@@ -26,8 +26,8 @@ export class EditCourseContComponent implements OnInit {
   ngOnInit(): void {
     this.COURSE = this.courseService.currentCourse.getValue();
 
-    if (this.COURSE == null || this.COURSE.name == "" || this.COURSE.min == -1 || this.COURSE.max == -1) {
-      this.courseService.getOne(this.route.snapshot.params.courses).subscribe(
+    if (this.COURSE == null || this.COURSE.min == -1 || this.COURSE.max == -1) {
+      this.courseService.getOne(this.COURSE.name).subscribe(
         (data) => {
           this.COURSE = data;
           this.courseService.setCurrentCourse(data);

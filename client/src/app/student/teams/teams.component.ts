@@ -30,22 +30,27 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   //Table Request
   displayedColumnsRequest: string[] = ['teamName', 'creator', 'students', 'choice'];
   dataSourceProposals = new MatTableDataSource<Proposal>();
-  tableRequestVisibility:boolean = true;
+
+  //Table Request Accepted
+  displayedColumnsRequestAccepted: string[] = ['teamName', 'creator', 'students'];
+  dataSourceProposalsAccepted = new MatTableDataSource<Proposal>();
+
+  //My proposal
   myProposal: Proposal;
 
   @Input() public team: Team;
   @Input() public proposals: Proposal[] = [];
   @Input() public members: Student[] = [];
-
   @Output('accept') accept = new EventEmitter<string>();
   @Output('refuse') refuse = new EventEmitter<string>();
 
-
   lengthProposals: number = 0;
+  lengthProposalsAccepted: number = 0;
   lengthMembers: number = 0;
   teamName: string;
 
   propsVisibility: boolean = false;
+  propsAcceptedVisibility: boolean = false;
   myPropVisibility: boolean = false;
 
   invited: string[] = [];
@@ -54,7 +59,8 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog,
+              private studentService: StudentService) { }
 
   openRequestDialog() {
     const dialogConfig = new MatDialogConfig();
@@ -134,26 +140,22 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
   setTableProposals() {
     const props: Proposal[] = [];
+    const propsAccepted: Proposal[] = [];
+    this.myProposal = null;
     
     if (this.proposals.length == 0) {
       this.propsVisibility = false;
+      this.propsAcceptedVisibility = false;
       this.myPropVisibility = false;
-    }
-    else if (this.proposals.length == 1) {
-      if (this.proposals[0].status) {
-        this.myPropVisibility = true;
-        this.propsVisibility = false;
-      }
-      else {
-        this.myPropVisibility = false;
-        this.propsVisibility = true;
-      }
+      return;
     }
 
+    const student: Student = this.studentService.currentStudent;
+    const studentInfo: string = student.name + " " + student.firstName + " (" + student.id + ")";
+
     this.proposals.forEach(p => {
-      if (p.status) {
+      if (p.creator == studentInfo) {
         this.myProposal = p;
-        this.myPropVisibility = true;
         this.getInvitations();
       }
       else {
@@ -162,15 +164,49 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
           p.students[0] = {student: "(Nessun altro partecipante)"}
         }
 
-        props.push(p);
-        this.propsVisibility = true;
+        if (p.status) {
+          propsAccepted.push(p);
+        }
+        else {
+          props.push(p);
+        }
       }
     });
 
-    this.dataSourceProposals = new MatTableDataSource<Proposal>(props);
-    this.dataSourceProposals.paginator = this.paginator;
-    this.dataSourceProposals.sort = this.sort;
-    this.lengthProposals = props.length;
+    if (this.myProposal != null) {
+      this.myPropVisibility = true;
+    }
+    else {
+      this.myPropVisibility = false;
+    }
+
+    if (props.length > 0) {
+      this.propsVisibility = true;
+    }
+    else {
+      this.propsVisibility = false;
+    }
+
+    if (propsAccepted.length > 0) {
+      this.propsAcceptedVisibility = true;
+    }
+    else {
+      this.propsAcceptedVisibility = false;
+    }
+
+    if (this.propsVisibility) { 
+      this.dataSourceProposals = new MatTableDataSource<Proposal>(props);
+      this.dataSourceProposals.paginator = this.paginator;
+      this.dataSourceProposals.sort = this.sort;
+      this.lengthProposals = props.length;
+    }
+
+    if (this.propsAcceptedVisibility) { 
+      this.dataSourceProposalsAccepted = new MatTableDataSource<Proposal>(propsAccepted);
+      this.dataSourceProposalsAccepted.paginator = this.paginator;
+      this.dataSourceProposalsAccepted.sort = this.sort;
+      this.lengthProposalsAccepted = propsAccepted.length;
+    }
   }
 
   setTableTeam(){

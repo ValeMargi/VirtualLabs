@@ -34,17 +34,6 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
     private router: Router,
     private formBuilder: FormBuilder) {
 
-    authService.userLogged.subscribe(ok => {
-      if (ok && authService.isLoggedIn()) {
-
-        if (router.url == "/")
-          router.navigateByUrl("home");
-      }
-      else {
-        document.getElementById("error").style.visibility = "visible";
-      }
-    });
-
     this.RegisterForm = this.formBuilder.group({
       name : new FormControl('', [Validators.required, Validators.minLength(3)]),
       surname : new FormControl('', [Validators.required]),

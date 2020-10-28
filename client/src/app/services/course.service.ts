@@ -66,9 +66,6 @@ export class CourseService {
   }
 
   enrollStudents(courseName: string, file: File) {
-    if (file == null)
-       return null;
-
     let data: FormData = new FormData();
     data.append("file", file, file.name);
     return this.http.post<Student[]>(`${this.API_COURSES}/${courseName}/enrollMany`, data).pipe(map(students => students || []));

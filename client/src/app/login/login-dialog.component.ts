@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Injectable, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Inject, Injectable, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,19 +13,17 @@ import { ForgotPasswordContComponent } from '../forgot-password/forgot-password-
   templateUrl: './login-dialog.component.html',
   styleUrls: ['./login-dialog.component.css']
 })
-export class LoginDialogComponent implements OnInit {
+export class LoginDialogComponent implements OnInit, OnChanges {
 
 LoginForm: FormGroup;
-error: boolean = false;
 
+@Input() badCredentials: boolean;
 @Output('login') log = new EventEmitter<any>();
 
   constructor(
       public matDialog: MatDialog,
       public authService: AuthService,
       private dialogRef: MatDialogRef<LoginDialogComponent>,
-      private router: Router,
-      private route: ActivatedRoute,
       private formBuilder: FormBuilder) {
 
       this.LoginForm = this.formBuilder.group({
@@ -37,6 +35,10 @@ error: boolean = false;
 
   ngOnInit() {
     
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.badCredentials = changes.badCredentials.currentValue;
   }
 
   close() {

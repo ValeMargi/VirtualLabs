@@ -13,24 +13,15 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class LoginContComponent implements OnInit {
 
   private md5: Md5;
-  private route$: Subscription
+  BAD_CREDENTIALS: boolean = false;
 
   constructor(private authService: AuthService,
-              private dialogRef: MatDialogRef<LoginContComponent>,
-              private router: Router,
-              private route: ActivatedRoute) {
+              private dialogRef: MatDialogRef<LoginContComponent>) {
 
                }
 
   ngOnInit(): void {
-    this.authService.userLogged.subscribe(ok => {
-      if (ok && this.authService.isLoggedIn()) {
-        this.close();
-      }
-      else {
-        //this.error = true;
-      }
-    });
+    
   }
 
   close() {
@@ -43,9 +34,22 @@ export class LoginContComponent implements OnInit {
 
     this.md5 = new Md5();
 
-    this.authService.login(email, this.md5.start().appendStr(password).end().toString());
+    this.authService.login(email, this.md5.start().appendStr(password).end().toString()).subscribe(
+      (data) => {
+        this.authService.setSession(data);
+        this.close();
+      },
+      (error) => {
+        this.authService.userLogged.emit(false);
 
-
+        if (error.error.status == 401) {
+          this.BAD_CREDENTIALS = true;
+        }
+        else {
+          window.alert(error.error.message);
+        }
+      }
+    );
   }
 
 }

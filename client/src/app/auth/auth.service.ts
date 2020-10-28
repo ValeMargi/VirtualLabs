@@ -31,23 +31,11 @@ export class AuthService {
   }
   
   login(email: string, password: string) {
-    this.http.post(`http://localhost:8080/login`,{
-        "username": email,
-        "password": password
-      }
-    ).subscribe(
-      (authResult: any) => {
-        this.setSession(authResult);
-        shareReplay();
-      },
-      (error: any) => {
-        this.userLogged.emit(false);
-      }
-    );
-
+    return this.http.post(`http://localhost:8080/login`, 
+    { "username": email, "password": password });
   }
 
-  private setSession(authResult) {
+  setSession(authResult) {
     const tkn = JSON.parse(atob(authResult.token.split('.')[1]));
     let token = jwt_decode(authResult.token);
 
@@ -66,6 +54,7 @@ export class AuthService {
     localStorage.setItem('role', role);
 
     this.userLogged.emit(true);
+    shareReplay();
   }
 
   logout() {

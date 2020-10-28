@@ -12,6 +12,11 @@ h2 {
     font-size: 16pt;
 }
 
+h3 {
+  text-align: center;
+  color: red;
+}
+
 mat-form-field {
     display: table;
     margin: 0 auto;
@@ -22,8 +27,13 @@ mat-dialog-actions {
 }
 
 .register {
-    display: table;
-    margin: 0 auto;
+  display: table;
+  margin: 0 auto;
+}
+
+.passwordForget {
+  display: table;
+  margin: 0 auto;
 }
 
 .btnLogin{

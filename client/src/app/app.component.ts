@@ -124,7 +124,13 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
       if (params['doLogin']) {
-        this.openDialogLogin();
+        if (this.authService.isLoggedOut()) {
+          this.openDialogLogin();
+        }
+        else {
+          const queryParams = {}
+          this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+        }
       }
       else if (params['doRegister']) {
         this.openDialogRegister();

@@ -103,27 +103,16 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       if (params['doLogin']) {
         this.openDialogLogin();
       }
-    });
-
-    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
-      if (params['doRegister']) {
+      else if (params['doRegister']) {
         this.openDialogRegister();
       }
-    });
-
-    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
-      if (params['myProfile']) {
+      else if (params['myProfile']) {
         this.openDialogProfile();
       }
-    });
-
-    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
-      if (params['newCourse']) {
+      else if (params['newCourse']) {
         this.openDialogCourse();
       }
     });
-
-    //HERE
 
     if (this.router.url == "") {
       this.notFoundVisibility = true;
@@ -179,7 +168,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        if (event.urlAfterRedirects == "/home") {
+        if (event.urlAfterRedirects.indexOf("home") >= 0) {
           this.homeVisibility = true;
         }
         else {
@@ -284,7 +273,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   routeNewCourse() {
     this.router.navigate([this.router.url], {queryParams: {newCourse : "true"}});
-
   }
 
   routeMyProfile() {

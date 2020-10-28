@@ -6,7 +6,7 @@ import { Team } from '../../../models/team.model';
 import { Student } from 'src/app/models/student.model';
 import { Course } from 'src/app/models/course.model';
 import { Proposal } from 'src/app/models/proposal.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 @Component({
   selector: 'app-teams-cont',
@@ -17,9 +17,9 @@ export class TeamsContComponent implements OnInit, OnDestroy {
 
   private route$: Subscription;
 
-  constructor(private studentService: StudentService,
-              private teamService: TeamService,
+  constructor(private teamService: TeamService,
               private courseService: CourseService,
+              private router: Router,
               private route: ActivatedRoute) { }
 
   @Output() TEAM: Team;
@@ -29,6 +29,11 @@ export class TeamsContComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route$ = this.route.params.subscribe(params =>  {
       let courseName: string = params.courses;
+
+      if (courseName == undefined) {
+        return;
+      }
+
       this.PROPOSALS = [];
       this.MEMBERS = [];
 
@@ -59,7 +64,7 @@ export class TeamsContComponent implements OnInit, OnDestroy {
     let studentId: string = localStorage.getItem('currentId');
 
     this.teamService.getTeamForStudent(courseName, studentId).subscribe(
-      (data) =>{
+      (data) => {
         this.TEAM = data;
 
         if (this.TEAM != null) {
@@ -67,6 +72,14 @@ export class TeamsContComponent implements OnInit, OnDestroy {
         }
         else {
           this.getProposals();
+        }
+      },
+      (error) => {
+        window.alert(error.error.message);
+        const status: number = error.error.status;
+
+        if (status == 404 || status == 403) {
+          this.router.navigateByUrl("home");
         }
       }
     );

@@ -99,20 +99,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     });
 
-    this.route$ = this.route.params.subscribe(params => {
-      const courseName = params.courses;
-      
-      this.courseService.getOne(courseName).subscribe(
-        (data) => {
-          this.courseService.setCurrentCourse(data);
-        },
-        (error) => {
-          window.alert(error.error.message);
-          this.router.navigateByUrl("home");
-        }
-      )
-    });
-
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         if (event.urlAfterRedirects.indexOf("home") >= 0) {
@@ -120,10 +106,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         }
         else {
           this.homeVisibility = false;
-
-          if (this.courseService.currentCourse.getValue().name == "" && this.router.url.match("course")) {
-            this.courseService.currentCourse.getValue().name = this.router.url.split("/")[3];
-          }
         }
       }
     });
@@ -210,6 +192,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.route$.unsubscribe();
+    this.routeQueryParams$.unsubscribe();
   }
 
   getUserName(){

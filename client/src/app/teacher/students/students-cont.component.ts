@@ -1,9 +1,10 @@
-import { Component, EventEmitter, OnInit, Output, Inject, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, Inject, AfterViewInit, OnDestroy } from '@angular/core';
 import { Student } from '../../models/student.model';
 import { StudentService } from '../../services/student.service';
 import { AuthService } from '../../auth/auth.service';
 import { CourseService } from 'src/app/services/course.service';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 
 @Component({
@@ -11,11 +12,12 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
   templateUrl: './students-cont.component.html',
   styleUrls: ['./students-cont.component.css']
 })
-export class StudentsContComponent implements OnInit {
+export class StudentsContComponent implements OnInit, OnDestroy {
 
   @Output() STUDENTS_ENROLLED: Student[] = []
   @Output() ALL_STUDENTS: Student[] = []
 
+  private route$: Subscription
                               
   constructor(private studentService: StudentService,
               private courseService: CourseService, 
@@ -25,37 +27,48 @@ export class StudentsContComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.route.params.subscribe( params => console.log(params));
+    this.route$ = this.route.params.subscribe(params => {
+      let courseName = params.courses;
 
-    this.studentService.all().subscribe(
-      (data) => {
-        this.ALL_STUDENTS = data;
-      },
-      (error) => { 
-        window.alert("studenti non reperiti");
-       } 
+      if (courseName == undefined) {
+        return;
+      }
+
+      this.studentService.all().subscribe(
+        (data) => {
+          this.ALL_STUDENTS = data;
+        },
+        (error) => { 
+          window.alert(error.error.message);
+
+          if (error.error.status == 404) {
+            this.router.navigateByUrl("home");
+          }
+        } 
       );
 
-      this.loadStudentsEnrolled();
-
-      this.router.events.subscribe((event) => {
-        if (event instanceof NavigationEnd) { 
-          if (event.urlAfterRedirects.match("/students")) {
-            this.loadStudentsEnrolled();
-          }
-        }
-      });
+      this.loadStudentsEnrolled(courseName);
+    });
   }
 
-  loadStudentsEnrolled() {
-    this.courseService.enrolledStudents(this.courseService.currentCourse.getValue().name).subscribe(
+  ngOnDestroy() {
+    this.route$.unsubscribe();
+  }
+
+  loadStudentsEnrolled(courseName: string) {
+    this.courseService.enrolledStudents(courseName).subscribe(
       (data) => {
         this.STUDENTS_ENROLLED = data;
       },
       (error) => { 
-        window.alert("studenti iscritti non reperiti");
-       } 
-      );
+        window.alert(error.error.message);
+        const status: number = error.error.status;
+
+        if (status == 404 || status == 403) {
+          this.router.navigateByUrl("home");
+        }
+      } 
+    );
   }
 
   enrollStudent(student: Student) {

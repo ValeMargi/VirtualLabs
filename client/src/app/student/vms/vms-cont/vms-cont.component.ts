@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { VM } from '../../../models/vm.model';
 import { AuthService } from '../../../auth/auth.service';
 import { TeamService } from '../../../services/team.service';
@@ -7,70 +7,88 @@ import { CourseService } from 'src/app/services/course.service';
 import { Student } from 'src/app/models/student.model';
 import { StudentService } from 'src/app/services/student.service';
 import { VMOwners } from 'src/app/models/vm-owners.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-vms-cont',
   templateUrl: './vms-cont.component.html',
   styleUrls: ['./vms-cont.component.css']
 })
-export class VmsContComponent implements OnInit {
+export class VmsContComponent implements OnInit, OnDestroy {
 
-  public VMs: VMOwners[] = [];
-  public TEAM: Team;
-  public MEMBERS: Student[] = [];
+  VMs: VMOwners[] = [];
+  TEAM: Team;
+  MEMBERS: Student[] = [];
+
+  private route$: Subscription
 
   constructor(private teamService: TeamService, 
     private courseService: CourseService, 
-    private studentService: StudentService) { 
+    private studentService: StudentService,
+    private router: Router,
+    private route: ActivatedRoute) { 
     
   }
 
 
   ngOnInit() {
-    let courseName = this.courseService.currentCourse.getValue().name;
     let studentId = localStorage.getItem('currentId');
 
-    this.teamService.getTeamForStudent(courseName, studentId).subscribe(
-      (data) => {
-        if (data != null) {
-          this.TEAM = data;
-          
-          this.teamService.getAllVMTeam(courseName, this.TEAM.id).subscribe(
-            (data) => {
-              let vms: VM[] = data;
-              let array: VMOwners[] = new Array();
+    this.route$ = this.route.params.subscribe(params => {
+      let courseName = params.courses;
 
-              vms.forEach(vm => {
-                this.studentService.getOwners(courseName, this.TEAM.id, vm.id).subscribe(
-                  (data) => {
-                    array.push(new VMOwners(vm.id, vm.numVcpu, vm.diskSpace, vm.ram, vm.status, vm.nameVM, vm.timestamp, data))
-                    this.VMs = array;
-                  }, 
-                  (error) => {
-                    window.alert(error.error.message);
-                  }
-                );
-              });
-            },
-            (error) => {
-              window.alert(error.error.message);
-            }
-          );
-
-          this.teamService.getMembersTeam(this.TEAM.id).subscribe(
-            (data) => {
-              this.MEMBERS = data;
-            },
-            (error) => {
-              window.alert(error.error.message);
-            }
-          )
-        }
-      },
-      (error) => {
-        window.alert(error.error.message);
+      if (courseName == undefined) {
+        return;
       }
-    );
+
+      this.teamService.getTeamForStudent(courseName, studentId).subscribe(
+        (data) => {
+          if (data != null) {
+            this.TEAM = data;
+            
+            this.teamService.getAllVMTeam(courseName, this.TEAM.id).subscribe(
+              (data) => {
+                let vms: VM[] = data;
+                let array: VMOwners[] = new Array();
+
+                vms.forEach(vm => {
+                  this.studentService.getOwners(courseName, this.TEAM.id, vm.id).subscribe(
+                    (data) => {
+                      array.push(new VMOwners(vm.id, vm.numVcpu, vm.diskSpace, vm.ram, vm.status, vm.nameVM, vm.timestamp, data))
+                      this.VMs = array;
+                    }, 
+                    (error) => {
+                      window.alert(error.error.message);
+                    }
+                  );
+                });
+              },
+              (error) => {
+                window.alert(error.error.message);
+              }
+            );
+
+            this.teamService.getMembersTeam(this.TEAM.id).subscribe(
+              (data) => {
+                this.MEMBERS = data;
+              },
+              (error) => {
+                window.alert(error.error.message);
+              }
+            )
+          }
+        },
+        (error) => {
+          window.alert(error.error.message);
+          const status: number = error.error.status;
+
+          if (status == 404 || status == 403) {
+            this.router.navigateByUrl("home");
+          }
+        }
+      );
+    });
 
     this.studentService.vmCreation.subscribe(
       (data) => {
@@ -103,6 +121,10 @@ export class VmsContComponent implements OnInit {
 
       }
     );
+  }
+
+  ngOnDestroy() {
+    this.route$.unsubscribe();
   }
 
   activateVM(vmId: number) {

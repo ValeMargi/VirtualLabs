@@ -105,38 +105,46 @@ openDialogLogin() {
   this.matDialog.open(LoginContComponent, dialogConfig);
 }
 
-register(firstName: string, name: string, id: string, email: string, password: string) {
+register(firstName: string, name: string, id: string, email: string, password: string, pwdRepeat: string) {
   if (this.selectedPhoto == null) {
     window.alert("Selezionare una foto del profilo");
     return;
   }
-
-  let image = this.selectedPhoto;
-
-  if (!image.type.match("image/jpg") && !image.type.match("image/jpeg") && !image.type.match("image/png")) {
-    window.alert("Formato immagine non supportato");
+  else if (password != pwdRepeat) {
+    window.alert("Le 2 password devono coincidere");
     return;
   }
   else if (!this.RegisterForm.valid) {
     window.alert("Controllare che i dati inseriti rispettino tutti i vincoli e riprovare");
     return;
   }
+  
+  let image = this.selectedPhoto;
+
+  if (!image.type.match("image/jpg") && !image.type.match("image/jpeg") && !image.type.match("image/png")) {
+    window.alert("Formato immagine non supportato");
+    return;
+  }
 
   this.md5 = new Md5();
 
-  let userJson = { "firstName": firstName,
-                  "name": name,
+  let userJson = { "firstName": firstName.charAt(0).toUpperCase() + firstName.toLowerCase().slice(1),
+                  "name": name.charAt(0).toUpperCase() + name.toLowerCase().slice(1),
                   "id": id.toLowerCase(),
                   "email": email.toLowerCase(),
                   "password": this.md5.start().appendStr(password).end().toString()
                 };
 
-  console.log(userJson.email.split("@",1));
-  let idEmail: string[];
-  idEmail = userJson.email.split("@",1);
+  let idEmail: string[] = userJson.email.split("@");
 
-  if(userJson.id != idEmail[0]){
+  if (userJson.id != idEmail[0]){
     window.alert("La tua email non corrisponde alla matricola inserita");
+  }
+  else if (userJson.id.startsWith("s") && idEmail[1] == "polito.it") {
+    window.alert("Lo studente deve avere come dominio 'studenti.polito.it'");
+  }
+  else if (userJson.id.startsWith("d") && idEmail[1] == "studenti.polito.it") {
+    window.alert("Il docente deve avere come dominio 'polito.it'");
   }
 
   this.reg.emit({image: image, userJson: userJson});

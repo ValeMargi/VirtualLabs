@@ -46,14 +46,11 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = true;
+    dialogConfig.autoFocus = false;
 
-    dialogConfig.data = {
-        id: 1,
-        title: 'Model'
-    };
+    const dialogRef = this.matDialog.open(ManageModelContComponent, dialogConfig);
 
-    this.matDialog.open(ManageModelContComponent, dialogConfig);
+    dialogRef.componentInstance.courseName = this.route.snapshot.params.courses;
   }
 
   selectTeam(team) {

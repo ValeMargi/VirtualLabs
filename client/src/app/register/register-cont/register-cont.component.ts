@@ -10,8 +10,9 @@ import { AuthService } from 'src/app/auth/auth.service';
 export class RegisterContComponent implements OnInit {
 
   QUERYING: boolean = false;
+  OK: boolean = false;
 
-  constructor(private authService: AuthService, private matDialogRef: MatDialogRef<RegisterContComponent>) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
   }
@@ -20,14 +21,15 @@ export class RegisterContComponent implements OnInit {
     let image = content.image;
     let userJson = content.userJson;
     this.QUERYING = true;
+    this.OK = false;
 
     this.authService.registerUser(image, userJson).subscribe(
       (data) => {
-        this.matDialogRef.close();
         this.QUERYING = false;
-        window.alert("Richiesta di registrazione avvenuta con successo. Controlla la tua posta per attivare l'account")
+        this.OK = true;
       },
       (error: any) => {
+        window.alert(error.error.message);
         this.QUERYING = false;
       }
     );

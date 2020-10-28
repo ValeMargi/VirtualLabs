@@ -24,7 +24,7 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
   private md5: Md5;
 
   @Input() querying: boolean;
-
+  @Input() ok: boolean;
   @Output('register') reg = new EventEmitter<any>();
 
   constructor(
@@ -82,7 +82,13 @@ ngOnInit() {
 }
 
 ngOnChanges(changes: SimpleChanges) {
-  this.querying = changes.querying.currentValue;
+  if (changes.querying != null) {
+    this.querying = changes.querying.currentValue;
+  }
+
+  if (changes.ok != null) {
+    this.ok = changes.ok.currentValue;
+  }
 }
 
 close() {

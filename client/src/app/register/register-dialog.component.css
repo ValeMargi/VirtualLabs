@@ -118,6 +118,12 @@ mat-dialog-actions {
     float: right;
 }
 
+.success {
+    text-align: center;
+    margin: 0 auto;
+    color: green;
+}
+
 .login {
     display: table;
     margin: 0 auto;

@@ -61,7 +61,10 @@
       </mat-form-field>
 
     </form>
-  </div>
+  </div><br>
+
+  <mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
+  <h3 class="success" *ngIf="ok">Richiesta di registrazione avvenuta con successo. Controlla la tua posta per attivare l'account</h3>
 
   <div class="login">
     Già registrato?&nbsp;
@@ -69,10 +72,8 @@
   </div>
 </mat-dialog-content>
 
-<mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
-
 <mat-dialog-actions class="actions">
   <button mat-button mat-raised-button color="warn"(click)="close()">Annulla</button>
-  <button mat-button mat-raised-button color="primary" (click)="register(name.value, surname.value, id.value, email.value, password.value, passwordRepeat.value)">Registrati</button>
+  <button mat-button mat-raised-button color="primary" [disabled]="ok" (click)="register(name.value, surname.value, id.value, email.value, password.value, passwordRepeat.value)">Registrati</button>
 </mat-dialog-actions>
 

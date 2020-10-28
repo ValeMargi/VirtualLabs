@@ -1,6 +1,6 @@
 <h1 mat-dialog-title><strong>Composizione Gruppo</strong></h1>
 <mat-dialog-content class="mat-typography" >
-  <form [formGroup]="CreateTeamForm" *ngIf="availableStudents.length >= min - 1">
+  <form [formGroup]="CreateTeamForm">
     <!--Nome Gruppo-->
     <mat-form-field class="gruppo">
           <mat-label>Gruppo</mat-label>
@@ -18,7 +18,7 @@
     </mat-form-field> <br><br>
     <!--<input #timeout type="date" placeholder="Scadenza richiesta" name="oneWeek" formControlName="date" [ngModel]="oneWeek | date:'yyyy-MM-dd'" matInput required>-->
 
-    <div *ngIf="max > 1">
+    <div *ngIf="max > 1 && availableStudents.length >= min - 1">
       <mat-form-field class="gruppo">
         <mat-label>Questo corso accetta da {{min}} a {{max}} partecipanti per team</mat-label>
         <input #input type="search" placeholder="Aggiungi partecipante" matInput [formControl]="myControl" [matAutocomplete]="auto">

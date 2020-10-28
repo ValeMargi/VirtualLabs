@@ -38,7 +38,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
 
   selectedPhoto: File;
   private studentSelected: Student;
-  private studentsToAdd: Student[] = [];
+  studentsToAdd: Student[] = [];
 
   @Input() querying: boolean;
   @Input() course: Course;

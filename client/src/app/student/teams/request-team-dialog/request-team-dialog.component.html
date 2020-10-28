@@ -1,6 +1,6 @@
 <h1 mat-dialog-title><strong>Composizione Gruppo</strong></h1>
 <mat-dialog-content class="mat-typography" >
-  <form [formGroup]="CreateTeamForm">
+  <form [formGroup]="CreateTeamForm" *ngIf="availableStudents.length >= min - 1">
     <!--Nome Gruppo-->
     <mat-form-field class="gruppo">
           <mat-label>Gruppo</mat-label>
@@ -18,19 +18,22 @@
     </mat-form-field> <br><br>
     <!--<input #timeout type="date" placeholder="Scadenza richiesta" name="oneWeek" formControlName="date" [ngModel]="oneWeek | date:'yyyy-MM-dd'" matInput required>-->
 
-    <mat-form-field class="gruppo">
-      <mat-label>Questo corso accetta da {{min}} a {{max}} partecipanti per team</mat-label>
-      <input #input type="search" placeholder="Aggiungi partecipante" matInput [formControl]="myControl" [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onStudentSelected($event.option.value)">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-              {{option.name}} {{option.firstName}} ({{option.id}})
-          </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
+    <div *ngIf="max > 1">
+      <mat-form-field class="gruppo">
+        <mat-label>Questo corso accetta da {{min}} a {{max}} partecipanti per team</mat-label>
+        <input #input type="search" placeholder="Aggiungi partecipante" matInput [formControl]="myControl" [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onStudentSelected($event.option.value)">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                {{option.name}} {{option.firstName}} ({{option.id}})
+            </mat-option>
+          </mat-autocomplete>
+      </mat-form-field>
 
-    <button mat-mini-fab color="primary" (click)="addStudent()">
-      <mat-icon>add</mat-icon>
-    </button>
+      <button mat-mini-fab color="primary" [disabled]="studentsToAdd.length == max - 1" (click)="addStudent()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+
     <div class="tableContainer" *ngIf="tableVisibility"> 
         <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
             <ng-container matColumnDef="id">
@@ -58,12 +61,15 @@
         </table>
     </div><br>
   </form>
+  <div *ngIf="availableStudents.length < min - 1">
+    <h3><strong>Attualmente non ci sono studenti disponibili a sufficienza per creare un team</strong></h3>
+  </div>
 </mat-dialog-content>
 
 <mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
 
 <mat-dialog-actions>
   <button mat-raised-button color="warn" mat-dialog-close>Anulla</button>
-  <button mat-raised-button color="primary" [disabled]="querying" (click)="proposeTeam(nameTeam.value, timeout.value)" cdkFocusInitial>Crea</button>
+  <button mat-raised-button color="primary" *ngIf="availableStudents.length >= min - 1" [disabled]="querying" (click)="proposeTeam(nameTeam.value, timeout.value)" cdkFocusInitial>Crea</button>
 </mat-dialog-actions>
 

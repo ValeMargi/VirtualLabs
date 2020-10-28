@@ -81,13 +81,6 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
 
     if (changes.availableStudents != null) {
       this.availableStudents = changes.availableStudents.currentValue;
-
-      this.filteredOptions = this.myControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value.name),
-        map(value => this._filter(value))
-      );
     }
   }
 
@@ -95,7 +88,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
     const filterValue = value.toLowerCase();
 
     return this.availableStudents.filter(option => 
-      (option.id != localStorage.getItem('currentId')) &&
+      (option.id != localStorage.getItem('currentId') && !this.studentsToAdd.includes(option)) &&
       (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
   }
 
@@ -113,7 +106,6 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   addStudent() {
     if (this.studentSelected != null && !this.studentsToAdd.includes(this.studentSelected)) {
       this.studentsToAdd.push(this.studentSelected);
-      this.availableStudents.splice(this.availableStudents.indexOf(this.studentSelected), 1);
       this.dataSource = new MatTableDataSource<Student>(this.studentsToAdd);
       this.dataSource.sort = this.sort;
       this.tableVisibility = true;
@@ -124,7 +116,6 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   deleteStudent(student: Student) {
     if (student != null && this.studentsToAdd.includes(student)) {
       this.studentsToAdd.splice(this.studentsToAdd.indexOf(student), 1);
-      this.availableStudents.push(student);
       this.dataSource = new MatTableDataSource<Student>(this.studentsToAdd);
       this.dataSource.sort = this.sort;
 

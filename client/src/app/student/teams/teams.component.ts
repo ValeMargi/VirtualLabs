@@ -5,7 +5,7 @@ import{ Team } from '../../models/team.model';
 import{ TeamsContComponent } from './teams-cont/teams-cont.component'
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import { RequestTeamDialogContComponent } from './request-team-dialog/request-team-dialog-cont/request-team-dialog-cont.component';
 import { Proposal } from 'src/app/models/proposal.model';
 import { Student } from 'src/app/models/student.model';
@@ -57,10 +57,16 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   constructor(private dialog: MatDialog) { }
 
   openRequestDialog() {
-    const dialogRef = this.dialog.open(RequestTeamDialogContComponent,{ id: 'dialogRequest'});
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    dialogConfig.disableClose = false;
+    dialogConfig.minWidth = "40%";
+    dialogConfig.id = "Request Team";
+
+    const dialogRef = this.dialog.open(RequestTeamDialogContComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      
     });
   }
 

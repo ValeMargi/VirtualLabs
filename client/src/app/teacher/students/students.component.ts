@@ -184,12 +184,6 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   addStudentCSV(file) {
     this.selectedCSV = file.target.files[0]
     this.toInsertCSV.emit(this.selectedCSV);
-
-    /*const reader = new FileReader();
-    reader.readAsDataURL(this.selectedPhoto);
-    reader.onload = (_event) => {
-      let csv = reader.result;
-    }*/
   }
 
   displayFn(student: Student) {

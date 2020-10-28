@@ -70,8 +70,8 @@
           <ng-container matColumnDef="delete">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
             <td mat-cell *matCellDef="let row"> 
-              <button mat-button class="delete">
-                <mat-icon aria-label="" (click)=deleteTeacher(row)>delete</mat-icon>
+              <button mat-button class="delete" (click)=deleteTeacher(row)>
+                <mat-icon>delete</mat-icon>
               </button>
             </td>
         </ng-container>

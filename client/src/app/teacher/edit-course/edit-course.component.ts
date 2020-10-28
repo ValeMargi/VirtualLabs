@@ -6,6 +6,7 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Course } from 'src/app/models/course.model';
+import { Student } from 'src/app/models/student.model';
 import { Teacher } from 'src/app/models/teacher.model';
 
 @Component({
@@ -50,12 +51,7 @@ export class EditCourseComponent implements OnInit, OnChanges {
       });
     }
 
-    this.filteredOptions = this.myControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value.name),
-        map(value => this._filter(value))
-      );
+    this.setupFilter();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -69,6 +65,7 @@ export class EditCourseComponent implements OnInit, OnChanges {
     }
 
     if (changes.teachersInCourse != null) {
+      this.setupFilter();
       this.teachersInCourse = changes.teachersInCourse.currentValue;
       this.dataSource = new MatTableDataSource<Teacher>(this.teachersInCourse);
       this.dataSource.sort = this.sort;
@@ -84,16 +81,25 @@ export class EditCourseComponent implements OnInit, OnChanges {
     return (this.course.enabled == 0) ? "Disabilitato" : "Abilitato";
   }
 
+  setupFilter() {
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(value => this._filter(value))
+      );
+  }
+
   _filter(value: string): Teacher[] {
     const filterValue = value.toLowerCase();
 
     return this.allTeachers.filter(option => 
-      (!this.teachersInCourse.map(t => t.id).includes(option.id)) &&
+      (!this.teachersInCourse.map(t => t.id).includes(option.id) && !this.teachersToAdd.includes(option)) &&
       (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
   }
 
   displayFn(teacher: Teacher) {
-    if (teacher != null)
+    if (teacher != null && teacher.name != null && teacher.firstName != null)
       return teacher.name.concat(" ", teacher.firstName, " (", teacher.id, ")");
     else
       return "";
@@ -109,6 +115,9 @@ export class EditCourseComponent implements OnInit, OnChanges {
       this.teachersToAdd.push(this.teacherSelected);
       this.dataSource = new MatTableDataSource<Teacher>(this.teachersInCourse);
       this.dataSource.sort = this.sort;
+      this.myControl.reset("");
+      this.teacherSelected = null;
+      this.setupFilter();
     }
   }
 
@@ -118,6 +127,7 @@ export class EditCourseComponent implements OnInit, OnChanges {
       this.teachersToAdd.splice(this.teachersToAdd.indexOf(teacher));
       this.dataSource = new MatTableDataSource<Teacher>(this.teachersInCourse);
       this.dataSource.sort = this.sort;
+      this.setupFilter();
     }
   }
 

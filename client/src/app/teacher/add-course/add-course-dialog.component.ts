@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Course } from 'src/app/models/course.model';
 import { CourseService } from 'src/app/services/course.service';
@@ -15,7 +15,7 @@ import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms'
   templateUrl: './add-course-dialog.component.html',
   styleUrls: ['./add-course-dialog.component.css']
 })
-export class AddCourseDialogComponent implements OnInit {
+export class AddCourseDialogComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -53,6 +53,21 @@ export class AddCourseDialogComponent implements OnInit {
      }
 
   ngOnInit(): void {
+    this.setupFilter();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.allTeachers != null) {
+      this.allTeachers = changes.allTeachers.currentValue;
+      this.setupFilter();
+    }
+  } 
+
+  close() {
+    this.cont.close();
+  }
+
+  setupFilter() {
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),
@@ -61,20 +76,16 @@ export class AddCourseDialogComponent implements OnInit {
       );
   }
 
-  close() {
-    this.cont.close();
-  }
-
   _filter(value: string): Teacher[] {
     const filterValue = value.toLowerCase();
 
     return this.allTeachers.filter(option => 
-      (option.id != localStorage.getItem('currentId')) &&
+      (option.id != localStorage.getItem('currentId') && !this.teachersToAdd.includes(option)) &&
       (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
   }
 
   displayFn(teacher: Teacher) {
-    if (teacher != null)
+    if (teacher != null && teacher.name != null && teacher.firstName != null)
       return teacher.name.concat(" ", teacher.firstName, " (", teacher.id, ")");
     else
       return "";
@@ -90,6 +101,9 @@ export class AddCourseDialogComponent implements OnInit {
       this.dataSource = new MatTableDataSource<Teacher>(this.teachersToAdd);
       this.dataSource.sort = this.sort;
       this.tableVisibility = true;
+      this.teacherSelected = null;
+      this.myControl.reset("");
+      this.setupFilter();
     }
   }
 
@@ -102,6 +116,8 @@ export class AddCourseDialogComponent implements OnInit {
       if (this.teachersToAdd.length == 0) {
         this.tableVisibility = false;
       }
+
+      this.setupFilter();
     }
   }
 

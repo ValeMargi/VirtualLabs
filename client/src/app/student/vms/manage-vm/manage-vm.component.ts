@@ -73,7 +73,7 @@ export class ManageVmComponent implements OnInit {
   }
 
   displayFn(student: Student) {
-    if (student != null && student.name != null)
+    if (student != null && student.name != null && student.firstName != null)
       return student.name.concat(" ", student.firstName, " (", student.id, ")");
     else
       return "";
@@ -89,6 +89,7 @@ export class ManageVmComponent implements OnInit {
       this.dataSource = new MatTableDataSource<Student>(this.vm.owners.concat(this.studentsToAdd));
       this.dataSource.sort = this.sort;
       this.myControl.reset("");
+      this.studentSelected = null;
       this.setupFilter();
     }
   }

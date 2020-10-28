@@ -70,13 +70,13 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.students != null) {
       this.students = changes.students.currentValue;
-      this.setupFilter();
     }
 
     if (changes.options != null) {
       this.options = changes.options.currentValue;
     }
 
+    this.setupFilter();
     this.manageTableVisibility();
     this.setTable();
   }
@@ -187,7 +187,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   displayFn(student: Student) {
-    if (student != null && student.name != null)
+    if (student != null && student.name != null && student.firstName != null)
       return student.name.concat(" ", student.firstName, " (", student.id, ")");
     else
       return "";

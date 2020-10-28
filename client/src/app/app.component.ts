@@ -280,14 +280,21 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     dialogConfig.data = {
         id: 1,
         title: 'Login'
-
     };
 
     const dialogRef = this.matDialog.open(LoginContComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
       const queryParams = {}
-      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+      const url = this.authService.getStoredUrl();
+
+      if (url != null) {
+        this.authService.storeUrl(null);
+        this.router.navigateByUrl(url);
+      }
+      else {
+        this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+      }
     });
   }
 
@@ -415,10 +422,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   getRoute(position: number) {
-    if (this.authService.isLoggedOut()) {
-      return;
-    }
-
     let res: string = this.role + "/course/" + this.router.url.split("/")[3];
 
     if (position == 0) {

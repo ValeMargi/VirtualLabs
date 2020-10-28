@@ -21,7 +21,8 @@ export class AuthService {
   @Output('userLogged') userLogged = new EventEmitter();
   user: Observable<User>;
   
-  currentUser: User;
+  private currentUser: User;
+  private storedUrl: string;
 
   constructor(private http: HttpClient, 
     private teacherService: TeacherService, 
@@ -78,12 +79,19 @@ export class AuthService {
     this.userLogged.emit(false);
   }
 
-  public isLoggedIn() {
-
+  isLoggedIn() {
     return moment().isBefore(moment.unix(+localStorage.getItem('expires_at')));
   }
 
-  public isLoggedOut() { return !this.isLoggedIn(); }
+  isLoggedOut() { return !this.isLoggedIn(); }
+
+  storeUrl(url: string) {
+    this.storedUrl = url;
+  }
+
+  getStoredUrl() {
+    return this.storedUrl;
+  }
 
   getUserByRole() {
     if (this.currentUser == null) {

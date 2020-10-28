@@ -33,17 +33,23 @@ export class AuthGuard implements CanActivate {
         return false;
       }
 
-      if ((role.match("teacher") && currentId.startsWith("d")) || (role.match("student") && currentId.startsWith("s"))) {
-        return true;
-      }
-      else {
-        this.router.navigateByUrl(url.concat("/not-allowed"));
+      if ((role == "teacher" && url.indexOf("student") == 1) || (role == "student" && url.indexOf("teacher") == 1)) {
+        window.alert("Non hai i privilegi per accedere a questa sezione");
+        this.router.navigateByUrl("home");
         return false;
       }
+
+      return true;
     }
     else {
-      this.router.navigate([url], {queryParams: {doLogin : "true"}});
-      return false;
+      if (!url.includes("doLogin")) {
+        this.authService.storeUrl(url);
+        this.router.navigate([''], {queryParams: {doLogin : "true"}});
+        return false;
+      }
+      else {
+        return true;
+      }
     }
   }
   

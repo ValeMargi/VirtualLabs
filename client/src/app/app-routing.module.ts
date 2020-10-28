@@ -41,22 +41,26 @@ const routes: Routes = [
       children: [
           {
             path: 'course',
-            canActivate: [AuthGuard],
             children: [
             {
               path: ':courses/assignments',
+              canActivate: [AuthGuard],
               component: AssignmentsContComponentStudent,
               children: [
-                { path: ':idA/versions', component: VersionsContComponentStudent
+                { path: ':idA/versions', 
+                canActivate: [AuthGuard],
+                component: VersionsContComponentStudent
                 }
               ],
             },
             {
               path: ':courses/teams',
+              canActivate: [AuthGuard],
               component: TeamsContComponent,
             },
             {
               path: ':courses/vms',
+              canActivate: [AuthGuard],
               component: VmsContComponentStudent,
             }
           ]
@@ -69,25 +73,29 @@ const routes: Routes = [
     children: [
         {
           path: 'course',
-          canActivate: [AuthGuard],
           children: [
             {
               path: ':courses/assignments',
+              canActivate: [AuthGuard],
               component: AssignmentsContComponentTeacher,
               children: [
                 { path: ':idA/homeworks', component: HomeworksContComponentTeacher,
+                  canActivate: [AuthGuard],
                   children: [
-                    { path: ':idH/versions', component: VersionsContComponentTeacher }
+                    { path: ':idH/versions', component: VersionsContComponentTeacher,
+                      canActivate: [AuthGuard] }
                     ],
                 }
               ],
             },
             {
               path: ':courses/students',
+              canActivate: [AuthGuard],
               component: StudentsContComponent,
             },
             {
               path: ':courses/vms',
+              canActivate: [AuthGuard],
               component: VmsContComponentTeacher,
               children: [
                 { path: 'team/:idT', component: TeamVmsContComponent }

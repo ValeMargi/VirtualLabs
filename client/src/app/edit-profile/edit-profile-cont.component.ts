@@ -26,9 +26,10 @@ export class EditProfileContComponent implements OnInit {
   ngOnInit() {
     this.CURRENT_USER = this.authService.getUserByRole();
 
-    let id = localStorage.getItem('currentId');
+    const id = localStorage.getItem('currentId');
+    const role = localStorage.getItem('role');
 
-    if (this.authService.currentUser.role == "student") {
+    if (role == "student") {
       this.studentService.getOne(id).subscribe(
         (data) => {
           this.CURRENT_AVATAR = 'data:' + data.avatar.type + ';base64,' + data.avatar.picByte;

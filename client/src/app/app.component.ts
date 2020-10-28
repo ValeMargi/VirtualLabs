@@ -99,6 +99,47 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     });
 
+    this.route$ = this.route.params.subscribe(params => {
+      const courseName = params.courses;
+      
+      this.courseService.getOne(courseName).subscribe(
+        (data) => {
+          this.courseService.setCurrentCourse(data);
+        },
+        (error) => {
+          window.alert(error.error.message);
+          this.router.navigateByUrl("home");
+        }
+      )
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        if (event.urlAfterRedirects.indexOf("home") >= 0) {
+          this.homeVisibility = true;
+        }
+        else {
+          this.homeVisibility = false;
+
+          if (this.courseService.currentCourse.getValue().name == "" && this.router.url.match("course")) {
+            this.courseService.currentCourse.getValue().name = this.router.url.split("/")[3];
+          }
+        }
+      }
+    });
+
+    this.courseService.currentCourse.subscribe(
+      (data) => {
+        if (this.courses.indexOf(data) < 0 && data.name != "") {
+          this.courses.push(data);
+          this.router.navigateByUrl(this.getRouteWithCourse(data));
+        }
+      },
+      (error) => {
+
+      }
+    );
+
     this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
       if (params['doLogin']) {
         this.openDialogLogin();
@@ -165,38 +206,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         this.loginVisibility = true;
       }
     }
-
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        if (event.urlAfterRedirects.indexOf("home") >= 0) {
-          this.homeVisibility = true;
-        }
-        else {
-          this.homeVisibility = false;
-
-          /*this.route$ = this.route.params.subscribe(params => {
-            this.courseName = params.courses;
-            console.log(this.courseName)
-          });*/
-
-          if (this.courseService.currentCourse.getValue().name == "" && this.router.url.match("course")) {
-            this.courseService.currentCourse.getValue().name = this.router.url.split("/")[3];
-          }
-        }
-      }
-    });
-
-    this.courseService.currentCourse.subscribe(
-      (data) => {
-        if (this.courses.indexOf(data) < 0 && data.name != "") {
-          this.courses.push(data);
-          this.router.navigateByUrl(this.getRouteWithCourse(data));
-        }
-      },
-      (error) => {
-
-      }
-    );
   }
 
   ngOnDestroy() {

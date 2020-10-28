@@ -23,8 +23,9 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
 
   displayedColumns: string[] = ['vmName', 'owners', 'status', 'link', 'swithOnOff', 'edit'];
   dataSource = new MatTableDataSource<VMOwners>();
-  @Input() public vms: VMOwners[];
-  @Input() public team: Team;
+  @Input() vms: VMOwners[];
+  @Input() team: Team;
+  @Input() members: Student[];
 
   @Output('activate') activate = new EventEmitter<number>();
   @Output('disable') disable = new EventEmitter<number>();
@@ -49,6 +50,10 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.team != null) {
       this.team = changes.team.currentValue;
+    }
+
+    if (changes.members != null) {
+      this.members = changes.members.currentValue;
     }
 
     if (changes.vms != null) {
@@ -110,7 +115,8 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
     dialogConfig.data = {
         id: 1,
         title: 'Edit',
-        vm: vm
+        vm: vm,
+        members: this.members
     };
 
     this.dialog.open(ManageVmContComponent, dialogConfig);

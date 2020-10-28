@@ -27,7 +27,7 @@ export class CreateVmsContComponent implements OnInit {
         this.studentService.vmCreation.emit(new VMOwners(data.id, data.numVcpu, data.diskSpace, data.ram, data.status, data.nameVM, data.timestamp, [this.studentService.currentStudent]));
       }, 
       (error) => {
-        console.log("Errore nella creazione della VM");
+        window.alert(error.error.message);
       }
     );
   }

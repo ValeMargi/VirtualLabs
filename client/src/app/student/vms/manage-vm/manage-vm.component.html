@@ -32,7 +32,60 @@
         <mat-error *ngIf="ModelVmForm.get('ram').hasError('max')">Massimo 250 MB </mat-error>
     </mat-form-field><br><br>
 
+    <div class="tableName"> <h3><strong>Owners della VM</strong></h3></div>
+
+    <!--Aggiunta Owner-->
+    <div *ngIf="vm.owners.length < studentsInTeam.length">
+        <mat-form-field>
+        <input #input type="search" placeholder="Aggiungi owner" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onStudentSelected($event.option.value)">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option.name}} {{option.firstName}} ({{option.id}})
+        </mat-option>
+        </mat-autocomplete>
+        </mat-form-field>
+        <button mat-mini-fab color="primary" (click)="addStudent()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <!--Tabella Owners VM-->
+   <div class="tableContainer">
+       <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
+           <ng-container matColumnDef="id">
+               <th mat-header-cell *matHeaderCellDef mat-sort-header> Matricola </th>
+               <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+           </ng-container>
+           <ng-container matColumnDef="name">
+               <th mat-header-cell *matHeaderCellDef mat-sort-header> Cognome </th>
+               <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+           </ng-container>
+           <ng-container matColumnDef="firstName">
+               <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+               <td mat-cell *matCellDef="let row"> {{row.firstName}} </td>
+           </ng-container>
+           <ng-container matColumnDef="delete">
+           <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
+           <td mat-cell *matCellDef="let row">
+               <button mat-button *ngIf="studentsToAdd.includes(row)" (click)=deleteStudent(row)>
+               <mat-icon>delete</mat-icon>
+               </button>
+           </td>
+       </ng-container>
+           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+       </table>
+   </div><br>
+
 </form>
+<br>
+<button mat-raised-button color="warn" (click)="deleteVM()">
+    Elimina
+    <mat-icon>delete</mat-icon>
+</button>
+<mat-divider></mat-divider>
+<br>
 </mat-dialog-content>
 
 <mat-dialog-actions>

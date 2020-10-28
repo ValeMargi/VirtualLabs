@@ -17,6 +17,7 @@ export class VmsContComponent implements OnInit {
 
   public VMs: VMOwners[] = [];
   public TEAM: Team;
+  public MEMBERS: Student[] = [];
 
   constructor(private teamService: TeamService, 
     private courseService: CourseService, 
@@ -27,8 +28,9 @@ export class VmsContComponent implements OnInit {
 
   ngOnInit() {
     let courseName = this.courseService.currentCourse.getValue().name;
+    let studentId = localStorage.getItem('currentId');
 
-    this.teamService.getTeamForStudent(courseName, this.studentService.currentStudent.id).subscribe(
+    this.teamService.getTeamForStudent(courseName, studentId).subscribe(
       (data) => {
         if (data != null) {
           this.TEAM = data;
@@ -45,19 +47,28 @@ export class VmsContComponent implements OnInit {
                     this.VMs = array;
                   }, 
                   (error) => {
-                    window.alert("Impossibile ottenere gli owners");
+                    window.alert(error.error.message);
                   }
                 );
               });
             },
             (error) => {
-              window.alert("Impossibile reperire le VM per il team");
+              window.alert(error.error.message);
             }
           );
+
+          this.teamService.getMembersTeam(this.TEAM.id).subscribe(
+            (data) => {
+              this.MEMBERS = data;
+            },
+            (error) => {
+              window.alert(error.error.message);
+            }
+          )
         }
       },
       (error) => {
-        window.alert("Impossibile reperire il team dello studente");
+        window.alert(error.error.message);
       }
     );
 
@@ -71,6 +82,22 @@ export class VmsContComponent implements OnInit {
         else {
           this.VMs.push(data);
         }
+      }, 
+      (error) => {
+
+      }
+    );
+
+    this.studentService.vmDelete.subscribe(
+      (data) => {
+        let array: VMOwners[] = this.VMs;
+        this.VMs = new Array();
+
+        array.forEach(vm => {
+          if (vm.id != data.id) {
+            this.VMs.push(vm);
+          }
+        })
       }, 
       (error) => {
 

@@ -28,6 +28,7 @@ export class StudentService {
   currentAvatar: File;
 
   vmCreation: EventEmitter<VMOwners> = new EventEmitter<VMOwners>();
+  vmDelete: EventEmitter<VMOwners> = new EventEmitter<VMOwners>();
   verUpload: EventEmitter<HomeworkVersion> = new EventEmitter<HomeworkVersion>();
 
   all() {
@@ -75,7 +76,7 @@ export class StudentService {
     return this.http.post<VM>(`${this.API_STUDENTS}/${courseName}/addVM`, data);
   }
 
-  addOwner(courseName: string, VMId: number, membersId: string[]) {
+  addOwners(courseName: string, VMId: number, membersId: string[]) {
     return this.http.post<boolean>(`${this.API_STUDENTS}/${courseName}/${VMId}/addOwner`, membersId);
   }
 

@@ -199,19 +199,19 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     this.authService.userLogged.subscribe(
       (data) => {
         if (data == true) {
-          //this.askLoginVisibility = false;
-
-          if(this.studentService.currentStudent != null){
+          if (this.studentService.currentStudent != null){
               this.name = this.studentService.currentStudent.name;
               this.firstName = this.studentService.currentStudent.firstName;
 
-          }else if(this.teacherService.currentTeacher != null){
+          }
+          else if(this.teacherService.currentTeacher != null){
               this.name = this.teacherService.currentTeacher.name;
               this.firstName = this.teacherService.currentTeacher.firstName;
-           }
+          }
         }
         else {
-          //this.askLoginVisibility = true;
+          this.name = "";
+          this.firstName = "";
         }
       },
       (error) => {
@@ -287,9 +287,9 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       const queryParams = {}
       const url = this.authService.getStoredUrl();
+      this.authService.storeUrl(null);
 
-      if (url != null) {
-        this.authService.storeUrl(null);
+      if (url != null && this.authService.isLoggedIn()) {
         this.router.navigateByUrl(url);
       }
       else {

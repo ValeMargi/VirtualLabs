@@ -2,6 +2,9 @@ import { Component, OnInit, Output } from '@angular/core';
 import { CourseService } from 'src/app/services/course.service';
 import { Course } from 'src/app/models/course.model';
 import { TeacherService } from 'src/app/services/teacher.service';
+import { MatDialogRef } from '@angular/material/dialog';
+import { core } from '@angular/compiler';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-manage-model-cont',
@@ -10,22 +13,34 @@ import { TeacherService } from 'src/app/services/teacher.service';
 })
 export class ManageModelContComponent implements OnInit {
 
+  courseName: string;
   @Output() MODEL_VM: Course;
 
-  constructor(private courseService: CourseService, private teacherService: TeacherService) { }
+  constructor(private courseService: CourseService, 
+              private teacherService: TeacherService,
+              private dialogRef: MatDialogRef<ManageModelContComponent>) { }
 
   ngOnInit(): void {
     this.MODEL_VM = this.courseService.currentCourse.getValue();
+    
+    this.courseService.getOne(this.courseName).subscribe(
+      (data) => {
+        this.MODEL_VM = data;
+      },
+      (error) => {
+        window.alert(error.error.message);
+      }
+    );
   }
 
   updateModel(modelvm: Course) {
     this.teacherService.updateModelVM(modelvm.name, modelvm).subscribe(
       (data) => {
         this.courseService.currentCourse.next(modelvm);
-        window.alert("Modello modificato con successo")
+        this.dialogRef.close();
       },
       (error) => {
-        console.log("modello non aggiornato");
+        window.alert(error.error.message);
       }
     )
   }

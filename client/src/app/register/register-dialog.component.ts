@@ -134,12 +134,15 @@ register(firstName: string, name: string, id: string, email: string, password: s
 
   if (userJson.id != idEmail[0]){
     window.alert("La tua email non corrisponde alla matricola inserita");
+    return;
   }
   else if (userJson.id.startsWith("s") && idEmail[1] == "polito.it") {
     window.alert("Lo studente deve avere come dominio 'studenti.polito.it'");
+    return;
   }
   else if (userJson.id.startsWith("d") && idEmail[1] == "studenti.polito.it") {
     window.alert("Il docente deve avere come dominio 'polito.it'");
+    return;
   }
 
   this.reg.emit({image: image, userJson: userJson});

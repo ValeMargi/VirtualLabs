@@ -37,11 +37,11 @@ public class JwtAuthenticationController {
         String usernameAuth = authenticationRequest.getUsername();
         /*Controllare se fare lowerCase*/
         if( !( usernameAuth.matches("^s[0-9]+@studenti.polito.it")) && !( usernameAuth.matches("^d[0-9]+@polito.it")))
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email " + usernameAuth + " not supported");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email " + usernameAuth + " non valida");
 
         int index = usernameAuth.indexOf("@");
         if(index == -1)
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email " + usernameAuth + " not supported");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email " + usernameAuth + " non valida");
         else{
             String id = usernameAuth.substring(0, index);
             authenticate(id, authenticationRequest.getPassword());

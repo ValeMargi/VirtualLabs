@@ -21,7 +21,9 @@ import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Reader;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
@@ -283,7 +285,8 @@ public class VLServiceImpl implements VLService{
                 Homework h = new Homework();
                 h.setAssignment(a);
                 h.setStatus("NULL");
-                h.setTimestamp("NULL");
+                h.setPermanent(false);
+                h.setTimestamp("/");
                 h.setGrade("-1");
                 h.setStudent(s);
                 homeworkRepository.saveAndFlush(h);
@@ -1337,7 +1340,7 @@ public class VLServiceImpl implements VLService{
                     for(Student s: c.getStudents()){
                         Homework h = new Homework();
                         h.setStatus("NULL");
-                        h.setTimestamp("NULL");
+                        h.setTimestamp("/");
                         h.setGrade("-1");
                         h.setAssignment(assignment);
                         h.setStudentForHomework(s);
@@ -1460,6 +1463,8 @@ public class VLServiceImpl implements VLService{
                                 h.setStatus("CONSEGNATO");
                                 PhotoVersionHomework photoVersionHomework = modelMapper.map(photoVersionHomeworkDTO, PhotoVersionHomework.class);
                                 h.setPhotoVersionHomework(photoVersionHomework);
+                              //  Date date = new Date(Long.parseLong(photoVersionHomework.getTimestamp()));
+                               // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm");
                                 h.setTimestamp(photoVersionHomework.getTimestamp());
                                 homeworkRepository.saveAndFlush(h);
                                 photoVersionHMRepository.saveAndFlush(photoVersionHomework);

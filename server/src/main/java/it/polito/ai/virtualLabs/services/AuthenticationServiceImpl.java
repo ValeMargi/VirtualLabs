@@ -80,7 +80,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                        "Enrollment to the VirtualLabs app",
                        "You have been subscribed to the application.\n" +
                                "Your data to access are as follows::\n\n" +
-                               "Username:  " + user.getId() +"\n"+
+                               "Email:  " + user.getId()+"@studenti.polito.it" +"\n"+
                                "Click here to activate the registration:\n\n" +
                                "http://localhost:8080/API/registration/confirm/"+ t.getId()
                        );
@@ -116,7 +116,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     "Enrollment to the VirtualLabs app",
                     "You have been subscribed to the application.\n" +
                             "Your data to access are as follows::\n\n" +
-                            "Username:  " + user.getId() +"\n"+
+                            "Email:  " + user.getId() +"@polito.it"+"\n"+
                             "Click here to activate the registration:\n\n" +
                             "http://localhost:8080/API/registration/confirm/"+ t.getId()
             );

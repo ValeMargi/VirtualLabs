@@ -54,6 +54,7 @@ export class ChangePasswordContComponent implements OnInit, OnDestroy {
         if (data) {
           this.OK = true;
           this.ERROR = false;
+          this.authService.storeUrl("home");
         }
         else {
           this.OK = false;

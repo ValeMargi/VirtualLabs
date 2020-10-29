@@ -34,11 +34,16 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
         return;
       }
 
-      if (history.state != null) {
-        this.HOMEWORK = history.state.homework;
-      }
-
       let courseName: string = this.courseService.currentCourse.getValue().name;
+
+      this.studentService.getHomework(courseName, this.id).subscribe(
+        (data) =>  {
+          this.HOMEWORK = data;
+        },
+        (error) => {
+          window.alert("Errore ottenimento Homework");
+        }
+      );
 
       this.studentService.getVersionsHMForStudent(courseName, this.id).subscribe(
         (data) => {

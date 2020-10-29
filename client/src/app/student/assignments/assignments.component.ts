@@ -34,7 +34,6 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
   @Input() assignments: Assignment[] = [];
   @Output() HOMEWORK: Homework;
   @Output() ASSIGNMENT: Assignment;
-  @Output('versions') versions = new EventEmitter<Assignment>()
 
   versionsVisibility: boolean = false;
   tableAssignmentsVisibility: boolean = false;
@@ -73,21 +72,16 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
       this.assignments = changes.assignments.currentValue;
     }
 
-    if (changes.homework != null && this.ASSIGNMENT != null) {
-      this.homework = changes.homework.currentValue;
-      this.HOMEWORK = this.homework;
-
-      if (this.HOMEWORK.status == "NULL") {
-        window.alert("Leggere prima la consegna");
-      }
-      else {
-        this.versionsVisibility = true;
-        this.router.navigate([this.ASSIGNMENT.id, 'versions'], { relativeTo: this.route, state: {homework: this.homework} });
-      }
-    }
-
     this.manageAssVisibility();
     this.setTable();
+  }
+
+  onRouterOutletActivate(event: any) {
+    this.versionsVisibility = true;
+  }
+
+  onRouterOutletDeactivate(event: any) {
+    this.versionsVisibility = false;
   }
 
   showVersions(ass: Assignment) {
@@ -101,8 +95,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
       return;
     }
 
-    this.versions.emit(ass);
-    this.ASSIGNMENT = ass;
+    this.router.navigate([ass.id, 'versions'], { relativeTo: this.route });
   }
 
   manageAssVisibility() {

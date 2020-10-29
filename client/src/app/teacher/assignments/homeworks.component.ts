@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { Homework } from 'src/app/models/homework.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { Student } from 'src/app/models/student.model';
 import { HomeworkStudent } from 'src/app/models/homework-student.model';
 
@@ -17,22 +18,21 @@ export class HomeworksComponent implements OnInit, OnChanges {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp', 'grade','version'];
+  displayedColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp', 'grade', 'version'];
   dataSource = new MatTableDataSource<HomeworkStudent>();
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
   @Input() homeworkStudents: HomeworkStudent[];
-  @Output() HOMEWORK: Homework;
 
   homeworksToShow: any[] = [];
   versionsVisibility: boolean = false;
-  homeworksVisibility: boolean = true;
   tableVisibility: boolean = false;
 
   constructor(private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private location: Location) { }
 
   ngOnInit(): void {
     this.manageTableVisibility();
@@ -58,11 +58,14 @@ export class HomeworksComponent implements OnInit, OnChanges {
   }
 
   manageTable() {
-    this.versionsVisibility = false;
     this.dataSource = new MatTableDataSource<HomeworkStudent>(this.homeworkStudents);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.length = this.homeworkStudents.length;
+  }
+
+  backAssignmetsTable() {
+    this.location.back();
   }
 
   manageTableVisibility() {
@@ -74,12 +77,17 @@ export class HomeworksComponent implements OnInit, OnChanges {
     }
   }
 
-  showHistory(hws: HomeworkStudent) {
-    this.homeworksVisibility = false;
+  onRouterOutletActivate(event: any) {
     this.versionsVisibility = true;
-    let homework = new Homework(hws.idHW, hws.status, hws.permanent, hws.grade, hws.timestamp);
-    this.HOMEWORK = homework;
-    this.router.navigate([homework.id, 'versions'], { relativeTo: this.route });
+  }
+
+  onRouterOutletDeactivate(event: any) {
+    this.versionsVisibility = false;
+  }
+
+  showHistory(hws: HomeworkStudent) {
+    const homework = new Homework(hws.idHW, hws.status, hws.permanent, hws.grade, hws.timestamp);
+    this.router.navigate([homework.id, 'versions'], { relativeTo: this.route, state: {homework: homework} });
   }
 
 }

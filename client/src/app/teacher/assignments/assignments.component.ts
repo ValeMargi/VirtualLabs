@@ -29,7 +29,6 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
 
 
   @Input() public assignments: Assignment[] = [];
-  @Output() public ASSIGNMENT: Assignment;
 
   HomeworkColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
   AssignmentsColumns: string[] = ['assignmentName', 'releaseDate','expiration','showAssignment', 'showHomeworks'];
@@ -64,9 +63,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   backAssignmetsTable() {
-    this.tableHomeworkVisibility = false;
     this.tableAssignmentsVisibility = true;
-    this.assTableVisibility = true;
     this.location.back();
   }
 
@@ -85,10 +82,17 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
     }
   }
 
-  showHomeworks(ass: Assignment) {
-    this.ASSIGNMENT = ass;
+  onRouterOutletActivate(event: any) {
     this.assTableVisibility = false;
     this.tableHomeworkVisibility = true;
+  }
+
+  onRouterOutletDeactivate(event: any) {
+    this.assTableVisibility = true;
+    this.tableHomeworkVisibility = false;
+  }
+
+  showHomeworks(ass: Assignment) {
     this.router.navigate([ass.id, 'homeworks'], { relativeTo: this.route });
   }
 

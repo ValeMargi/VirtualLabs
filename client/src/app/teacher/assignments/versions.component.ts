@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
-import { HomeworksComponent } from './homeworks.component';
 import { HomeworkCorrection } from 'src/app/models/homework-correction.model';
 import { Location } from '@angular/common';
 import { Homework } from 'src/app/models/homework.model';
@@ -27,8 +26,7 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
   corrsToShow: HomeworkCorrection[] = [];
   showedId: number = -1;
 
-  constructor(private homeworkComponent: HomeworksComponent,
-              private location: Location,
+  constructor(private location: Location,
               private route: ActivatedRoute,
               private dialog: MatDialog) { }
 
@@ -70,7 +68,6 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   back() {
-    this.homeworkComponent.versionsVisibility = false;
     this.location.back();
   }
 

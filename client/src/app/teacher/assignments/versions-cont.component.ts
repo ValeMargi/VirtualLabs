@@ -15,42 +15,62 @@ import { Subscription } from 'rxjs/internal/Subscription';
 })
 export class VersionsContComponent implements OnInit, OnDestroy {
 
-  @Input() homework: Homework;
   @Output() HOMEWORK: Homework;
   @Output() VERSIONS: HomeworkVersion[] = [];
   @Output() CORRECTIONS: HomeworkCorrection[] = [];
 
   private route$: Subscription;
-  private idA: number;
 
   constructor(private teacherService: TeacherService,
               private courseService: CourseService,
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.route$ = this.route.params.subscribe(params => {
-      this.idA = params.idA;
-      
-      this.HOMEWORK = this.homework;
+    this.route$ = this.route.parent.params.subscribe(params => {
+      const idA: number = +params.idA;
+      const courseName: string = this.courseService.currentCourse.getValue().name;
+      const idHw: number = +this.route.snapshot.params.idH;
 
-      if (this.idA == null) {
+      if (idA == null || courseName == null || idHw == null) {
         return;
       }
 
-      this.teacherService.getVersionsHMForProfessor(this.courseService.currentCourse.getValue().name, this.idA, this.homework.id).subscribe(
+      if (history.state != null) {
+        this.HOMEWORK = history.state.homework;
+      }
+
+      if (this.HOMEWORK == null) {
+        this.teacherService.allHomework(courseName, idA).subscribe(
+          (data) => {
+            data.forEach(element => {
+              let homework: Homework = element.Homework;
+              
+              if (homework.id == idHw) {
+                this.HOMEWORK = homework;
+              }
+            });
+          },
+          (error) => {
+            window.alert(error.error.message);
+          }
+        )
+      }
+
+      this.teacherService.getVersionsHMForProfessor(courseName, idA, idHw).subscribe(
         (data) => {
           this.VERSIONS = data;
         },
         (error) => {
-          console.log("Errore nel reperire le versioni");
+          window.alert(error.error.message);
         }                                          
       );
-      this.teacherService.getCorrectionsHMForProfessor(this.courseService.currentCourse.getValue().name, this.idA, this.homework.id).subscribe(
+
+      this.teacherService.getCorrectionsHMForProfessor(courseName, idA, idHw).subscribe(
         (data) => {
           this.CORRECTIONS = data;
         },
         (error) => {
-          window.alert("Errore nel reperire le revisioni");
+          window.alert(error.error.message);
         }
       );
     });

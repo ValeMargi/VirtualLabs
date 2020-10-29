@@ -99,21 +99,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     });
 
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        if (event.urlAfterRedirects.indexOf("home") == 1) {
-          this.homeVisibility = true;
-        }
-        else {
-          this.homeVisibility = false;
-
-          if (this.courseService.currentCourse.getValue().name == "" && this.router.url.match("course")) {
-            this.courseService.currentCourse.getValue().name = this.router.url.split("/")[3];
-          }
-        }
-      }
-    });
-
     this.courseService.currentCourse.subscribe(
       (data) => {
         if (data == null || data.name == "") {
@@ -156,6 +141,21 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
     );
 
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        if (event.urlAfterRedirects.indexOf("home") == 1) {
+          this.homeVisibility = true;
+        }
+        else {
+          this.homeVisibility = false;
+
+          if (this.courseService.currentCourse.getValue().name == "" && this.router.url.match("course")) {
+            this.courseService.currentCourse.getValue().name = this.router.url.split("/")[3];
+          }
+        }
+      }
+    });
+
     this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
       if (params['doLogin']) {
         if (this.authService.isLoggedOut()) {
@@ -184,12 +184,12 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       this.notFoundVisibility = false;
 
 
-      if (this.router.url == "/home") {
+      /*if (this.router.url == "/home") {
         this.homeVisibility = true;
       }
       else {
         this.homeVisibility = false;
-      }
+      }*/
 
       if (this.authService.isLoggedIn()) {
         this.loginVisibility = false;
@@ -197,31 +197,9 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
         if (this.role.match("student")) {
           this.teacherVisibility = false;
-          
-          /*this.studentService.getOne(localStorage.getItem('currentId')).subscribe(
-            (data) => {
-              this.studentService.currentStudent = data.student;
-              this.authService.userLogged.emit(true);
-              this.setCourses();
-            },
-            (error) => {
-              console.log("Impossibile ottenere lo studente");
-            }
-          );*/
         }
         else {
           this.teacherVisibility = true;
-
-          /*this.teacherService.getOne(localStorage.getItem('currentId')).subscribe(
-            (data) => {
-              this.teacherService.currentTeacher = data.professor;
-              this.authService.userLogged.emit(true);
-              this.setCourses();
-            },
-            (error) => {
-              console.log("Impossibile ottenere il professore");
-            }
-          );*/
         }
 
         this.authService.getUserByRole();
@@ -433,7 +411,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   getCourseName(value: string) {
-    if (value.length <= 1 || value.includes("home")) {
+    if (value.length <= 1 || value.indexOf("home") == 1) {
       return "";
     }
 

@@ -62,9 +62,9 @@
    </mat-card-header>
 </mat-card>
 
-<router-outlet>
-  <app-versions-cont-student *ngIf="false"></app-versions-cont-student>
-</router-outlet>
+<app-versions-cont-student *ngIf="false"></app-versions-cont-student>
+
+<router-outlet (activate)="onRouterOutletActivate($event)" (deactivate)="onRouterOutletDeactivate($event)"></router-outlet>
 
 
 

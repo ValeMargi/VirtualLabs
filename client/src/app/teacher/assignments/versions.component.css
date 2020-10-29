@@ -1,3 +1,9 @@
+.card {
+  width: 90%;
+  margin-left: 2%;
+  margin-top: 2%;
+}
+
 .title{
   color:#3F51B5;
 }
@@ -20,7 +26,6 @@
   background-color:#001ea34d;
   color: black;
 }
-
 
 .versions-corrections {
     display: flex;

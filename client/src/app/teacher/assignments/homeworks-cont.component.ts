@@ -17,7 +17,6 @@ export class HomeworksContComponent implements OnInit, OnDestroy {
 
   private route$: Subscription;
 
-  @Input() assignment: Assignment;
   @Output() HOMEWORKS_STUDENTS: HomeworkStudent[] = [];
 
   constructor(private teacherService: TeacherService,

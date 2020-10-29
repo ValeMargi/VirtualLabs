@@ -7,7 +7,6 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddHomeworkContComponent } from '../add-homework/add-homework-cont/add-homework-cont.component';
 import { ActivatedRoute } from '@angular/router';
 import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
-import { AssignmentsComponent } from 'src/app/student/assignments/assignments.component';
 
 @Component({
   selector: 'app-versions-student',
@@ -27,8 +26,7 @@ export class VersionsComponent implements OnInit, OnChanges {
 
   constructor(private location: Location,
               private matDialog: MatDialog,
-              private route: ActivatedRoute,
-              private assComponent: AssignmentsComponent) { }
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.assId = +this.route.snapshot.paramMap.get('idA');
@@ -65,7 +63,6 @@ export class VersionsComponent implements OnInit, OnChanges {
 
   back() {
     this.location.back();
-    this.assComponent.versionsVisibility = false;
   }
 
   showCorrections(version: HomeworkVersion) {

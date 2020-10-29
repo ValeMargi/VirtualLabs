@@ -65,20 +65,8 @@
   </mat-card-content>
 </mat-card>
 
-<!--Elaborati Studenti-->
-<mat-card class="card" *ngIf="tableHomeworkVisibility">
-  <mat-card-header>
-   <mat-card-title>
-    <button class="iconButton" mat-icon-button color="primary" (click)="backAssignmetsTable()">
-      <mat-icon>arrow_back</mat-icon></button>
-    Elaborati </mat-card-title>
-   <mat-card-subtitle>Titolo: {{ASSIGNMENT.assignmentName}}</mat-card-subtitle>
-  </mat-card-header>
+<app-homeworks-cont *ngIf="false"></app-homeworks-cont>
 
-  <mat-card-content>
-    <app-homeworks-cont *ngIf="false" [assignment]="ASSIGNMENT"></app-homeworks-cont>
-    <router-outlet></router-outlet>
-  </mat-card-content>
-</mat-card>
+<router-outlet (activate)="onRouterOutletActivate($event)" (deactivate)="onRouterOutletDeactivate($event)"></router-outlet>
 
 

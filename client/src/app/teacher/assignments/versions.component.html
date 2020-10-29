@@ -1,4 +1,4 @@
-<mat-card class="cardVersion">
+<mat-card class="card">
   <mat-card-header class="header">
    <mat-card-title>
      <button class = "iconClose" mat-icon-button color="primary" (click)="back()">
@@ -46,7 +46,7 @@
             </div>
 
             <button mat-raised-button color="primary" class="upload"
-                *ngIf="!homework.permanent && homework.status != 'NULL' && homework.status != 'LETTO'" (click)="uploadCorrection()">
+                *ngIf="homework != null && !homework.permanent && homework.status != 'NULL' && homework.status != 'LETTO'" (click)="uploadCorrection()">
                 <mat-icon>cloud_upload</mat-icon> Carica revisione
             </button>
         </div>

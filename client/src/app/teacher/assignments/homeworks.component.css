@@ -1,3 +1,32 @@
-.matTable {
+.mat-table{
+    margin:2%;
+    width: 90%;
+  }
+  
+.iconButton:hover{
+background-color:#001ea34d;
+}
+
+.card {
+width: 90%;
+margin-left: 2%;
+margin-top: 2%;
+}
+
+.buttonText{
+margin-left:45%;
+}
+
+.tableContainer {
+overflow: hidden;
+}
+
+.create {
+    margin: 1em;
+}
+
+.noAss {
     width: 100%;
+    text-align: center;
+    margin-top: 10%;
 }

@@ -85,16 +85,4 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.route$.unsubscribe();
   }
-
-  getHomework(ass: Assignment) {
-    this.studentService.getHomework(this.courseService.currentCourse.getValue().name, ass.id).subscribe(
-      (data) =>  {
-        this.HOMEWORK = data;
-      },
-      (error) => {
-        window.alert("Errore ottenimento Homework");
-      }
-    );
-
-  }
 }

@@ -21,19 +21,17 @@ export class ForgotPasswordComponent implements OnInit, OnChanges {
   @Input() querying: boolean;
   @Output('reset') reset = new EventEmitter<string>();
 
-  email;
-
  constructor(
-      public matDialog: MatDialog,
+      public matDialog: MatDialog, 
       public authService: AuthService,
       private dialogRef: MatDialogRef<ForgotPasswordComponent>,
       private router: Router,
       private formBuilder: FormBuilder) {
 
       this.ForgotPasswordForm = this.formBuilder.group({
-        email: new FormControl('',[Validators.required])
+        id: new FormControl('',[Validators.required])
       });
-
+  
   }
 
   ngOnInit() {
@@ -53,14 +51,14 @@ export class ForgotPasswordComponent implements OnInit, OnChanges {
     this.dialogRef.close();
   }
 
-  resetPassword(email: string) {
-    this.reset.emit(email);
+  resetPassword(id: string) {
+    this.reset.emit(id);
   }
 
 
   openDialogRegister() {
     this.dialogRef.close();
-
+    
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = false;

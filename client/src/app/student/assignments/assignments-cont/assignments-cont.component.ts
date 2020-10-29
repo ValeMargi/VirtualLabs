@@ -16,7 +16,6 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
 
   HAS_TEAM: boolean = false;
   HAS_VM: boolean = false;
-  HOMEWORK: Homework;
   ASSIGNMENTS: Assignment[] = [];
 
   private route$: Subscription;

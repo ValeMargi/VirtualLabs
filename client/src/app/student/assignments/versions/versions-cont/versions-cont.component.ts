@@ -8,6 +8,7 @@ import { CourseService } from 'src/app/services/course.service';
 import { ActivatedRoute } from '@angular/router';
 import { Assignment } from 'src/app/models/assignment.model';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { Location } from '@angular/common/';
 
 @Component({
   selector: 'app-versions-cont-student',
@@ -24,7 +25,8 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private studentService: StudentService,
               private courseService: CourseService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute, 
+              private location: Location) { }
 
   ngOnInit(): void {
     this.route$ = this.route.params.subscribe(params => {
@@ -38,6 +40,12 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
 
       this.studentService.getHomework(courseName, this.id).subscribe(
         (data) =>  {
+          if (data.status == "NULL") {
+            window.alert("Devi prima leggere il testo per accedere a questa sezione");
+            this.location.back()
+            return;
+          }
+
           this.HOMEWORK = data;
         },
         (error) => {

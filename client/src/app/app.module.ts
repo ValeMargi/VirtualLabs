@@ -89,6 +89,19 @@ import { EditCourseContComponent } from './teacher/edit-course/edit-course-cont/
 import { EditCourseComponent } from './teacher/edit-course/edit-course.component';
 
 import { CommonModule } from '@angular/common';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
+
+export const MY_FORMATS = {
+  parse: {
+      dateInput: 'LL'
+  },
+  display: {
+      dateInput: 'YYYY-MM-DD',
+      monthYearLabel: 'YYYY',
+      dateA11yLabel: 'LL',
+      monthYearA11yLabel: 'YYYY'
+  }
+};
 
 @NgModule({
   declarations: [
@@ -181,7 +194,8 @@ import { CommonModule } from '@angular/common';
     CommonModule
   ],
   entryComponents: [MatDialogModule, MatFormFieldModule],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+              { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }],
   bootstrap: [AppComponent]
 })
 

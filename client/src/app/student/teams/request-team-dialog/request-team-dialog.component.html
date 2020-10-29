@@ -10,41 +10,19 @@
     </mat-form-field><br>
 
     <!--Durata Richieste-->
-    <mat-form-field appearance="fill">
-      <!--
-  <mat-select #timeout placeholder="Durata richieste" formControlName="date" [(value)]="defaultTimeout" required>
-        <mat-option [value]="option.value" *ngFor="let option of timeouts">{{ option.viewValue }}</mat-option>
-      </mat-select>
-      -->
-
-      <!--
-    <mat-label>Scegli una data di scadenza</mat-label>
-        <input matInput [matDatepicker]="timeout"
-                id="dateTimeout"
-                type="text"
-                [(ngModel)]="dateTimeout"
-                value ="{{dateTimeout|date:'dd-mmm-yyyy'}}">
-        <mat-datepicker-toggle matSuffix [for]="timeout"></mat-datepicker-toggle>
-        <mat-datepicker #timeout></mat-datepicker>
-
-      -->
-
-
-          <mat-label>Date</mat-label>
-          <input  matInput [matDatepicker]="myPicker"  placeholder="date" (ngModel)="dateTimeout">
-          <mat-datepicker-toggle  matSuffix [for]="myPicker"></mat-datepicker-toggle>
-          <mat-datepicker #myPicker></mat-datepicker>
-
-
-
-        <!--
-
- <mat-error *ngIf="CreateTeamForm.get('date').hasError('required')">Seleziona un timeout richiesta</mat-error>
-
-        -->
-
-    </mat-form-field> <br><br>
-    <!--<input #timeout type="date" placeholder="Scadenza richiesta" name="oneWeek" formControlName="date" [ngModel]="oneWeek | date:'yyyy-MM-dd'" matInput required>-->
+    <mat-form-field>
+      <input
+        #timeout
+          matInput
+          [matDatepicker]="dp"
+          placeholder="Scadenza richiesta"
+          formControlName="date"
+          [formControl]="dateControl"
+      >
+      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp></mat-datepicker>
+      <mat-error *ngIf="CreateTeamForm.get('date').hasError('required')">Seleziona un timeout richiesta</mat-error>
+    </mat-form-field>
 
     <div *ngIf="max > 1 && availableStudents.length >= min - 1">
       <mat-form-field class="gruppo">
@@ -98,6 +76,6 @@
 
 <mat-dialog-actions>
   <button mat-raised-button color="warn" mat-dialog-close>Anulla</button>
-  <button mat-raised-button color="primary" *ngIf="availableStudents.length >= min - 1" [disabled]="querying" (click)="proposeTeam(nameTeam.value, dateTimeout)" cdkFocusInitial>Crea</button>
+  <button mat-raised-button color="primary" *ngIf="availableStudents.length >= min - 1" [disabled]="querying" (click)="proposeTeam(nameTeam.value, timeout.value)" cdkFocusInitial>Crea</button>
 </mat-dialog-actions>
 

@@ -30,9 +30,8 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   tableVisibility: boolean = false;
 
   myControl = new FormControl();
+  dateControl = new FormControl(new Date());
   filteredOptions: Observable<Student[]>;
-
-
   dateTimeout: Date;
 
   selectedPhoto: File;
@@ -46,15 +45,18 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
 
   constructor(private formBuilder: FormBuilder,
               private courseService: CourseService) {
+    const currentDate = new Date();
+    const oneWeek = new Date(currentDate);
+    oneWeek.setDate(oneWeek.getDate() + 7);
+
     this.CreateTeamForm = this.formBuilder.group({
       name : new FormControl('', [Validators.required]),
-      //dateTimeout : new FormControl('', [Validators.required])
+      date : new FormControl(oneWeek, [Validators.required])
     });
   }
 
   ngOnInit() {
-    //this.date = new Date();
-    //this.oneWeek.setDate(this.oneWeek.getDate() + 7);
+
     this.setupFiter();
   }
 
@@ -130,37 +132,15 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
     }
   }
 
-  proposeTeam(nameTeam: string, expire: Date) {
-    console.log("Date:"+expire);
-
+  proposeTeam(nameTeam: string, expire: string) {
     if (this.studentsToAdd.length + 1 < this.min || this.studentsToAdd.length + 1> this.max) {
       window.alert("Selezionare un numero di studenti compreso tra " + this.min + " e " + this.max);
     }
     else if (this.CreateTeamForm.valid) {
-      let d = expire;
-      var timeout = /*d.getFullYear().toString()+"-"+
-                    ((d.getMonth()+1).toString().length==2?(d.getMonth()+1).toString():"0"+(d.getMonth()+1).toString())+"-"+
-                    (d.getDate().toString().length==2?d.getDate().toString():"0"+d.getDate().toString())+" "+
-                    (d.getHours().toString().length==2?d.getHours().toString():"0"+d.getHours().toString())+":"+
-                    ((parseInt(d.getMinutes()/5)*5).toString().length==2?(parseInt(d.getMinutes()/5)*5).toString():"0"+(parseInt(d.getMinutes()/5)*5).toString())+":00"+
-                    parseInt(d.getMilliseconds()).toString();*/
+      let res = expire.split("-");
+      const date = new Date(Number.parseInt(res[0]), Number.parseInt(res[1]) - 1, Number.parseInt(res[2]), 23, 59, 59, 999);
+      const timeout = moment(date).format("YYYY-MM-DD HH:mm:ss.SSS");
 
-                    d
-                    .toISOString() // Convert date to a string in the format of 2019-03-25T00:07:22.0253Z
-                    .substr(0, 19)  // Strip off the milliseconds and Zulu timezone indication
-                    .replace('T', ' '); // Replace the T for "time" with a space
-
-
-
-                    var date = expire.getFullYear() + '-' + (expire.getMonth() + 1) + '-' + expire.getDate();
-                    var time = expire.getHours() + ":" +
-                               (expire.getMinutes() < 10 ? '0' : '') +
-                               expire.getMinutes() + ":" +
-                               expire.getSeconds()+"."+
-                               expire.getMilliseconds();
-                    var timeout = date + ' ' + time;
-
-      console.log(timeout);
       let membersId: string[] = this.studentsToAdd.map(s => s.id);
       this.propose.emit({teamName: nameTeam, timeout: timeout, membersId: membersId});
     }
@@ -168,21 +148,5 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
       window.alert("Controllare di aver inserito dei campi validi e riprovare");
     }
   }
-
 }
 
-
-//console.log(timeout);
-      /*let res = expire.split("-");
-      let date = new Date(Number.parseInt(res[0]), Number.parseInt(res[1]) - 1, Number.parseInt(res[2]), 23, 59, 59, 999);
-      let timeout = moment(date).format("YYYY-MM-DD HH:mm:ss.SSS"); 2020-10-29 12:55:00322*/
-
-
-
-       //let num = new Date().setDate(new Date().getDate() + Number.parseInt(expire));
-      //console.log(num);
-      //let timeout: string = (num.format("YYYY-MM-DD HH:mm:ss.SSS"));
-
-      //let res = expire.split('-');
-      //let date = new Date(Number.parseInt(res[0]), Number.parseInt(res[1]) - 1, Number.parseInt(res[2]), 23, 59, 59, 999);
-      //let timeout = moment(date).format("YYYY-MM-DD HH:mm:ss.SSS");

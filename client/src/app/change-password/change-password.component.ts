@@ -48,11 +48,13 @@ export class ChangePasswordComponent implements OnInit, OnChanges {
   }
 
   save(newPass: string, passR: string) {
-    if (newPass.length == 0 || passR.length == 0) {
-      window.alert("Riempire entrambi i campi");
-    }
-    else if (newPass != passR) {
+    if (newPass != passR) {
       window.alert("Le 2 password devono coincidere");
+      return;
+    }
+    else if (!this.ChangePasswordForm.valid) {
+      window.alert("La password deve essere lunga da 8 a 20 caratteri");
+      return;
     }
     else {
       this.changePass.emit(newPass);

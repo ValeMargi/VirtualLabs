@@ -28,7 +28,7 @@ LoginForm: FormGroup;
 
       this.LoginForm = this.formBuilder.group({
         email: new FormControl('',[Validators.email,this.emailDomainValidator]),
-        password: ['', [Validators.required, Validators.minLength(8)]],
+        password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
       });
 
   }
@@ -47,9 +47,11 @@ LoginForm: FormGroup;
 
   login(email: string, password:string) {
     if (!this.LoginForm.valid) {
-      window.alert("Controllare che i dati inseriti siano validi e riprovare");
+      this.badCredentials = true;
+      return;
     }
     else {
+      this.badCredentials = false;
       this.log.emit({email: email.toLowerCase(), password: password});
     }
   }

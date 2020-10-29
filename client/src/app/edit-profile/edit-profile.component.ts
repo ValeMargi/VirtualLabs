@@ -21,8 +21,6 @@ export class EditProfileComponent implements OnInit, OnChanges {
   @Output('password') changePassword = new EventEmitter<any>();
 
   selectedPhoto: File;
-
-
   ChangePasswordForm: FormGroup;
 
   constructor(private dialogRef: MatDialogRef<EditProfileComponent>,
@@ -90,9 +88,15 @@ export class EditProfileComponent implements OnInit, OnChanges {
     if (actualPwd.length > 0 && pwd.length > 0 && pwd2.length > 0) {
       if (actualPwd == pwd) {
         window.alert("La nuova password deve essere diversa");
+        return;
       }
       else if (pwd != pwd2) {
         window.alert("Conferma nuova password non corretta");
+        return;
+      }
+      else if (!this.ChangePasswordForm.valid) {
+        window.alert("La password deve essere lunga da 8 a 20 caratteri");
+        return;
       }
       else {
         this.changePassword.emit({oldPassword: actualPwd, newPassword: pwd});

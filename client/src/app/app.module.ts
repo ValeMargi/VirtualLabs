@@ -76,6 +76,9 @@ import { ViewImageComponent } from './view-image/view-image.component';
 import { RegisterContComponent } from './register/register-cont/register-cont.component';
 import { LoginContComponent } from './login/login-cont/login-cont.component';
 
+import {MatMomentDateModule} from '@angular/material-moment-adapter';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+
 import {MatExpansionModule} from '@angular/material/expansion';
 import { ForgotPasswordContComponent } from './forgot-password/forgot-password-cont/forgot-password-cont.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
@@ -173,6 +176,8 @@ import { CommonModule } from '@angular/common';
     MatProgressBarModule,
     TextFieldModule,
     MatExpansionModule,
+    MatDatepickerModule,
+    MatMomentDateModule,
     CommonModule
   ],
   entryComponents: [MatDialogModule, MatFormFieldModule],

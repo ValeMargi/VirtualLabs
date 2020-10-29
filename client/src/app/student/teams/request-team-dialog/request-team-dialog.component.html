@@ -10,11 +10,39 @@
     </mat-form-field><br>
 
     <!--Durata Richieste-->
-    <mat-form-field class="data">
-      <mat-select #timeout placeholder="Durata richieste" formControlName="date" [(value)]="defaultTimeout" required>
+    <mat-form-field appearance="fill">
+      <!--
+  <mat-select #timeout placeholder="Durata richieste" formControlName="date" [(value)]="defaultTimeout" required>
         <mat-option [value]="option.value" *ngFor="let option of timeouts">{{ option.viewValue }}</mat-option>
       </mat-select>
-      <mat-error *ngIf="CreateTeamForm.get('date').hasError('required')">Seleziona un timeout richiesta</mat-error>
+      -->
+
+      <!--
+    <mat-label>Scegli una data di scadenza</mat-label>
+        <input matInput [matDatepicker]="timeout"
+                id="dateTimeout"
+                type="text"
+                [(ngModel)]="dateTimeout"
+                value ="{{dateTimeout|date:'dd-mmm-yyyy'}}">
+        <mat-datepicker-toggle matSuffix [for]="timeout"></mat-datepicker-toggle>
+        <mat-datepicker #timeout></mat-datepicker>
+
+      -->
+
+
+          <mat-label>Date</mat-label>
+          <input  [value]="date.value" matInput [matDatepicker]="myPicker"  placeholder="date">
+          <mat-datepicker-toggle  matSuffix [for]="myPicker"></mat-datepicker-toggle>
+          <mat-datepicker #myPicker></mat-datepicker>
+
+
+
+        <!--
+
+ <mat-error *ngIf="CreateTeamForm.get('date').hasError('required')">Seleziona un timeout richiesta</mat-error>
+
+        -->
+
     </mat-form-field> <br><br>
     <!--<input #timeout type="date" placeholder="Scadenza richiesta" name="oneWeek" formControlName="date" [ngModel]="oneWeek | date:'yyyy-MM-dd'" matInput required>-->
 
@@ -34,7 +62,7 @@
       </button>
     </div>
 
-    <div class="tableContainer" *ngIf="tableVisibility"> 
+    <div class="tableContainer" *ngIf="tableVisibility">
         <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
@@ -50,7 +78,7 @@
             </ng-container>
             <ng-container matColumnDef="delete">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
-              <td mat-cell *matCellDef="let row"> 
+              <td mat-cell *matCellDef="let row">
                 <button mat-button class="delete" (click)=deleteStudent(row)>
                   <mat-icon>delete</mat-icon>
                 </button>
@@ -70,6 +98,6 @@
 
 <mat-dialog-actions>
   <button mat-raised-button color="warn" mat-dialog-close>Anulla</button>
-  <button mat-raised-button color="primary" *ngIf="availableStudents.length >= min - 1" [disabled]="querying" (click)="proposeTeam(nameTeam.value, timeout.value)" cdkFocusInitial>Crea</button>
+  <button mat-raised-button color="primary" *ngIf="availableStudents.length >= min - 1" [disabled]="querying" (click)="proposeTeam(nameTeam.value, date.value)" cdkFocusInitial>Crea</button>
 </mat-dialog-actions>
 

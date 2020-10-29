@@ -1,5 +1,7 @@
+import { MatDatepicker } from '@angular/material/datepicker';
 import { Component, OnInit, Input,Output,EventEmitter, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { DateAdapter } from '@angular/material/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
@@ -8,6 +10,7 @@ import { map, startWith } from 'rxjs/operators';
 import { Course } from 'src/app/models/course.model';
 import { Student } from 'src/app/models/student.model';
 import { CourseService } from 'src/app/services/course.service';
+
 @Component({
   selector: 'app-request-team-dialog',
   templateUrl: './request-team-dialog.component.html',
@@ -16,13 +19,8 @@ import { CourseService } from 'src/app/services/course.service';
 export class RequestTeamDialogComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
 
-  timeouts = [
-    {value: "7", viewValue: "1 settimana"},
-    {value: "14", viewValue: "2 settimane"}
-  ];
-
-  defaultTimeout = this.timeouts[0].value;
   CreateTeamForm: FormGroup;
   min: number;
   max: number;
@@ -34,7 +32,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   myControl = new FormControl();
   filteredOptions: Observable<Student[]>;
 
-  oneWeek;
+  date  =  new  FormControl(new  Date());
 
   selectedPhoto: File;
   private studentSelected: Student;
@@ -49,13 +47,13 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
               private courseService: CourseService) {
     this.CreateTeamForm = this.formBuilder.group({
       name : new FormControl('', [Validators.required]),
-      date : new FormControl('', [Validators.required])
+      //dateTimeout : new FormControl('', [Validators.required])
     });
   }
 
   ngOnInit() {
-    this.oneWeek = new Date();
-    this.oneWeek.setDate(this.oneWeek.getDate() + 7);
+    //this.date = new Date();
+    //this.oneWeek.setDate(this.oneWeek.getDate() + 7);
     this.setupFiter();
   }
 
@@ -90,7 +88,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   _filter(value: string): Student[] {
     const filterValue = value.toLowerCase();
 
-    return this.availableStudents.filter(option => 
+    return this.availableStudents.filter(option =>
       (option.id != localStorage.getItem('currentId') && !this.studentsToAdd.includes(option)) &&
       (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
   }
@@ -131,17 +129,23 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
     }
   }
 
-  proposeTeam(nameTeam: string, expire: string) {
+  proposeTeam(nameTeam: string, expire: Date) {
+    console.log("Date:"+expire);
+
     if (this.studentsToAdd.length + 1 < this.min || this.studentsToAdd.length + 1> this.max) {
       window.alert("Selezionare un numero di studenti compreso tra " + this.min + " e " + this.max);
     }
     else if (this.CreateTeamForm.valid) {
-      let timeout: string = moment(new Date().setDate(new Date().getDate() + Number.parseInt(expire))).format("YYYY-MM-DD HH:mm:ss.SSS");
-      /*let res = expire.split("-");
-      let date = new Date(Number.parseInt(res[0]), Number.parseInt(res[1]) - 1, Number.parseInt(res[2]), 23, 59, 59, 999);
-      let timeout = moment(date).format("YYYY-MM-DD HH:mm:ss.SSS");*/
-      let membersId: string[] = this.studentsToAdd.map(s => s.id);
+      let d = expire;
+      var timeout = d.getFullYear().toString()+"-"+
+                    ((d.getMonth()+1).toString().length==2?(d.getMonth()+1).toString():"0"+(d.getMonth()+1).toString())+"-"+
+                    (d.getDate().toString().length==2?d.getDate().toString():"0"+d.getDate().toString())+" "+
+                    (d.getHours().toString().length==2?d.getHours().toString():"0"+d.getHours().toString())+":"+
+                    ((parseInt(d.getMinutes()/5)*5).toString().length==2?(parseInt(d.getMinutes()/5)*5).toString():"0"+(parseInt(d.getMinutes()/5)*5).toString())+":00"+
+                    parseInt(d.getMilliseconds()).toString();
 
+      console.log(timeout);
+      let membersId: string[] = this.studentsToAdd.map(s => s.id);
       this.propose.emit({teamName: nameTeam, timeout: timeout, membersId: membersId});
     }
     else {
@@ -150,3 +154,19 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   }
 
 }
+
+
+//console.log(timeout);
+      /*let res = expire.split("-");
+      let date = new Date(Number.parseInt(res[0]), Number.parseInt(res[1]) - 1, Number.parseInt(res[2]), 23, 59, 59, 999);
+      let timeout = moment(date).format("YYYY-MM-DD HH:mm:ss.SSS"); 2020-10-29 12:55:00322*/
+
+
+
+       //let num = new Date().setDate(new Date().getDate() + Number.parseInt(expire));
+      //console.log(num);
+      //let timeout: string = (num.format("YYYY-MM-DD HH:mm:ss.SSS"));
+
+      //let res = expire.split('-');
+      //let date = new Date(Number.parseInt(res[0]), Number.parseInt(res[1]) - 1, Number.parseInt(res[2]), 23, 59, 59, 999);
+      //let timeout = moment(date).format("YYYY-MM-DD HH:mm:ss.SSS");

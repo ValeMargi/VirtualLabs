@@ -3,6 +3,10 @@
     height: 80.8%;
 }
 
+:focus {
+  outline: 0 !important;
+}
+
 .toolbarCourse{
   background-color: #3f51b53a;
 }

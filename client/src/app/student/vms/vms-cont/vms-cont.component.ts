@@ -55,8 +55,9 @@ export class VmsContComponent implements OnInit, OnDestroy {
                 vms.forEach(vm => {
                   this.studentService.getOwners(courseName, this.TEAM.id, vm.id).subscribe(
                     (data) => {
-                      array.push(new VMOwners(vm.id, vm.numVcpu, vm.diskSpace, vm.ram, vm.status, vm.nameVM, vm.timestamp, data))
-                      this.VMs = array;
+                      this.VMs = new Array();
+                      array.push(new VMOwners(vm.id, vm.numVcpu, vm.diskSpace, vm.ram, vm.status, vm.nameVM, vm.timestamp, data));
+                      array.forEach(vmow => this.VMs.push(vmow));
                     }, 
                     (error) => {
                       window.alert(error.error.message);
@@ -92,14 +93,13 @@ export class VmsContComponent implements OnInit, OnDestroy {
 
     this.studentService.vmCreation.subscribe(
       (data) => {
-        if (this.VMs.length == 0) {
-          let array: VMOwners[] = new Array();
-          array.push(data);
-          this.VMs = array;
-        }
-        else {
-          this.VMs.push(data);
-        }
+        let array: VMOwners[] = this.VMs;
+        this.VMs = new Array();
+        array.push(data);
+
+        array.forEach(vm => {
+          this.VMs.push(vm);
+        });
       }, 
       (error) => {
 
@@ -115,7 +115,7 @@ export class VmsContComponent implements OnInit, OnDestroy {
           if (vm.id != data.id) {
             this.VMs.push(vm);
           }
-        })
+        });
       }, 
       (error) => {
 

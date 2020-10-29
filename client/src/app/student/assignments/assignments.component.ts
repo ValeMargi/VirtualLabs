@@ -30,9 +30,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
 
   @Input() hasTeam: boolean;
   @Input() hasVM: boolean;
-  @Input() homework: Homework;
   @Input() assignments: Assignment[] = [];
-  @Output() HOMEWORK: Homework;
   @Output() ASSIGNMENT: Assignment;
 
   versionsVisibility: boolean = false;

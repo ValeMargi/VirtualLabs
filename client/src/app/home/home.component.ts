@@ -28,45 +28,43 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
               private route: ActivatedRoute,
               private studentService: StudentService,
               private teacherService: TeacherService) {
-                this.getUserName();
+
               }
 
   ngOnInit(): void {
+    this.getUserName(this.authService.isLoggedIn());
 
-    this.getUserName();
-    this.route$ = this.route.queryParams.subscribe(params => {
-
-    });
-  }
-
-  ngAfterViewInit(){
-    this.getUserName();
-  }
-
-
-  getUserName(){
     this.authService.userLogged.subscribe(
       (data) => {
-        if (data == true) {
-          this.askLoginVisibility = false;
-
-          if(this.studentService.currentStudent != null){
-              this.name = this.studentService.currentStudent.name;
-              this.firstName = this.studentService.currentStudent.firstName;
-
-          }else if(this.teacherService.currentTeacher != null){
-              this.name = this.teacherService.currentTeacher.name;
-              this.firstName = this.teacherService.currentTeacher.firstName;
-           }
-        }
-        else {
-          this.askLoginVisibility = true;
-        }
+        this.getUserName(data);
       },
       (error) => {
 
       }
     );
+  }
+
+  ngAfterViewInit() {
+
+  }
+
+
+  getUserName(loggedIn: boolean) {
+    if (loggedIn == true) {
+      this.askLoginVisibility = false;
+
+      if (this.studentService.currentStudent != null) {
+        this.name = this.studentService.currentStudent.name;
+        this.firstName = this.studentService.currentStudent.firstName;
+      }
+      else if (this.teacherService.currentTeacher != null){
+        this.name = this.teacherService.currentTeacher.name;
+        this.firstName = this.teacherService.currentTeacher.firstName;
+      }
+    }
+    else {
+      this.askLoginVisibility = true;
+    }
   }
 
 

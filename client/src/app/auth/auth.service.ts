@@ -18,7 +18,7 @@ import { Teacher } from '../models/teacher.model';
 export class AuthService {
   API_AUTH = 'http://localhost:8080/API';
 
-  @Output('userLogged') userLogged = new EventEmitter();
+  @Output('userLogged') userLogged = new EventEmitter<boolean>();
   user: Observable<User>;
 
   private currentUser: User;

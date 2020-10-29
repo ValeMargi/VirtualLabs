@@ -276,11 +276,11 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   routeToLogin() {
-    this.router.navigate([this.router.url], {queryParams: {doLogin : "true"}});
+    this.router.navigate([], {queryParams: {doLogin : "true"}});
   }
 
   routeToRegister() {
-    this.router.navigate([this.router.url], {queryParams: {doRegister : "true"}});
+    this.router.navigate([], {queryParams: {doRegister : "true"}});
   }
 
   routeNewCourse() {

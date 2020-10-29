@@ -27,15 +27,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
               private authService: AuthService,
               private route: ActivatedRoute,
               private studentService: StudentService,
-              private teacherService: TeacherService) {
-                this.getUserName();
-              }
+              private teacherService: TeacherService) { }
 
   ngOnInit(): void {
 
     this.getUserName();
     this.route$ = this.route.queryParams.subscribe(params => {
-
+      
     });
   }
 

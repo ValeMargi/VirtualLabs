@@ -44,6 +44,7 @@ export class AuthGuard implements CanActivate {
     else {
       if (!url.includes("doLogin")) {
         this.authService.storeUrl(url);
+        this.authService.userLogged.emit(false);
         this.router.navigate([''], {queryParams: {doLogin : "true"}});
         return false;
       }

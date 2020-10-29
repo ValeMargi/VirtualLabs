@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitte
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Teacher } from '../models/teacher.model';
 import { AuthService } from '../auth/auth.service';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TeacherService } from '../services/teacher.service';
 
 @Component({

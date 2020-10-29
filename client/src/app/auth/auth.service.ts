@@ -10,7 +10,7 @@ import { shareReplay } from 'rxjs/operators';
 import { Student } from '../models/student.model';
 import { TeacherService } from '../services/teacher.service';
 import { StudentService } from '../services/student.service';
-import { Teacher } from '../models/teacher.model';   
+import { Teacher } from '../models/teacher.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,18 +20,18 @@ export class AuthService {
 
   @Output('userLogged') userLogged = new EventEmitter();
   user: Observable<User>;
-  
+
   private currentUser: User;
   private storedUrl: string;
 
-  constructor(private http: HttpClient, 
-    private teacherService: TeacherService, 
+  constructor(private http: HttpClient,
+    private teacherService: TeacherService,
     private studentService: StudentService) {
-    
+
   }
-  
+
   login(email: string, password: string) {
-    return this.http.post(`http://localhost:8080/login`, 
+    return this.http.post(`http://localhost:8080/login`,
     { "username": email, "password": password });
   }
 
@@ -59,7 +59,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('expires_at');
-    localStorage.removeItem('token');   
+    localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('currentId');
     this.currentUser = null;
@@ -124,7 +124,7 @@ export class AuthService {
     }
 
     console.log(userJson)
-    
+
     let data: FormData = new FormData();
     data.append('file', file, file.name);
 
@@ -134,18 +134,18 @@ export class AuthService {
     return this.http.post<User>(`${this.API_AUTH}/addUser`, data);
   }
 
-  resetPassword(userId: string) {
-    return this.http.post<boolean>(`${this.API_AUTH}/user/resetPassword`, userId);
+  resetPassword(email: string) {
+    return this.http.post<boolean>(`${this.API_AUTH}/user/resetPassword`, email);
   }
 
   savePassword(token: string, newPassword: string) {
     //JSON {"token": token, "newPassword": newPassword}
-    return this.http.post<boolean>(`${this.API_AUTH}/user/savePassword`, 
+    return this.http.post<boolean>(`${this.API_AUTH}/user/savePassword`,
                 {"token": token, "newPassword": newPassword});
   }
 
   changeUserPassword(oldPassword: string, newPassword: string) {
-    return this.http.post<boolean>(`${this.API_AUTH}/user/updatePassword`, 
+    return this.http.post<boolean>(`${this.API_AUTH}/user/updatePassword`,
                 {"oldPassword": oldPassword, "newPassword": newPassword});
   }
 

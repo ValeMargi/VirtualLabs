@@ -25,27 +25,36 @@
         <mat-icon>arrow_drop_down</mat-icon>
     </button>
     <br>
-    <div>
+    <form [formGroup]="ChangePasswordForm">
         <mat-form-field>
             <mat-label>Password attuale</mat-label>
-            <input #actualPassword type="password" matInput required minlength="8">
+            <input #actualPassword type="password" matInput required formControlName="actualPassword" minlength="8">
+            <mat-error class="input" *ngIf="ChangePasswordForm.hasError('required', 'actualPassword')">Inserisci una password</mat-error>
+            <mat-error class="inputErr" *ngIf="ChangePasswordForm.hasError('minlength','actualPassword')">Inserisci almeno 8 caratteri</mat-error>
+            <mat-error class="inputErr" *ngIf="ChangePasswordForm.hasError('maxlength','actualPassword')">Inserisci non più di 20 caratteri</mat-error>
 
         </mat-form-field>
         <br>
         <mat-form-field>
             <mat-label>Nuova password</mat-label>
-            <input #newPassword type="password"  matInput required minlength="8">
+            <input #newPassword type="password"  matInput required formControlName="newPassword" minlength="8">
+            <mat-error class="input" *ngIf="ChangePasswordForm.hasError('required', 'newPassword')">Inserisci una Nuova password</mat-error>
+            <mat-error class="inputErr" *ngIf="ChangePasswordForm.hasError('minlength','newPassword')">Inserisci almeno 8 caratteri</mat-error>
+            <mat-error class="inputErr" *ngIf="ChangePasswordForm.hasError('maxlength','newPassword')">Inserisci non più di 20 caratteri</mat-error>
 
 
         </mat-form-field>
         <br>
         <mat-form-field>
             <mat-label>Ripeti password</mat-label>
-            <input #repeatPassword type="password" matInput required minlength="8">
+            <input #repeatPassword type="password" matInput required formControlName="repeatPassword" minlength="8">
+            <mat-error class="input" *ngIf="ChangePasswordForm.hasError('notSame')"> Le due password non coincidono</mat-error>
+            <mat-error class="inputErr" *ngIf="ChangePasswordForm.hasError('minlength','repeatPassword')">Inserisci almeno 8 caratteri</mat-error>
+            <mat-error class="inputErr" *ngIf="ChangePasswordForm.hasError('maxlength','repeatPassword')">Inserisci non più di 20 caratteri</mat-error>
 
 
         </mat-form-field>
-    </div>
+    </form>
   </div>
 </mat-dialog-content>
 

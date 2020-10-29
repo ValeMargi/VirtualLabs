@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitte
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Teacher } from '../models/teacher.model';
 import { AuthService } from '../auth/auth.service';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TeacherService } from '../services/teacher.service';
 
 @Component({
@@ -21,11 +21,28 @@ export class EditProfileComponent implements OnInit, OnChanges {
   @Output('password') changePassword = new EventEmitter<any>();
 
   selectedPhoto: File;
-  actualPassword: string;
-  newPassword: string;
-  repeatPassword: string;
 
-  constructor(private dialogRef: MatDialogRef<EditProfileComponent>) { }
+
+  ChangePasswordForm: FormGroup;
+
+  constructor(private dialogRef: MatDialogRef<EditProfileComponent>,
+              private formBuilder: FormBuilder) {
+
+      this.ChangePasswordForm = this.formBuilder.group({
+        actualPassword:['', [Validators.required,Validators.minLength(8), Validators.maxLength(20)]],
+        newPassword: ['', [Validators.required,Validators.minLength(8), Validators.maxLength(20)]],
+        repeatPassword: ['',[Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
+      }, { validator: this.checkPasswords });
+
+    }
+
+    checkPasswords(group: FormGroup) { // here we have the 'passwords' group
+    let pass = group.controls.newPassword.value;
+    let confirmPass = group.controls.repeatPassword.value;
+
+    return pass === confirmPass ? null : { notSame: true }
+  }
+
 
   changePassVisibility: boolean = false;
 

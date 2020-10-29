@@ -32,7 +32,8 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   myControl = new FormControl();
   filteredOptions: Observable<Student[]>;
 
-  date  =  new  FormControl(new  Date());
+
+  dateTimeout: Date;
 
   selectedPhoto: File;
   private studentSelected: Student;
@@ -137,12 +138,27 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
     }
     else if (this.CreateTeamForm.valid) {
       let d = expire;
-      var timeout = d.getFullYear().toString()+"-"+
+      var timeout = /*d.getFullYear().toString()+"-"+
                     ((d.getMonth()+1).toString().length==2?(d.getMonth()+1).toString():"0"+(d.getMonth()+1).toString())+"-"+
                     (d.getDate().toString().length==2?d.getDate().toString():"0"+d.getDate().toString())+" "+
                     (d.getHours().toString().length==2?d.getHours().toString():"0"+d.getHours().toString())+":"+
                     ((parseInt(d.getMinutes()/5)*5).toString().length==2?(parseInt(d.getMinutes()/5)*5).toString():"0"+(parseInt(d.getMinutes()/5)*5).toString())+":00"+
-                    parseInt(d.getMilliseconds()).toString();
+                    parseInt(d.getMilliseconds()).toString();*/
+
+                    d
+                    .toISOString() // Convert date to a string in the format of 2019-03-25T00:07:22.0253Z
+                    .substr(0, 19)  // Strip off the milliseconds and Zulu timezone indication
+                    .replace('T', ' '); // Replace the T for "time" with a space
+
+
+
+                    var date = expire.getFullYear() + '-' + (expire.getMonth() + 1) + '-' + expire.getDate();
+                    var time = expire.getHours() + ":" +
+                               (expire.getMinutes() < 10 ? '0' : '') +
+                               expire.getMinutes() + ":" +
+                               expire.getSeconds()+"."+
+                               expire.getMilliseconds();
+                    var timeout = date + ' ' + time;
 
       console.log(timeout);
       let membersId: string[] = this.studentsToAdd.map(s => s.id);

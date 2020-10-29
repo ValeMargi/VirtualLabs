@@ -31,7 +31,7 @@
 
 
           <mat-label>Date</mat-label>
-          <input  [value]="date.value" matInput [matDatepicker]="myPicker"  placeholder="date">
+          <input  matInput [matDatepicker]="myPicker"  placeholder="date" (ngModel)="dateTimeout">
           <mat-datepicker-toggle  matSuffix [for]="myPicker"></mat-datepicker-toggle>
           <mat-datepicker #myPicker></mat-datepicker>
 
@@ -98,6 +98,6 @@
 
 <mat-dialog-actions>
   <button mat-raised-button color="warn" mat-dialog-close>Anulla</button>
-  <button mat-raised-button color="primary" *ngIf="availableStudents.length >= min - 1" [disabled]="querying" (click)="proposeTeam(nameTeam.value, date.value)" cdkFocusInitial>Crea</button>
+  <button mat-raised-button color="primary" *ngIf="availableStudents.length >= min - 1" [disabled]="querying" (click)="proposeTeam(nameTeam.value, dateTimeout)" cdkFocusInitial>Crea</button>
 </mat-dialog-actions>
 

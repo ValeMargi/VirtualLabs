@@ -9,13 +9,16 @@
 
 .buttonS{
   margin-left: 2%;
-
 }
 
 .buttonS:focus {
   outline: none;
   box-shadow: none;
   background-color:  #3F51B5!important;
+}
+
+.homeBtn {
+  cursor: pointer;
 }
 
 .mat-button ::ng-deep .mat-button-focus-overlay {

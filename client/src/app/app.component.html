@@ -9,7 +9,7 @@
     <button mat-button *ngIf="!loginVisibility" (click)=toggleForMenuClick()>
       <mat-icon>menu</mat-icon>
     </button>
-    <span routerLink="/home">VirtualLabs</span><mat-icon>developer_board</mat-icon>
+    <span routerLink="/home" class="homeBtn">VirtualLabs</span><mat-icon>developer_board</mat-icon>
     <span class="example-spacer"></span>
     <button #btLogin class="buttonS" mat-button *ngIf="loginVisibility"  (click)="routeToLogin()"> <mat-icon>login</mat-icon> Login</button>
     <button #btLogout class="buttonS" mat-button *ngIf="!loginVisibility" (click)="routeMyProfile()"> <mat-icon>face</mat-icon> {{firstName}} {{name}} - Profilo</button>

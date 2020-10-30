@@ -2,6 +2,6 @@ package it.polito.ai.virtualLabs.exceptions;
 
 public class HomeworkIsPermanentException extends VLServiceException {
     public HomeworkIsPermanentException() {
-        super("Homework is permanent!");
+        super("Non è più possibile caricare una consegna");
     }
 }

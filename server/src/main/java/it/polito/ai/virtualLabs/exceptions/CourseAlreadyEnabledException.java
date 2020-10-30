@@ -2,6 +2,6 @@ package it.polito.ai.virtualLabs.exceptions;
 
 public class CourseAlreadyEnabledException extends VLServiceException {
     public CourseAlreadyEnabledException() {
-        super("Selected course is already enabled/disabled!");
+        super("Il corso selezionato è già abilitato/disabilitato");
     }
 }

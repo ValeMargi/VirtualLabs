@@ -43,7 +43,7 @@ public class CourseController {
     public CourseDTO getOne(@PathVariable String name){
         Optional<CourseDTO > courseDTO= vlService.getCourse(name);
         if( !courseDTO.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course "+name+" not present");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Corso non presente");
         else
             return  ModelHelper.enrich(courseDTO.get());
     }
@@ -61,9 +61,9 @@ public class CourseController {
             if (vlService.addCourse(courseDTO, Arrays.asList(professorsId))) {
                 return ModelHelper.enrich(courseDTO);
             } else
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Course "+courseDTO.getName()+" already present");
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Esiste già un corso con lo stesso nome");
         }catch (ProfessorNotFoundException p){
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, p.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, p.getMessage());
         }
     }
 
@@ -81,12 +81,12 @@ public class CourseController {
                 vlService.enableCourse(courseName);
             else
                 vlService.disableCourse(courseName);
-        }catch(CourseNotFoundException cntfe ){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, cntfe.getMessage());
-        }catch (PermissionDeniedException permissionException){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, permissionException.getMessage());
-        }catch (CourseAlreadyEnabledException enabledException){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, enabledException.getMessage());
+        }catch(CourseNotFoundException e ){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (PermissionDeniedException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }catch (CourseAlreadyEnabledException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -172,7 +172,6 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }catch(CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-
         }
     }
 
@@ -188,7 +187,7 @@ public class CourseController {
         if(file.isEmpty() || file.getContentType()==null)
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("text/csv") && !file.getContentType().equals("application/vnd.ms-excel"))
-            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not text/csv");
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"Formato "+file.getContentType()+" non valido: richiesto text/csv");
         else
             try {
                 return vlService.EnrollAllFromCSV(new BufferedReader(new InputStreamReader(file.getInputStream())), courseName);

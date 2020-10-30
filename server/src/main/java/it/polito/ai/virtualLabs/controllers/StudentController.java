@@ -64,7 +64,7 @@ public class StudentController {
         try {
             return  vlService.getCoursesForStudent(studentId).stream().map(ModelHelper::enrich).collect(Collectors.toList());
 
-        } catch (StudentNotFoundException cnfe) {
+        } catch (StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, studentId);
         }
     }
@@ -128,8 +128,11 @@ public class StudentController {
     public List<AssignmentDTO> allAssignment(@PathVariable String courseName) {
         try{
             return  vlService.allAssignmentStudent(courseName);
-        } catch (CourseNotFoundException  | StudentNotFoundException e) {
+        } catch (StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch(StudentNotEnrolledToCourseException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+
         }
     }
 
@@ -144,7 +147,8 @@ public class StudentController {
     public PhotoAssignmentDTO getAssignment(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.getAssignmentStudent( assignmentId);
-        } catch (CourseNotFoundException  | StudentNotFoundException  e) {
+        } catch (CourseNotFoundException  | StudentNotFoundException
+                | PhotoAssignmentNotFoundException | AssignmentNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -162,10 +166,9 @@ public class StudentController {
         if ( !input.containsKey("nameVM") ||  !input.containsKey("numVcpu")
                 || !input.containsKey("diskSpace")
                 || !input.containsKey("ram") )
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Parametri non conformi con la richiesta");
 
         try{
-            //Date date= new Date(System.currentTimeMillis());
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
 
             VMDTO vmdto = new VMDTO();
@@ -179,7 +182,8 @@ public class StudentController {
             return  vlService.addVM(vmdto, courseName);
         }catch (CourseNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch( ModelVMAlreadytPresentException | ResourcesVMNotRespectedException | VMduplicatedException | CourseDisabledException | ImageSizeException e){
+        }catch( ModelVMAlreadytPresentException | ResourcesVMNotRespectedException |
+                VMduplicatedException | CourseDisabledException | ImageSizeException | InvalidInputVMresources e){
             throw new    ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch(PermissionDeniedException p){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, p.getMessage());
@@ -254,7 +258,7 @@ public class StudentController {
     public boolean disableVM(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
             return vlService.disableVM(VMid);
-        } catch (VMNotFoundException   e) {
+        } catch (VMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, p.getMessage());
@@ -271,13 +275,12 @@ public class StudentController {
     public boolean removeVM(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
             return  vlService.removeVM(VMid);
-        } catch (VMNotFoundException  e) {
+        } catch (VMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, p.getMessage());
         }
     }
-
 
     /**
      * Metodo per utilizzare una VM, carico una nuova immagine andando a sovrascrivere
@@ -293,7 +296,7 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
-            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"Formato "+file.getContentType()+" non valido: richiesto jpg/jpeg/png");
         try{
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
             PhotoVMDTO photoVMDTO = new PhotoVMDTO();
@@ -324,7 +327,7 @@ public class StudentController {
     public VMDTO updateVMresources( @PathVariable String courseName,  @PathVariable Long VMid,
                                     @RequestPart("VM")  Map<String, Object> input) {
         if ( !input.containsKey("nameVM") || !input.containsKey("numVcpu") || !input.containsKey("diskSpace")   || !input.containsKey("ram") )
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Parametri non conformi con la richiesta");
         try{
             VMDTO vmdto = new VMDTO();
             vmdto.setNameVM(input.get("nameVM").toString());
@@ -356,7 +359,7 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
-            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"Formato "+file.getContentType()+" non valido: richiesto jpg/jpeg/png");
 
         try {
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
@@ -386,7 +389,7 @@ public class StudentController {
     public HomeworkDTO getHomework(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.getHomework( assignmentId);
-        }catch (  HomeworkNotFoundException e) {
+        }catch (HomeworkNotFoundException | AssignmentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -405,7 +408,7 @@ public class StudentController {
     public List<Map<String, Object>> getVersionsHWForStudent(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.getVersionsHWForStudent(assignmentId);
-        } catch (  HomeworkNotFoundException e) {
+        } catch (HomeworkNotFoundException | AssignmentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -423,7 +426,7 @@ public class StudentController {
     public List<Map<String, Object>> getCorrectionsForStudent(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.getCorrectionsForStudent(assignmentId);
-        } catch (  HomeworkNotFoundException e) {
+        } catch (HomeworkNotFoundException |  AssignmentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

@@ -65,26 +65,25 @@ public class UserController {
 
     @PostMapping("/addUser")
     public Optional<UserDTO> registerUser(@RequestPart("file") @Valid @NotNull MultipartFile file, @Valid @RequestPart("registerData") Map<String, String> registerData) throws IOException {
-        /*Controllare se fare lowerCase*/
         if(file.isEmpty() || file.getContentType()==null)
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
-            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided for the avatar profile is type "+file.getContentType()+" not valid");
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"Formato "+file.getContentType()+" non valido: richiesto jpg/jpeg/png");
 
         if(!registerData.containsKey("firstName") || !registerData.containsKey("name") || !registerData.containsKey("id")
           || !registerData.containsKey("email") || !registerData.containsKey("password")){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters for login not found");
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Parametri non conformi con la richiesta");
         }
         if (!registerData.get("email").matches("^d[0-9]+@polito.it") && !registerData.get("email").matches("^s[0-9]+@studenti.polito.it")) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email " + registerData.get("email") + " not supported");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email " + registerData.get("email") + " non supportata");
         } else if (!jwtUserDetailsService.checkUsernameInUserRepo(registerData.get("email"))) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with email" + registerData.get("email") + "  already present");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Utente già presente");
         }else try {
              int index = registerData.get("email").indexOf("@");
              String id = registerData.get("email").substring(0, index);
             if(!id.equals(registerData.get("id")))
-               throw new ResponseStatusException(HttpStatus.CONFLICT, "Id does not match with email!");
+               throw new ResponseStatusException(HttpStatus.CONFLICT, "Matricola e email non corrispondono");
 
             if (registerData.get("email").matches("^d[0-9]+@polito.it")) { //Professor
                 ProfessorDTO professorDTO = new ProfessorDTO(registerData.get("id"),
@@ -205,7 +204,7 @@ public class UserController {
             }
             authenticationService.changeUserPassword(user, input.get("newPassword"));
             return true;
-        }else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato");
     }
 
 
@@ -225,24 +224,14 @@ public class UserController {
                avatarStudentDTO.setType(file.getContentType());
                avatarStudentDTO.setPicByte(vlService.compressZLib(file.getBytes()));
                res = vlService.changeAvatar(null, avatarStudentDTO);
-
            }
-
            return res;
        }catch (AvatarNotPresentException | StudentNotFoundException | ProfessorNotFoundException e){
            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
        }catch(ImageSizeException e){
            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
        }
-
-
     }
 
 
-
-
-
-
-
-
-    }
+}

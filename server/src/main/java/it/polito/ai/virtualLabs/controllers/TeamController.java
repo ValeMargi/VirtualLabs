@@ -35,14 +35,14 @@ public class TeamController {
     @PostMapping("/{courseName}/proposeTeam")
     public Map<String,Object> proposeTeam(@PathVariable String courseName, @RequestBody Map<String, Object> object) {
         if ( !object.containsKey("nameTeam") ||  !object.containsKey("timeout") || !object.containsKey("membersId"))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Parametri non conformi con la richiesta");
         try {
             String nameTeam = object.get("nameTeam").toString();
             Timestamp timeout = Timestamp.valueOf(object.get("timeout").toString());
             List<String> membersId= (List<String>)object.get("membersId");
             membersId.forEach(member -> member = member.trim());
             return vlService.proposeTeam(courseName, nameTeam, membersId, timeout);
-        } catch (  CourseNotFoundException exception) {
+        } catch (CourseNotFoundException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -50,7 +50,8 @@ public class TeamController {
                 | CardinalityNotAccetableException
                 | StudentDuplicateException
                 | CourseDisabledException
-                | TimeoutNotValidException e){
+                | TimeoutNotValidException
+                | NameTeamIntoCourseAlreadyPresentException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 
         }
@@ -60,9 +61,9 @@ public class TeamController {
     public List<Map<String, Object>> getProposal(@PathVariable String courseName) {
         try {
             return vlService.getProposals(courseName);
-        }catch(StudentWaitingTeamCreationException | StudentAlreadyInTeamException e){
+        }catch( StudentAlreadyInTeamException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }catch (TeamNotFoundException | StudentNotFoundException e){
+        }catch (TeamNotFoundException | StudentNotFoundException | TokenNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -77,8 +78,8 @@ public class TeamController {
     public List<TeamDTO> getTeamsForCourse(@PathVariable String courseName) {
         try {
             return vlService.getTeamForCourse(courseName).stream().map(ModelHelper::enrich).collect(Collectors.toList());
-        }catch(CourseNotFoundException cnfe){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, cnfe.getMessage());
+        }catch(CourseNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
@@ -92,8 +93,8 @@ public class TeamController {
     public List<StudentDTO> getMembersTeam(@PathVariable Long teamId) {
         try{
             return vlService.getMembers(teamId).stream().map(ModelHelper::enrich).collect(Collectors.toList());
-        }catch (TeamNotFoundException tnfe){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " +teamId.toString() +"not present!");
+        }catch (TeamNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
@@ -107,8 +108,8 @@ public class TeamController {
     public List<TeamDTO> getTeamsForStudent(@PathVariable String studentId) {
         try {
             return vlService.getTeamsForStudent(studentId).stream().map(ModelHelper::enrich).collect(Collectors.toList());
-        } catch (StudentNotFoundException cnfe) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,  "Student with id:"+studentId+" not present");
+        } catch (StudentNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedDataAccessException p){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,  p.getMessage());
 
@@ -124,10 +125,10 @@ public class TeamController {
     public TeamDTO getTeamForStudent(@PathVariable String courseId, @PathVariable String studentId) {
         try {
             return vlService.getTeamForStudent(courseId, studentId);
-        } catch (CourseNotFoundException cnfe) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,  "Course with id:" + courseId + " not present");
-        } catch (StudentNotFoundException snfe) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,  "Student with id:" + studentId + " not present");
+        } catch (CourseNotFoundException | StudentNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,  e.getMessage());
+        } catch (StudentNotEnrolledToCourseException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,  e.getMessage());
         } catch(PermissionDeniedDataAccessException p){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,  p.getMessage());
         }

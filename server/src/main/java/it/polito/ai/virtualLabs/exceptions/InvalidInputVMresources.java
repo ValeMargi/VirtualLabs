@@ -2,6 +2,6 @@ package it.polito.ai.virtualLabs.exceptions;
 
 public class InvalidInputVMresources extends VLServiceException {
     public InvalidInputVMresources() {
-        super(" Cannot insert negative or equal 0 value for the VM resources!");
+        super(" Impossibile inserire valori negativi o nulli per le risorse della VM");
     }
 }

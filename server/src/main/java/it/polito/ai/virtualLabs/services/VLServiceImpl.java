@@ -384,7 +384,7 @@ public class VLServiceImpl implements VLService{
                     ret.add(student);
                 }
             }
-            return ret.stream().map(student -> modelMapper.map(student, StudentDTO.class)).collect(Collectors.toList());
+            return ret.stream().map(st -> modelMapper.map(st, StudentDTO.class)).collect(Collectors.toList());
         }
   }
 
@@ -663,14 +663,14 @@ public class VLServiceImpl implements VLService{
     }
 
 
-    /*---> SERVICE GRUPPO*/
+    /*---> SERVICE TEAM*/
     @PreAuthorize("hasAuthority('student')")
     @Override
     public List<TeamDTO> getTeamsForStudent(String studentId){
         try {
             Student s = studentRepository.getOne(studentId);
             return s.getTeams().stream().filter(t-> t.getStatus()==1).map(t -> modelMapper.map(t, TeamDTO.class)).collect(Collectors.toList());
-        }catch(EntityNotFoundException enfe){
+        }catch(EntityNotFoundException e){
             throw new StudentNotFoundException();
         }
     }
@@ -685,8 +685,10 @@ public class VLServiceImpl implements VLService{
             Optional<Student> os = studentRepository.findById(studentId);
             if (!os.isPresent())
                 throw new StudentNotFoundException();
+            if(!os.get().getCourses().contains(oc.get()))
+                throw new StudentNotEnrolledToCourseException();
             List<TeamDTO> list = oc.get().getTeams().stream()
-                                        .filter(team -> team.getMembers().contains(os.get()) && team.getStatus()==1)
+                                        .filter(team -> team.getMembers().contains(os.get())  && team.getStatus()==1)
                                         .map(team -> modelMapper.map(team, TeamDTO.class)).collect(Collectors.toList());
 
             if (list.size() != 1) {
@@ -805,9 +807,6 @@ public class VLServiceImpl implements VLService{
         Student s = os.get();
         if(s.getTeams().stream().anyMatch(t-> t.getCourse().getName().equals(courseId) && t.getStatus()==1))
             throw new StudentAlreadyInTeamException();
-        //if(s.getTokens().stream().filter(t-> t.getCourseId().equals(courseId)).anyMatch(t->  t.getStatus().equals(true)))
-           // throw new StudentWaitingTeamCreationException();
-
         List<Long> teamList = s.getTokens().stream()
                 .filter(t-> t.getCourseId().equals(courseId)).map(Token::getTeamId).collect(Collectors.toList());
 
@@ -829,6 +828,8 @@ public class VLServiceImpl implements VLService{
             m.put("tokenId", currentToken);
             // se status==true, proposta già accettata
             m.put("status", tokenStudent.getStatus());
+            m.put("scadenza", tokenStudent.getExpiryDate());
+            
             List<Map<String, Object>> l2 = new ArrayList<>();
             for(Token token: tokenRepository.findAllByTeamId(teamId).stream()
                     .filter(t->!t.getStudent().equals(s) && !t.getStudent().equals(stu)).collect(Collectors.toList())){
@@ -1405,7 +1406,7 @@ public class VLServiceImpl implements VLService{
              //   List<Assignment> assignmentsList = c.get().getAssignments();
               //  assignmentsList.stream().forEach(a->a.setPicByte(decompressZLib(a.getPicByte())));
                 return c.get().getAssignments().stream().map( a -> modelMapper.map(a, AssignmentDTO.class)).collect(Collectors.toList());
-            }throw new CourseNotFoundException();
+            }throw new StudentNotEnrolledToCourseException();
         }else throw new StudentNotFoundException();
     }
     /*Metodo per ritornare la consegna di un dato corso*/
@@ -1434,8 +1435,6 @@ public class VLServiceImpl implements VLService{
                             PhotoAssignmentDTO paDTO = modelMapper.map(pa, PhotoAssignmentDTO.class);
                             paDTO.setPicByte(decompressZLib(paDTO.getPicByte()));
                             return paDTO;
-                            //pa.setPicByte(decompressZLib(pa.getPicByte()));
-                            //return modelMapper.map(pa, PhotoAssignmentDTO.class);
                         } else throw new PhotoAssignmentNotFoundException();
                     } else throw new PermissionDeniedException();
                 } else throw new AssignmentNotFoundException();

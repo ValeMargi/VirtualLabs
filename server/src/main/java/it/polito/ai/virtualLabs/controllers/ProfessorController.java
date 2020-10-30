@@ -87,12 +87,12 @@ public class ProfessorController {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
-            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"Formato "+file.getContentType()+" non valido: richiesto jpg/jpeg/png");
 
         if (!input.containsKey("maxVcpu") || !input.containsKey("diskSpace")
                 || !input.containsKey("ram") ||  !input.containsKey("runningInstances")
                 || !input.containsKey("totInstances") )
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Parametri non conformi con la richiesta");
         try{
             CourseDTO courseDTO = new CourseDTO();
             courseDTO.setMaxVcpu((int)input.get("maxVcpu"));
@@ -129,7 +129,7 @@ public class ProfessorController {
         if (!input.containsKey("maxVcpu") || !input.containsKey("diskSpace")
                 || !input.containsKey("ram") ||  !input.containsKey("runningInstances")
                 || !input.containsKey("totInstances") )
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Parametri non conformi con la richiesta");
         try{
             CourseDTO courseDTO = new CourseDTO();
             courseDTO.setMaxVcpu((int)input.get("maxVcpu"));
@@ -198,12 +198,6 @@ public class ProfessorController {
         }
     }
 
-
-    // addAssignment ->inserimento consegna Prof
-    /*
-     * Ass: id, release, expiration
-     * Im: id, times, name, type*/
-
     /**
      * Metodo: POST
      * Authority: Docente
@@ -219,10 +213,10 @@ public class ProfessorController {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
-            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"Formato "+file.getContentType()+" non valido: richiesto jpg/jpeg/png");
 
         if (!input.containsKey("assignmentName") || !input.containsKey("expiration") )
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Parameters not found");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Parametri non conformi con la richiesta");
         try {
             AssignmentDTO assignmentDTO = new AssignmentDTO();
             assignmentDTO.setAssignmentName(input.get("assignmentName").toString());
@@ -275,7 +269,7 @@ public class ProfessorController {
     public PhotoAssignmentDTO getAssignment(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.getAssignmentProfessor( assignmentId);
-        } catch (CourseNotFoundException  | StudentNotFoundException  e) {
+        } catch (CourseNotFoundException  | StudentNotFoundException | AssignmentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -293,7 +287,8 @@ public class ProfessorController {
     public List<Map<String, Object>> allHomework(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.allHomework(courseName, assignmentId);
-        } catch (CourseNotFoundException  | ProfessorNotFoundException | StudentNotFoundException e) {
+        } catch (CourseNotFoundException  | ProfessorNotFoundException
+                | StudentNotFoundException | AssignmentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -342,7 +337,7 @@ public class ProfessorController {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
-            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"File provided is type "+file.getContentType()+" not valid");
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"Formato "+file.getContentType()+" non valido: richiesto jpg/jpeg/png");
 
         try {
             Timestamp timestamp= new Timestamp(System.currentTimeMillis());
@@ -354,15 +349,14 @@ public class ProfessorController {
             photoCorrectionDTO.setTimestamp(timestamp.toString());
             return vlService.uploadCorrection(homeworkId, versionHMid, photoCorrectionDTO, Boolean.parseBoolean(permanent), grade);
 
-        }catch ( HomeworkNotFoundException e){
+        }catch ( HomeworkNotFoundException | HomeworkVersionIdNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch(ImageSizeException | HomeworkIsPermanentException e){
+        }catch(ImageSizeException | HomeworkIsPermanentException | GradeNotValidException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
-
 
     /**
      * Metodo: GET

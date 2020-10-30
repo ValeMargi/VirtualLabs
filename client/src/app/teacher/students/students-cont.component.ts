@@ -5,6 +5,7 @@ import { AuthService } from '../../auth/auth.service';
 import { CourseService } from 'src/app/services/course.service';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { StudentGroup } from 'src/app/models/student-group.model';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 })
 export class StudentsContComponent implements OnInit, OnDestroy {
 
-  @Output() STUDENTS_ENROLLED: Student[] = []
+  @Output() STUDENTS_ENROLLED: StudentGroup[] = []
   @Output() ALL_STUDENTS: Student[] = []
 
   private route$: Subscription
@@ -58,9 +59,17 @@ export class StudentsContComponent implements OnInit, OnDestroy {
   }
 
   loadStudentsEnrolled(courseName: string) {
-    this.courseService.enrolledStudents(courseName).subscribe(
+    this.courseService.getEnrolledStudentsAllInfo(courseName).subscribe(
       (data) => {
-        this.STUDENTS_ENROLLED = data;
+        let array: StudentGroup[] = new Array();
+
+        data.forEach(s => {
+          let student: Student = s.student;
+          let teamName: string = s.teamName;
+          array.push(new StudentGroup(student.id, student.firstName, student.name, student.email, teamName));
+        });
+
+        this.STUDENTS_ENROLLED = array;
       },
       (error) => { 
         window.alert(error.error.message);
@@ -77,7 +86,8 @@ export class StudentsContComponent implements OnInit, OnDestroy {
   enrollStudent(student: Student) {
     this.courseService.enrollOne(this.courseService.currentCourse.getValue().name, student.id).subscribe(
       (data) => {
-        this.STUDENTS_ENROLLED = this.STUDENTS_ENROLLED.concat(student);
+        let s: StudentGroup = new StudentGroup(student.id, student.firstName, student.name, student.email, "/");
+        this.STUDENTS_ENROLLED = this.STUDENTS_ENROLLED.concat(s);
       },
       (error) => { 
         window.alert(error.error.message);
@@ -99,7 +109,8 @@ export class StudentsContComponent implements OnInit, OnDestroy {
         data.forEach(s => array.push(s));
 
         array.forEach(student => {
-          this.STUDENTS_ENROLLED.push(student);
+          let s: StudentGroup = new StudentGroup(student.id, student.firstName, student.name, student.email, "/");
+          this.STUDENTS_ENROLLED.push(s);
         });
       },
       (error) => {
@@ -117,11 +128,11 @@ export class StudentsContComponent implements OnInit, OnDestroy {
   removeStudents(students: Student[]) {
     this.courseService.deleteStudentsFromCourse(this.courseService.currentCourse.getValue().name, students.map(student => student.id)).subscribe(
       (data) => {
-        let array: Student[] = this.STUDENTS_ENROLLED;
+        let array: StudentGroup[] = this.STUDENTS_ENROLLED;
         this.STUDENTS_ENROLLED = new Array();
 
         data.forEach(student => {
-          let remove: Student = null;
+          let remove: StudentGroup = null;
 
           array.forEach(s => {
             if (s.id == student.id) {

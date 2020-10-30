@@ -15,6 +15,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatInput } from '@angular/material/input';
 import { Student } from '../../models/student.model';
 import { StudentsContComponent } from './students-cont.component';
+import { StudentGroup } from 'src/app/models/student-group.model';
 
 
 
@@ -43,15 +44,15 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
     this.setDataSourceAttributes();
   }
 
-  @Input() students: Student[];
+  @Input() students: StudentGroup[];
   @Input() options: Student[];
   @Output('enroll') toInsert = new EventEmitter<Student>()
   @Output('CSV') toInsertCSV = new EventEmitter<File>();
-  @Output('remove') toRemove = new EventEmitter<Student[]>()
+  @Output('remove') toRemove = new EventEmitter<StudentGroup[]>()
 
   displayedColumns: string[] = ['select', 'id', 'name', 'firstName', 'team'];
-  dataSource = new MatTableDataSource<Student>();
-  selectedStudents = new SelectionModel<Student>(true, []);
+  dataSource = new MatTableDataSource<StudentGroup>();
+  selectedStudents = new SelectionModel<StudentGroup>(true, []);
 
   myControl = new FormControl();
   selectedCSV: File;
@@ -102,7 +103,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   setTable() {
-    this.dataSource = new MatTableDataSource<Student>(this.students);
+    this.dataSource = new MatTableDataSource<StudentGroup>(this.students);
     this.setDataSourceAttributes();
     this.length = this.students.length;
   }

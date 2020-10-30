@@ -86,6 +86,10 @@ export class CourseService {
     return this.http.get<Student[]>(`${this.API_COURSES}/${courseName}/enrolled`).pipe(map(students => students || []));
   }
 
+  getEnrolledStudentsAllInfo(courseName: string) {
+    return this.http.get<any[]>(`${this.API_COURSES}/${courseName}/enrolledInfo`).pipe(map(students => students || []));
+  }
+
   getProfessorsForCourse(courseName: string) {
     return this.http.get<Teacher[]>(`${this.API_COURSES}/${courseName}/getProfessors`).pipe(map(teachers => teachers || []));
   }

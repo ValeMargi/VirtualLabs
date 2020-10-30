@@ -18,7 +18,8 @@ export class CourseService {
   currentCourse = new BehaviorSubject<Course>(new Course("", "", -1, -1, 0, -1, -1, -1, -1, -1));
   currentCourse$ = this.currentCourse.asObservable();
 
-  courseRemove: EventEmitter<Course> = new EventEmitter<Course>();
+  courseRemove: EventEmitter<string> = new EventEmitter<string>();
+  courseReload: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private http: HttpClient) {}
 

@@ -20,6 +20,7 @@ export class VmsContComponent implements OnInit, OnDestroy {
   private route$: Subscription
 
   constructor(private teamService: TeamService, 
+              private courseService: CourseService,
               private router: Router,
               private route: ActivatedRoute) { 
     
@@ -43,6 +44,7 @@ export class VmsContComponent implements OnInit, OnDestroy {
 
           if (status == 404 || status == 403) {
             this.router.navigateByUrl("home");
+            this.courseService.courseReload.emit();
           }
         }
       );

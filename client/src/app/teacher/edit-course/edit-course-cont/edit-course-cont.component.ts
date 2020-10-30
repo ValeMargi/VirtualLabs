@@ -81,7 +81,7 @@ export class EditCourseContComponent implements OnInit {
     this.courseService.removeCourse(this.courseService.currentCourse.getValue().name).subscribe(
       (data) => {
         if (data) {
-          this.courseService.courseRemove.emit(this.courseService.currentCourse.getValue());
+          this.courseService.courseRemove.emit(this.courseService.currentCourse.getValue().name);
           this.matDialogRef.close();
         }
         else {

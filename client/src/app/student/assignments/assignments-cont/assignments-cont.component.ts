@@ -36,7 +36,9 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.teamService.getTeamForStudent(courseName, localStorage.getItem('currentId')).subscribe(
+      const currentId: string = localStorage.getItem('currentId');
+
+      this.teamService.getTeamForStudent(courseName, currentId).subscribe(
         (data) => {
           if (data != null) {
             this.HAS_TEAM = true;
@@ -62,6 +64,12 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
         },
         (error) => {
           window.alert(error.error.message);
+          const status: number = error.error.status;
+
+          if (status == 404 || status == 403) {
+            this.router.navigateByUrl("home");
+            this.courseService.courseReload.emit();
+          }
         }
       )
 
@@ -75,6 +83,7 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
 
           if (status == 404 || status == 403) {
             this.router.navigateByUrl("home");
+            this.courseService.courseReload.emit();
           }
         }
       );

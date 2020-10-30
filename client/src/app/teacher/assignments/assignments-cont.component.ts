@@ -19,6 +19,7 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
   private route$: Subscription
 
   constructor(private teacherService: TeacherService,
+              private courseService: CourseService,
               private router: Router,
               private route: ActivatedRoute) { 
     
@@ -42,6 +43,7 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
 
           if (status == 404 || status == 403) {
             this.router.navigateByUrl("home");
+            this.courseService.courseReload.emit();
           }
         }
       );

@@ -68,13 +68,38 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.getUserName();
+
   }
 
   ngOnInit() {
     this.role = localStorage.getItem("role");
 
-    this.getUserName();
+    if (this.router.url == "") {
+      this.notFoundVisibility = true;
+    }
+    else {
+      this.notFoundVisibility = false;
+
+      if (this.authService.isLoggedIn()) {
+        this.loginVisibility = false;
+        this.LoginSuccess = true;
+
+        if (this.role.match("student")) {
+          this.teacherVisibility = false;
+        }
+        else {
+          this.teacherVisibility = true;
+        }
+
+        this.authService.getUserByRole();
+        this.getUserName(true);
+        this.setCourses();
+      }
+      else {
+        this.loginVisibility = true;
+        this.getUserName(false);
+      }
+    }
 
     this.authService.userLogged.subscribe(ok => {
       if (ok && this.authService.isLoggedIn()) {
@@ -90,11 +115,13 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
           this.teacherVisibility = true;
         }
 
+        this.getUserName(true);
         this.setCourses();
       }
       else {
         this.loginVisibility = true;
         this.homeVisibility = true;
+        this.getUserName(false);
         this.sidenav.close();
       }
     });
@@ -129,7 +156,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         this.courses = new Array();
 
         array.forEach(c => {
-          if (c.name != data.name) {
+          if (c.name != data) {
             this.courses.push(c);
           }
         });
@@ -140,6 +167,15 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       (error) => {}
 
     );
+
+    this.courseService.courseReload.subscribe(
+      (data) => {
+        this.setCourses();
+      },
+      (error) => {
+
+      }
+    )
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -176,38 +212,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         this.openDialogCourse();
       }
     });
-
-    if (this.router.url == "") {
-      this.notFoundVisibility = true;
-    }
-    else {
-      this.notFoundVisibility = false;
-
-
-      /*if (this.router.url == "/home") {
-        this.homeVisibility = true;
-      }
-      else {
-        this.homeVisibility = false;
-      }*/
-
-      if (this.authService.isLoggedIn()) {
-        this.loginVisibility = false;
-        this.LoginSuccess = true;
-
-        if (this.role.match("student")) {
-          this.teacherVisibility = false;
-        }
-        else {
-          this.teacherVisibility = true;
-        }
-
-        this.authService.getUserByRole();
-      }
-      else {
-        this.loginVisibility = true;
-      }
-    }
   }
 
   ngOnDestroy() {
@@ -215,29 +219,22 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     this.routeQueryParams$.unsubscribe();
   }
 
-  getUserName(){
-    this.authService.userLogged.subscribe(
-      (data) => {
-        if (data == true) {
-          if (this.studentService.currentStudent != null){
-              this.name = this.studentService.currentStudent.name;
-              this.firstName = this.studentService.currentStudent.firstName;
-
-          }
-          else if(this.teacherService.currentTeacher != null){
-              this.name = this.teacherService.currentTeacher.name;
-              this.firstName = this.teacherService.currentTeacher.firstName;
-          }
-        }
-        else {
-          this.name = "";
-          this.firstName = "";
-        }
-      },
-      (error) => {
+  getUserName(loggedIn: boolean) {
+    if (loggedIn) {
+      if (this.studentService.currentStudent != null){
+          this.name = this.studentService.currentStudent.name;
+          this.firstName = this.studentService.currentStudent.firstName;
 
       }
-    );
+      else if(this.teacherService.currentTeacher != null){
+          this.name = this.teacherService.currentTeacher.name;
+          this.firstName = this.teacherService.currentTeacher.firstName;
+      }
+    }
+    else {
+      this.name = "";
+      this.firstName = "";
+    }
   }
 
   setCourses() {

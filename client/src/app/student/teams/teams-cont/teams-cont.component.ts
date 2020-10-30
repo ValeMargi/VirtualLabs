@@ -82,6 +82,7 @@ export class TeamsContComponent implements OnInit, OnDestroy {
 
         if (status == 404 || status == 403) {
           this.router.navigateByUrl("home");
+          this.courseService.courseReload.emit();
         }
       }
     );
@@ -140,6 +141,12 @@ export class TeamsContComponent implements OnInit, OnDestroy {
       (error) => {
         window.alert(error.error.message);
         this.processing = false;
+        const status: number = error.error.status;
+
+        if (status == 404 || status == 403) {
+          this.router.navigateByUrl("home");
+          this.courseService.courseReload.emit();
+        }
       }
     );
   }
@@ -169,6 +176,12 @@ export class TeamsContComponent implements OnInit, OnDestroy {
       (error) => {
         window.alert(error.error.message);
         this.processing = false;
+        const status: number = error.error.status;
+
+        if (status == 404 || status == 403) {
+          this.router.navigateByUrl("home");
+          this.courseService.courseReload.emit();
+        }
       }
     );
   }

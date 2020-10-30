@@ -33,14 +33,15 @@ export class VmsContComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    let studentId = localStorage.getItem('currentId');
-
     this.route$ = this.route.params.subscribe(params => {
       let courseName = params.courses;
 
       if (courseName == undefined) {
         return;
       }
+
+      const studentId = localStorage.getItem('currentId');
+      console.log(studentId)
 
       this.teamService.getTeamForStudent(courseName, studentId).subscribe(
         (data) => {
@@ -86,6 +87,7 @@ export class VmsContComponent implements OnInit, OnDestroy {
 
           if (status == 404 || status == 403) {
             this.router.navigateByUrl("home");
+            this.courseService.courseReload.emit();
           }
         }
       );
@@ -139,7 +141,13 @@ export class VmsContComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        window.alert("Impossibile attivare la VM");
+        window.alert(error.error.message);
+        const status: number = error.error.status;
+
+        if (status == 404 || status == 403) {
+          this.router.navigateByUrl("home");
+          this.courseService.courseReload.emit();
+        }
       }
     )
   }
@@ -156,7 +164,13 @@ export class VmsContComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        window.alert("Impossibile spegnere la VM");
+        window.alert(error.error.message);
+        const status: number = error.error.status;
+
+        if (status == 404 || status == 403) {
+          this.router.navigateByUrl("home");
+          this.courseService.courseReload.emit();
+        }
       }
     )
   }

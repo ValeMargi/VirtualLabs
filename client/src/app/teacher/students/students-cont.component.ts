@@ -40,9 +40,11 @@ export class StudentsContComponent implements OnInit, OnDestroy {
         },
         (error) => { 
           window.alert(error.error.message);
+          const status: number = error.error.status;
 
-          if (error.error.status == 404) {
+          if (status == 404 || status == 403) {
             this.router.navigateByUrl("home");
+            this.courseService.courseReload.emit();
           }
         } 
       );
@@ -66,6 +68,7 @@ export class StudentsContComponent implements OnInit, OnDestroy {
 
         if (status == 404 || status == 403) {
           this.router.navigateByUrl("home");
+          this.courseService.courseReload.emit();
         }
       } 
     );
@@ -77,9 +80,15 @@ export class StudentsContComponent implements OnInit, OnDestroy {
         this.STUDENTS_ENROLLED = this.STUDENTS_ENROLLED.concat(student);
       },
       (error) => { 
-        window.alert("studente non aggiunto");
+        window.alert(error.error.message);
+        const status: number = error.error.status;
+
+        if (status == 404 || status == 403) {
+          this.router.navigateByUrl("home");
+          this.courseService.courseReload.emit();
+        }
       } 
-      );
+    );
   }
 
   enrollStudentCSV(file: File) {
@@ -94,7 +103,13 @@ export class StudentsContComponent implements OnInit, OnDestroy {
         });
       },
       (error) => {
-        window.alert("Studenti non aggiunti");
+        window.alert(error.error.message);
+        const status: number = error.error.status;
+
+        if (status == 404 || status == 403) {
+          this.router.navigateByUrl("home");
+          this.courseService.courseReload.emit();
+        }
       }
     )
   }
@@ -122,8 +137,14 @@ export class StudentsContComponent implements OnInit, OnDestroy {
         array.forEach(s => this.STUDENTS_ENROLLED.push(s));
       },
       (error) => { 
-        window.alert("Rimozione studenti non avvenuta");
-       }
+        window.alert(error.error.message);
+        const status: number = error.error.status;
+
+        if (status == 404 || status == 403) {
+          this.router.navigateByUrl("home");
+          this.courseService.courseReload.emit();
+        }
+      }
     );
   }
 

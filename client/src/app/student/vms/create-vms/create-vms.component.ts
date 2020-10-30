@@ -14,15 +14,12 @@ export class CreateVmsComponent implements OnInit {
   constructor(private matDialogRef: MatDialogRef<CreateVmsComponent>) { }
 
   form = {
-    name : new FormControl('', [Validators.required, Validators.minLength(3)])
+    name : new FormControl('', [Validators.required])
   }
 
   getErrorMessage() {
     if (this.form.name.hasError('required')) {
       return 'Campo obbligatorio';
-    }
-    if(this.form.name.hasError('minlength')){
-      return 'Inserire almeno 3 caratteri';
     }
   }
 

@@ -24,9 +24,11 @@ export class UploadCorrectionComponent implements OnInit {
   uploadCorrection(grade: string) {
     if (grade.length > 0 && Number.parseInt(grade) < 0 || Number.parseInt(grade) > 30) {
       window.alert("Inserire un voto tra 0 e 30");
+      return;
     }
     else if (this.selectedPhoto == null) {
       window.alert("Inserire un'immagine");
+      return;
     }
     else {
       this.upload.emit({file: this.selectedPhoto, grade: grade});

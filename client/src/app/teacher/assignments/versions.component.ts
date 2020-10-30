@@ -20,8 +20,7 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() versions: HomeworkVersion[] = [];
   @Input() corrections: HomeworkCorrection[] = [];
   @Output('upload') upload = new EventEmitter<File>();
-  private idA: number;
-  private route$: Subscription;
+
   corrVisibility: boolean = false;
   corrsToShow: HomeworkCorrection[] = [];
   showedId: number = -1;
@@ -31,13 +30,7 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
               private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.route$ = this.route.params.subscribe(params => {
-      this.idA = params.idA;
-      
-      if (this.idA == null) {
-        return;
-      }
-    });
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -64,7 +57,7 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.route$.unsubscribe();
+
   }
 
   back() {
@@ -99,7 +92,7 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
         id: 1,
         title: 'Correction',
         versions: this.versions,
-        assId: this.idA,
+        assId: this.route.parent.snapshot.params.idA,
         hwId: this.homework.id
     };
 
@@ -116,7 +109,7 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
         title: 'VersionText',
         isTeacher: true,
         type: "version",
-        assignmentId: this.idA,
+        assignmentId: this.route.parent.snapshot.params.idA,
         homeworkId: this.homework.id,
         versionId: version.id
     };
@@ -134,7 +127,7 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
         title: 'CorrectionText',
         isTeacher: true,
         type: "correction",
-        assignmentId: this.idA,
+        assignmentId: this.route.parent.snapshot.params.idA,
         homeworkId: this.homework.id,
         correctionId: correction.id
     };

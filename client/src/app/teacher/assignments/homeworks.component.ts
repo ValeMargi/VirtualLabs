@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, OnChanges, SimpleChanges, EventEmitter } from '@angular/core';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -36,6 +36,7 @@ export class HomeworksComponent implements OnInit, OnChanges {
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
   @Input() homeworkStudents: HomeworkStudent[];
+  @Output('update') update = new EventEmitter<number>();
 
   homeworksToShow: any[] = [];
   versionsVisibility: boolean = false;
@@ -98,6 +99,7 @@ export class HomeworksComponent implements OnInit, OnChanges {
 
   onRouterOutletDeactivate(event: any) {
     this.versionsVisibility = false;
+    this.update.emit(this.route.snapshot.params.idA);
   }
 
   showHistory(hws: HomeworkStudent) {

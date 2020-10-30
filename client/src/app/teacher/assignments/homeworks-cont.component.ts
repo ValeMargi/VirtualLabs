@@ -31,27 +31,32 @@ export class HomeworksContComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.teacherService.allHomework(this.courseService.currentCourse.getValue().name, idA).subscribe(
-        (data) => {
-          let tmp: HomeworkStudent[] = [];
-          data.forEach(element => {
-            let homework: Homework = element.Homework;
-            let student: Student = element.Student;
-            let hws: HomeworkStudent = new HomeworkStudent(student.id, student.firstName, student.name, student.email, homework.id, homework.status, homework.permanent, homework.grade, homework.timestamp);
-            tmp.push(hws);
-          });
-
-          this.HOMEWORKS_STUDENTS = tmp;
-        },
-        (error) => {
-          window.alert("Errore nel reperire gli homeworks");
-        }
-      );
+      this.updateHomeworks(idA);
+      
     });
   }
 
   ngOnDestroy() {
     this.route$.unsubscribe();
+  }
+
+  updateHomeworks(idA: number) {
+    this.teacherService.allHomework(this.courseService.currentCourse.getValue().name, idA).subscribe(
+      (data) => {
+        let tmp: HomeworkStudent[] = [];
+        data.forEach(element => {
+          let homework: Homework = element.Homework;
+          let student: Student = element.Student;
+          let hws: HomeworkStudent = new HomeworkStudent(student.id, student.firstName, student.name, student.email, homework.id, homework.status, homework.permanent, homework.grade, homework.timestamp);
+          tmp.push(hws);
+        });
+
+        this.HOMEWORKS_STUDENTS = tmp;
+      },
+      (error) => {
+        window.alert(error.error.message);
+      }
+    );
   }
 
 }

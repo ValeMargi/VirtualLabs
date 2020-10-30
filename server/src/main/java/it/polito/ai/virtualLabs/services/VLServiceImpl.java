@@ -1640,7 +1640,7 @@ public class VLServiceImpl implements VLService{
     /*Metodo per consegnare correzione*/
     @PreAuthorize("hasAuthority('professor')")
     @Override
-    public PhotoCorrectionDTO uploadCorrection(Long homeworkId, Long versionHMid,
+    public Map<String, Object> uploadCorrection(Long homeworkId, Long versionHMid,
                                     PhotoCorrectionDTO photoCorrectionDTO,Boolean permanent, String grade) {
         Optional<Homework> oh = homeworkRepository.findById(homeworkId);
         String professorAuth = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -1661,9 +1661,14 @@ public class VLServiceImpl implements VLService{
                     }
                     h.setTimestamp(photoCorrection.getTimestamp());
                     photoCorrectionRepository.saveAndFlush(photoCorrection);
-                    PhotoCorrectionDTO photoCorDTO = modelMapper.map(photoCorrection, PhotoCorrectionDTO.class);
-                    photoCorDTO.setPicByte(decompressZLib(photoCorDTO.getPicByte()));
-                    return photoCorDTO;
+
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("id", photoCorrection.getId());
+                    m.put("timestamp", photoCorrection.getTimestamp());
+                    m.put("nameFile", photoCorrection.getNameFile());
+                    m.put("versionId",photoCorrection.getIdVersionHomework());
+
+                    return m;
                 }else throw new HomeworkVersionIdNotFoundException();
 
             }else throw  new PermissionDeniedException();

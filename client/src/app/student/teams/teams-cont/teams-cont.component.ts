@@ -25,8 +25,7 @@ export class TeamsContComponent implements OnInit, OnDestroy {
   TEAM: Team;
   PROPOSALS: Proposal[];
   MEMBERS: Student[] = [];
-
-  private processing: boolean = false;
+  QUERYING: boolean = false;
 
   ngOnInit(): void {
     this.route$ = this.route.params.subscribe(params =>  {
@@ -111,36 +110,36 @@ export class TeamsContComponent implements OnInit, OnDestroy {
   }
 
   acceptProposal(token: string) {
-    if (this.processing) {
+    if (this.QUERYING) {
       return;
     }
 
-    this.processing = true;
+    this.QUERYING = true;
 
     this.teamService.confirm(token).subscribe(
       (data) => {
         switch(data) {
           case 0: {
             window.alert("Token non valido");
-            this.processing = false;
+            this.QUERYING = false;
             break;
           }
           case 1: {
             this.getProposals(this.route.snapshot.params.courses);
-            this.processing = false;
+            this.QUERYING = false;
             break;
           }
           case 2: {
             this.PROPOSALS = new Array();
             this.getTeam(this.route.snapshot.params.courses);
-            this.processing = false;
+            this.QUERYING = false;
             break;
           }
         }
       },
       (error) => {
         window.alert(error.error.message);
-        this.processing = false;
+        this.QUERYING = false;
         const status: number = error.error.status;
 
         if (status == 404 || status == 403) {
@@ -152,30 +151,30 @@ export class TeamsContComponent implements OnInit, OnDestroy {
   }
 
   refuseProposal(token: string) {
-    if (this.processing) {
+    if (this.QUERYING) {
       return;
     }
 
-    this.processing = true;
+    this.QUERYING = true;
 
     this.teamService.refuse(token).subscribe(
       (data) => {
         switch(data) {
           case 0: {
             window.alert("Token non valido");
-            this.processing = false;
+            this.QUERYING = false;
             break;
           }
           case 1: {
             this.getProposals(this.route.snapshot.params.courses);
-            this.processing = false;
+            this.QUERYING = false;
             break;
           }
         }
       },
       (error) => {
         window.alert(error.error.message);
-        this.processing = false;
+        this.QUERYING = false;
         const status: number = error.error.status;
 
         if (status == 404 || status == 403) {

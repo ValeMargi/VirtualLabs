@@ -38,9 +38,10 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   //My proposal
   myProposal: Proposal;
 
-  @Input() public team: Team;
-  @Input() public proposals: Proposal[] = [];
-  @Input() public members: Student[] = [];
+  @Input() team: Team;
+  @Input() proposals: Proposal[] = [];
+  @Input() members: Student[] = [];
+  @Input() querying: boolean;
   @Output('accept') accept = new EventEmitter<string>();
   @Output('refuse') refuse = new EventEmitter<string>();
 
@@ -85,7 +86,6 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
     if (changes.team != null) {
       this.team = changes.team.currentValue;
 
@@ -97,6 +97,10 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     if (changes.members != null) {
       this.members = changes.members.currentValue;
       this.setTableTeam();
+    }
+
+    if (changes.querying != null) {
+      this.querying = changes.querying.currentValue;
     }
 
     if (changes.proposals != null) {

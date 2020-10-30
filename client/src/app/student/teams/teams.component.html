@@ -113,6 +113,7 @@
   </mat-card-header>
 
   <mat-card-content>
+    <mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
     <div class="tableContainer">
       <table #table mat-table [dataSource]="dataSourceProposals" matSort class="matTable" >
           <ng-container matColumnDef="teamName">

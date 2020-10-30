@@ -17,7 +17,13 @@ import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms'
 })
 export class AddCourseDialogComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  
+  private sort: MatSort;
+  
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.dataSource.sort = this.sort;
+  }
 
   AddCourseForm: FormGroup;
   displayedColumns: string[] = ['id', 'name', 'firstName', 'delete'];

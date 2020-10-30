@@ -19,8 +19,23 @@ import { strict } from 'assert';
 export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
   @ViewChild('table') table: MatTable<Element>;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  
+  private sort: MatSort;
+  private paginator: MatPaginator;
+  
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceTeamAttributes();
+    this.setDataSourceProposalsAttributes();
+    this.setDataSourceProposalsAcceptedAttributes();
+  }
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceTeamAttributes();
+    this.setDataSourceProposalsAttributes();
+    this.setDataSourceProposalsAcceptedAttributes();
+  }
 
   //Table Team
   displayedColumnsTeam: string[] = ['id', 'name', 'firstName'];
@@ -45,9 +60,9 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   @Output('accept') accept = new EventEmitter<string>();
   @Output('refuse') refuse = new EventEmitter<string>();
 
-  lengthProposals: number = 0;
-  lengthProposalsAccepted: number = 0;
-  lengthMembers: number = 0;
+  lengthProposals;
+  lengthProposalsAccepted;
+  lengthMembers;
   teamName: string;
 
   propsVisibility: boolean = false;
@@ -200,24 +215,36 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
     if (this.propsVisibility) { 
       this.dataSourceProposals = new MatTableDataSource<Proposal>(props);
-      this.dataSourceProposals.paginator = this.paginator;
-      this.dataSourceProposals.sort = this.sort;
+      this.setDataSourceProposalsAttributes();
       this.lengthProposals = props.length;
     }
 
     if (this.propsAcceptedVisibility) { 
       this.dataSourceProposalsAccepted = new MatTableDataSource<Proposal>(propsAccepted);
-      this.dataSourceProposalsAccepted.paginator = this.paginator;
-      this.dataSourceProposalsAccepted.sort = this.sort;
+      this.setDataSourceProposalsAcceptedAttributes();
       this.lengthProposalsAccepted = propsAccepted.length;
     }
   }
 
   setTableTeam(){
     this.dataSourceTeam = new MatTableDataSource<Student>(this.members);
+    this.setDataSourceTeamAttributes();
+    this.lengthMembers = this.members.length;
+  }
+
+  setDataSourceTeamAttributes() {
     this.dataSourceTeam.paginator = this.paginator;
     this.dataSourceTeam.sort = this.sort;
-    this.lengthMembers = this.members.length;
+  }
+
+  setDataSourceProposalsAttributes() {
+    //this.dataSourceProposals.paginator = this.paginator;
+    this.dataSourceProposals.sort = this.sort;
+  }
+
+  setDataSourceProposalsAcceptedAttributes() {
+    //this.dataSourceProposalsAccepted.paginator = this.paginator;
+    this.dataSourceProposalsAccepted.sort = this.sort;
   }
 
   acceptProposal(token: string) {

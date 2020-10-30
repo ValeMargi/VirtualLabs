@@ -15,8 +15,19 @@ import { HomeworkStudent } from 'src/app/models/homework-student.model';
 })
 export class HomeworksComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  
+  private sort: MatSort;
+  private paginator: MatPaginator;
+  
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceAttributes();
+  }
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
 
   displayedColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp', 'grade', 'version'];
   dataSource = new MatTableDataSource<HomeworkStudent>();
@@ -59,9 +70,13 @@ export class HomeworksComponent implements OnInit, OnChanges {
 
   manageTable() {
     this.dataSource = new MatTableDataSource<HomeworkStudent>(this.homeworkStudents);
+    this.setDataSourceAttributes();
+    this.length = this.homeworkStudents.length;
+  }
+
+  setDataSourceAttributes() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.length = this.homeworkStudents.length;
   }
 
   backAssignmetsTable() {

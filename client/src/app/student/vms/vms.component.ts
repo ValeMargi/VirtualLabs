@@ -18,8 +18,19 @@ import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-
 })
 export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  
+  private sort: MatSort;
+  private paginator: MatPaginator;
+  
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceAttributes();
+  }
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
 
   displayedColumns: string[] = ['vmName', 'owners', 'status', 'link', 'swithOnOff', 'edit'];
   dataSource = new MatTableDataSource<VMOwners>();
@@ -83,9 +94,13 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
 
   manageTable() {
     this.dataSource = new MatTableDataSource<VMOwners>(this.vms);
+    this.setDataSourceAttributes();
+    this.length = this.vms.length;
+  }
+
+  setDataSourceAttributes() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.length = this.vms.length;
   }
 
   openDialogEdit(vm: VMOwners) {

@@ -16,7 +16,13 @@ import { VM } from 'src/app/models/vm.model';
 })
 export class ManageVmComponent implements OnInit {
   @ViewChild('table') table: MatTable<Element>;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  
+  private sort: MatSort;
+  
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.dataSource.sort = this.sort;
+  }
 
   displayedColumns: string[] = ['id', 'name', 'firstName', 'delete'];
   dataSource = new MatTableDataSource<Student>();

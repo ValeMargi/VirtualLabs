@@ -16,7 +16,14 @@ import { Teacher } from 'src/app/models/teacher.model';
 })
 export class EditCourseComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  
+  private sort: MatSort;
+  
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.dataSource.sort = this.sort;
+  }
+
   EditCourseForm: FormGroup;
   displayedColumns: string[] = ['id', 'name', 'firstName', 'delete'];
   dataSource = new MatTableDataSource<Teacher>();

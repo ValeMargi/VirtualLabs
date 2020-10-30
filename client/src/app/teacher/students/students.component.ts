@@ -25,12 +25,23 @@ import { StudentsContComponent } from './students-cont.component';
 })
 export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild('checkall') checkall: MatCheckbox;
   @ViewChild('checksingle') checksingle: MatCheckbox;
   @ViewChild('input') input: MatInput
+
+  private sort: MatSort;
+  private paginator: MatPaginator;
+  
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceAttributes();
+  }
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
 
   @Input() students: Student[];
   @Input() options: Student[];
@@ -92,9 +103,13 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
 
   setTable() {
     this.dataSource = new MatTableDataSource<Student>(this.students);
+    this.setDataSourceAttributes();
+    this.length = this.students.length;
+  }
+
+  setDataSourceAttributes() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.length = this.students.length;
   }
 
   setupFilter() {

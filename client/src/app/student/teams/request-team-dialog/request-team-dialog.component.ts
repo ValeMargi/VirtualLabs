@@ -18,8 +18,13 @@ import { CourseService } from 'src/app/services/course.service';
 })
 export class RequestTeamDialogComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
+  
+  private sort: MatSort;
+  
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.dataSource.sort = this.sort;
+  }
 
   CreateTeamForm: FormGroup;
   min: number;

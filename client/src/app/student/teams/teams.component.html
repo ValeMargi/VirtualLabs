@@ -59,7 +59,7 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumnsTeam"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumnsTeam"></tr>
             </table>
-            <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
+            <mat-paginator class="paginator" [length]="lengthMembers" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
             </mat-paginator>
           </div>
     </mat-card-content>
@@ -98,7 +98,7 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumnsRequestAccepted"></tr>
       </table>
 
-      <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
+      <mat-paginator class="paginator" [length]="lengthProposalsAccepted" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
 
       </mat-paginator>
     </div>
@@ -155,7 +155,7 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumnsRequest"></tr>
       </table>
 
-      <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
+      <mat-paginator class="paginator" [length]="lengthProposals" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
 
       </mat-paginator>
     </div>

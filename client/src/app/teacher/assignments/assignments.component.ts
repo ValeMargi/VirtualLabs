@@ -24,8 +24,19 @@ import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-
 export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
 
   @ViewChild('table') table: MatTable<Element>;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  
+  private sort: MatSort;
+  private paginator: MatPaginator;
+  
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceAttributes();
+  }
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
 
 
   @Input() public assignments: Assignment[] = [];
@@ -60,6 +71,13 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
 
   setTable() {
     this.dataAssignments = new MatTableDataSource<Assignment>(this.assignments);
+    this.setDataSourceAttributes();
+    this.length = this.assignments.length;
+  }
+
+  setDataSourceAttributes() {
+    this.dataAssignments.paginator = this.paginator;
+    this.dataAssignments.sort = this.sort;
   }
 
   backAssignmetsTable() {

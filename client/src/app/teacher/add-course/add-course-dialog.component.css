@@ -24,3 +24,7 @@ mat-dialog-actions {
   width: 100%;
   margin: 0 auto;
 }
+
+.matForm{
+  width: 70%;
+}

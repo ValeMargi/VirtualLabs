@@ -41,20 +41,22 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
   @Output('add') add = new EventEmitter<any>();
 
   constructor(private cont: AddCourseContComponent,
-     private formBuilder: FormBuilder) { 
+     private formBuilder: FormBuilder) {
 
       this.AddCourseForm = this.formBuilder.group({
         name : new FormControl('', [Validators.required, Validators.minLength(3)]),
         acronym : new FormControl('', [Validators.required, Validators.minLength(2)]),
         max_iscrizioni : new FormControl('', [Validators.required, Validators.min(1), Validators.max(10)]),
         min_iscrizioni : new FormControl('', [Validators.required, Validators.min(1), Validators.max(10)]),
+        imageVM: new FormControl('', [Validators.required])
       });
 
       this.AddCourseForm.setValue({
         name: "",
         acronym: "",
         max_iscrizioni : 4,
-        min_iscrizioni : 2
+        min_iscrizioni : 2,
+        imageVM: ""
       });
      }
 
@@ -67,7 +69,7 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
       this.allTeachers = changes.allTeachers.currentValue;
       this.setupFilter();
     }
-  } 
+  }
 
   close() {
     this.cont.close();
@@ -85,7 +87,7 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
   _filter(value: string): Teacher[] {
     const filterValue = value.toLowerCase();
 
-    return this.allTeachers.filter(option => 
+    return this.allTeachers.filter(option =>
       (option.id != localStorage.getItem('currentId') && !this.teachersToAdd.includes(option)) &&
       (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
   }
@@ -142,7 +144,7 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
     }
 
     let course = new Course(name.toLowerCase().split(' ').join('-'), acronym.toUpperCase(), min, max, 1, 4, 100, 8, 10, 10);
-    
+
     this.add.emit({course: course, file: this.selectedPhoto, ids: this.teachersToAdd.map(t => t.id)});
   }
 

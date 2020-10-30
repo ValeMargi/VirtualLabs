@@ -38,44 +38,45 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
 
       const currentId: string = localStorage.getItem('currentId');
 
-      this.teamService.getTeamForStudent(courseName, currentId).subscribe(
-        (data) => {
-          if (data != null) {
-            this.HAS_TEAM = true;
-
-            this.teamService.getAllVMTeam(courseName, data.id).subscribe(
-              (data) => {
-                if (data.length > 0) {
-                  this.HAS_VM = true;
-                }
-                else {
-                  this.HAS_VM = false;
-                }
-              },
-              (error) => {
-                window.alert(error.error.message);
-              }
-            )
-          }
-          else {
-            this.HAS_TEAM = false;
-            this.HAS_VM = false;
-          }
-        },
-        (error) => {
-          window.alert(error.error.message);
-          const status: number = error.error.status;
-
-          if (status == 404 || status == 403) {
-            this.router.navigateByUrl("home");
-            this.courseService.courseReload.emit();
-          }
-        }
-      )
 
       this.studentService.allAssignments(courseName).subscribe(
         (data) =>  {
           this.ASSIGNMENTS = data;
+
+          this.teamService.getTeamForStudent(courseName, currentId).subscribe(
+            (data) => {
+              if (data != null) {
+                this.HAS_TEAM = true;
+    
+                this.teamService.getAllVMTeam(courseName, data.id).subscribe(
+                  (data) => {
+                    if (data.length > 0) {
+                      this.HAS_VM = true;
+                    }
+                    else {
+                      this.HAS_VM = false;
+                    }
+                  },
+                  (error) => {
+                    window.alert(error.error.message);
+                  }
+                )
+              }
+              else {
+                this.HAS_TEAM = false;
+                this.HAS_VM = false;
+              }
+            },
+            (error) => {
+              window.alert(error.error.message);
+              const status: number = error.error.status;
+    
+              if (status == 404 || status == 403) {
+                this.router.navigateByUrl("home");
+                this.courseService.courseReload.emit();
+              }
+            }
+          );
         },
         (error) => {
           window.alert(error.error.message);

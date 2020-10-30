@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -232,6 +233,20 @@ public class CourseController {
         try {
             return vlService.getEnrolledStudents(courseName).stream().map(ModelHelper::enrich).collect(Collectors.toList());
         }catch(CourseNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    /**
+     * Metodo: FET
+     * @param courseName
+     * @return Lista con per ogni studente il StudentDTO e nameTeam inscritto al corso courseName
+     */
+    @GetMapping("/{courseName}/enrolledInfo")
+    List<Map<String, Object>> getEnrolledStudentsAllInfo(@PathVariable String courseName){
+        try{
+            return vlService.getEnrolledStudentsAllInfo(courseName);
+        }catch(CourseNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }

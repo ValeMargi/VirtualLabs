@@ -81,4 +81,7 @@ public interface VLService {
      byte[] compressZLib(byte[] data);
      byte[] decompressZLib(byte[] data);
     void assignmentExpiredSetPermanentHW(Assignment a);
-}
+
+    List<Map<String, Object>> getEnrolledStudentsAllInfo(String courseName);
+
+    }

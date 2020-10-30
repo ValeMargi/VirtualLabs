@@ -259,6 +259,26 @@ public class VLServiceImpl implements VLService{
         }
     }
 
+    @PreAuthorize("hasAuthority('professor')")
+    public List<Map<String, Object>> getEnrolledStudentsAllInfo(String courseName){
+        List<Map<String, Object>> l = new ArrayList<>();
+
+        List<String> students = getEnrolledStudents(courseName).stream().map(s->s.getId()).collect(Collectors.toList());
+        for(Student s: studentRepository.findAllById(students)){
+            Map<String, Object> map = new HashMap<>();
+            Optional<Team> ot = s.getTeams().stream().filter(t->t.getCourse().getName().equals(courseName)).findFirst();
+            if(ot.isPresent()){
+               map.put("student", modelMapper.map(s, StudentDTO.class));
+               map.put("teamName", ot.get().getName());
+            }else{
+                map.put("student", modelMapper.map(s, StudentDTO.class));
+                map.put("teamName", "/");
+            }
+            l.add(map);
+        }
+
+        return l;
+    }
     @PreAuthorize("hasAuthority('professor')")  //hasROLE????
     @Override
     public boolean addStudentToCourse(String studentId, String courseName) {

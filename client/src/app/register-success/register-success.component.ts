@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { AuthService } from '../auth/auth.service';
 
 
 @Component({
@@ -14,9 +15,12 @@ export class RegisterSuccessComponent implements OnInit, OnDestroy {
   private route$: Subscription;
   success: boolean = true;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private authService: AuthService,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.authService.logout();
+    
     this.route$ = this.route.params.subscribe(param => {
       if (param.success == "confirm") {
         this.success = true;

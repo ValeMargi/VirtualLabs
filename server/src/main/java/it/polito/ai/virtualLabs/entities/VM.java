@@ -17,7 +17,6 @@ public class VM{
     private int  numVcpu, diskSpace, ram;
     private String status;
 
-    private String timestamp;
 
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "vm_student",

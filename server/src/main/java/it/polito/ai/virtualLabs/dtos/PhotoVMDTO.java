@@ -9,5 +9,6 @@ public class PhotoVMDTO  extends RepresentationModel<PhotoVMDTO> {
     private String nameFile;
     private String type;
     private byte[] picByte;
+    String timestamp;
 
 }

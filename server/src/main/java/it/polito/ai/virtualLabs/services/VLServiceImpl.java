@@ -21,14 +21,13 @@ import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Reader;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
+import java.util.StringTokenizer;
 
 @Configuration
 @EnableScheduling
@@ -101,8 +100,6 @@ public class VLServiceImpl implements VLService{
         for(Assignment a: assignmentRepository.findAll()){
             if(a.getExpiration().compareTo(now.toString())<=0){
                 assignmentExpiredSetPermanentHW(a);
-                //a.getHomeworks().forEach(h-> h.setPermanent(true));
-               // assignmentRepository.saveAndFlush(a);
             }
         }
 
@@ -122,7 +119,6 @@ public class VLServiceImpl implements VLService{
 
     }
 
-    //METODO AGGIUNTO 23/10
     @Override
     public void assignmentExpiredSetPermanentHW(Assignment a){
         List<Homework> homeworks = a.getHomeworks();
@@ -1010,7 +1006,7 @@ public class VLServiceImpl implements VLService{
      */
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public VMDTO addVM(VMDTO vmdto, String courseId) {
+    public VMDTO addVM(VMDTO vmdto, String courseId, String timestamp) {
 
             String studentAuth= SecurityContextHolder.getContext().getAuthentication().getName();
             if( getStudentsInTeams(courseId).stream().anyMatch(s-> s.getId().equals(studentAuth))){
@@ -1039,6 +1035,7 @@ public class VLServiceImpl implements VLService{
                     photoVM.setNameFile(photoModelVM.getNameFile());
                     photoVM.setType(photoModelVM.getType());
                     photoVM.setPicByte(photoModelVM.getPicByte());
+                    photoVM.setTimestamp(timestamp);
 
                     vm.setPhotoVM(photoVM);
                     vm.addStudentToOwnerList(s);
@@ -1144,7 +1141,7 @@ public class VLServiceImpl implements VLService{
     /*Metodo per utilizzare VM, controllo se l'utente autenticato è un membro della VM*/
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public boolean useVM(Long VMid, String timestamp, PhotoVMDTO photoVMDTO ){ //CourseId preso dal pathVariable
+    public boolean useVM(Long VMid, String timestamp, PhotoVMDTO photoVMDTO ){
         Optional<VM> ovm = VMRepository.findById(VMid);
         if (ovm.isPresent()) {
             VM vm = ovm.get();
@@ -1154,7 +1151,7 @@ public class VLServiceImpl implements VLService{
                     p.setNameFile(photoVMDTO.getNameFile());
                     p.setType(photoVMDTO.getType());
                     p.setPicByte(photoVMDTO.getPicByte());
-                    vm.setTimestamp(timestamp);
+                    p.setTimestamp(timestamp);
                     return true;
                 }else throw new VMnotEnabledException();
             } else throw new PermissionDeniedException();
@@ -1294,6 +1291,8 @@ public class VLServiceImpl implements VLService{
                if(listVMs.contains(vm)){
                    PhotoVMDTO photoVMDTO = modelMapper.map(vm.getPhotoVM(), PhotoVMDTO.class);
                    photoVMDTO.setPicByte(decompressZLib(photoVMDTO.getPicByte()));
+                   StringTokenizer st = new StringTokenizer(photoVMDTO.getTimestamp(), ".");
+                   photoVMDTO.setTimestamp(st.nextToken());
                    return photoVMDTO;
                }else throw new PermissionDeniedException();
            }else throw new VMNotFoundException();
@@ -1316,6 +1315,8 @@ public class VLServiceImpl implements VLService{
                 if(teamOptional.isPresent()){
                     PhotoVMDTO photoVMDTO = modelMapper.map(vm.getPhotoVM(), PhotoVMDTO.class);
                     photoVMDTO.setPicByte(decompressZLib(photoVMDTO.getPicByte()));
+                    StringTokenizer st = new StringTokenizer(photoVMDTO.getTimestamp(), ".");
+                    photoVMDTO.setTimestamp(st.nextToken());
                     return photoVMDTO;
                 }else throw new PermissionDeniedException();
             }else throw new VMNotFoundException();
@@ -1370,7 +1371,12 @@ public class VLServiceImpl implements VLService{
                     }
                     assignmentRepository.save(assignment);
                     photoAssignmentRepository.save(photoAssignment);
-                    return modelMapper.map(assignment, AssignmentDTO.class);
+                    AssignmentDTO assignmentDTO1 = modelMapper.map(assignment, AssignmentDTO.class);
+                    StringTokenizer releaseDateST = new StringTokenizer(assignmentDTO1.getReleaseDate(), ".");
+                    assignmentDTO1.setReleaseDate(releaseDateST.nextToken());
+                    StringTokenizer expirationST = new StringTokenizer(assignmentDTO1.getExpiration(), ".");
+                    assignmentDTO1.setExpiration(expirationST.nextToken());
+                    return assignmentDTO1;
                 }else throw new AssignmentAlreadyExistException();
             }else throw new PermissionDeniedException();
         }else throw new CourseNotFoundException();
@@ -1386,7 +1392,16 @@ public class VLServiceImpl implements VLService{
             Professor p= op.get();
             Optional<Course> c = p.getCourses().stream().filter(co->co.getName().equals(courseId)).findFirst();
             if(c.isPresent()){
-                return c.get().getAssignments().stream().map( a -> modelMapper.map(a, AssignmentDTO.class)).collect(Collectors.toList());
+                List<AssignmentDTO>  assignmentDTOList= c.get().getAssignments().stream()
+                                                                                .map( a -> modelMapper.map(a, AssignmentDTO.class))
+                                                                                .collect(Collectors.toList());
+                assignmentDTOList.stream().forEach(a-> {
+                    StringTokenizer expirationST = new StringTokenizer(a.getExpiration(), ".");
+                    StringTokenizer releaseDateST= new StringTokenizer(a.getReleaseDate(), ".");
+                    a.setExpiration(expirationST.nextToken());
+                    a.setReleaseDate(releaseDateST.nextToken());
+                });
+                return assignmentDTOList;
             }throw new PermissionDeniedException();
         }else throw new ProfessorNotFoundException();
     }
@@ -1403,8 +1418,6 @@ public class VLServiceImpl implements VLService{
             Student s = os.get();
             Optional<Course> c = s.getCourses().stream().filter(co->co.getName().equals(courseId)).findFirst();
             if(c.isPresent()){
-             //   List<Assignment> assignmentsList = c.get().getAssignments();
-              //  assignmentsList.stream().forEach(a->a.setPicByte(decompressZLib(a.getPicByte())));
                 return c.get().getAssignments().stream().map( a -> modelMapper.map(a, AssignmentDTO.class)).collect(Collectors.toList());
             }throw new StudentNotEnrolledToCourseException();
         }else throw new StudentNotFoundException();
@@ -1434,6 +1447,8 @@ public class VLServiceImpl implements VLService{
                         if (photoAssignment.isPresent()) {
                             PhotoAssignmentDTO paDTO = modelMapper.map(pa, PhotoAssignmentDTO.class);
                             paDTO.setPicByte(decompressZLib(paDTO.getPicByte()));
+                            StringTokenizer st = new StringTokenizer(paDTO.getTimestamp(), ".");
+                            paDTO.setTimestamp(st.nextToken());
                             return paDTO;
                         } else throw new PhotoAssignmentNotFoundException();
                     } else throw new PermissionDeniedException();
@@ -1482,13 +1497,13 @@ public class VLServiceImpl implements VLService{
                                 h.setStatus("CONSEGNATO");
                                 PhotoVersionHomework photoVersionHomework = modelMapper.map(photoVersionHomeworkDTO, PhotoVersionHomework.class);
                                 h.setPhotoVersionHomework(photoVersionHomework);
-                              //  Date date = new Date(Long.parseLong(photoVersionHomework.getTimestamp()));
-                               // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm");
                                 h.setTimestamp(photoVersionHomework.getTimestamp());
                                 homeworkRepository.saveAndFlush(h);
                                 photoVersionHMRepository.saveAndFlush(photoVersionHomework);
                                 PhotoVersionHomeworkDTO photoVersionHomeworkDTO1 = modelMapper.map(photoVersionHomework, PhotoVersionHomeworkDTO.class);
                                 photoVersionHomeworkDTO1.setPicByte(decompressZLib(photoVersionHomeworkDTO1.getPicByte()));
+                                StringTokenizer st = new StringTokenizer(photoVersionHomeworkDTO1.getTimestamp(), ".");
+                                photoVersionHomeworkDTO1.setTimestamp(st.nextToken());
                                 return photoVersionHomeworkDTO1;
                             }else throw new VMNotFoundException();
                         }else throw new TeamNotFoundException();
@@ -1531,6 +1546,8 @@ public class VLServiceImpl implements VLService{
                         if(h.getStudent()==null)
                             throw new StudentNotFoundException();
                         StudentDTO sdto = modelMapper.map(h.getStudent(),StudentDTO.class);
+                        StringTokenizer st = new StringTokenizer(hdto.getTimestamp(), ".");
+                        hdto.setTimestamp(st.nextToken());
                         m.put("Homework", hdto);
                         m.put("Student", sdto);
                         ret.add(m);
@@ -1561,7 +1578,8 @@ public class VLServiceImpl implements VLService{
                 for( PhotoVersionHomework v: versions){
                     Map<String, Object> m = new HashMap<>();
                     m.put("id", v.getId());
-                    m.put("timestamp", v.getTimestamp());
+                    StringTokenizer st = new StringTokenizer(v.getTimestamp(), ".");
+                    m.put("timestamp", st.nextToken());
                     m.put("nameFile", v.getNameFile());
                     l.add(m);
                 }
@@ -1602,7 +1620,8 @@ public class VLServiceImpl implements VLService{
                 for( PhotoVersionHomework v: versions) {
                     Map<String, Object> m = new HashMap<>();
                     m.put("id", v.getId());
-                    m.put("timestamp", v.getTimestamp());
+                    StringTokenizer st = new StringTokenizer(v.getTimestamp(), ".");
+                    m.put("timestamp", st.nextToken());
                     m.put("nameFile", v.getNameFile());
                     l.add(m);
                 }
@@ -1664,7 +1683,8 @@ public class VLServiceImpl implements VLService{
 
                     Map<String, Object> m = new HashMap<>();
                     m.put("id", photoCorrection.getId());
-                    m.put("timestamp", photoCorrection.getTimestamp());
+                    StringTokenizer st = new StringTokenizer(photoCorrection.getTimestamp(), ".");
+                    m.put("timestamp", st.nextToken());
                     m.put("nameFile", photoCorrection.getNameFile());
                     m.put("versionId",photoCorrection.getIdVersionHomework());
 
@@ -1688,15 +1708,13 @@ public class VLServiceImpl implements VLService{
                 for( PhotoCorrection c: corrections) {
                     Map<String, Object> m = new HashMap<>();
                     m.put("id", c.getId());
-                    m.put("timestamp", c.getTimestamp());
+                    StringTokenizer st = new StringTokenizer(c.getTimestamp(), ".");
+                    m.put("timestamp", st.nextToken());
                     m.put("nameFile", c.getNameFile());
                     m.put("versionId",c.getIdVersionHomework());
                     l.add(m);
                 }
                 return l;
-               // correctionsList.stream().forEach(p->p.setPicByte(decompressZLib(p.getPicByte())));
-             //   return correctionsList.stream().map( c -> modelMapper.map(c, PhotoCorrectionDTO.class)).collect(Collectors.toList());
-
             }else throw  new PermissionDeniedException();
         }else throw new HomeworkNotFoundException();
     }
@@ -1714,7 +1732,8 @@ public class VLServiceImpl implements VLService{
                 for( PhotoCorrection c: corrections) {
                     Map<String, Object> m = new HashMap<>();
                     m.put("id", c.getId());
-                    m.put("timestamp", c.getTimestamp());
+                    StringTokenizer st = new StringTokenizer(c.getTimestamp(), ".");
+                    m.put("timestamp", st.nextToken());
                     m.put("nameFile", c.getNameFile());
                     m.put("versionId",c.getIdVersionHomework());
                     l.add(m);

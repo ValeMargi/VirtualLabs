@@ -177,9 +177,7 @@ public class StudentController {
             vmdto.setNameVM(input.get("nameVM").toString());
             vmdto.setRam(Integer.parseInt(input.get("ram").toString()));
             vmdto.setStatus("off");
-            vmdto.setTimestamp( timestamp.toString());
-
-            return  vlService.addVM(vmdto, courseName);
+            return  vlService.addVM(vmdto, courseName, timestamp.toString());
         }catch (CourseNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch( ModelVMAlreadytPresentException | ResourcesVMNotRespectedException |

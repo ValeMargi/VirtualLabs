@@ -250,7 +250,7 @@ public class ProfessorController {
     @GetMapping("/{courseName}/assignments")
     public List<AssignmentDTO> allAssignment(@PathVariable String courseName) {
         try{
-            return  vlService.allAssignment(courseName);
+            return vlService.allAssignment(courseName);
         } catch (ProfessorNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){

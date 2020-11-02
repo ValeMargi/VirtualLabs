@@ -15,6 +15,8 @@ public class PhotoVM extends Image{
     @OneToOne(mappedBy = "photoVM")
     private VM vm;
 
+    String timestamp;
+
 
     void setVM(VM v){
         if(v!=null && vm!=v){

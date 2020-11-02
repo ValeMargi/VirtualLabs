@@ -12,6 +12,7 @@ import {AddHomeworkContComponent } from './add-homework/add-homework-cont/add-ho
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { AssignmentGrade } from 'src/app/models/assignment-grade.model';
 
 @Component({
   selector: 'app-assignments-student',
@@ -35,13 +36,13 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
   }
 
   HomeworkColumns: string[] = ['id', 'name', 'firstName', 'status', 'timestamp'];
-  AssignmentsColumns: string[] = ['assignmentName', 'releaseDate','expiration','showAssignment', 'showVersions'];
+  AssignmentsColumns: string[] = ['assignmentName', 'releaseDate','expiration', 'grade', 'status', 'showAssignment', 'showVersions'];
 
-  dataAssignments = new MatTableDataSource<Assignment>();
+  dataAssignments = new MatTableDataSource<AssignmentGrade>();
 
   @Input() hasTeam: boolean;
   @Input() hasVM: boolean;
-  @Input() assignments: Assignment[] = [];
+  @Input() assignments: AssignmentGrade[] = [];
 
   versionsVisibility: boolean = false;
   tableAssignmentsVisibility: boolean = false;
@@ -71,8 +72,17 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
     
   }
 
+  getGrade(row: AssignmentGrade) {
+    if (row.grade == null || row.grade == "-1") {
+      return "Da valutare";
+    }
+    else {
+      return row.grade;
+    }
+  }
+
   setTable() {
-    this.dataAssignments = new MatTableDataSource<Assignment>(this.assignments);
+    this.dataAssignments = new MatTableDataSource<AssignmentGrade>(this.assignments);
     this.setDataSourceAttributes();
     this.length = this.assignments.length;
   }
@@ -122,7 +132,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
     }
   }
 
-  openDialogImage(ass: Assignment) {
+  openDialogImage(ass: AssignmentGrade) {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = false;
@@ -135,7 +145,11 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
         assignmentId: ass.id
     };
 
-    this.matDialog.open(ViewImageContComponent, dialogConfig);
+    const dialogRef = this.matDialog.open(ViewImageContComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      //gestire stato
+    });
   }
 
 }

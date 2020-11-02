@@ -7,6 +7,7 @@ import { CourseService } from 'src/app/services/course.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { TeamService } from 'src/app/services/team.service';
+import { AssignmentGrade } from 'src/app/models/assignment-grade.model';
 @Component({
   selector: 'app-assignments-cont',
   templateUrl: './assignments-cont.component.html',
@@ -16,7 +17,7 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
 
   HAS_TEAM: boolean = false;
   HAS_VM: boolean = false;
-  ASSIGNMENTS: Assignment[] = [];
+  ASSIGNMENTS: AssignmentGrade[] = [];
 
   private route$: Subscription;
 
@@ -38,10 +39,19 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
 
       const currentId: string = localStorage.getItem('currentId');
 
-
       this.studentService.allAssignments(courseName).subscribe(
         (data) =>  {
-          this.ASSIGNMENTS = data;
+          let array: AssignmentGrade[] = new Array();
+
+          data.forEach(ass => {
+            let assignment: Assignment = ass.assignment;
+            let grade: string = ass.grade;
+            let status: string = ass.status;
+            let assGrade: AssignmentGrade = new AssignmentGrade(assignment.id, assignment.assignmentName, assignment.releaseDate, assignment.expiration, grade, status);
+            array.push(assGrade);
+          });
+
+          this.ASSIGNMENTS = array;
 
           this.teamService.getTeamForStudent(courseName, currentId).subscribe(
             (data) => {

@@ -12,8 +12,8 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./vms.component.css']
 })
 export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
-  @Input() public teams: Team[];
-  @Output() public TEAM: Team;
+  @Input() teams: Team[];
+  TEAM: Team;
   
   teamVMsVisibility: boolean = false;
   teamsVisibility: boolean = false;

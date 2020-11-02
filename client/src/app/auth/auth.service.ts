@@ -123,11 +123,8 @@ export class AuthService {
        return null;
     }
 
-    console.log(userJson)
-
     let data: FormData = new FormData();
     data.append('file', file, file.name);
-
     data.append('registerData', new Blob([JSON.stringify(userJson)], {
       type: "application/json" }));
 

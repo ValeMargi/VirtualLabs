@@ -14,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ManageModelContComponent implements OnInit {
 
   courseName: string;
-  @Output() MODEL_VM: Course;
+  MODEL_VM: Course;
 
   constructor(private courseService: CourseService, 
               private teacherService: TeacherService,

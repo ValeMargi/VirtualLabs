@@ -12,7 +12,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class AddHomeworkContComponent implements OnInit {
 
-  @Output() QUERYING: boolean;
+  QUERYING: boolean;
 
   assId: number;
   hwId: number;
@@ -35,8 +35,8 @@ export class AddHomeworkContComponent implements OnInit {
         this.studentService.verUpload.emit(data);
       },
       (error) => {
+        window.alert(error.error.message);
         this.QUERYING = false;
-        window.alert("Errore nel caricamento dell'homework");
       }
     );
   }

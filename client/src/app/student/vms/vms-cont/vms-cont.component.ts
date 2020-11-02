@@ -41,7 +41,6 @@ export class VmsContComponent implements OnInit, OnDestroy {
       }
 
       const studentId = localStorage.getItem('currentId');
-      console.log(studentId)
 
       this.teamService.getTeamForStudent(courseName, studentId).subscribe(
         (data) => {

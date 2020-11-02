@@ -15,7 +15,7 @@ export class UploadCorrectionContComponent implements OnInit {
   assId: number;
   hwId: number;
 
-  @Output() QUERYING: boolean;
+  QUERYING: boolean;
  
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               private teacherService: TeacherService,
@@ -56,8 +56,8 @@ export class UploadCorrectionContComponent implements OnInit {
         this.teacherService.corrUpload.emit({corr: data, permanent: permanent});
       },
       (error) => {
+        window.alert(error.error.message);
         this.QUERYING = false;
-        window.alert("Errore nel caricamento della correzione");
       }
     )
   }

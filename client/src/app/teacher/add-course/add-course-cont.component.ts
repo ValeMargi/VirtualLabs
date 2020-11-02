@@ -13,7 +13,7 @@ import { CourseService } from 'src/app/services/course.service';
 })
 export class AddCourseContComponent implements OnInit {
 
-  @Output() ALL_TEACHERS: Teacher[] = [];
+  ALL_TEACHERS: Teacher[] = [];
 
   constructor(private dialogRef: MatDialogRef<AddCourseDialogComponent>, 
               private teacherService: TeacherService,
@@ -25,7 +25,7 @@ export class AddCourseContComponent implements OnInit {
         this.ALL_TEACHERS = data;
       },
       (error) => {
-        console.log("Impossibile ottenere gli insegnanti");
+        window.alert(error.error.message);
       }
     )
   }
@@ -49,12 +49,12 @@ export class AddCourseContComponent implements OnInit {
             this.close();
           },
           (error) => {
-            window.alert("Errore aggiunta modello VM");
+            window.alert(error.error.message);
           }
         );
       },
       (error) => {
-        window.alert("Errore aggiunta corso");
+        window.alert(error.error.message);
       }
     );
   }

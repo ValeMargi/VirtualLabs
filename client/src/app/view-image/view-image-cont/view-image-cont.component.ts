@@ -39,7 +39,7 @@ export class ViewImageContComponent implements OnInit {
               this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
             },
             (error) => {
-              window.alert("Impossibile ottenere il testo dell'assignment");
+              window.alert(error.error.message);
             }
           );
         }
@@ -50,7 +50,7 @@ export class ViewImageContComponent implements OnInit {
               this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
             },
             (error) => {
-              window.alert("Impossibile ottenere il testo dell'assignment");
+              window.alert(error.error.message);
             }
           );
         }
@@ -70,7 +70,7 @@ export class ViewImageContComponent implements OnInit {
             this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
           },
           (error) => {
-            window.alert("Impossibile ottenere la versione dell'homework");
+            window.alert(error.error.message);
           }
         );
 
@@ -89,7 +89,7 @@ export class ViewImageContComponent implements OnInit {
             this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
           },
           (error) => {
-            window.alert("Impossibile ottenere la correzione dell'homework");
+            window.alert(error.error.message);
           }
         );
 
@@ -110,7 +110,7 @@ export class ViewImageContComponent implements OnInit {
               this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
             },
             (error) => {
-              window.alert("Impossibile ottenere la schermata della VM");
+              window.alert(error.error.message);
             }
           );
         }
@@ -122,7 +122,7 @@ export class ViewImageContComponent implements OnInit {
               this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
             },
             (error) => {
-              window.alert("Impossibile ottenere la schermata della VM");
+              window.alert(error.error.message);
             }
           );
         }
@@ -153,7 +153,7 @@ export class ViewImageContComponent implements OnInit {
         this.QUERYING = false;
       },
       (error) => {
-        window.alert("Errore nell'utilizzo della VM, riprovare");
+        window.alert(error.error.message);
         this.QUERYING = false;
       }
     );

@@ -12,7 +12,7 @@ import { CreateAssignmentComponent } from './create-assignment.component';
 })
 export class CreateAssignmentContComponent implements OnInit {
 
-  @Output() QUERYING: boolean;
+  QUERYING: boolean;
 
   constructor(private matDialogRef: MatDialogRef<CreateAssignmentComponent>, private teacherService: TeacherService, private courseService: CourseService) { }
 
@@ -32,8 +32,8 @@ export class CreateAssignmentContComponent implements OnInit {
         this.teacherService.assCreation.emit(data);
       }, 
       (error) => {
+        window.alert(error.error.message);
         this.QUERYING = false;
-        window.alert("Errore nella creazione della consegna");
       }
     );
   }

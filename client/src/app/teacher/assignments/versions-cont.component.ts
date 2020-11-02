@@ -15,9 +15,9 @@ import { Subscription } from 'rxjs/internal/Subscription';
 })
 export class VersionsContComponent implements OnInit, OnDestroy {
 
-  @Output() HOMEWORK: Homework;
-  @Output() VERSIONS: HomeworkVersion[] = [];
-  @Output() CORRECTIONS: HomeworkCorrection[] = [];
+  HOMEWORK: Homework;
+  VERSIONS: HomeworkVersion[] = [];
+  CORRECTIONS: HomeworkCorrection[] = [];
 
   private route$: Subscription;
 

@@ -35,7 +35,7 @@ export class RequestTeamDialogContComponent implements OnInit {
           this.getStudents(this.COURSE.name);
         },
         (error) => {
-          window.alert("Errore nell'ottenimento del corso");
+          window.alert(error.error.message);
         }
       );
     }
@@ -52,7 +52,7 @@ export class RequestTeamDialogContComponent implements OnInit {
         this.AVAILABLE_STUDENTS = data;
       },
       (error) => {
-        window.alert("Errore nel reperire gli studenti disponibili");
+        window.alert(error.error.message);
       }
     )
   }

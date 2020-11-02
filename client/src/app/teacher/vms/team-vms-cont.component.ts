@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input } from '@angular/core';
+import { Component, OnInit, Output, Input, OnDestroy } from '@angular/core';
 import { Team } from 'src/app/models/team.model';
 import { VM } from 'src/app/models/vm.model';
 import { TeamService } from 'src/app/services/team.service';
@@ -13,11 +13,11 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './team-vms-cont.component.html',
   styleUrls: ['./team-vms-cont.component.css']
 })
-export class TeamVmsContComponent implements OnInit {
+export class TeamVmsContComponent implements OnInit, OnDestroy {
   private route$: Subscription;
 
-  @Input() public team: Team;
-  @Output() public VMs: VMOwners[] = []
+  @Input() team: Team;
+  VMs: VMOwners[] = []
 
   constructor(private teamService: TeamService,
               private courseService: CourseService,
@@ -40,16 +40,20 @@ export class TeamVmsContComponent implements OnInit {
                 this.VMs = array;
               }, 
               (error) => {
-                console.log("Impossibile ottenere gli owners");
+                window.alert(error.error.message);
               }
             );
           });
         },
         (error) => {
-          console.log("Errore nel recupero delle VM");
+          window.alert(error.error.message);
         } 
       );
     });
+  }
+
+  ngOnDestroy() {
+    this.route$.unsubscribe();
   }
 
 }

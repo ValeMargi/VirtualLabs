@@ -13,9 +13,9 @@ import { TeacherService } from 'src/app/services/teacher.service';
   styleUrls: ['./edit-course-cont.component.css']
 })
 export class EditCourseContComponent implements OnInit {
-  @Output() COURSE: Course;
-  @Output() ALL_TEACHERS: Teacher[] = [];
-  @Output() COURSE_TEACHERS: Teacher[] = [];
+  COURSE: Course;
+  ALL_TEACHERS: Teacher[] = [];
+  COURSE_TEACHERS: Teacher[] = [];
 
   constructor(private courseService: CourseService,
               private teacherService: TeacherService,
@@ -34,7 +34,7 @@ export class EditCourseContComponent implements OnInit {
           this.getTeachers();
         },
         (error) => {
-          window.alert("Errore nel reperimento del corso");
+          window.alert(error.error.message);
         }
       )
     }
@@ -49,7 +49,7 @@ export class EditCourseContComponent implements OnInit {
         this.ALL_TEACHERS = data;
       },
       (error) => {
-        window.alert("Errore nel reperire la lista completa dei docenti");
+        window.alert(error.error.message);
       }
     )
 
@@ -58,7 +58,7 @@ export class EditCourseContComponent implements OnInit {
         this.COURSE_TEACHERS = data;
       },
       (error) => {
-        window.alert("Errore nel reperire i docenti del corso");
+        window.alert(error.error.message);
       }
     )
   }
@@ -72,7 +72,7 @@ export class EditCourseContComponent implements OnInit {
         this.courseService.setCurrentCourse(this.COURSE);
       },
       (error) => {
-        window.alert("Errore abilitazione/disabilitazione corso");
+        window.alert(error.error.message);
       }
     )
   }
@@ -89,7 +89,7 @@ export class EditCourseContComponent implements OnInit {
         }
       },
       (error) => {
-        window.alert("Errore nell'eliminazione del corso");
+        window.alert(error.error.message);
       }
     );
   }
@@ -102,7 +102,7 @@ export class EditCourseContComponent implements OnInit {
         }
       },
       (error) => {
-        window.alert("Errore aggiunta professori al corso");
+        window.alert(error.error.message);
       }
     );
   }
@@ -127,7 +127,7 @@ export class EditCourseContComponent implements OnInit {
         }
       },
       (error) => {
-        window.alert("Errore modifica parametri corso");
+        window.alert(error.error.message);
       }
     )
     

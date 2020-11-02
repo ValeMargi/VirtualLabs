@@ -16,9 +16,9 @@ import { Location } from '@angular/common/';
   styleUrls: ['./versions-cont.component.css']
 })
 export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
-  @Output() HOMEWORK: Homework;
-  @Output() VERSIONS: HomeworkVersion[] = [];
-  @Output() CORRECTIONS: HomeworkCorrection[] = [];
+  HOMEWORK: Homework;
+  VERSIONS: HomeworkVersion[] = [];
+  CORRECTIONS: HomeworkCorrection[] = [];
 
   private route$: Subscription;
   private id: number;
@@ -49,7 +49,7 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
           this.HOMEWORK = data;
         },
         (error) => {
-          window.alert("Errore ottenimento Homework");
+          window.alert(error.error.message);
         }
       );
 
@@ -58,7 +58,7 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
           this.VERSIONS = data;
         },
         (error) => {
-          window.alert("Impossibile ottenere le versioni");
+          window.alert(error.error.message);
         }
       );
 
@@ -67,7 +67,7 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
           this.CORRECTIONS = data;
         },
         (error) => {
-          window.alert("Impossibile ottenere le revisioni");
+          window.alert(error.error.message);
         }
       );
     });

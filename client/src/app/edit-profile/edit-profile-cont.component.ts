@@ -13,11 +13,11 @@ export class EditProfileContComponent implements OnInit {
 
   private md5: Md5;
 
-  @Output() CURRENT_USER: any;
-  @Output() CURRENT_AVATAR: any;
-  @Output() QUERYING: boolean = false;
-  @Output() AVATAR_OK: boolean = false;
-  @Output() PWD_OK: boolean = false;
+  CURRENT_USER: any;
+  CURRENT_AVATAR: any;
+  QUERYING: boolean = false;
+  AVATAR_OK: boolean = false;
+  PWD_OK: boolean = false;
 
   constructor(private authService: AuthService,
               private teacherService: TeacherService,
@@ -35,7 +35,7 @@ export class EditProfileContComponent implements OnInit {
           this.CURRENT_AVATAR = 'data:' + data.avatar.type + ';base64,' + data.avatar.picByte;
         },
         (error) => {
-          window.alert("Impossibile ottenere l'avatar");
+          window.alert(error.error.message);
         }
       );
     }
@@ -45,7 +45,7 @@ export class EditProfileContComponent implements OnInit {
           this.CURRENT_AVATAR = 'data:' + data.avatar.type + ';base64,' + data.avatar.picByte;
         },
         (error) => {
-          window.alert("Impossibile ottenere l'avatar");
+          window.alert(error.error.message);
         }
       );
     }
@@ -65,7 +65,7 @@ export class EditProfileContComponent implements OnInit {
         this.AVATAR_OK = true;
       },
       (error) => {
-        window.alert("Errore nel caricamento dell'immagine");
+        window.alert(error.error.message);
         this.QUERYING = false;
       }
     )
@@ -88,7 +88,7 @@ export class EditProfileContComponent implements OnInit {
         this.PWD_OK = true;
       },
       (error) => {
-        window.alert("Errore nel cambio password");
+        window.alert(error.error.message);
       }
     )
   }

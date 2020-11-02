@@ -42,7 +42,6 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
   @Input() hasTeam: boolean;
   @Input() hasVM: boolean;
   @Input() assignments: Assignment[] = [];
-  @Output() ASSIGNMENT: Assignment;
 
   versionsVisibility: boolean = false;
   tableAssignmentsVisibility: boolean = false;

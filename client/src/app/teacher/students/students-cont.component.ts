@@ -15,8 +15,8 @@ import { StudentGroup } from 'src/app/models/student-group.model';
 })
 export class StudentsContComponent implements OnInit, OnDestroy {
 
-  @Output() STUDENTS_ENROLLED: StudentGroup[] = []
-  @Output() ALL_STUDENTS: Student[] = []
+  STUDENTS_ENROLLED: StudentGroup[] = []
+  ALL_STUDENTS: Student[] = []
 
   private route$: Subscription
                               

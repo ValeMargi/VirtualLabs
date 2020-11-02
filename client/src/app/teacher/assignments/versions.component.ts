@@ -26,7 +26,6 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
   corrsToShow: HomeworkCorrection[] = [];
   showedId: number = -1;
 
-  route$: Subscription;
   routeQueryParams$: Subscription;
 
   constructor(private location: Location,
@@ -39,15 +38,9 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
 
     this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
       if (params['uploadCorrection']) {
-        if (this.authService.isLoggedOut()) {
-          this.uploadCorrection();
-        }
-        else {
-          const queryParams = {}
-          this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
-        }
-    }});
-
+        this.uploadCorrection();
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -115,17 +108,10 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
     };
 
     const dialogRef =  this.dialog.open(UploadCorrectionContComponent, dialogConfig);
+    
     dialogRef.afterClosed().subscribe(result => {
       const queryParams = {}
-      const url = this.authService.getStoredUrl();
-      this.authService.storeUrl(null);
-
-      if (url != null && this.authService.isLoggedIn()) {
-        this.router.navigateByUrl(url);
-      }
-      else {
-        this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
-      }
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
     });
   }
 
@@ -167,7 +153,6 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
 
 
   ngOnDestroy() {
-    this.route$.unsubscribe();
     this.routeQueryParams$.unsubscribe();
   }
 

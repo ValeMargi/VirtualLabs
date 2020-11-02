@@ -25,30 +25,22 @@ export class VersionsComponent implements OnInit, OnChanges {
   corrVisibility: boolean = false;
   corrsToShow: HomeworkCorrection[] = [];
   showedId: number = -1;
-  route$: Subscription;
   routeQueryParams$: Subscription;
 
 
   constructor(private location: Location,
               private matDialog: MatDialog,
               private route: ActivatedRoute,
-              private router: Router,
-              private authService: AuthService) { }
+              private router: Router) { }
 
   ngOnInit(): void {
     this.assId = +this.route.snapshot.paramMap.get('idA');
 
     this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
       if (params['uploadVersion']) {
-        if (this.authService.isLoggedOut()) {
-          this. uploadVersion();
-        }
-        else {
-          const queryParams = {}
-          this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
-        }
-    }});
-
+        this.uploadVersion();
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -85,17 +77,8 @@ export class VersionsComponent implements OnInit, OnChanges {
 
     dialogRef.afterClosed().subscribe(result => {
       const queryParams = {}
-      const url = this.authService.getStoredUrl();
-      this.authService.storeUrl(null);
-
-      if (url != null && this.authService.isLoggedIn()) {
-        this.router.navigateByUrl(url);
-      }
-      else {
-        this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
-      }
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
     });
-
   }
 
   back() {
@@ -158,7 +141,6 @@ export class VersionsComponent implements OnInit, OnChanges {
   }
 
   ngOnDestroy() {
-    this.route$.unsubscribe();
     this.routeQueryParams$.unsubscribe();
   }
 

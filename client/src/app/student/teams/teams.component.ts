@@ -79,28 +79,20 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  route$: Subscription;
   routeQueryParams$: Subscription;
 
   constructor(private dialog: MatDialog,
               private studentService: StudentService,
               private router: Router,
-              private route: ActivatedRoute,
-              private authService: AuthService) { }
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
 
     this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
       if (params['requestTeam']) {
-        if (this.authService.isLoggedIn()) {
-          this. openRequestDialog();
-        }
-        else {
-          const queryParams = {}
-          this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
-        }
-    }});
-
+        this. openRequestDialog();
+      }
+    });
   }
 
   routeToRequest() {
@@ -118,15 +110,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
     dialogRef.afterClosed().subscribe(result => {
       const queryParams = {}
-      const url = this.authService.getStoredUrl();
-      this.authService.storeUrl(null);
-
-      if (url != null && this.authService.isLoggedIn()) {
-        this.router.navigateByUrl(url);
-      }
-      else {
-        this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
-      }
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
     });
   }
 
@@ -290,7 +274,6 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngOnDestroy() {
-    this.route$.unsubscribe();
     this.routeQueryParams$.unsubscribe();
   }
 }

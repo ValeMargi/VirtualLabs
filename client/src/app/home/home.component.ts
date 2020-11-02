@@ -16,8 +16,6 @@ import { Teacher } from '../models/teacher.model';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
-
-  private route$: Subscription;
   askLoginVisibility = true;
 
   name: string;
@@ -25,7 +23,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private matDialog: MatDialog,
               private authService: AuthService,
-              private route: ActivatedRoute,
               private studentService: StudentService,
               private teacherService: TeacherService) {
 
@@ -84,9 +81,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    if (this.route$ != null) {
-      this.route$.unsubscribe();
-    }
+    
   }
 
 }

@@ -29,6 +29,7 @@ import { RegisterContComponent } from './register/register-cont/register-cont.co
 import { LoginContComponent } from './login/login-cont/login-cont.component';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { EditCourseContComponent } from './teacher/edit-course/edit-course-cont/edit-course-cont.component';
+import { ForgotPasswordContComponent } from './forgot-password/forgot-password-cont/forgot-password-cont.component';
 
 @Component({
   selector: 'app-root',
@@ -214,6 +215,9 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       else if (params['editCourse']) {
         this.openCourseEdit();
       }
+      else if (params['forgotPass']) {
+        this.openDialogForgotPassword();
+      }
     });
   }
 
@@ -284,11 +288,15 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   routeNewCourse() {
-    this.router.navigate([this.router.url], {queryParams: {newCourse : "true"}});
+    this.router.navigate([], {queryParams: {newCourse : "true"}});
   }
 
   routeMyProfile() {
-    this.router.navigate([this.router.url], {queryParams: {myProfile : "true"}});
+    this.router.navigate([], {queryParams: {myProfile : "true"}});
+  }
+
+  routeCourseEdit() {
+    this.router.navigate([], {queryParams: {editCourse : "true"}});
   }
 
   openDialogLogin(): void {
@@ -313,7 +321,11 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         this.router.navigateByUrl(url);
       }
       else {
-        this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+        const params = this.route.snapshot.queryParams;
+
+        if (!params['doRegister'] && !params['forgotPass']) {
+          this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+        }
       }
     });
   }
@@ -377,6 +389,46 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
 
     const dialogRef = this.matDialog.open(EditProfileContComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      const queryParams = {}
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+    });
+  }
+
+  openCourseEdit() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "35%";
+
+    dialogConfig.data = {
+        id: 1,
+        title: 'CourseEdit'
+    };
+
+
+    const dialogRef =  this.matDialog.open(EditCourseContComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      const queryParams = {}
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+    });
+  }
+
+  openDialogForgotPassword() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+        id: 1,
+        title: 'ForgotPwd'
+    };
+
+    const dialogRef = this.matDialog.open(ForgotPasswordContComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
       const queryParams = {}
@@ -466,40 +518,5 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   setCurrentCourse(course: Course) {
     this.courseService.currentCourse.next(course);
-  }
-
-  routeCourseEdit() {
-    this.router.navigate([], {queryParams: {editCourse : "true"}});
-  }
-
-  openCourseEdit() {
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = "35%";
-
-    dialogConfig.data = {
-        id: 1,
-        title: 'CourseEdit'
-    };
-
-
-    const dialogRef =  this.matDialog.open(EditCourseContComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(result => {
-      const queryParams = {}
-      const url = this.authService.getStoredUrl();
-      this.authService.storeUrl(null);
-
-      if (url != null && this.authService.isLoggedIn()) {
-        this.router.navigateByUrl(url);
-      }
-      else {
-        this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
-      }
-    });
-
-
   }
 }

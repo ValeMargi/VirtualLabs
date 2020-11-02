@@ -25,7 +25,7 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private studentService: StudentService,
               private courseService: CourseService,
-              private route: ActivatedRoute,
+              private route: ActivatedRoute, 
               private location: Location) { }
 
   ngOnInit(): void {
@@ -89,7 +89,7 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
+    
   }
 
   ngOnDestroy() {

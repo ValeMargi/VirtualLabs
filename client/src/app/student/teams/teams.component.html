@@ -6,7 +6,7 @@
    </mat-card-header>
    <!-- Bottone Composizione gruppo -->
   <div class="button-request" align="center">
-    <button mat-raised-button color="primary" (click)=" routeToRequest()" >
+    <button mat-raised-button color="primary" (click)="openRequestDialog()" >
       <mat-icon>playlist_add</mat-icon>
       Nuovo gruppo</button>
   </div>
@@ -27,7 +27,7 @@
 
       </mat-card-header>
 
-      <strong>Invitati nel team:</strong>
+      <strong>Invitati nel team:</strong> 
       <div *ngFor="let item of invited">{{item}} <br></div>
     </mat-card>
 

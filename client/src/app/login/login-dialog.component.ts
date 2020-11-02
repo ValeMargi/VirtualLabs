@@ -6,9 +6,7 @@ import { RegisterDialogComponent } from '../register/register-dialog.component';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import {ForgotPasswordComponent} from '../forgot-password/forgot-password.component'
 import { RegisterContComponent } from '../register/register-cont/register-cont.component';
-
 import { ForgotPasswordContComponent } from '../forgot-password/forgot-password-cont/forgot-password-cont.component';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login-dialog',
@@ -18,9 +16,6 @@ import { Subscription } from 'rxjs';
 export class LoginDialogComponent implements OnInit, OnChanges {
 
 LoginForm: FormGroup;
-route$: Subscription;
-routeQueryParams$: Subscription;
-
 
 @Input() badCredentials: boolean;
 @Output('login') log = new EventEmitter<any>();
@@ -29,9 +24,7 @@ routeQueryParams$: Subscription;
       public matDialog: MatDialog,
       public authService: AuthService,
       private dialogRef: MatDialogRef<LoginDialogComponent>,
-      private formBuilder: FormBuilder,
-      private router: Router,
-      private route: ActivatedRoute) {
+      private formBuilder: FormBuilder) {
 
       this.LoginForm = this.formBuilder.group({
         email: new FormControl('',[Validators.email,this.emailDomainValidator]),
@@ -41,20 +34,7 @@ routeQueryParams$: Subscription;
   }
 
   ngOnInit() {
-
-    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
-      if (params['forgotPass']) {
-        if (this.authService.isLoggedOut()) {
-          this.openDialogForgotPassword();
-        }
-      }
-        if (params['toRegister']) {
-        if (this.authService.isLoggedOut()) {
-          this.openDialogRegister();
-        }
-        }
-  });
-
+    
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -76,10 +56,6 @@ routeQueryParams$: Subscription;
     }
   }
 
-  routeToRegister() {
-    this.router.navigate([], {queryParams: {toRegister : "true"}});
-  }
-
   openDialogRegister() {
     this.dialogRef.close();
 
@@ -87,34 +63,14 @@ routeQueryParams$: Subscription;
 
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
 
     dialogConfig.data = {
         id: 1,
         title: 'Register'
     };
 
-    const dialogRef = this.matDialog.open(RegisterContComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(result => {
-      const queryParams = {}
-      const url = this.authService.getStoredUrl();
-      this.authService.storeUrl(null);
-
-      if (url != null && this.authService.isLoggedIn()) {
-        this.router.navigateByUrl(url);
-      }
-      else {
-        this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
-      }
-    });
-
+    this.matDialog.open(RegisterContComponent, dialogConfig);
   }
-
-  routeForgotPass() {
-    this.router.navigate([], {queryParams: {forgotPass : "true"}});
-  }
-
 
   openDialogForgotPassword() {
     this.dialogRef.close();
@@ -129,25 +85,7 @@ routeQueryParams$: Subscription;
         title: 'ForgotPwd'
     };
 
-    const dialogRef = this.matDialog.open(ForgotPasswordContComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(result => {
-      const queryParams = {}
-      const url = this.authService.getStoredUrl();
-      this.authService.storeUrl(null);
-
-      if (url != null && this.authService.isLoggedIn()) {
-        this.router.navigateByUrl(url);
-      }
-      else {
-        this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    this.route$.unsubscribe();
-    this.routeQueryParams$.unsubscribe();
+    this.matDialog.open(ForgotPasswordContComponent, dialogConfig);
   }
 
   emailDomainValidator(control: FormControl) {

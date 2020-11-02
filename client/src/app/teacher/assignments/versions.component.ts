@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/auth/auth.service';
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { HomeworkVersion } from 'src/app/models/homework-version.model';
 import { HomeworkCorrection } from 'src/app/models/homework-correction.model';
@@ -5,7 +6,7 @@ import { Location } from '@angular/common';
 import { Homework } from 'src/app/models/homework.model';
 import { UploadCorrectionContComponent } from './upload-correction/upload-correction-cont/upload-correction-cont.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
 
@@ -25,11 +26,27 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
   corrsToShow: HomeworkCorrection[] = [];
   showedId: number = -1;
 
+  route$: Subscription;
+  routeQueryParams$: Subscription;
+
   constructor(private location: Location,
               private route: ActivatedRoute,
+              private router: Router,
+              private authService: AuthService,
               private dialog: MatDialog) { }
 
   ngOnInit(): void {
+
+    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
+      if (params['uploadCorrection']) {
+        if (this.authService.isLoggedOut()) {
+          this.uploadCorrection();
+        }
+        else {
+          const queryParams = {}
+          this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+        }
+    }});
 
   }
 
@@ -56,9 +73,6 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-
-  }
 
   back() {
     this.location.back();
@@ -82,6 +96,10 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  routeUploadCorrection() {
+    this.router.navigate([], {queryParams: {uploadCorrection : "true"}});
+  }
+
   uploadCorrection() {
     const dialogConfig = new MatDialogConfig();
 
@@ -96,7 +114,19 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
         hwId: this.homework.id
     };
 
-    this.dialog.open(UploadCorrectionContComponent, dialogConfig);
+    const dialogRef =  this.dialog.open(UploadCorrectionContComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(result => {
+      const queryParams = {}
+      const url = this.authService.getStoredUrl();
+      this.authService.storeUrl(null);
+
+      if (url != null && this.authService.isLoggedIn()) {
+        this.router.navigateByUrl(url);
+      }
+      else {
+        this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+      }
+    });
   }
 
   openVersionImage(version: HomeworkVersion) {
@@ -115,7 +145,7 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
     };
 
     this.dialog.open(ViewImageContComponent, dialogConfig);
-  } 
+  }
 
   openCorrectionImage(correction: HomeworkCorrection) {
     const dialogConfig = new MatDialogConfig();
@@ -133,6 +163,12 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
     };
 
     this.dialog.open(ViewImageContComponent, dialogConfig);
+  }
+
+
+  ngOnDestroy() {
+    this.route$.unsubscribe();
+    this.routeQueryParams$.unsubscribe();
   }
 
 }

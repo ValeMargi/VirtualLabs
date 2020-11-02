@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/auth/auth.service';
 import { StudentService } from 'src/app/services/student.service';
 import { Component, OnInit, Input, AfterViewInit, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
 import { MatTable, MatTableDataSource } from '@angular/material/table'
@@ -11,6 +12,9 @@ import { Proposal } from 'src/app/models/proposal.model';
 import { Student } from 'src/app/models/student.model';
 import { strict } from 'assert';
 
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-teams',
   templateUrl: '../teams/teams.component.html',
@@ -19,10 +23,10 @@ import { strict } from 'assert';
 export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
   @ViewChild('table') table: MatTable<Element>;
-  
+
   private sort: MatSort;
   private paginator: MatPaginator;
-  
+
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
     this.setDataSourceTeamAttributes();
@@ -75,8 +79,33 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
+  route$: Subscription;
+  routeQueryParams$: Subscription;
+
   constructor(private dialog: MatDialog,
-              private studentService: StudentService) { }
+              private studentService: StudentService,
+              private router: Router,
+              private route: ActivatedRoute,
+              private authService: AuthService) { }
+
+  ngOnInit(): void {
+
+    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
+      if (params['requestTeam']) {
+        if (this.authService.isLoggedIn()) {
+          this. openRequestDialog();
+        }
+        else {
+          const queryParams = {}
+          this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+        }
+    }});
+
+  }
+
+  routeToRequest() {
+    this.router.navigate([], {queryParams: {requestTeam : "true"}});
+  }
 
   openRequestDialog() {
     const dialogConfig = new MatDialogConfig();
@@ -88,7 +117,16 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     const dialogRef = this.dialog.open(RequestTeamDialogContComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
-      
+      const queryParams = {}
+      const url = this.authService.getStoredUrl();
+      this.authService.storeUrl(null);
+
+      if (url != null && this.authService.isLoggedIn()) {
+        this.router.navigateByUrl(url);
+      }
+      else {
+        this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+      }
     });
   }
 
@@ -96,9 +134,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
   }
 
-  ngOnInit(): void {
 
-  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.team != null) {
@@ -161,7 +197,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     const props: Proposal[] = [];
     const propsAccepted: Proposal[] = [];
     this.myProposal = null;
-    
+
     if (this.proposals.length == 0) {
       this.propsVisibility = false;
       this.propsAcceptedVisibility = false;
@@ -213,13 +249,13 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
       this.propsAcceptedVisibility = false;
     }
 
-    if (this.propsVisibility) { 
+    if (this.propsVisibility) {
       this.dataSourceProposals = new MatTableDataSource<Proposal>(props);
       this.setDataSourceProposalsAttributes();
       this.lengthProposals = props.length;
     }
 
-    if (this.propsAcceptedVisibility) { 
+    if (this.propsAcceptedVisibility) {
       this.dataSourceProposalsAccepted = new MatTableDataSource<Proposal>(propsAccepted);
       this.setDataSourceProposalsAcceptedAttributes();
       this.lengthProposalsAccepted = propsAccepted.length;
@@ -253,5 +289,10 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
   refuseProposal(token: string) {
     this.refuse.emit(token);
+  }
+
+  ngOnDestroy() {
+    this.route$.unsubscribe();
+    this.routeQueryParams$.unsubscribe();
   }
 }

@@ -211,6 +211,9 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       else if (params['newCourse']) {
         this.openDialogCourse();
       }
+      else if (params['editCourse']) {
+        this.openCourseEdit();
+      }
     });
   }
 
@@ -465,6 +468,10 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     this.courseService.currentCourse.next(course);
   }
 
+  routeCourseEdit() {
+    this.router.navigate([], {queryParams: {editCourse : "true"}});
+  }
+
   openCourseEdit() {
     const dialogConfig = new MatDialogConfig();
 
@@ -477,6 +484,22 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         title: 'CourseEdit'
     };
 
-    this.matDialog.open(EditCourseContComponent, dialogConfig);
+
+    const dialogRef =  this.matDialog.open(EditCourseContComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      const queryParams = {}
+      const url = this.authService.getStoredUrl();
+      this.authService.storeUrl(null);
+
+      if (url != null && this.authService.isLoggedIn()) {
+        this.router.navigateByUrl(url);
+      }
+      else {
+        this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+      }
+    });
+
+
   }
 }

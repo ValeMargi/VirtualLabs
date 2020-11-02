@@ -134,8 +134,6 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
   }
 
-
-
   ngOnChanges(changes: SimpleChanges) {
     if (changes.team != null) {
       this.team = changes.team.currentValue;

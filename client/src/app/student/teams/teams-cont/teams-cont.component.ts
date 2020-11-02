@@ -42,13 +42,21 @@ export class TeamsContComponent implements OnInit, OnDestroy {
 
       this.teamService.proposal.subscribe(
         (data) => {
-          let array: Proposal[] = this.PROPOSALS;
-          this.PROPOSALS = new Array();
-          array.push(data);
+          if (data.students.length == 0) {
+            //solo 1 partecipante, team creato
+            this.PROPOSALS = new Array();
+            this.getTeam(this.route.snapshot.params.courses);
+          }
+          else {
+            //aggiornamento proposals
+            let array: Proposal[] = this.PROPOSALS;
+            this.PROPOSALS = new Array();
+            array.push(data);
 
-          array.forEach(prop => {
-            this.PROPOSALS.push(prop);
-          });
+            array.forEach(prop => {
+              this.PROPOSALS.push(prop);
+            });
+          }
         },
         (error) => {
 
@@ -69,9 +77,11 @@ export class TeamsContComponent implements OnInit, OnDestroy {
         this.TEAM = data;
 
         if (this.TEAM != null) {
+          //se c'è un team, ne carico i membri...
           this.membersInTeam();
         }
         else {
+          //...altrimenti carico eventuali proposte
           this.getProposals(courseName);
         }
       },
@@ -120,16 +130,19 @@ export class TeamsContComponent implements OnInit, OnDestroy {
       (data) => {
         switch(data) {
           case 0: {
+            //errore token
             window.alert("Token non valido");
             this.QUERYING = false;
             break;
           }
           case 1: {
+            //richiesta accettata, in attesa
             this.getProposals(this.route.snapshot.params.courses);
             this.QUERYING = false;
             break;
           }
           case 2: {
+            //team creato
             this.PROPOSALS = new Array();
             this.getTeam(this.route.snapshot.params.courses);
             this.QUERYING = false;
@@ -161,11 +174,13 @@ export class TeamsContComponent implements OnInit, OnDestroy {
       (data) => {
         switch(data) {
           case 0: {
+            //errore token
             window.alert("Token non valido");
             this.QUERYING = false;
             break;
           }
           case 1: {
+            //richiesta rifiutata
             this.getProposals(this.route.snapshot.params.courses);
             this.QUERYING = false;
             break;

@@ -106,6 +106,7 @@ export class ViewImageContComponent implements OnInit {
 
           this.teacherService.getVMForProfessor(course, vmId).subscribe(
             (data) => {
+              this.TIMESTAMP = data.timestamp;
               this.PHOTO = this.sanitizer.bypassSecurityTrustUrl('data:' + data.type + ';base64,' + data.picByte);
             },
             (error) => {

@@ -48,8 +48,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   @Input() availableStudents: Student[] = [];
   @Output('propose') propose = new EventEmitter<any>();
 
-  constructor(private formBuilder: FormBuilder,
-              private courseService: CourseService) {
+  constructor(private formBuilder: FormBuilder) {
     const currentDate = new Date();
     const oneWeek = new Date(currentDate);
     oneWeek.setDate(oneWeek.getDate() + 7);
@@ -81,6 +80,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
 
     if (changes.availableStudents != null) {
       this.availableStudents = changes.availableStudents.currentValue;
+      this.setupFiter();
     }
   }
 

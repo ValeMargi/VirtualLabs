@@ -1,9 +1,11 @@
-<h2 mat-dialog-title>Crea consegna</h2>
+<form (keyup.enter)="createAss(name.value, release.value, expire.value)">
+
+  <h2 mat-dialog-title>Crea consegna</h2>
 <mat-dialog-content>
 
-<!--RegisterForm--> 
+<!--RegisterForm-->
 <form>
-  
+
 <!--Nome della consegna-->
 <mat-form-field>
     <input #name type="text" placeholder="Nome della consegna" matInput required>
@@ -15,7 +17,7 @@
     <input #release type="date" placeholder="Creazione" name="currentDate" [ngModel]="currentDate | date:'yyyy-MM-dd'" matInput readonly required>
     <!--<mat-error *ngIf="CreateAssignmentForm.get('currentDate').hasError('required')">Inserisci la data corrente</mat-error>-->
 </mat-form-field><br><br>
-    
+
 <!--Data di scadenza-->
 <mat-form-field>
     <input #expire type="date" placeholder="Scadenza" name="oneWeek" [ngModel]="oneWeek | date:'yyyy-MM-dd'" matInput required>
@@ -36,4 +38,6 @@ Selezionare immagine della consegna
     <button mat-button (click)="close()">Annulla</button>
     <button mat-button mat-raised-button color="primary" (click)="createAss(name.value, release.value, expire.value)">Crea</button>
 </mat-dialog-actions>
+
+</form>
 

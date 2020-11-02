@@ -80,6 +80,11 @@ ngOnChanges(changes: SimpleChanges) {
   }
 }
 
+forceLower(strInput: string)
+{
+strInput = strInput.toLowerCase();
+}​
+
 close() {
   this.dialogRef.close();
 }
@@ -113,7 +118,7 @@ register(firstName: string, name: string, id: string, email: string, password: s
     window.alert("Controllare che i dati inseriti rispettino tutti i vincoli e riprovare");
     return;
   }
-  
+
   let image = this.selectedPhoto;
 
   if (!image.type.match("image/jpg") && !image.type.match("image/jpeg") && !image.type.match("image/png")) {

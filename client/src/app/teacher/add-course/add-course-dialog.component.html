@@ -1,92 +1,96 @@
-<h2 mat-dialog-title><mat-icon>school</mat-icon> Crea corso</h2>
-<mat-dialog-content>
-  <!--RegisterForm-->
-  <form [formGroup]="AddCourseForm">
+<form (keyup.enter)="addCourse(courseName.value, acronym.value, min.value, max.value)">
+  <h2 mat-dialog-title><mat-icon>school</mat-icon> Crea corso</h2>
+  <mat-dialog-content>
+    <!--RegisterForm-->
+    <form [formGroup]="AddCourseForm">
 
-  <!--Nome Corso-->
-  <mat-form-field class="matForm">
-    <input #courseName class="input" type="text" placeholder="Nome del corso" formControlName="name" matInput required>
-    <mat-error *ngIf="AddCourseForm.get('name').hasError('required')">Il nome è richiesto</mat-error>
-  </mat-form-field><br><br>
+    <!--Nome Corso-->
+    <mat-form-field class="matForm">
+      <input #courseName class="input" type="text" placeholder="Nome del corso" formControlName="name" matInput required>
+      <mat-error *ngIf="AddCourseForm.get('name').hasError('required')">Il nome è richiesto</mat-error>
+    </mat-form-field><br><br>
 
-  <!--Acronimo-->
-  <mat-form-field class="matForm">
-    <input #acronym class="input" type="text" placeholder="Acronimo" formControlName="acronym" matInput required>
-    <mat-error *ngIf="AddCourseForm.get('acronym').hasError('required')">L'acronimo deve avere almeno 2 lettere</mat-error>
-  </mat-form-field><br><br>
+    <!--Acronimo-->
+    <mat-form-field class="matForm">
+      <input #acronym class="input" type="text" placeholder="Acronimo" formControlName="acronym" matInput required>
+      <mat-error *ngIf="AddCourseForm.get('acronym').hasError('required')">L'acronimo deve avere almeno 2 lettere</mat-error>
+    </mat-form-field><br><br>
 
-  <!--Massimo Membri-->
-  <mat-form-field class="matForm">
-    <input #max class="input" type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput max="10" min="2" required>
-    <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di membri</mat-error>
-    <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
-    <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
-  </mat-form-field><br><br>
+    <!--Massimo Membri-->
+    <mat-form-field class="matForm">
+      <input #max class="input" type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput max="10" min="2" required>
+      <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di membri</mat-error>
+      <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
+      <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
+    </mat-form-field><br><br>
 
-  <!--Minimo Membri-->
-  <mat-form-field class="matForm">
-    <input #min class="input" type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="2" max="10" required>
-    <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero minimo di membri</mat-error>
-    <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
-    <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
-  </mat-form-field><br><br>
+    <!--Minimo Membri-->
+    <mat-form-field class="matForm">
+      <input #min class="input" type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="2" max="10" required>
+      <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero minimo di membri</mat-error>
+      <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
+      <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
+    </mat-form-field><br><br>
 
-  <!--Foto iniziale VM-->
+    <!--Foto iniziale VM-->
 
-    Seleziona foto iniziale VM<br>
-    <input class="inputfile" type="file" formControlName="imageVM" accept="image/*" (change)="addVMImage($event)" required>
-    <mat-error *ngIf="AddCourseForm.get('imageVM').hasError('required')">Inserire la VM</mat-error>
-  <br>
+      Seleziona foto iniziale VM<br>
+      <input class="inputfile" type="file" formControlName="imageVM" accept="image/*" (change)="addVMImage($event)" required>
+      <mat-error *ngIf="AddCourseForm.get('imageVM').hasError('required')">Inserire la VM</mat-error>
+    <br>
 
-  <!--Aggiungi Professore-->
-  <mat-form-field class="matForm">
-    <input #input type="search" placeholder="Aggiungi professore" matInput [formControl]="myControl" [matAutocomplete]="auto">
-        <mat-autocomplete   #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onTeacherSelected($event.option.value)">
-        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-            {{option.name}} {{option.firstName}} ({{option.id}})
-        </mat-option>
-        </mat-autocomplete>
-  </mat-form-field>
+    <!--Aggiungi Professore-->
+    <mat-form-field class="matForm">
+      <input #input type="search" placeholder="Aggiungi professore" matInput [formControl]="myControl" [matAutocomplete]="auto">
+          <mat-autocomplete   #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onTeacherSelected($event.option.value)">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+              {{option.name}} {{option.firstName}} ({{option.id}})
+          </mat-option>
+          </mat-autocomplete>
+    </mat-form-field>
 
- <button mat-mini-fab color="primary" (click)="addTeacher()">
-   <mat-icon>add</mat-icon>
-  </button>
+   <button mat-mini-fab color="primary" (click)="addTeacher()">
+     <mat-icon>add</mat-icon>
+    </button>
 
-  </form>
- <!--Tabella Docenti del Corso-->
-  <div class="tableContainer" *ngIf="tableVisibility">
-      <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
-          <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-              <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+    </form>
+   <!--Tabella Docenti del Corso-->
+    <div class="tableContainer" *ngIf="tableVisibility">
+        <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cognome </th>
+                <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="firstName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+                <td mat-cell *matCellDef="let row"> {{row.firstName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
+              <td mat-cell *matCellDef="let row">
+                <button mat-button class="delete" (click)=deleteTeacher(row)>
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
           </ng-container>
-          <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Cognome </th>
-              <td mat-cell *matCellDef="let row"> {{row.name}} </td>
-          </ng-container>
-          <ng-container matColumnDef="firstName">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
-              <td mat-cell *matCellDef="let row"> {{row.firstName}} </td>
-          </ng-container>
-          <ng-container matColumnDef="delete">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
-            <td mat-cell *matCellDef="let row">
-              <button mat-button class="delete" (click)=deleteTeacher(row)>
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-        </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-  </div>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+    </div>
 
-</mat-dialog-content>
+  </mat-dialog-content>
 
-<!--Errore-->
-<h3 id="error" style="color: red; visibility: hidden;">Corso già esistente</h3>
+  <!--Errore-->
+  <h3 id="error" style="color: red; visibility: hidden;">Corso già esistente</h3>
 
-<mat-dialog-actions>
-  <button mat-button mat-raised-button color="warn" (click)="close()">Annulla</button>
-  <button mat-button mat-raised-button color="primary" (click)="addCourse(courseName.value, acronym.value, min.value, max.value)">Crea</button>
-</mat-dialog-actions>
+  <mat-dialog-actions>
+    <button mat-button mat-raised-button color="warn" (click)="close()">Annulla</button>
+    <button mat-button mat-raised-button color="primary" (click)="addCourse(courseName.value, acronym.value, min.value, max.value)">Crea</button>
+  </mat-dialog-actions>
+
+
+</form>

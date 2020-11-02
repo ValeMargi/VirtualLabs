@@ -58,6 +58,7 @@ public interface VLService {
     List<VMDTO> allVMforCourse( String courseId);
     PhotoVMDTO getVMforStudent( String courseId, Long VMid);
     PhotoVMDTO getVMforProfessor( String courseId, Long VMid);
+    Map<String, Object> getResourcesVM(Long teamId);
     List<VMDTO> getAllVMTeam(  Long teamId);
     boolean isOwner(  Long VMid);
     List<StudentDTO> getOwnersForProfessor(Long VMid);

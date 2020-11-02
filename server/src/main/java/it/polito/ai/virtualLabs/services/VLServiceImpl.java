@@ -1323,7 +1323,26 @@ public class VLServiceImpl implements VLService{
         }else throw new TeamNotFoundException();
     }
 
-    /*student owner modifia risorse associate a VM se è spenta e se non superano i limiti imposti dal gruppo*/
+    @PreAuthorize("hasAuthority('professor')")
+    @Override
+    public Map<String, Object> getResourcesVM(Long teamId){
+        String professor =SecurityContextHolder.getContext().getAuthentication().getName();
+        Professor p = professorRepository.getOne(professor);
+        Optional<Team> ot = teamRepository.findById(teamId);
+        if(!ot.isPresent()) throw new TeamNotFoundException();
+        Team t = ot.get();
+        Course course = t.getCourse();
+        if(!course.getProfessors().contains(p)) throw new PermissionDeniedException();
+        Map<String, Object> resources = new HashMap<>();
+        resources.put("Vcpu", (course.getMaxVcpu()-t.getMaxVpcuLeft())+"/"+course.getMaxVcpu());
+        resources.put("diskSpace", (course.getDiskSpace()-t.getDiskSpaceLeft())+"/"+course.getDiskSpace());
+        resources.put("ram", (course.getRam()-t.getRamLeft())+"/"+course.getRam());
+        resources.put("running", (course.getRunningInstances()-t.getRunningInstances())+"/"+course.getRunningInstances());
+        resources.put("total", (course.getTotInstances()-t.getTotInstances())+"/"+course.getTotInstances());
+        return resources;
+    }
+
+    /*student owner modifica risorse associate a VM se è spenta e se non superano i limiti imposti dal gruppo*/
 
     /*Per vedere chi è owner*/
     @PreAuthorize("hasAuthority('student')")

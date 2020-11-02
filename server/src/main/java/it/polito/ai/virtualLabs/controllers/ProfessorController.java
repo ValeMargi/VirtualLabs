@@ -148,10 +148,10 @@ public class ProfessorController {
         }
     }
     /**
-     * Authrority: Professor
+     * Authority: Professor
      * @param courseName
      * @param VMid
-     * @return: ritrona  PhotoVM dto con l'immagine  della VM con id pari a VMid
+     * @return: ritorna  PhotoVM dto con l'immagine  della VM con id pari a VMid
      */
     @GetMapping("/VM/{courseName}/{VMid}")
     public PhotoVMDTO getVMforProfessor(@PathVariable String courseName, @PathVariable Long VMid) {
@@ -164,10 +164,34 @@ public class ProfessorController {
         }
     }
 
+
     /**
-     * Authrority: Docente
+     * Authority: Professor
+     * @param teamId
+     * @return: ritorna  mappa con questo formato:
+     *  "nomeRisorsa": inUso/MassimoUtilizzabili
+     *
+     *  Vcpu: ________
+     *  diskSpace: ______
+     *  ram: _____
+     *  runningInstances: _______
+     *  totalInstances: _____
+     */
+    @GetMapping("/team/{teamId}/resources")
+    public Map<String, Object> getResourcesVM(@PathVariable Long teamId) {
+        try{
+            return vlService.getResourcesVM(teamId);
+        } catch (TeamNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch ( PermissionDeniedException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
+
+    /**
+     * Authority: Docente
      * @param courseName
-     * @return: ritrona lista di VM dto con le informazioni
+     * @return: ritorna lista di VM dto con le informazioni
      *          di tutte le VM di un dato corso
      */
     @GetMapping("/VM/{courseName}")
@@ -183,7 +207,7 @@ public class ProfessorController {
 
     /**
      * Metodo GET
-     * Authrority: Docente
+     * Authority: Docente
      * @param courseName, teamId, vmId
      * @return: ritorna la lista di StudentDTO owner di una VM
      */

@@ -66,7 +66,7 @@ public interface VLService {
     AssignmentDTO addAssignment(AssignmentDTO assignmentDTO, PhotoAssignmentDTO photoAssignmentDTO, String courseId);
     PhotoAssignmentDTO getAssignmentStudent( Long assignmentId);
     PhotoAssignmentDTO getAssignmentProfessor(Long assignmentId );
-    List<AssignmentDTO> allAssignmentStudent(  String courseId);
+    List<Map<String, Object>> allAssignmentStudent(  String courseId);
     List<AssignmentDTO> allAssignment(String courseId);
     PhotoVersionHomeworkDTO uploadVersionHomework( Long homeworkId, PhotoVersionHomeworkDTO photoVersionHomeworkDTO);
     boolean updateStatusHomework( Long homeworkId, String status);

@@ -1347,7 +1347,7 @@ public class VLServiceImpl implements VLService{
     /*Per vedere chi è owner*/
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public boolean isOwner(  Long VMid) { //CourseId preso dal pathVariable
+    public boolean isOwner(  Long VMid) {
         String student =SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Student> os = studentRepository.findById(student);
         if(os.isPresent()){
@@ -1430,14 +1430,23 @@ public class VLServiceImpl implements VLService{
     /*Metodo per ritornare le consegne di un dato corso*/
     @PreAuthorize("hasAuthority('student')")
     @Override
-    public List<AssignmentDTO> allAssignmentStudent(  String courseId) { //CourseId preso dal pathVariable
+    public List<Map<String, Object>> allAssignmentStudent(  String courseId) { //CourseId preso dal pathVariable
         String student = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Student> os = studentRepository.findById(student);
         if (os.isPresent()) {
             Student s = os.get();
             Optional<Course> c = s.getCourses().stream().filter(co->co.getName().equals(courseId)).findFirst();
             if(c.isPresent()){
-                return c.get().getAssignments().stream().map( a -> modelMapper.map(a, AssignmentDTO.class)).collect(Collectors.toList());
+                List<Assignment>  assignmentList= c.get().getAssignments();
+                List<Map<String, Object>> list = new ArrayList<>();
+                for(Assignment  a:assignmentList){
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("assignment", modelMapper.map(a, AssignmentDTO.class));
+                    map.put("grade", s.getHomeworks().stream().filter(h-> h.getAssignment().equals(a)).findFirst().get().getGrade());
+                    map.put("status", s.getHomeworks().stream().filter(h-> h.getAssignment().equals(a)).findFirst().get().getStatus());
+                    list.add(map);
+                }
+                return list;
             }throw new StudentNotEnrolledToCourseException();
         }else throw new StudentNotFoundException();
     }

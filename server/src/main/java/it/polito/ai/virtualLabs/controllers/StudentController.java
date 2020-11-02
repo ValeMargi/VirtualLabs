@@ -122,10 +122,10 @@ public class StudentController {
      * Metodo: GET
      * Authority: Studente
      * @param courseName: riceve dal path il nome del corso di cui si vuole elencare le consegne associate
-     * @return: ritorna la lista di consegne associate al corso con nome pari a CourseName
+     * @return: ritorna la lista di map con AssignmentDTO associato al corso e i campi "grade" e "status"
      */
     @GetMapping("/{courseName}/assignment")
-    public List<AssignmentDTO> allAssignment(@PathVariable String courseName) {
+    public List<Map<String,Object>> allAssignment(@PathVariable String courseName) {
         try{
             return  vlService.allAssignmentStudent(courseName);
         } catch (StudentNotFoundException e) {

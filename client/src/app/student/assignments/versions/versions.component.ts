@@ -20,13 +20,13 @@ export class VersionsComponent implements OnInit, OnChanges {
   @Input() homework: Homework;
   @Input() versions: HomeworkVersion[] = [];
   @Input() corrections: HomeworkCorrection[] = [];
+  @Input() titolo: string;
 
   private assId: number;
   corrVisibility: boolean = false;
   corrsToShow: HomeworkCorrection[] = [];
   showedId: number = -1;
   routeQueryParams$: Subscription;
-
 
   constructor(private location: Location,
               private matDialog: MatDialog,

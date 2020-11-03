@@ -5,9 +5,9 @@
       <button class="iconButton" mat-icon-button color="primary" (click)="backAssignmetsTable()">
         <mat-icon>arrow_back</mat-icon></button>
       Elaborati </mat-card-title>
-     <mat-card-subtitle>Titolo: </mat-card-subtitle>
+     <mat-card-subtitle class="subTitle">Titolo: <strong> {{titolo}}</strong> </mat-card-subtitle>
     </mat-card-header>
-  
+
     <mat-card-content>
         <div>
             <table #table mat-table [dataSource]="dataSource" matSort class="matTable">

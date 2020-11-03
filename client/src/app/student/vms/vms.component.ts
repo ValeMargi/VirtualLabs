@@ -1,3 +1,5 @@
+import { AuthService } from 'src/app/auth/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { VM } from '../../models/vm.model';
@@ -11,6 +13,7 @@ import { VMOwners } from 'src/app/models/vm-owners.model';
 import { Student } from 'src/app/models/student.model';
 import { ManageVmContComponent } from './manage-vm/manage-vm-cont/manage-vm-cont.component';
 import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-vms-student',
   templateUrl: './vms.component.html',
@@ -18,10 +21,10 @@ import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-
 })
 export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
-  
+
   private sort: MatSort;
   private paginator: MatPaginator;
-  
+
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
     this.setDataSourceAttributes();
@@ -48,7 +51,13 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
   vmVisibility: boolean = true;
   noTeamVisibility: boolean = true;
 
-  constructor(private studentService: StudentService, public dialog: MatDialog) { }
+  routeQueryParams$: Subscription;
+
+  constructor(private studentService: StudentService,
+              public dialog: MatDialog,
+              private router: Router,
+              private route: ActivatedRoute,
+              private authService: AuthService) { }
 
   ngAfterViewInit(): void {
 
@@ -56,8 +65,34 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
 
   ngOnInit() {
     this.manageViews();
+
+    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
+      if (params['createVm']) {
+        this.openCreateVmsDialog();
+    }});
   }
 
+  routeCreateVm() {
+    this.router.navigate([], {queryParams: {createVm : "true"}});
+  }
+
+  openCreateVmsDialog() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(CreateVmsContComponent,{ id: 'dialogCreateVms'});
+
+    dialogRef.afterClosed().subscribe(result => {
+      const queryParams = {}
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+    });
+
+  }
+
+  ngOnDestroy() {
+    this.routeQueryParams$.unsubscribe();
+  }
   ngOnChanges(changes: SimpleChanges) {
     if (changes.team != null) {
       this.team = changes.team.currentValue;
@@ -181,10 +216,6 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
     return str;
   }
 
-  openCreateVmsDialog() {
-    const dialogRef = this.dialog.open(CreateVmsContComponent,{ id: 'dialogCreateVms'});
-  }
-
   openVM(vm: VM) {
     if (vm.status == "off") {
       window.alert("La VM deve essere accesa per essere avviata");
@@ -206,5 +237,7 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
 
     this.dialog.open(ViewImageContComponent, dialogConfig);
   }
+
+
 
 }

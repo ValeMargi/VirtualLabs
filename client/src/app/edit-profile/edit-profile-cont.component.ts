@@ -3,6 +3,8 @@ import { TeacherService } from '../services/teacher.service';
 import { StudentService } from '../services/student.service';
 import { AuthService } from '../auth/auth.service';
 import { Md5 } from 'ts-md5/dist/md5';
+import { RegisterDialogComponent } from '../register/register-dialog.component';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-profile-cont',
@@ -21,7 +23,8 @@ export class EditProfileContComponent implements OnInit {
 
   constructor(private authService: AuthService,
               private teacherService: TeacherService,
-              private studentService: StudentService) { }
+              private studentService: StudentService,
+              private dialogRef: MatDialogRef<RegisterDialogComponent>) { }
 
   ngOnInit() {
     this.CURRENT_USER = this.authService.getUserByRole();
@@ -63,6 +66,7 @@ export class EditProfileContComponent implements OnInit {
 
         this.QUERYING = false;
         this.AVATAR_OK = true;
+        setTimeout(()=>{this.close()}, 3000);
       },
       (error) => {
         window.alert(error.error.message);
@@ -86,11 +90,16 @@ export class EditProfileContComponent implements OnInit {
         }
 
         this.PWD_OK = true;
+        setTimeout(()=>{this.close()}, 3000);
       },
       (error) => {
         window.alert(error.error.message);
       }
     )
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 
 }

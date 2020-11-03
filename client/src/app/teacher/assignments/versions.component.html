@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            <button mat-raised-button color="primary" class="upload"
+            <button mat-raised-button color="primary" class="upload" onclick="this.blur()"
                 *ngIf="homework != null && !homework.permanent && homework.status != 'NULL' && homework.status != 'LETTO'" (click)="uploadCorrection()">
                 <mat-icon>cloud_upload</mat-icon> Carica revisione
             </button>

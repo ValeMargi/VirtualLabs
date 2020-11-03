@@ -2,7 +2,7 @@
     margin:2%;
     width: 90%;
   }
-  
+
 .iconButton:hover{
 background-color:#001ea34d;
 }
@@ -11,6 +11,10 @@ background-color:#001ea34d;
 width: 90%;
 margin-left: 2%;
 margin-top: 2%;
+}
+
+.subTitle{
+  font-size: 1em;
 }
 
 .buttonText{

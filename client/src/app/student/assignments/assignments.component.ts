@@ -42,6 +42,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
   @Input() hasTeam: boolean;
   @Input() hasVM: boolean;
   @Input() assignments: AssignmentGrade[] = [];
+  @Output('update') update = new EventEmitter<void>();
 
   versionsVisibility: boolean = false;
   tableAssignmentsVisibility: boolean = false;
@@ -106,6 +107,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
 
   onRouterOutletDeactivate(event: any) {
     this.versionsVisibility = false;
+    this.update.emit();
   }
 
   showVersions(ass: Assignment) {
@@ -149,7 +151,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
     const dialogRef = this.matDialog.open(ViewImageContComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
-      //gestire stato
+      this.update.emit();
     });
   }
 

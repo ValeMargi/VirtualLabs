@@ -20,6 +20,7 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
   ASSIGNMENTS: AssignmentGrade[] = [];
 
   private route$: Subscription;
+  private courseName: string;
 
   constructor(private studentService: StudentService,
               private courseService: CourseService,
@@ -31,15 +32,15 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route$ = this.route.params.subscribe(params => {
-      let courseName: string = params.courses;
+      this.courseName = params.courses;
 
-      if (courseName == undefined) {
+      if (this.courseName == undefined) {
         return;
       }
 
       const currentId: string = localStorage.getItem('currentId');
 
-      this.studentService.allAssignments(courseName).subscribe(
+      this.studentService.allAssignments(this.courseName).subscribe(
         (data) =>  {
           let array: AssignmentGrade[] = new Array();
 
@@ -53,12 +54,12 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
 
           this.ASSIGNMENTS = array;
 
-          this.teamService.getTeamForStudent(courseName, currentId).subscribe(
+          this.teamService.getTeamForStudent(this.courseName, currentId).subscribe(
             (data) => {
               if (data != null) {
                 this.HAS_TEAM = true;
     
-                this.teamService.getAllVMTeam(courseName, data.id).subscribe(
+                this.teamService.getAllVMTeam(this.courseName, data.id).subscribe(
                   (data) => {
                     if (data.length > 0) {
                       this.HAS_VM = true;
@@ -99,6 +100,32 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
         }
       );
     });
+  }
+
+  updateAssignments() {
+    this.studentService.allAssignments(this.courseName).subscribe(
+      (data) =>  {
+        let array: AssignmentGrade[] = new Array();
+
+        data.forEach(ass => {
+          let assignment: Assignment = ass.assignment;
+          let grade: string = ass.grade;
+          let status: string = ass.status;
+          let assGrade: AssignmentGrade = new AssignmentGrade(assignment.id, assignment.assignmentName, assignment.releaseDate, assignment.expiration, grade, status);
+          array.push(assGrade);
+        });
+
+        this.ASSIGNMENTS = array;
+      },
+      (error) => {
+        window.alert(error.error.message);
+          const status: number = error.error.status;
+
+          if (status == 404 || status == 403) {
+            this.router.navigateByUrl("home");
+            this.courseService.courseReload.emit();
+          }
+      });
   }
 
   ngOnDestroy() {

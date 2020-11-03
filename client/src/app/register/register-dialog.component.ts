@@ -141,17 +141,40 @@ register(firstName: string, name: string, id: string, email: string, password: s
     window.alert("La tua email non corrisponde alla matricola inserita");
     return;
   }
-  else if (userJson.id.startsWith("s") && idEmail[1] == "polito.it") {
+  /*
+  else if (!this.isEmailStudent(userJson.email)) {
     window.alert("Lo studente deve avere come dominio 'studenti.polito.it'");
     return;
   }
-  else if (userJson.id.startsWith("d") && idEmail[1] == "studenti.polito.it") {
+  else if (!this.isEmailTeacher(userJson.email)) {
     window.alert("Il docente deve avere come dominio 'polito.it'");
     return;
   }
-
+*/
   this.reg.emit({image: image, userJson: userJson});
 }
+
+
+isEmailStudent(emailUser:string):boolean
+{
+    var  correct:boolean;
+    let regexp = new RegExp('([sS]{1}[0-9]+[@]{1}[sS]{1}[tT]{1}[uU]{1}[dD]{1}[eE]{1}[nN]{1}[tT]{1}[iI]{1}[.][pP]{1}[oO]{1}[Ll]{1}[iI]{1}[tT]{1}[oO][.][iI]{1}[tT]{1})');
+    correct = regexp.test(emailUser);
+
+    console.log(correct);
+    return correct;
+}
+
+isEmailTeacher(emailUser:string):boolean
+{
+    var  correct:boolean;
+    let regexp = new RegExp('([dD]{1}[0-9]+[@]{1}[pP]{1}[oO]{1}[Ll]{1}[iI]{1}[tT]{1}[oO][.][iI]{1}[tT]{1})');
+    correct = regexp.test(emailUser);
+
+    console.log(correct);
+    return correct;
+}
+
 
 onFileChanged(imageInput) {
   this.selectedPhoto = imageInput.target.files[0]

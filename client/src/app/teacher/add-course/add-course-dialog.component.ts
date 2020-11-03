@@ -17,9 +17,9 @@ import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms'
 })
 export class AddCourseDialogComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
-  
+
   private sort: MatSort;
-  
+
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
     this.dataSource.sort = this.sort;
@@ -55,7 +55,7 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
         name: "",
         acronym: "",
         max_iscrizioni : 4,
-        min_iscrizioni : 2,
+        min_iscrizioni : 1,
         imageVM: ""
       });
      }

@@ -289,11 +289,31 @@ public class ProfessorController {
      * @param assignmentId
      * @return informazioni assignment dello studente
      */
+    @GetMapping("/{courseName}/{assignmentId}/getAssignmentDTO")
+    public AssignmentDTO getAssignmentDTO(@PathVariable String courseName, @PathVariable Long assignmentId) {
+        try{
+            return  vlService.getAssignmentDTOProfessor( assignmentId);
+        } catch ( ProfessorNotFoundException | AssignmentNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (PermissionDeniedException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    /**
+     * Metodo: Get
+     * Authority: Docente
+     * @param courseName
+     * @param assignmentId
+     * @return informazioni assignment dello studente
+     */
     @GetMapping("/{courseName}/{assignmentId}/getAssignment")
     public PhotoAssignmentDTO getAssignment(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.getAssignmentProfessor( assignmentId);
-        } catch (CourseNotFoundException  | StudentNotFoundException | AssignmentNotFoundException e) {
+        } catch ( ProfessorNotFoundException | AssignmentNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }

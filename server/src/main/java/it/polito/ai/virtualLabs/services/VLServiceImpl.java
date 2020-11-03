@@ -1504,7 +1504,25 @@ public class VLServiceImpl implements VLService{
                 } else throw new AssignmentNotFoundException();
         }else throw new ProfessorNotFoundException();
     }
+    
 
+    /*Metodo per ritornare la consegna di un dato corso*/
+    @PreAuthorize("hasAuthority('professor')")
+    @Override
+    public AssignmentDTO getAssignmentDTOProfessor(Long assignmentId ) {
+        String professor =SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Professor> op = professorRepository.findById(professor);
+        if(op.isPresent()){
+            Professor p =op.get();
+            Optional<Assignment> oa=assignmentRepository.findById(assignmentId);
+            if(oa.isPresent()){
+                Assignment a = oa.get();
+                if (a.getCourseAssignment().getProfessors().contains(p)) {
+                    return modelMapper.map(a, AssignmentDTO.class);
+                } else throw new PermissionDeniedException();
+            } else throw new AssignmentNotFoundException();
+        }else throw new ProfessorNotFoundException();
+    }
 
     /*SERVICE ELABORATI*/
     @PreAuthorize("hasAuthority('student')")

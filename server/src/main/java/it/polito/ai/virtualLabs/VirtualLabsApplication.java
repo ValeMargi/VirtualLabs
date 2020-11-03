@@ -33,25 +33,6 @@ public class VirtualLabsApplication {
             }
         };
     }
-
-   /* @Bean
-    CommandLineRunner runner(PhotoAssignmentRepository pa, PhotoVersionHMRepository pvh,
-                             PhotoCorrectionRepository photoc, HomeworkRepository h, VLService service) {
-        return new CommandLineRunner() {
-            @Override
-            public void run(String... args) throws Exception {
-
-          //      PhotoCorrectionDTO pc = new PhotoCorrectionDTO();
-          //      pc.setIdProfessor("p1");
-           //     photoc.saveAndFlush(modelMapper().map(pc, PhotoCorrection.class));
-          //      PhotoVersionHomeworkDTO ph = new PhotoVersionHomeworkDTO();
-           //     pvh.saveAndFlush(modelMapper().map(ph, PhotoVersionHomework.class));
-            }
-        };
-
-    }
-
-    */
     public static void main(String[] args) {
         SpringApplication.run(VirtualLabsApplication.class, args);
     }

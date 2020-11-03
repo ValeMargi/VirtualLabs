@@ -20,13 +20,17 @@
                   <mat-selection-list [multiple]="false">
                     <mat-list-option *ngFor="let ver of versions" [value]="ver">
                       <mat-divider></mat-divider>
-                        <div style="display: flex;">
-                            <div style="text-align: center; vertical-align: middle;" (click)="openVersionImage(ver)">{{ ver.timestamp }}</div>
+                      <div style="display: flex;">
+                        <div style="text-align: center; vertical-align: middle;">{{ ver.timestamp }}</div>
 
-                            <button class="bt-rev" mat-flat-button color="primary" (click)="showCorrections(ver)">
-                                Revisioni <mat-icon>keyboard_arrow_right</mat-icon>
-                                </button>
-                            </div>
+                        <button class="bt-rev" mat-flat-button (click)="openVersionImage(ver)">
+                          Visualizza <mat-icon>subject </mat-icon>
+                      </button>
+
+                        <button class="bt-rev" mat-flat-button color="primary" (click)="showCorrections(ver)">
+                            Revisioni <mat-icon>keyboard_arrow_right</mat-icon>
+                        </button>
+                    </div>
                         </mat-list-option>
                     </mat-selection-list>
                 </div>
@@ -35,8 +39,14 @@
                   <br/>
                   <h3 class="title"><strong>Revisioni</strong></h3>
                     <mat-selection-list [multiple]="false">
-                        <mat-list-option *ngFor="let cor of corrsToShow" [value]="cor" (click)="openCorrectionImage(cor)">
-                            {{ cor.timestamp }}
+                        <mat-list-option *ngFor="let cor of corrsToShow" [value]="cor">
+                          <div style="display: flex;">
+                            <div style="text-align: center; vertical-align: middle;">{{ cor.timestamp }}</div>
+
+                            <button class="bt-rev" mat-flat-button (click)="openCorrectionImage(cor)">
+                              Visualizza  <mat-icon>subject </mat-icon>
+                          </button>
+                        </div>
                         </mat-list-option>
                     </mat-selection-list>
                     <div *ngIf="corrsToShow.length == 0">

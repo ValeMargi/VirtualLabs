@@ -38,7 +38,7 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
       name : new FormControl('', [Validators.required, Validators.minLength(3)]),
       surname : new FormControl('', [Validators.required]),
       id : new FormControl('', [Validators.required]),
-      email: new FormControl('',[Validators.email,this.emailDomainValidator]),
+      email: new FormControl('',[Validators.email]),
       password: ['', [Validators.required,Validators.minLength(8), Validators.maxLength(20)]],
       confirmPassword: ['',[Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
     }, { validator: this.checkPasswords });
@@ -46,6 +46,7 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
 }
 
 
+/*
 emailDomainValidator(control: FormControl) {
   let email = control.value;
   var  correctS:boolean;
@@ -66,7 +67,7 @@ emailDomainValidator(control: FormControl) {
     }}
   }
 
-}
+}*/
 
 isEmailStudent(emailUser:string):boolean
 {

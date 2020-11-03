@@ -17,6 +17,7 @@ export class HomeworksContComponent implements OnInit, OnDestroy {
 
   private route$: Subscription;
 
+  ASSIGNMENT: Assignment;
   HOMEWORKS_STUDENTS: HomeworkStudent[] = [];
 
   constructor(private teacherService: TeacherService,
@@ -31,8 +32,15 @@ export class HomeworksContComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.updateHomeworks(idA);
-      
+      this.teacherService.getAssignment(this.courseService.currentCourse.getValue().name, idA).subscribe(
+        (data) => {
+          this.ASSIGNMENT = data;
+          this.updateHomeworks(idA);
+        },
+        (error) => {
+          window.alert(error.error.message);
+        }
+      );
     });
   }
 

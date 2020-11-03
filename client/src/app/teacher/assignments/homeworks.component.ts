@@ -9,6 +9,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { Student } from 'src/app/models/student.model';
 import { HomeworkStudent } from 'src/app/models/homework-student.model';
+import { Assignment } from 'src/app/models/assignment.model';
 
 @Component({
   selector: 'app-homeworks',
@@ -20,10 +21,6 @@ export class HomeworksComponent implements OnInit, OnChanges {
 
   private sort: MatSort;
   private paginator: MatPaginator;
-
-  currentRoute: string;
-
-  @Input() titolo:string;
 
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
@@ -42,55 +39,35 @@ export class HomeworksComponent implements OnInit, OnChanges {
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
   @Input() homeworkStudents: HomeworkStudent[];
+  @Input() assignment: Assignment;
   @Output('update') update = new EventEmitter<number>();
 
   homeworksToShow: any[] = [];
   versionsVisibility: boolean = false;
   tableVisibility: boolean = false;
-  assId:string;
+  assignmentName: string = "";
 
   constructor(private router: Router,
               private route: ActivatedRoute,
-              private location: Location,
-              private teacherService: TeacherService,
-              private courseService: CourseService) {
-
-    console.log(router.url);
-    this.currentRoute = router.url;
-    console.log(this.currentRoute);
-
-    let paramRoute = this.currentRoute.split('/', 6);
-    console.log(paramRoute);
-    this.assId = paramRoute[5];
+              private location: Location) {
   }
 
   ngOnInit(): void {
     this.manageTableVisibility();
     this.manageTable();
-
-    let course: string = this.courseService.currentCourse.getValue().name;
-
-
-    this.teacherService.allAssignments(course).subscribe(
-      (data) => {
-        data.forEach(ass => {
-          if(ass.id.toString() === this.assId){
-            this.titolo = ass.assignmentName;
-          }
-        });
-      },
-      (error) => {
-        window.alert(error.error.message);
-      }
-    );
-
-
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.homeworkStudents != null) {
       this.homeworkStudents = changes.homeworkStudents.currentValue;
+    }
+
+    if (changes.assignment != null) {
+      this.assignment = changes.assignment.currentValue;
+
+      if (this.assignment != null) {
+        this.assignmentName = this.assignment.assignmentName;
+      }
     }
 
     this.manageTableVisibility();

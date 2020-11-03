@@ -82,6 +82,10 @@ export class TeacherService {
     return this.http.get<Assignment[]>(`${this.API_PROFESSORS}/${courseName}/assignments`).pipe(map(ass => ass || []));
   }
 
+  getAssignment(courseName: string, assignmentId: number) {
+    return this.http.get<Assignment>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/getAssignmentDTO`);
+  }
+
   getPhotoAssignment(courseName: string, assignmentId: number) {
     return this.http.get<PhotoAssignment>(`${this.API_PROFESSORS}/${courseName}/${assignmentId}/getAssignment`);
   }

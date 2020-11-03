@@ -6,7 +6,7 @@
             Versioni elaborato
         </mat-card-title>
 
-        <button mat-raised-button color="primary" class="upload" *ngIf="homework != null && !homework.permanent && homework.status != 'NULL'"
+        <button mat-raised-button color="primary" class="upload" onclick="this.blur()" *ngIf="homework != null && !homework.permanent && homework.status != 'NULL'"
         (click)="routeUploadVersion()">
         <mat-icon>cloud_upload</mat-icon> Carica versione
         </button>

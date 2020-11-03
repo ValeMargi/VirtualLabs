@@ -117,10 +117,10 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
 
         if (authenticationService.confirmRegistration((token))) {
-            headers.setLocation(URI.create("http://localhost:4200/register/confirm/" + token));
+            headers.setLocation(URI.create("http://localhost:4200/register/confirm?regtoken=" + token));
         }
         else {
-            headers.setLocation(URI.create("http://localhost:4200/register/expired/" + token));
+            headers.setLocation(URI.create("http://localhost:4200/register/expired?regtoken=" + token));
         }
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }

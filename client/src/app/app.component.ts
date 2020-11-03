@@ -47,7 +47,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   homeVisibility: boolean = true;
   teacherVisibility: boolean = true;
   notFoundVisibility: boolean = true;
-  registerSuccess: boolean = true;
   courseSelected: string = "";
   role: string = "";
   courses: Course[] = [];
@@ -244,6 +243,10 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
+  get registerSuccess() {
+    return this.route.snapshot.queryParams['regtoken'];
+  }
+
   setCourses() {
     if (this.role.match("student")) {
       this.studentService.getCourses(this.studentService.currentStudent.id).subscribe(
@@ -324,7 +327,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         const params = this.route.snapshot.queryParams;
 
         if (!params['doRegister'] && !params['forgotPass']) {
-          this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+          this.router.navigate(["home"], { queryParams, replaceUrl: true, relativeTo: this.route });
         }
       }
     });

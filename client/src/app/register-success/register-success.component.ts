@@ -18,9 +18,7 @@ export class RegisterSuccessComponent implements OnInit, OnDestroy {
   constructor(private authService: AuthService,
               private route: ActivatedRoute) { }
 
-  ngOnInit(): void {
-    this.authService.logout();
-    
+  ngOnInit(): void {    
     this.route$ = this.route.params.subscribe(param => {
       if (param.success == "confirm") {
         this.success = true;

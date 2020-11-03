@@ -45,19 +45,45 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
 
 }
 
+
 emailDomainValidator(control: FormControl) {
   let email = control.value;
-  if (email && email.indexOf("@") != -1) {
-    let [_, domain] = email.split("@");
-    if (domain !== "studenti.polito.it" && domain !== "polito.it") {
-      return {
-        emailDomain: {
-          parsedDomain: domain
-        }
-      }
-    }
+  var  correctS:boolean;
+  var  correctT:boolean;
+  let [_, domain] = email.split("@");
+
+  let regexpStudent = new RegExp('([sS]{1}[0-9]+[@]{1}[sS]{1}[tT]{1}[uU]{1}[dD]{1}[eE]{1}[nN]{1}[tT]{1}[iI]{1}[.][pP]{1}[oO]{1}[Ll]{1}[iI]{1}[tT]{1}[oO][.][iI]{1}[tT]{1})');
+  correctS = regexpStudent.test(email);
+
+  let regexpTeacher = new RegExp('([dD]{1}[0-9]+[@]{1}[pP]{1}[oO]{1}[Ll]{1}[iI]{1}[tT]{1}[oO][.][iI]{1}[tT]{1})');
+  correctT = regexpTeacher.test(email);
+
+  if(correctS && correctT){
+    return null;
+  }else{
+    return  {emailDomain: {
+      parsedDomain: domain
+    }}
   }
-  return null;
+
+}
+
+isEmailStudent(emailUser:string):boolean
+{
+    var  correct:boolean;
+    let regexp = new RegExp('([sS]{1}[0-9]+[@]{1}[sS]{1}[tT]{1}[uU]{1}[dD]{1}[eE]{1}[nN]{1}[tT]{1}[iI]{1}[.][pP]{1}[oO]{1}[Ll]{1}[iI]{1}[tT]{1}[oO][.][iI]{1}[tT]{1})');
+    correct = regexp.test(emailUser);
+    console.log(correct);
+    return correct;
+}
+
+isEmailTeacher(emailUser:string):boolean
+{
+    var  correct:boolean;
+    let regexp = new RegExp('([dD]{1}[0-9]+[@]{1}[pP]{1}[oO]{1}[Ll]{1}[iI]{1}[tT]{1}[oO][.][iI]{1}[tT]{1})');
+    correct = regexp.test(emailUser);
+    console.log(correct);
+    return correct;
 }
 
 checkPasswords(group: FormGroup) { // here we have the 'passwords' group
@@ -141,40 +167,17 @@ register(firstName: string, name: string, id: string, email: string, password: s
     window.alert("La tua email non corrisponde alla matricola inserita");
     return;
   }
-  /*
-  else if (!this.isEmailStudent(userJson.email)) {
+
+  else if (userJson.id.startsWith("s") && idEmail[1] == "polito.it") {
     window.alert("Lo studente deve avere come dominio 'studenti.polito.it'");
     return;
   }
-  else if (!this.isEmailTeacher(userJson.email)) {
+  else if (userJson.id.startsWith("d") && idEmail[1] == "studenti.polito.it") {
     window.alert("Il docente deve avere come dominio 'polito.it'");
     return;
   }
-*/
   this.reg.emit({image: image, userJson: userJson});
 }
-
-
-isEmailStudent(emailUser:string):boolean
-{
-    var  correct:boolean;
-    let regexp = new RegExp('([sS]{1}[0-9]+[@]{1}[sS]{1}[tT]{1}[uU]{1}[dD]{1}[eE]{1}[nN]{1}[tT]{1}[iI]{1}[.][pP]{1}[oO]{1}[Ll]{1}[iI]{1}[tT]{1}[oO][.][iI]{1}[tT]{1})');
-    correct = regexp.test(emailUser);
-
-    console.log(correct);
-    return correct;
-}
-
-isEmailTeacher(emailUser:string):boolean
-{
-    var  correct:boolean;
-    let regexp = new RegExp('([dD]{1}[0-9]+[@]{1}[pP]{1}[oO]{1}[Ll]{1}[iI]{1}[tT]{1}[oO][.][iI]{1}[tT]{1})');
-    correct = regexp.test(emailUser);
-
-    console.log(correct);
-    return correct;
-}
-
 
 onFileChanged(imageInput) {
   this.selectedPhoto = imageInput.target.files[0]

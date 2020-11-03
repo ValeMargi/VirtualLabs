@@ -24,10 +24,11 @@ import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-
 export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
 
   @ViewChild('table') table: MatTable<Element>;
-  
+  @Output() titolo:string;
+
   private sort: MatSort;
   private paginator: MatPaginator;
-  
+
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
     this.setDataSourceAttributes();
@@ -58,7 +59,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
 
   constructor(private matDialog: MatDialog,
               private router: Router,
-              private route: ActivatedRoute, 
+              private route: ActivatedRoute,
               private location: Location) { }
 
   ngAfterViewInit(): void {
@@ -111,6 +112,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   showHomeworks(ass: Assignment) {
+    this.titolo = ass.assignmentName;
     this.router.navigate([ass.id, 'homeworks'], { relativeTo: this.route });
   }
 

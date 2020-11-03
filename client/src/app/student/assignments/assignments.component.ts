@@ -21,10 +21,9 @@ import { AssignmentGrade } from 'src/app/models/assignment-grade.model';
 })
 export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy {
   @ViewChild('table') table: MatTable<Element>;
-  
   private sort: MatSort;
   private paginator: MatPaginator;
-  
+
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
     this.setDataSourceAttributes();
@@ -49,7 +48,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
   buttonHomeworkVisibility:boolean = false;
 
   panelOpenState = false;
-  titolo: string;
+  @Output() titolo: string;
   public assId: number;
 
   length = 5;
@@ -69,7 +68,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
   }
 
   ngOnDestroy() {
-    
+
   }
 
   getGrade(row: AssignmentGrade) {
@@ -119,6 +118,8 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
       window.alert("Il team deve avere almeno una VM per accedere a questa sessione");
       return;
     }
+
+    this.titolo = ass.assignmentName;
 
     this.router.navigate([ass.id, 'versions'], { relativeTo: this.route });
   }

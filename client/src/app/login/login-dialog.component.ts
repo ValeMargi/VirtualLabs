@@ -30,7 +30,7 @@ LoginForm: FormGroup;
       private router: Router) {
 
       this.LoginForm = this.formBuilder.group({
-        email: new FormControl('',[Validators.email,this.emailDomainValidator]),
+        email: new FormControl('',[Validators.email]),
         password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
       });
 
@@ -55,6 +55,7 @@ LoginForm: FormGroup;
     }
     else {
       this.badCredentials = false;
+
       this.log.emit({email: email.toLowerCase(), password: password});
     }
   }
@@ -72,19 +73,5 @@ LoginForm: FormGroup;
   ngOnDestroy() {
   }
 
-  emailDomainValidator(control: FormControl) {
-    let email = control.value;
-    if (email && email.indexOf("@") != -1) {
-      let [_, domain] = email.split("@");
-      if (domain !== "studenti.polito.it" && domain !== "polito.it") {
-        return {
-          emailDomain: {
-            parsedDomain: domain
-          }
-        }
-      }
-    }
-    return null;
-  }
 
 }

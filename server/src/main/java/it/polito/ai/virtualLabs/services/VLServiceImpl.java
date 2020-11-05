@@ -376,6 +376,9 @@ public class VLServiceImpl implements VLService{
                                 evictTeam(t.getId());
                             }
                         }
+                    }else{
+                        List<Homework> homeworkStudent = student.getHomeworks().stream().filter(h -> h.getAssignment().getCourseAssignment().equals(course.get())).collect(Collectors.toList());
+                        homeworkRepository.deleteAll(homeworkStudent);
                     }
                     ret.add(student);
                 }

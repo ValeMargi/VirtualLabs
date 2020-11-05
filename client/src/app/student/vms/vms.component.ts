@@ -83,6 +83,8 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
     dialogConfig.autoFocus = true;
     const dialogRef = this.dialog.open(CreateVmsContComponent,{ id: 'dialogCreateVms'});
 
+    dialogRef.componentInstance.TEAM = this.team;
+
     dialogRef.afterClosed().subscribe(result => {
       const queryParams = {}
       this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });

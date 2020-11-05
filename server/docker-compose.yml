@@ -20,7 +20,7 @@ services:
     ports:
       - "3307:3306"
     volumes:
-        - ./test_dati:/var/lib/mysql
+        - ./db_data:/var/lib/mysql
         - ./scripts:/docker-entrypoint-initdb.d:ro
     environment:
       MYSQL_ROOT_PASSWORD: pwd

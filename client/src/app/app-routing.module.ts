@@ -32,7 +32,7 @@ import { ChangePasswordContComponent } from './change-password/change-password-c
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'page-not-found', component: PageNotFoundComponent },
-  { path: 'register/:success', component: RegisterSuccessComponent },
+  { path: 'register/confirmation', component: RegisterSuccessComponent },
   //{ path: 'team/:success/:token', component: TeamPartecipationComponent },
   { path: ':role/course/:courses/:tab/not-allowed', component: UserNotAllowedComponent },
   { path: 'user/password-reset', component: ChangePasswordContComponent },

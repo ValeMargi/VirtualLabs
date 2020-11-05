@@ -88,7 +88,7 @@
             <th mat-header-cell mat-sort-header *matHeaderCellDef> Altri partecipanti </th>
             <td *matCellDef="let row">
               <ng-container *ngFor="let i of row.students">
-                ∎ {{i.student}}
+                ∎ {{getOthers(i)}}
                 <br/>
               </ng-container>
 
@@ -129,7 +129,7 @@
             <th mat-header-cell mat-sort-header *matHeaderCellDef> Altri partecipanti </th>
             <td *matCellDef="let row">
               <ng-container *ngFor="let i of row.students">
-                ∎ {{i.student}}
+                ∎ {{getOthers(i)}}
                 <br/>
               </ng-container>
 

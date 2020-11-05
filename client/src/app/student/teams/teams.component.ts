@@ -175,6 +175,20 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     return this.invited;
   }
 
+  getOthers(s: any) {
+    let text: string = '';
+    text = text.concat(s.student + " ➥ ");
+
+    if (s.status == true) {
+      text = text.concat("Richiesta accettata");
+    }
+    else {
+      text = text.concat("In attesa di risposta");
+    }
+
+    return text;
+  }
+
   setTableProposals() {
     const props: Proposal[] = [];
     const propsAccepted: Proposal[] = [];

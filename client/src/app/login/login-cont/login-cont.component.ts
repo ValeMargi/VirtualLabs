@@ -34,6 +34,8 @@ export class LoginContComponent implements OnInit {
 
     this.md5 = new Md5();
 
+    this.BAD_CREDENTIALS = false;
+
     this.authService.login(email, this.md5.start().appendStr(password).end().toString()).subscribe(
       (data) => {
         this.authService.setSession(data);

@@ -54,8 +54,6 @@ LoginForm: FormGroup;
       return;
     }
     else {
-      this.badCredentials = false;
-
       this.log.emit({email: email.toLowerCase(), password: password});
     }
   }

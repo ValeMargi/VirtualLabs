@@ -23,7 +23,7 @@ export class CourseService {
 
   constructor(private http: HttpClient) {}
 
-  API_COURSES = "http://localhost:8080/API/courses";
+  API_COURSES = "http://172.18.0.3:8080/API/courses";
 
 
   setCurrentCourse(course: Course) {

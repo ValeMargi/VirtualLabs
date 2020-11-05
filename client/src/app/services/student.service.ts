@@ -22,7 +22,7 @@ export class StudentService {
 
   constructor(private http: HttpClient) {}
 
-  API_STUDENTS = "http://localhost:8080/API/students";
+  API_STUDENTS = "http://172.18.0.3:8080/API/students";
 
   currentStudent: Student;
   currentAvatar: File;

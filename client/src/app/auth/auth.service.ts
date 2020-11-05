@@ -16,7 +16,7 @@ import { Teacher } from '../models/teacher.model';
   providedIn: 'root'
 })
 export class AuthService {
-  API_AUTH = 'http://localhost:8080/API';
+  API_AUTH = 'http://172.18.0.3:8080/API';
 
   @Output('userLogged') userLogged = new EventEmitter<boolean>();
   user: Observable<User>;
@@ -31,7 +31,7 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    return this.http.post(`http://localhost:8080/login`,
+    return this.http.post(`http://172.18.0.3:8080/login`,
     { "username": email, "password": password });
   }
 

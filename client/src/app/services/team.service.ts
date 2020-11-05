@@ -15,7 +15,7 @@ export class TeamService {
 
   constructor(private http: HttpClient) {}
 
-  API_TEAMS = "http://localhost:8080/API/teams";
+  API_TEAMS = "http://172.18.0.3:8080/API/teams";
 
   proposal: EventEmitter<Proposal> = new EventEmitter<Proposal>();
 
@@ -62,12 +62,12 @@ export class TeamService {
 
   confirm(token: string) {
     //0 = non valido, 1 = conferma, 2 = creato
-    return this.http.get<number>(`http://localhost:8080/API/notification/confirm/${token}`);
+    return this.http.get<number>(`http://172.18.0.3:8080/API/notification/confirm/${token}`);
   }
 
   refuse(token: string) {
     //0 = non valido, 1 = respinto
-    return this.http.get<number>(`http://localhost:8080/API/notification/reject/${token}`);
+    return this.http.get<number>(`http://172.18.0.3:8080/API/notification/reject/${token}`);
   }
 
 }

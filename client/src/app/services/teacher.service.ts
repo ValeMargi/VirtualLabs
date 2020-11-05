@@ -17,7 +17,7 @@ import { PhotoVM } from '../models/photo-vm.model';
 })
 export class TeacherService {
 
-  API_PROFESSORS = "http://localhost:8080/API/professors";
+  API_PROFESSORS = "http://172.18.0.3:8080/API/professors";
 
   currentTeacher: Teacher;
   currentAvatar: any;

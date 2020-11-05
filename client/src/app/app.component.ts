@@ -244,7 +244,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   get registerSuccess() {
-    return this.route.snapshot.queryParams['regtoken'];
+    return this.route.snapshot.params["success"];
   }
 
   setCourses() {

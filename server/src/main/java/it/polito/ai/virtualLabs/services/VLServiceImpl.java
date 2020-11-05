@@ -620,6 +620,13 @@ public class VLServiceImpl implements VLService{
                     }
 
                 }
+
+                List<Assignment> assignmentsCourse = c.getAssignments();
+                for(Assignment assignment: assignmentsCourse) {
+                    homeworkRepository.deleteAll(assignment.getHomeworks());
+                }
+                assignmentRepository.deleteAll(assignmentsCourse);
+
                 if( c.getPhotoModelVM()!=null)
                     photoModelVMRepository.delete(c.getPhotoModelVM());
 

@@ -8,40 +8,30 @@
       <mat-form-field>
           <input #maxVcpu class="input" type="number" placeholder="Massimo VCPU" formControlName="max_vcpu" matInput required>
           <mat-error *ngIf="ModelVmForm.get('max_vcpu').hasError('required')">Inserisci un numero massimo di vcpu</mat-error>
-          <mat-error *ngIf="ModelVmForm.get('max_vcpu').hasError('min')">Minimo 1</mat-error>
-          <mat-error *ngIf="ModelVmForm.get('max_vcpu').hasError('max')">Massimo 24 </mat-error>
       </mat-form-field><br><br>
 
       <!--Massimo disco-->
       <mat-form-field>
           <input #maxDisk class="input" type="number" placeholder="Massimo disco" formControlName="max_disco" matInput min="10" max="500" required>
           <mat-error *ngIf="ModelVmForm.get('max_disco').hasError('required')">Inserisci una dimensione massima del disco</mat-error>
-          <mat-error *ngIf="ModelVmForm.get('max_disco').hasError('min')">Minimo 10 MB</mat-error>
-          <mat-error *ngIf="ModelVmForm.get('max_disco').hasError('max')">Massimo 500 MB </mat-error>
       </mat-form-field><br><br>
 
       <!--Massima RAM-->
       <mat-form-field>
           <input #ram class="input" type="number" placeholder="Massima RAM" formControlName="max_ram" matInput min="1" max="250" required>
           <mat-error *ngIf="ModelVmForm.get('max_ram').hasError('required')">Inserisci una dimensione massima della RAM</mat-error>
-          <mat-error *ngIf="ModelVmForm.get('max_ram').hasError('min')">Minimo 1MB</mat-error>
-          <mat-error *ngIf="ModelVmForm.get('max_ram').hasError('max')">Massimo 250 MB </mat-error>
       </mat-form-field><br><br>
 
       <!--Massimo VM-->
       <mat-form-field>
           <input #totInstances class="input" type="number" placeholder="Massimo VM" formControlName="max_vm" matInput min="1" max="10" required>
           <mat-error *ngIf="ModelVmForm.get('max_vm').hasError('required')">Inserisci un numero massimo di VM</mat-error>
-          <mat-error *ngIf="ModelVmForm.get('max_vm').hasError('min')">Minimo 1</mat-error>
-          <mat-error *ngIf="ModelVmForm.get('max_vm').hasError('max')">Massimo 10</mat-error>
       </mat-form-field><br><br>
 
       <!--Massimo VM attive-->
       <mat-form-field>
           <input #runningInstances class="input" type="number" placeholder="Massimo VM attive" formControlName="max_vm_active" matInput min="1" max="10" required>
           <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('required')">Inserisci un numero massimo di VM attive</mat-error>
-          <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('min')">Minimo 1</mat-error>
-          <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('max')">Massimo 10</mat-error>
       </mat-form-field><br><br>
 
   </form>

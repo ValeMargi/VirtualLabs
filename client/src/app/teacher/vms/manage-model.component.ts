@@ -21,11 +21,11 @@ export class ManageModelComponent implements OnInit, OnChanges {
               private dialogRef: MatDialogRef<ManageModelComponent>
               ) {
       this.ModelVmForm = this.formBuilder.group({
-        max_vcpu : new FormControl('', [Validators.required, Validators.min(1),Validators.max(24)]),
-        max_disco : new FormControl('', [Validators.required, Validators.min(10),Validators.max(500)]),
-        max_ram : new FormControl('', [Validators.required, Validators.min(1),Validators.max(250)]),
-        max_vm : new FormControl('', [Validators.required, Validators.min(1),Validators.max(10)]),
-        max_vm_active : new FormControl('', [Validators.required, Validators.min(1),Validators.max(10)])
+        max_vcpu : new FormControl('', [Validators.required]),
+        max_disco : new FormControl('', [Validators.required]),
+        max_ram : new FormControl('', [Validators.required]),
+        max_vm : new FormControl('', [Validators.required]),
+        max_vm_active : new FormControl('', [Validators.required])
       });
     }
 
@@ -52,7 +52,7 @@ export class ManageModelComponent implements OnInit, OnChanges {
       window.alert("Controllare che i dati inseriti rispettino tutti i vincoli e riprovare");
       return;
     }
-    
+
     this.modelvm.maxVcpu = Number(maxVcpu);
     this.modelvm.diskSpace = Number(maxDisk);
     this.modelvm.ram = Number(ram);

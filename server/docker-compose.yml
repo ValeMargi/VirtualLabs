@@ -21,9 +21,9 @@ services:
       - "3307:3306"
     volumes:
       #- "~/db_data:/var/lib/mysql"
-      - ./test_dati:/var/lib/mysql
+        - ./test_dati:/var/lib/mysql
     #      - .server//mariadb/database:/var/lib/mysql
-    #      - .server/mariadb/scripts:/docker-entrypoint-initdb.d:ro
+        - ./scripts:/docker-entrypoint-initdb.d:ro
     environment:
       MYSQL_ROOT_PASSWORD: pwd
       MYSQL_USER: root

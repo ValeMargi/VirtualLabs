@@ -1,0 +1,5 @@
+INSERT INTO virtualLabs.team (id, creator_id, disk_space_left, max_vpcu_left, name, ram_left, running_instances, status, tot_instances, course_id) VALUES (58, 's1', 0, 0, 'Team1_AI', 0, 10, 1, 9, 'architetture-e-sistemi-di-elaborazione');
+INSERT INTO virtualLabs.team (id, creator_id, disk_space_left, max_vpcu_left, name, ram_left, running_instances, status, tot_instances, course_id) VALUES (93, 's2', 0, 0, 'T1', 0, 10, 1, 9, 'applicazioni-internet');
+INSERT INTO virtualLabs.team (id, creator_id, disk_space_left, max_vpcu_left, name, ram_left, running_instances, status, tot_instances, course_id) VALUES (103, 's1', 0, 0, 'Team1', 0, 9, 1, 9, 'applicazioni-internet');
+INSERT INTO virtualLabs.team (id, creator_id, disk_space_left, max_vpcu_left, name, ram_left, running_instances, status, tot_instances, course_id) VALUES (110, 's3', 0, 0, 'tt', 0, 10, 1, 9, 'applicazioni-internet');
+INSERT INTO virtualLabs.team (id, creator_id, disk_space_left, max_vpcu_left, name, ram_left, running_instances, status, tot_instances, course_id) VALUES (115, 's1', 100, 4, 'T1_MA', 8, 10, 1, 10, 'mobile-applications');

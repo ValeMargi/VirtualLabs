@@ -1,0 +1,4 @@
+INSERT INTO virtualLabs.vm (id, disk_space, namevm, num_vcpu, ram, status, timestamp, course_id, photo_id, team_id) VALUES (59, 100, 'vm1', 4, 8, 'off', '2020-11-02 16:53:58.725', 'architetture-e-sistemi-di-elaborazione', 60, 58);
+INSERT INTO virtualLabs.vm (id, disk_space, namevm, num_vcpu, ram, status, timestamp, course_id, photo_id, team_id) VALUES (94, 100, 'Vm', 4, 8, 'off', null, 'applicazioni-internet', 95, 93);
+INSERT INTO virtualLabs.vm (id, disk_space, namevm, num_vcpu, ram, status, timestamp, course_id, photo_id, team_id) VALUES (104, 100, 'Vm', 4, 8, 'on', null, 'applicazioni-internet', 105, 103);
+INSERT INTO virtualLabs.vm (id, disk_space, namevm, num_vcpu, ram, status, timestamp, course_id, photo_id, team_id) VALUES (111, 100, 'VMM', 4, 8, 'off', null, 'applicazioni-internet', 112, 110);

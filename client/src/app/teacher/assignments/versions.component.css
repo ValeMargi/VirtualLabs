@@ -9,9 +9,19 @@
 }
 .mat-list-option{
   padding: 0 0px;
+  cursor: default;
 }
+
+
+.mat-list-option:active{
+  background-color: transparent;
+}
+
+.mat-list-option:visited{
+  background-color: transparent;
+}
+
 .bt-rev{
-  padding-right:0.5%;
   margin-left: 1%;
 }
 

@@ -23,17 +23,17 @@
                   <br/>
                     <h3 class="title"><strong>Versioni</strong></h3>
                     <mat-divider></mat-divider>
-                    <mat-selection-list [multiple]="false">
+                    <mat-selection-list [multiple]="false" >
                         <mat-list-option *ngFor="let ver of versions" [value]="ver">
                           <mat-divider></mat-divider>
                             <div style="display: flex;">
                                 <div style="text-align: center; vertical-align: middle;">{{ ver.timestamp }}</div>
 
-                                <button class="bt-rev" mat-flat-button (click)="openVersionImage(ver)">
-                                  Visualizza  <mat-icon>subject </mat-icon>
+                                <button class="bt-rev" type="button" mat-flat-button color="accent" (click)="openVersionImage(ver)">
+                                  Visualizza
                               </button>
 
-                                <button class="bt-rev" mat-flat-button color="primary" (click)="showCorrections(ver)">
+                                <button class="bt-rev" type="button"  mat-flat-button color="primary" (click)="showCorrections(ver)">
                                     Revisioni <mat-icon>keyboard_arrow_right</mat-icon>
                                 </button>
                             </div>
@@ -49,8 +49,8 @@
                           <div style="display: flex;">
                             <div style="text-align: center; vertical-align: middle;">{{ cor.timestamp }}</div>
 
-                            <button class="bt-rev" mat-flat-button  (click)="openCorrectionImage(cor)">
-                              Visualizza  <mat-icon>subject </mat-icon>
+                            <button class="bt-rev" mat-flat-button color="accent" (click)="openCorrectionImage(cor)">
+                              Visualizza
                           </button>
                         </div>
                         </mat-list-option>

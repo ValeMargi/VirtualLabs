@@ -25,10 +25,25 @@
 
 .mat-list-option{
   padding: 0 0px;
+  cursor: default;
+  background:transparent;
+  outline:none;
+
 }
+
+
+.mat-list-option:active{
+  background-color: transparent;
+}
+
+.mat-list-option:visited{
+  background-color: transparent;
+}
+
+
 .bt-rev{
-  padding-right:0.5%;
   margin-left:1%;
+  margin-right:1%;
 }
 
 .versions {
@@ -54,11 +69,3 @@
   background-color:#001ea34d;
 }
 
-.mat-list-option:active{
-  background-color:#281fa846;
-  color: black;
-}
-.mat-list-option:hover{
-  background-color:#001ea34d;
-  color: black;
-}

@@ -8,6 +8,7 @@ import { Student } from 'src/app/models/student.model';
 import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ThrowStmt } from '@angular/compiler';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-team-vms',
@@ -42,7 +43,8 @@ export class TeamVmsComponent implements OnInit, OnChanges {
 
   VMsVisibility: boolean = false;
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog,
+              private location: Location) { }
 
   ngOnInit(): void {
     this.manageTable();
@@ -58,6 +60,10 @@ export class TeamVmsComponent implements OnInit, OnChanges {
     }
 
     this.manageTable();
+  }
+
+  backToGroups() {
+    this.location.back();
   }
 
   manageTable() {

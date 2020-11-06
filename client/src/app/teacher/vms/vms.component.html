@@ -1,6 +1,9 @@
-<mat-card class="card">
+<mat-card class="card" *ngIf="!teamVMsVisibility">
     <mat-card-header>
-        <mat-card-title>Macchine virtuali degli studenti</mat-card-title>
+        <mat-card-title>
+            <mat-icon>groups</mat-icon>
+            Gruppi degli studenti
+        </mat-card-title>
         <mat-card-subtitle *ngIf="!teamsVisibility">Nessun team in questo corso</mat-card-subtitle>
         <mat-card-subtitle *ngIf="teamsVisibility">Selezionare un team</mat-card-subtitle>
 
@@ -20,8 +23,9 @@
                         {{ team.name }} </mat-list-option>
                 </mat-selection-list>
             </div>
-            <router-outlet></router-outlet>
-            <app-team-vms-cont class="tableContainer" *ngIf="teamVMsVisibility"></app-team-vms-cont> 
         </div>
     </mat-card-content>
 </mat-card>
+
+<app-team-vms-cont *ngIf="false"></app-team-vms-cont> 
+<router-outlet (activate)="onRouterOutletActivate($event)" (deactivate)="onRouterOutletDeactivate($event)"></router-outlet>

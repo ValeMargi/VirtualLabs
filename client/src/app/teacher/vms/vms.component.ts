@@ -43,6 +43,14 @@ export class VmsComponent implements OnInit, OnChanges, OnDestroy {
     this.routeQueryParams$.unsubscribe();
   }
 
+  onRouterOutletActivate(event: any) {
+    this.teamVMsVisibility = true;
+  }
+
+  onRouterOutletDeactivate(event: any) {
+    this.teamVMsVisibility = false;
+  }
+
   manageTeamsVisibility() {
     if (this.teams.length > 0) {
       this.teamsVisibility = true;

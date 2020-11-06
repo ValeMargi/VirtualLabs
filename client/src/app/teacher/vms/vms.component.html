@@ -6,7 +6,7 @@
 
         <!-- Bottone Modello Vm -->
         <div class="button-request" align="right">
-            <button mat-button  align ="end" mat-raised-button color="primary" (click)="openDialogModel()">
+            <button mat-button  align ="end" mat-raised-button color="primary" (click)="routeToEditModel()">
                 <mat-icon>desktop_windows</mat-icon>Modifica modello VM
             </button>
         </div>
@@ -21,7 +21,7 @@
                 </mat-selection-list>
             </div>
             <router-outlet></router-outlet>
-            <app-team-vms-cont class="tableContainer" [team]="TEAM" *ngIf="teamVMsVisibility"></app-team-vms-cont> 
+            <app-team-vms-cont class="tableContainer" *ngIf="teamVMsVisibility"></app-team-vms-cont> 
         </div>
     </mat-card-content>
 </mat-card>

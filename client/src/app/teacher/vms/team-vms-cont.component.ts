@@ -16,8 +16,8 @@ import { ActivatedRoute } from '@angular/router';
 export class TeamVmsContComponent implements OnInit, OnDestroy {
   private route$: Subscription;
 
-  @Input() team: Team;
   VMs: VMOwners[] = []
+  RESOURCES: any;
 
   constructor(private teamService: TeamService,
               private courseService: CourseService,
@@ -44,6 +44,15 @@ export class TeamVmsContComponent implements OnInit, OnDestroy {
               }
             );
           });
+
+          this.teacherService.getResourcesVM(params.idT).subscribe(
+            (data) => {
+              this.RESOURCES = data;
+            },
+            (error) => {
+              window.alert(error.error.message);
+            }
+          )
         },
         (error) => {
           window.alert(error.error.message);

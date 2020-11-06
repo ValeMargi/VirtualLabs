@@ -30,7 +30,7 @@ LoginForm: FormGroup;
       private router: Router) {
 
       this.LoginForm = this.formBuilder.group({
-        email: new FormControl('',[Validators.email]),
+        email: new FormControl('',[Validators.email, this.emailDomainValidator]),
         password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
       });
 
@@ -47,6 +47,23 @@ LoginForm: FormGroup;
   close() {
     this.dialogRef.close();
   }
+
+
+emailDomainValidator(control: FormControl) {
+  let email = control.value;
+  if (email && email.indexOf("@") != -1) {
+    let [_, domain] = email.toLowerCase().split("@");
+    if (domain !== "studenti.polito.it" && domain !== "polito.it") {
+      return {
+        emailDomain: {
+          parsedDomain: domain
+        }
+      }
+    }
+  }
+  return null;
+
+}
 
   login(email: string, password:string) {
     if (!this.LoginForm.valid) {

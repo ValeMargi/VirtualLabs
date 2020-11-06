@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CourseService } from 'src/app/services/course.service';
 import { StudentService } from 'src/app/services/student.service';
 import { TeacherService } from 'src/app/services/teacher.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-view-image-cont',
@@ -141,6 +142,8 @@ export class ViewImageContComponent implements OnInit {
     this.studentService.useVM(this.courseService.currentCourse.getValue().name, this.data.vmId, file).subscribe(
       (data) => {
         if (data) {
+          this.TIMESTAMP = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+          
           const reader = new FileReader();
           reader.readAsDataURL(file);
           reader.onload = (_event) => { 

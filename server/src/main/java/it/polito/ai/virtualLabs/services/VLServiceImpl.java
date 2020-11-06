@@ -772,7 +772,7 @@ public class VLServiceImpl implements VLService{
         if( course.get().getPhotoModelVM()!=null){
             Course c =course.get();
             team.setDiskSpaceLeft(c.getDiskSpace());
-            team.setMaxVpcuLeft(c.getMaxVcpu());
+            team.setMaxVcpuLeft(c.getMaxVcpu());
             team.setRamLeft(c.getRam());
             team.setRunningInstances(c.getRunningInstances());
             team.setTotInstances(c.getRunningInstances());
@@ -835,7 +835,7 @@ public class VLServiceImpl implements VLService{
             // se status==true, proposta già accettata
             m.put("status", tokenStudent.getStatus());
             m.put("scadenza", tokenStudent.getExpiryDate());
-            
+
             List<Map<String, Object>> l2 = new ArrayList<>();
             for(Token token: tokenRepository.findAllByTeamId(teamId).stream()
                     .filter(t->!t.getStudent().equals(s) && !t.getStudent().equals(stu)).collect(Collectors.toList())){
@@ -947,7 +947,7 @@ public class VLServiceImpl implements VLService{
                     teams.forEach(t-> {
                         t.setDiskSpaceLeft(courseDTO.getDiskSpace());
                         t.setRamLeft(courseDTO.getRam());
-                        t.setMaxVpcuLeft(courseDTO.getMaxVcpu());
+                        t.setMaxVcpuLeft(courseDTO.getMaxVcpu());
                         t.setTotInstances(courseDTO.getTotInstances());
                         t.setRunningInstances(courseDTO.getRunningInstances());
                     });
@@ -978,7 +978,7 @@ public class VLServiceImpl implements VLService{
                     int totalInstancesDecrease = c.getTotInstances() - courseDTO.getTotInstances();
                     for(Team t:teams){
                         if(     (diskSpaceDecrease>0 && t.getDiskSpaceLeft()<diskSpaceDecrease) ||
-                                (vcpuDecrease>0 && t.getMaxVpcuLeft()<vcpuDecrease) ||
+                                (vcpuDecrease>0 && t.getMaxVcpuLeft()<vcpuDecrease) ||
                                 (ramDecrease>0 && t.getRamLeft()<ramDecrease) ||
                                 (runningInstancesDecrease>0 && t.getRunningInstances()<runningInstancesDecrease) ||
                                 (totalInstancesDecrease>0 && t.getTotInstances()<totalInstancesDecrease))
@@ -991,9 +991,9 @@ public class VLServiceImpl implements VLService{
                     c.setRunningInstances(courseDTO.getRunningInstances());
 
                     teams.forEach(t-> {
-                        t.setDiskSpaceLeft(courseDTO.getDiskSpace()-diskSpaceDecrease);
+                        t.setDiskSpaceLeft(t.getDiskSpaceLeft()-diskSpaceDecrease);
                         t.setRamLeft(t.getRamLeft()-ramDecrease);
-                        t.setMaxVpcuLeft(t.getMaxVpcuLeft()-vcpuDecrease);
+                        t.setMaxVcpuLeft(t.getMaxVcpuLeft()-vcpuDecrease);
                         t.setTotInstances(t.getTotInstances()-totalInstancesDecrease);
                         t.setRunningInstances(t.getRunningInstances()-runningInstancesDecrease);
                     });
@@ -1032,7 +1032,7 @@ public class VLServiceImpl implements VLService{
                 Team t = teamRepository.getOne(s.getTeams().stream().filter(te->te.getCourse().equals(c)).findFirst().get().getId());
                 if(t.getVms().stream().anyMatch(v->v.getNameVM().equals(vmdto.getNameVM())))
                     throw new VMduplicatedException();
-                if( vmdto.getDiskSpace() <= t.getDiskSpaceLeft() && vmdto.getNumVcpu()<= t.getMaxVpcuLeft()
+                if( vmdto.getDiskSpace() <= t.getDiskSpaceLeft() && vmdto.getNumVcpu()<= t.getMaxVcpuLeft()
                     && vmdto.getRam() <= t.getRamLeft() && t.getTotInstances()>0){
                     if( vmdto.getDiskSpace()<=0 || vmdto.getNumVcpu()<=0 || vmdto.getRam()<=0)
                         throw new InvalidInputVMresources();
@@ -1053,7 +1053,7 @@ public class VLServiceImpl implements VLService{
                     t.getMembers().forEach(vm::addStudentToMemberList);
                     vm.setTeam(t);
                     t.setDiskSpaceLeft(t.getDiskSpaceLeft()-vmdto.getDiskSpace());
-                    t.setMaxVpcuLeft(t.getMaxVpcuLeft()-vmdto.getNumVcpu());
+                    t.setMaxVcpuLeft(t.getMaxVcpuLeft()-vmdto.getNumVcpu());
                     t.setRamLeft(t.getRamLeft()-vmdto.getRam());
                     t.setTotInstances(t.getTotInstances()-1);
                     VMRepository.save(vm);
@@ -1199,7 +1199,7 @@ public class VLServiceImpl implements VLService{
                 }
                 t.setTotInstances(t.getTotInstances()+1);
                 t.setRamLeft(vm.getRam()+t.getRamLeft());
-                t.setMaxVpcuLeft(vm.getNumVcpu()+t.getMaxVpcuLeft());
+                t.setMaxVcpuLeft(vm.getNumVcpu()+t.getMaxVcpuLeft());
                 t.setDiskSpaceLeft(vm.getDiskSpace()+t.getDiskSpaceLeft());
                 t.removeVM(vm);
                 c.removeVM(vm);
@@ -1229,11 +1229,11 @@ public class VLServiceImpl implements VLService{
                if(!vm.getStatus().equals("off") ) throw new VMnotOffException();
                 if (
                         vmdto.getDiskSpace() <= (t.getDiskSpaceLeft()+vm.getDiskSpace()) &&
-                        vmdto.getNumVcpu() <= (t.getMaxVpcuLeft()+vm.getNumVcpu()) &&
+                        vmdto.getNumVcpu() <= (t.getMaxVcpuLeft()+vm.getNumVcpu()) &&
                         vmdto.getRam() <= (t.getRamLeft()+vm.getRam())) {
                     t.setDiskSpaceLeft(t.getDiskSpaceLeft() + vm.getDiskSpace() - vmdto.getDiskSpace());
                     t.setRamLeft(t.getRamLeft() + vm.getRam() - vmdto.getRam());
-                    t.setMaxVpcuLeft(t.getMaxVpcuLeft() + vm.getNumVcpu() - vmdto.getNumVcpu());
+                    t.setMaxVcpuLeft(t.getMaxVcpuLeft() + vm.getNumVcpu() - vmdto.getNumVcpu());
                     vm.setNameVM(vmdto.getNameVM());
                     vm.setDiskSpace(vmdto.getDiskSpace());
                     vm.setRam(vmdto.getRam());
@@ -1344,7 +1344,7 @@ public class VLServiceImpl implements VLService{
         Course course = t.getCourse();
         if(!course.getProfessors().contains(p)) throw new PermissionDeniedException();
         Map<String, Object> resources = new HashMap<>();
-        resources.put("Vcpu", (course.getMaxVcpu()-t.getMaxVpcuLeft())+"/"+course.getMaxVcpu());
+        resources.put("Vcpu", (course.getMaxVcpu()-t.getMaxVcpuLeft())+"/"+course.getMaxVcpu());
         resources.put("diskSpace", (course.getDiskSpace()-t.getDiskSpaceLeft())+"/"+course.getDiskSpace());
         resources.put("ram", (course.getRam()-t.getRamLeft())+"/"+course.getRam());
         resources.put("running", (course.getRunningInstances()-t.getRunningInstances())+"/"+course.getRunningInstances());
@@ -1516,7 +1516,7 @@ public class VLServiceImpl implements VLService{
                 } else throw new AssignmentNotFoundException();
         }else throw new ProfessorNotFoundException();
     }
-    
+
 
     /*Metodo per ritornare la consegna di un dato corso*/
     @PreAuthorize("hasAuthority('professor')")

@@ -8,27 +8,30 @@
         <mat-form-field>
         <input #name type="text" placeholder="Nome VM" formControlName="name" matInput required>
         <mat-error *ngIf="createVmForm.get('name').hasError('required')">Campo obbligatorio </mat-error>
-        </mat-form-field>
+        </mat-form-field><br>
 
         <!--Vcpu-->
         <mat-form-field>
-        <input #vcpu class="input" type="number" placeholder="Numero di VCPU" formControlName="vcpu" matInput  value="4" required>
+        <input #vcpu class="input" type="number" placeholder="Numero di VCPU" formControlName="vcpu" matInput required>
         <mat-error *ngIf="createVmForm.get('vcpu').hasError('required')">Campo obbligatorio </mat-error>
-        <mat-error *ngIf="createVmForm.hasError('max','vcpu')">Numero di Vcpu disponibile: {{team.maxVpcuLeft}} </mat-error>
+        <mat-error *ngIf="createVmForm.hasError('max','vcpu')">VCpu disponibili: {{team.maxVcpuLeft}}</mat-error>
+        <mat-error *ngIf="createVmForm.hasError('min','vcpu')">Minimo 1 VCpu</mat-error>
         </mat-form-field><br>
 
         <!--Ram-->
         <mat-form-field>
-        <input #ram class="input" type="number" placeholder="Dimensione RAM (GB)" formControlName="ram" matInput value="8" required>
+        <input #ram class="input" type="number" placeholder="Dimensione RAM (GB)" formControlName="ram" matInput required>
         <mat-error *ngIf="createVmForm.get('ram').hasError('required')">Campo obbligatorio </mat-error>
-        <mat-error *ngIf="createVmForm.hasError('max','ram')">La Ram disponibile: {{team.ramLeft}} </mat-error>
+        <mat-error *ngIf="createVmForm.hasError('max','ram')">RAM disponibile: {{team.ramLeft}} GB</mat-error>
+        <mat-error *ngIf="createVmForm.hasError('min','ram')">Minimo 1 GB di RAM</mat-error>
         </mat-form-field><br>
 
         <!--Disk-->
         <mat-form-field>
-        <input #disk class="input" type="number" placeholder="Spazio disco (GB)" formControlName="disk" matInput  value="100" required>
+        <input #disk class="input" type="number" placeholder="Spazio disco (GB)" formControlName="disk" matInput required>
         <mat-error *ngIf="createVmForm.get('disk').hasError('required')">Campo obbligatorio </mat-error>
-        <mat-error *ngIf="createVmForm.hasError('max','disk')">Lo spazio disponibile: {{team.diskSpaceLeft}} </mat-error>
+        <mat-error *ngIf="createVmForm.hasError('max','disk')">Spazio disponibile: {{team.diskSpaceLeft}} GB</mat-error>
+        <mat-error *ngIf="createVmForm.hasError('min','disk')">Minimo 1 GB di spazio</mat-error>
         </mat-form-field><br>
   </form>
 

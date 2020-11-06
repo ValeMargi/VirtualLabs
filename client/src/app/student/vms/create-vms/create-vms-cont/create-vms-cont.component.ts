@@ -1,5 +1,5 @@
 import { TeamService } from './../../../../services/team.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Team } from 'src/app/models/team.model';
 import { VMOwners } from 'src/app/models/vm-owners.model';
@@ -15,7 +15,7 @@ import { CreateVmsComponent } from '../create-vms.component';
 })
 export class CreateVmsContComponent implements OnInit {
 
-    TEAM: Team;
+   TEAM: Team;
 
 
   constructor(private matDialogRef: MatDialogRef<CreateVmsComponent>,
@@ -24,15 +24,20 @@ export class CreateVmsContComponent implements OnInit {
     private teamService: TeamService) { }
 
   ngOnInit(): void {
-
-    this.teamService.getTeamForStudent(this.courseService.currentCourse.getValue().name,this.studentService.currentStudent.id).subscribe(
-      (data)=>{
+    this.teamService.getTeamForStudent(this.courseService.currentCourse.getValue().name, this.studentService.currentStudent.id).subscribe(
+      (data) => {
         this.TEAM = data;
+
+        if (this.TEAM != null && (this.TEAM.maxVcpuLeft == 0 || this.TEAM.diskSpaceLeft == 0 || this.TEAM.ramLeft == 0)) {
+          window.alert("Non ci sono più risorse a sufficienza per creare una nuova macchina virtuale");
+          this.matDialogRef.close();
+          return;
+        }
       },
-      (error)=>{
+      (error) => {
         window.alert(error.error.message);
       }
-      );
+    );
   }
 
   createVM(vm: VM) {
@@ -46,6 +51,5 @@ export class CreateVmsContComponent implements OnInit {
       }
     );
   }
-
 
 }

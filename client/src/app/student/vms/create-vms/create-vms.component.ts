@@ -18,7 +18,7 @@ export class CreateVmsComponent implements OnInit, OnChanges {
   constructor(private matDialogRef: MatDialogRef<CreateVmsComponent>,
               private formBuilder: FormBuilder) {
 
-    this.createVmForm =this.formBuilder.group({
+    this.createVmForm = this.formBuilder.group({
       name: new FormControl('', [Validators.required]),
       vcpu: new FormControl('', [Validators.required, Validators.min(1)]),
       ram: new FormControl('', [Validators.required, Validators.min(1)]),
@@ -34,14 +34,20 @@ export class CreateVmsComponent implements OnInit, OnChanges {
     if (changes.team != null) {
       this.team = changes.team.currentValue;
 
-      /*if (this.team != null) {
-        this.createVmForm =this.formBuilder.group({
+      if (this.team != null) {
+        this.createVmForm = this.formBuilder.group({
           name: new FormControl('', [Validators.required]),
-          vcpu: new FormControl('', [Validators.required, Validators.min(1), Validators.max(this.team.maxVpcuLeft)]),
-          ram: new FormControl('', [Validators.required, Validators.min(1)]),
-          disk: new FormControl('', [Validators.required, Validators.min(1)])
+          vcpu: new FormControl('', [Validators.required, Validators.min(1), Validators.max(this.team.maxVcpuLeft)]),
+          ram: new FormControl('', [Validators.required, Validators.min(1), Validators.max(this.team.ramLeft)]),
+          disk: new FormControl('', [Validators.required, Validators.min(1), Validators.max(this.team.diskSpaceLeft)])
         });
-      }*/
+
+        this.createVmForm.patchValue({
+          vcpu: this.team.maxVcpuLeft,
+          disk: this.team.diskSpaceLeft,
+          ram: this.team.ramLeft
+        });
+      }
     }
   }
 
@@ -49,23 +55,12 @@ export class CreateVmsComponent implements OnInit, OnChanges {
     this.matDialogRef.close();
   }
 
-  updateForm() {
-    return (control: AbstractControl) => {
-      return this.checkResources(control.value)/*.pipe(
-        map(res => {
-          // if res is true, username exists, return true
-          return res ? { usernameExists: true } : null;
-          // NB: Return null if there is no error
-        })
-      );*/
-    };
-  }
-
-  checkResources(value) {
-    console.log(value)
-  }
-
   createVM(vcpu: number, diskSpace: number, ram: number, name: string) {
+    if (!this.createVmForm.valid) {
+      window.alert("Controllare che i dati inseriti siano validi e riprovare");
+      return;
+    }
+
     let vm = new VM(-1, vcpu, diskSpace, ram, "", name, "");
     this.create.emit(vm);
   }

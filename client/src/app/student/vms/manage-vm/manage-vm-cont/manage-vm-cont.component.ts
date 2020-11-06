@@ -1,10 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Student } from 'src/app/models/student.model';
+import { Team } from 'src/app/models/team.model';
 import { VMOwners } from 'src/app/models/vm-owners.model';
 import { VM } from 'src/app/models/vm.model';
 import { CourseService } from 'src/app/services/course.service';
 import { StudentService } from 'src/app/services/student.service';
+import { TeamService } from 'src/app/services/team.service';
 
 @Component({
   selector: 'app-manage-vm-cont',
@@ -15,15 +17,26 @@ export class ManageVmContComponent implements OnInit {
 
   VM: VMOwners;
   STUDENTS_IN_TEAM: Student[] = [];
+  TEAM: Team;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
             private dialogRef: MatDialogRef<ManageVmContComponent>,
             private studentService: StudentService,
-            private courseService: CourseService) { }
+            private courseService: CourseService,
+            private teamService: TeamService) { }
 
   ngOnInit(): void {
     this.VM = this.data.vm;
     this.STUDENTS_IN_TEAM = this.data.members;
+
+    this.teamService.getTeamForStudent(this.courseService.currentCourse.getValue().name, this.studentService.currentStudent.id).subscribe(
+      (data) => {
+        this.TEAM = data;
+      },
+      (error) => {
+        window.alert(error.error.message);
+      }
+    );
   }
  
   updateVM(content: any) {

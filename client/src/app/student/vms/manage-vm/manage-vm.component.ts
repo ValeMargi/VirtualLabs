@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
@@ -6,6 +6,7 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Student } from 'src/app/models/student.model';
+import { Team } from 'src/app/models/team.model';
 import { VMOwners } from 'src/app/models/vm-owners.model';
 import { VM } from 'src/app/models/vm.model';
 
@@ -14,7 +15,7 @@ import { VM } from 'src/app/models/vm.model';
   templateUrl: './manage-vm.component.html',
   styleUrls: ['./manage-vm.component.css']
 })
-export class ManageVmComponent implements OnInit {
+export class ManageVmComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
   
   private sort: MatSort;
@@ -33,6 +34,7 @@ export class ManageVmComponent implements OnInit {
 
   @Input() studentsInTeam: Student[] = [];
   @Input() vm: VMOwners;
+  @Input() team: Team;
   @Output('update') update = new EventEmitter<any>();
   @Output('delete') delete = new EventEmitter<void>();
 
@@ -44,9 +46,9 @@ export class ManageVmComponent implements OnInit {
   ngOnInit(): void {
     this.ModelVmForm = this.formBuilder.group({
       name : new FormControl('', [Validators.required]),
-      vcpu : new FormControl('', [Validators.required, Validators.min(1),Validators.max(24)]),
-      disk : new FormControl('', [Validators.required, Validators.min(10),Validators.max(500)]),
-      ram : new FormControl('', [Validators.required, Validators.min(1),Validators.max(250)])
+      vcpu : new FormControl('', [Validators.required, Validators.min(1)]),
+      disk : new FormControl('', [Validators.required, Validators.min(1)]),
+      ram : new FormControl('', [Validators.required, Validators.min(1)])
     });
   
     this.ModelVmForm.setValue({
@@ -59,6 +61,28 @@ export class ManageVmComponent implements OnInit {
     this.setupFilter();
     this.dataSource = new MatTableDataSource<Student>(this.vm.owners);
     this.dataSource.sort = this.sort;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.team != null) {
+      this.team = changes.team.currentValue;
+
+      if (this.team != null) {
+        this.ModelVmForm = this.formBuilder.group({
+          name: new FormControl('', [Validators.required]),
+          vcpu: new FormControl('', [Validators.required, Validators.min(1), Validators.max(this.team.maxVcpuLeft + this.vm.numVcpu)]),
+          ram: new FormControl('', [Validators.required, Validators.min(1), Validators.max(this.team.ramLeft + this.vm.ram)]),
+          disk: new FormControl('', [Validators.required, Validators.min(1), Validators.max(this.team.diskSpaceLeft + this.vm.diskSpace)])
+        });
+
+        this.ModelVmForm.setValue({
+          name: this.vm.nameVM,
+          vcpu: this.vm.numVcpu,
+          disk: this.vm.diskSpace,
+          ram: this.vm.ram
+        });
+      }
+    }
   }
 
   setupFilter() {
@@ -110,6 +134,11 @@ export class ManageVmComponent implements OnInit {
   }
 
   editVM(name: string, vcpu: number, disk: number, ram: number) {
+    if (!this.ModelVmForm.valid) {
+      window.alert("Controllare che tutti i dati rispettino i vincoli e riprovare");
+      return;
+    }
+
     this.vm.nameVM = name;
     this.vm.numVcpu = Number(vcpu);
     this.vm.diskSpace = Number(disk);

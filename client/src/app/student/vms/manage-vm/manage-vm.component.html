@@ -10,26 +10,26 @@
 
     <!--VCPU-->
     <mat-form-field>
-        <input #vcpu class="input" type="number" placeholder="Numero VCPU" formControlName="vcpu" matInput required>
+        <input #vcpu class="input" type="number" placeholder="Numero di VCPU" formControlName="vcpu" matInput required>
         <mat-error *ngIf="ModelVmForm.get('vcpu').hasError('required')">Inserisci il numero di vcpu</mat-error>
-        <mat-error *ngIf="ModelVmForm.get('vcpu').hasError('min')">Minimo 1</mat-error>
-        <mat-error *ngIf="ModelVmForm.get('vcpu').hasError('max')">Massimo 24 </mat-error>
-    </mat-form-field><br><br>
-    
-    <!--Disco-->
-    <mat-form-field>
-        <input #disk class="input" type="number" placeholder="Numero disco" formControlName="disk" matInput min="10" max="500" required>
-        <mat-error *ngIf="ModelVmForm.get('disk').hasError('required')">Inserisci la dimensione del disco</mat-error>
-        <mat-error *ngIf="ModelVmForm.get('disk').hasError('min')">Minimo 10 MB</mat-error>
-        <mat-error *ngIf="ModelVmForm.get('disk').hasError('max')">Massimo 500 MB </mat-error>
+        <mat-error *ngIf="ModelVmForm.get('vcpu').hasError('min')">Minimo 1 VCpu</mat-error>
+        <mat-error *ngIf="ModelVmForm.get('vcpu').hasError('max')">VCpu disponibili: {{team.maxVcpuLeft}}</mat-error>
     </mat-form-field><br><br>
 
     <!--RAM-->
     <mat-form-field>
-        <input #ram class="input" type="number" placeholder="Numero RAM" formControlName="ram" matInput min="1" max="250" required>
+        <input #ram class="input" type="number" placeholder="Dimensione RAM (GB)" formControlName="ram" matInput min="1" max="250" required>
         <mat-error *ngIf="ModelVmForm.get('ram').hasError('required')">Inserisci la dimensione della RAM</mat-error>
-        <mat-error *ngIf="ModelVmForm.get('ram').hasError('min')">Minimo 1MB</mat-error>
-        <mat-error *ngIf="ModelVmForm.get('ram').hasError('max')">Massimo 250 MB </mat-error>
+        <mat-error *ngIf="ModelVmForm.get('ram').hasError('min')">Minimo 1 GB di RAM</mat-error>
+        <mat-error *ngIf="ModelVmForm.get('ram').hasError('max')">RAM disponibile: {{team.ramLeft}} GB</mat-error>
+    </mat-form-field><br><br>
+    
+    <!--Disco-->
+    <mat-form-field>
+        <input #disk class="input" type="number" placeholder="Spazio disco (GB)" formControlName="disk" matInput min="10" max="500" required>
+        <mat-error *ngIf="ModelVmForm.get('disk').hasError('required')">Inserisci la dimensione del disco</mat-error>
+        <mat-error *ngIf="ModelVmForm.get('disk').hasError('min')">Minimo 1 GB di spazio</mat-error>
+        <mat-error *ngIf="ModelVmForm.get('disk').hasError('max')">Spazio disponibile: {{team.diskSpaceLeft}} GB</mat-error>
     </mat-form-field><br><br>
 
     <div class="tableName"> <h3><strong>Owners della VM</strong></h3></div>

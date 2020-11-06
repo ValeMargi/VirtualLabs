@@ -69,11 +69,19 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
     this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
       if (params['createVm']) {
         this.openCreateVmsDialog();
-    }});
+      }
+      else if (params['editVm']) {
+        this.openDialogEdit(history.state.vm);
+      }
+    });
   }
 
   routeCreateVm() {
     this.router.navigate([], {queryParams: {createVm : "true"}});
+  }
+
+  routeToEditVm(vm: VMOwners) {
+    this.router.navigate([], {queryParams: {editVm : "true"}, state: {vm: vm}});
   }
 
   openCreateVmsDialog() {
@@ -89,12 +97,12 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
       const queryParams = {}
       this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
     });
-
   }
 
   ngOnDestroy() {
     this.routeQueryParams$.unsubscribe();
   }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes.team != null) {
       this.team = changes.team.currentValue;
@@ -141,6 +149,13 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   openDialogEdit(vm: VMOwners) {
+    if (vm == null) {
+      //se si ricarica la pagine, la vm non rimane nell'history state
+      const queryParams = {}
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+      return;
+    }
+
     let isOwner: boolean = false;
 
     vm.owners.forEach(s => {
@@ -171,7 +186,12 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
         members: this.members
     };
 
-    this.dialog.open(ManageVmContComponent, dialogConfig);
+    const dialogRef = this.dialog.open(ManageVmContComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      const queryParams = {}
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+    });
   }
 
   swithOnOffVm(vm: VMOwners) {

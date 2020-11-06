@@ -24,7 +24,6 @@ import { RegisterSuccessComponent } from './register-success/register-success.co
 import { AuthGuard} from './auth/auth.guard';
 import {LoginDialogComponent} from './login/login-dialog.component';
 import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.component';
-import { TeamPartecipationComponent } from './team-creation/team-partecipation.component';
 import { TeamVmsContComponent } from './teacher/vms/team-vms-cont.component';
 import { ChangePasswordContComponent } from './change-password/change-password-cont/change-password-cont.component';
 
@@ -33,7 +32,6 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'page-not-found', component: PageNotFoundComponent },
   { path: 'register/confirmation', component: RegisterSuccessComponent },
-  //{ path: 'team/:success/:token', component: TeamPartecipationComponent },
   { path: ':role/course/:courses/:tab/not-allowed', component: UserNotAllowedComponent },
   { path: 'user/password-reset', component: ChangePasswordContComponent },
   {

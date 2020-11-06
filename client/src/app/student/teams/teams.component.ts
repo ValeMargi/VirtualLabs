@@ -176,6 +176,10 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   getOthers(s: any) {
+    if (s.student == "(Nessun altro partecipante)") {
+      return s.student;
+    }
+
     let text: string = '';
     text = text.concat(s.student + " ➥ ");
 

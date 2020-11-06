@@ -175,7 +175,7 @@ create table team
         primary key,
     creator_id        varchar(255) null,
     disk_space_left   int          not null,
-    max_vpcu_left     int          not null,
+    max_vcpu_left     int          not null,
     name              varchar(255) null,
     ram_left          int          not null,
     running_instances int          not null,

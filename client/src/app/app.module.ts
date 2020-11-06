@@ -68,7 +68,6 @@ import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.componen
 import { VersionsComponent as VersionsComponentStudent } from './student/assignments/versions/versions.component';
 import { VersionsContComponent as VersionsContComponentStudent } from './student/assignments/versions/versions-cont/versions-cont.component';
 import { RegisterSuccessComponent } from './register-success/register-success.component';
-import { TeamPartecipationComponent } from './team-creation/team-partecipation.component';
 import { ManageVmComponent } from './student/vms/manage-vm/manage-vm.component';
 import { ManageVmContComponent } from './student/vms/manage-vm/manage-vm-cont/manage-vm-cont.component';
 import { ViewImageContComponent } from './view-image/view-image-cont/view-image-cont.component';
@@ -148,7 +147,6 @@ export const MY_FORMATS = {
     VersionsComponentStudent,
     VersionsContComponentStudent,
     RegisterSuccessComponent,
-    TeamPartecipationComponent,
     ManageVmComponent,
     ManageVmContComponent,
     ViewImageContComponent,

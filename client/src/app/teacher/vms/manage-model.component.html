@@ -12,13 +12,13 @@
 
       <!--Massimo disco-->
       <mat-form-field>
-          <input #maxDisk class="input" type="number" placeholder="Massimo disco" formControlName="max_disco" matInput min="10" max="500" required>
+          <input #maxDisk class="input" type="number" placeholder="Massimo disco (GB)" formControlName="max_disco" matInput min="10" max="500" required>
           <mat-error *ngIf="ModelVmForm.get('max_disco').hasError('required')">Inserisci una dimensione massima del disco</mat-error>
       </mat-form-field><br><br>
 
       <!--Massima RAM-->
       <mat-form-field>
-          <input #ram class="input" type="number" placeholder="Massima RAM" formControlName="max_ram" matInput min="1" max="250" required>
+          <input #ram class="input" type="number" placeholder="Massima RAM (GB)" formControlName="max_ram" matInput min="1" max="250" required>
           <mat-error *ngIf="ModelVmForm.get('max_ram').hasError('required')">Inserisci una dimensione massima della RAM</mat-error>
       </mat-form-field><br><br>
 

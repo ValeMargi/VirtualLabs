@@ -22,6 +22,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
 
   selectedPhoto: File;
   ChangePasswordForm: FormGroup;
+  panelOpenState = false;
 
   constructor(private dialogRef: MatDialogRef<EditProfileComponent>,
               private formBuilder: FormBuilder) {

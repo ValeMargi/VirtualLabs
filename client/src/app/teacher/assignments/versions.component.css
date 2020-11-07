@@ -12,7 +12,6 @@
   cursor: default;
 }
 
-
 .mat-list-option:active{
   background-color: transparent;
 }
@@ -67,6 +66,8 @@
 }
 
 .upload {
-    display: inline-block;
-    margin-top: 1em;
+  margin-left:50%;
+  margin-bottom: 1em;
+  display: inline-block;
+  margin-top: 1em;
 }

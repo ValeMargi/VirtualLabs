@@ -1,16 +1,16 @@
 <mat-card class="cardVersion">
   <mat-card-header class="header">
-   <mat-card-title>
-     <button class = "iconClose" mat-icon-button color="primary" (click)="back()">
-      <mat-icon>close</mat-icon></button>
-            Versioni elaborato
-        </mat-card-title>
-
-        <button mat-raised-button color="primary" class="upload" onclick="this.blur()" *ngIf="homework != null && !homework.permanent && homework.status != 'NULL'"
-        (click)="routeUploadVersion()">
-        <mat-icon>cloud_upload</mat-icon> Carica versione
+      <mat-card-title>
+        <button class = "iconClose" mat-icon-button color="primary" (click)="back()">
+          <mat-icon>close</mat-icon>
         </button>
+        Versioni elaborato
+      </mat-card-title>
 
+      <button mat-raised-button color="primary" class="upload" onclick="this.blur()" *ngIf="homework != null && !homework.permanent && homework.status != 'NULL'"
+      (click)="routeUploadVersion()">
+      <mat-icon>cloud_upload</mat-icon> Carica versione
+      </button>
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content>
@@ -54,9 +54,7 @@
                           </button>
                         </div>
                         </mat-list-option>
-
                     </mat-selection-list>
-
 
                     <div *ngIf="corrsToShow.length == 0">
                     <h4>Nessuna correzione per questa versione</h4>

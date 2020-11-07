@@ -6,10 +6,10 @@ export class Team {
     public maxVcpuLeft: number;
     public diskSpaceLeft: number;
     public ramLeft: number;
-    public runningInstances: number;
-    public totInstances: number;
+    public runningInstancesLeft: number;
+    public totInstancesLeft: number;
 
-    constructor(id: number, creatorId: string, name: string, status: number, maxVcpuLeft: number, diskSpaceLeft: number, ramLeft: number, runningInstances: number, totInstances: number) {
+    constructor(id: number, creatorId: string, name: string, status: number, maxVcpuLeft: number, diskSpaceLeft: number, ramLeft: number, runningInstancesLeft: number, totInstancesLeft: number) {
         this.id = id;
         this.creatorId = creatorId;
         this.name = name;
@@ -17,7 +17,7 @@ export class Team {
         this.maxVcpuLeft = maxVcpuLeft;
         this.diskSpaceLeft = diskSpaceLeft;
         this.ramLeft = ramLeft;
-        this.runningInstances = runningInstances;
-        this.totInstances = totInstances;
+        this.runningInstancesLeft = runningInstancesLeft;
+        this.totInstancesLeft = totInstancesLeft;
     }
 }

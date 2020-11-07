@@ -102,4 +102,8 @@ export class CourseService {
     return this.http.get<PhotoHomeworkCorrection>(`${this.API_COURSES}/${courseName}/${assignmentId}/${homeworkId}/${correctionId}/correction`);
   }
 
+  getMaxResources(courseName: string) {
+    return this.http.get<any>(`${this.API_COURSES}/${courseName}/maxResources`);
+  }
+
 }

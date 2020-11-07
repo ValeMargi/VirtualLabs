@@ -14,6 +14,7 @@ import { Team } from 'src/app/models/team.model';
 export class ManageModelComponent implements OnInit, OnChanges {
 
   @Input() modelvm: Course;
+  @Input() totRes: any;
   @Output() update: EventEmitter<Course> = new EventEmitter<Course>();
 
   ModelVmForm: FormGroup;
@@ -39,22 +40,27 @@ export class ManageModelComponent implements OnInit, OnChanges {
       this.modelvm = changes.modelvm.currentValue;
     }
 
-    //gestire
-    this.ModelVmForm = this.formBuilder.group({
-      max_vcpu : new FormControl('', [Validators.required, Validators.min(1)]),
-      max_disco : new FormControl('', [Validators.required, Validators.min(1)]),
-      max_ram : new FormControl('', [Validators.required, Validators.min(1)]),
-      max_vm : new FormControl('', [Validators.required, Validators.min(1)]),
-      max_vm_active : new FormControl('', [Validators.required, Validators.min(1)])
-    });
+    if (changes.totRes != null) {
+      this.totRes = changes.totRes.currentValue;
 
-    this.ModelVmForm.setValue({
-      max_vcpu: this.modelvm.maxVcpu,
-      max_disco: this.modelvm.diskSpace,
-      max_ram: this.modelvm.ram,
-      max_vm: this.modelvm.totInstances,
-      max_vm_active: this.modelvm.runningInstances
-    });
+      if (this.totRes != null) {
+        this.ModelVmForm = this.formBuilder.group({
+          max_vcpu : new FormControl('', [Validators.required, Validators.min(this.totRes.vcpu)]),
+          max_disco : new FormControl('', [Validators.required, Validators.min(this.totRes.diskSpace)]),
+          max_ram : new FormControl('', [Validators.required, Validators.min(this.totRes.ram)]),
+          max_vm : new FormControl('', [Validators.required, Validators.min(this.totRes.total)]),
+          max_vm_active : new FormControl('', [Validators.required, Validators.min(this.totRes.running)])
+        });
+
+        this.ModelVmForm.setValue({
+          max_vcpu: this.modelvm.maxVcpu,
+          max_disco: this.modelvm.diskSpace,
+          max_ram: this.modelvm.ram,
+          max_vm: this.modelvm.totInstances,
+          max_vm_active: this.modelvm.runningInstances
+        });
+      }
+    }
   }
 
   saveModel(maxVcpu: number, maxDisk: number, ram: number, totInstances: number, runningInstances: number) {

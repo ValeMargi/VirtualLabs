@@ -15,6 +15,7 @@ export class ManageModelContComponent implements OnInit {
 
   courseName: string;
   MODEL_VM: Course;
+  TOT_RES: any;
 
   constructor(private courseService: CourseService, 
               private teacherService: TeacherService,
@@ -26,6 +27,15 @@ export class ManageModelContComponent implements OnInit {
     this.courseService.getOne(this.courseName).subscribe(
       (data) => {
         this.MODEL_VM = data;
+
+        this.courseService.getMaxResources(this.courseName).subscribe(
+          (data) => {
+            this.TOT_RES = data;
+          },
+          (error) => {
+            window.alert(error.error.message);
+          }
+        )
       },
       (error) => {
         window.alert(error.error.message);

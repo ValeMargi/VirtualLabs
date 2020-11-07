@@ -4,6 +4,7 @@ import { TeacherService } from 'src/app/services/teacher.service';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CourseService } from 'src/app/services/course.service';
+import { Team } from 'src/app/models/team.model';
 
 @Component({
   selector: 'app-manage-model',
@@ -13,19 +14,19 @@ import { CourseService } from 'src/app/services/course.service';
 export class ManageModelComponent implements OnInit, OnChanges {
 
   @Input() modelvm: Course;
-  ModelVmForm: FormGroup;
-
   @Output() update: EventEmitter<Course> = new EventEmitter<Course>();
+
+  ModelVmForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
               private dialogRef: MatDialogRef<ManageModelComponent>
               ) {
       this.ModelVmForm = this.formBuilder.group({
-        max_vcpu : new FormControl('', [Validators.required]),
-        max_disco : new FormControl('', [Validators.required]),
-        max_ram : new FormControl('', [Validators.required]),
-        max_vm : new FormControl('', [Validators.required]),
-        max_vm_active : new FormControl('', [Validators.required])
+        max_vcpu : new FormControl('', [Validators.required, Validators.min(1)]),
+        max_disco : new FormControl('', [Validators.required, Validators.min(1)]),
+        max_ram : new FormControl('', [Validators.required, Validators.min(1)]),
+        max_vm : new FormControl('', [Validators.required, Validators.min(1)]),
+        max_vm_active : new FormControl('', [Validators.required, Validators.min(1)])
       });
     }
 
@@ -36,15 +37,24 @@ export class ManageModelComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.modelvm != null) {
       this.modelvm = changes.modelvm.currentValue;
-
-      this.ModelVmForm.setValue({
-        max_vcpu: this.modelvm.maxVcpu,
-        max_disco: this.modelvm.diskSpace,
-        max_ram: this.modelvm.ram,
-        max_vm: this.modelvm.totInstances,
-        max_vm_active: this.modelvm.runningInstances
-      });
     }
+
+    //gestire
+    this.ModelVmForm = this.formBuilder.group({
+      max_vcpu : new FormControl('', [Validators.required, Validators.min(1)]),
+      max_disco : new FormControl('', [Validators.required, Validators.min(1)]),
+      max_ram : new FormControl('', [Validators.required, Validators.min(1)]),
+      max_vm : new FormControl('', [Validators.required, Validators.min(1)]),
+      max_vm_active : new FormControl('', [Validators.required, Validators.min(1)])
+    });
+
+    this.ModelVmForm.setValue({
+      max_vcpu: this.modelvm.maxVcpu,
+      max_disco: this.modelvm.diskSpace,
+      max_ram: this.modelvm.ram,
+      max_vm: this.modelvm.totInstances,
+      max_vm_active: this.modelvm.runningInstances
+    });
   }
 
   saveModel(maxVcpu: number, maxDisk: number, ram: number, totInstances: number, runningInstances: number) {

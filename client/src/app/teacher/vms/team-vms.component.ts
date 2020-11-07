@@ -7,6 +7,8 @@ import { VMOwners } from 'src/app/models/vm-owners.model';
 import { Student } from 'src/app/models/student.model';
 import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ThrowStmt } from '@angular/compiler';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-team-vms',
@@ -32,7 +34,8 @@ export class TeamVmsComponent implements OnInit, OnChanges {
   displayedColumns: string[] = ['vmName', 'owners', 'status', 'link'];
   dataSource = new MatTableDataSource<VMOwners>();
   
-  @Input() public vms: VMOwners[];
+  @Input() vms: VMOwners[];
+  @Input() resources: any;
 
   length = 5;
   pageSize = 5;
@@ -40,15 +43,27 @@ export class TeamVmsComponent implements OnInit, OnChanges {
 
   VMsVisibility: boolean = false;
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog,
+              private location: Location) { }
 
   ngOnInit(): void {
     this.manageTable();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.vms = changes.vms.currentValue;
+    if (changes.vms != null) {
+      this.vms = changes.vms.currentValue;
+    }
+
+    if (changes.resources != null) {
+      this.resources = changes.resources.currentValue;
+    }
+
     this.manageTable();
+  }
+
+  backToGroups() {
+    this.location.back();
   }
 
   manageTable() {

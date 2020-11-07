@@ -1344,7 +1344,7 @@ public class VLServiceImpl implements VLService{
         Course course = t.getCourse();
         if(!course.getProfessors().contains(p)) throw new PermissionDeniedException();
         Map<String, Object> resources = new HashMap<>();
-        resources.put("Vcpu", (course.getMaxVcpu()-t.getMaxVcpuLeft())+"/"+course.getMaxVcpu());
+        resources.put("vcpu", (course.getMaxVcpu()-t.getMaxVcpuLeft())+"/"+course.getMaxVcpu());
         resources.put("diskSpace", (course.getDiskSpace()-t.getDiskSpaceLeft())+"/"+course.getDiskSpace());
         resources.put("ram", (course.getRam()-t.getRamLeft())+"/"+course.getRam());
         resources.put("running", (course.getRunningInstances()-t.getRunningInstances())+"/"+course.getRunningInstances());

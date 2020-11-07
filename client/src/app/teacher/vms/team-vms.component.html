@@ -1,31 +1,50 @@
-<div *ngIf="VMsVisibility">
-    <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
-        <ng-container matColumnDef="vmName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
-            <td mat-cell *matCellDef="let row"> {{row.nameVM}} </td>
-        </ng-container>
-        <ng-container matColumnDef="owners">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Proprietario </th>
-            <td mat-cell *matCellDef="let row"> {{getOwners(row.owners)}} </td>
-        </ng-container>
-        <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato </th>
-            <td mat-cell *matCellDef="let row"> {{getStatus(row.status)}} </td>
-        </ng-container>
-        <ng-container matColumnDef="link">
-            <th mat-header-cell *matHeaderCellDef> Collegamento </th>
-            <td mat-cell *matCellDef="let row"> 
-                <button mat-stroked-button (click)=openVM(row)>Collegati</button>
-            </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+<mat-card class="card">
+    <mat-card-header>
+        <mat-card-title>
+            <button class="iconButton" mat-icon-button color="primary" (click)="backToGroups()">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            Macchine virtuali degli studenti
+        </mat-card-title>
+    </mat-card-header>
 
-    <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
-                
-    </mat-paginator>
-</div>
-<div class="noVMs" *ngIf="!VMsVisibility">
-    <h3>Nessuna VM per questo gruppo</h3>
-</div>
+    <mat-card-content>
+        <div *ngIf="VMsVisibility">
+            <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
+                <ng-container matColumnDef="vmName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+                    <td mat-cell *matCellDef="let row"> {{row.nameVM}} </td>
+                </ng-container>
+                <ng-container matColumnDef="owners">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Proprietario </th>
+                    <td mat-cell *matCellDef="let row"> {{getOwners(row.owners)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato </th>
+                    <td mat-cell *matCellDef="let row"> {{getStatus(row.status)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="link">
+                    <th mat-header-cell *matHeaderCellDef> Collegamento </th>
+                    <td mat-cell *matCellDef="let row"> 
+                        <button mat-stroked-button (click)=openVM(row)>Collegati</button>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+
+            <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
+            </mat-paginator><br>
+            <div *ngIf="resources != null">
+                <h4>VCpu utilizzate: {{resources.vcpu}}</h4>
+                <h4>Spazio utilizzato: {{resources.diskSpace}}</h4>
+                <h4>RAM utilizzata: {{resources.ram}}</h4>
+                <h4>Macchine accese: {{resources.running}}</h4>
+                <h4>Macchine totali: {{resources.total}}</h4>
+            </div>
+        </div>
+        <div class="noVMs" *ngIf="!VMsVisibility">
+            <h3>Nessuna VM per questo gruppo</h3>
+        </div>
+    </mat-card-content>
+</mat-card>

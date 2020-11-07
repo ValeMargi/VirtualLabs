@@ -38,7 +38,7 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
       name : new FormControl('', [Validators.required, Validators.minLength(3)]),
       surname : new FormControl('', [Validators.required]),
       id : new FormControl('', [Validators.required]),
-      email: new FormControl('',[Validators.email]),
+      email: new FormControl('',[Validators.email, this.emailDomainValidator]),
       password: ['', [Validators.required,Validators.minLength(8), Validators.maxLength(20)]],
       confirmPassword: ['',[Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
     }, { validator: this.checkPasswords });
@@ -46,28 +46,22 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
 }
 
 
-/*
+
 emailDomainValidator(control: FormControl) {
   let email = control.value;
-  var  correctS:boolean;
-  var  correctT:boolean;
-  let [_, domain] = email.split("@");
-
-  let regexpStudent = new RegExp('([sS]{1}[0-9]+[@]{1}[sS]{1}[tT]{1}[uU]{1}[dD]{1}[eE]{1}[nN]{1}[tT]{1}[iI]{1}[.][pP]{1}[oO]{1}[Ll]{1}[iI]{1}[tT]{1}[oO][.][iI]{1}[tT]{1})');
-  correctS = regexpStudent.test(email);
-
-  let regexpTeacher = new RegExp('([dD]{1}[0-9]+[@]{1}[pP]{1}[oO]{1}[Ll]{1}[iI]{1}[tT]{1}[oO][.][iI]{1}[tT]{1})');
-  correctT = regexpTeacher.test(email);
-
-  if(correctS && correctT){
-    return null;
-  }else{
-    return  {emailDomain: {
-      parsedDomain: domain
-    }}
+  if (email && email.indexOf("@") != -1) {
+    let [_, domain] = email.toLowerCase().split("@");
+    if (domain !== "studenti.polito.it" && domain !== "polito.it") {
+      return {
+        emailDomain: {
+          parsedDomain: domain
+        }
+      }
+    }
   }
+  return null;
 
-}*/
+}
 
 isEmailStudent(emailUser:string):boolean
 {

@@ -37,32 +37,17 @@ h2 {
   margin-right:1em;
 }
 
-.avatar {
-    float: left;
-    max-width: 300px;
-    max-height: 300px;
-    margin-left: 10%;
-    margin-right: 3%;
-    margin-top: 3.5em;
+.mask {
+  object-fit: cover;
+  width: 10em;
+  height: 10em;
+  margin-top: 10%;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
-.rounded-box {
-    width: 100%;
-    height: auto;
-    max-width: 10em;
-    max-height: 10em;
-    background-size: 10em 10em;
-    border-radius: 100%;
-    display: block;
-    margin: 0 auto;
-    position: static;
-    overflow: hidden;
-}
+img {max-width: 100%;}
 
-.img {
-    max-width: 100%;
-    max-height: 100%;
-}
 
 .camera-box {
     background-color: #3F51B5;

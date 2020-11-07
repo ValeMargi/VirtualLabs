@@ -61,6 +61,10 @@ export class TeacherService {
     return this.http.get<PhotoVM>(`${this.API_PROFESSORS}/VM/${courseName}/${vmId}`);
   }
 
+  getResourcesVM(teamId: number) {
+    return this.http.get<any>(`${this.API_PROFESSORS}/team/${teamId}/resources`)
+  }
+
   allVMforCourse(courseName: string) {
     return this.http.get<VM[]>(`${this.API_PROFESSORS}/VM/${courseName}`).pipe(map(vms => vms || []));
   }

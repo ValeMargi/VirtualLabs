@@ -301,4 +301,16 @@ public class CourseController {
         }
     }
 
+
+    @GetMapping("/{courseName}/maxResources")
+    public Map<String, Object> getMaxResources(@PathVariable String courseName){
+        try{
+            return vlService.getMaxResources(courseName);
+        }catch(ProfessorNotFoundException | CourseNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (PermissionDeniedException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
+
 }

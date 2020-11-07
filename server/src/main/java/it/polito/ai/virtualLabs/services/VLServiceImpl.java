@@ -1707,6 +1707,8 @@ public class VLServiceImpl implements VLService{
             }
             PhotoVersionHomeworkDTO photoVersionHomeworkDTO = modelMapper.map(op.get(), PhotoVersionHomeworkDTO.class);
             photoVersionHomeworkDTO.setPicByte(decompressZLib(photoVersionHomeworkDTO.getPicByte()));
+            StringTokenizer st = new StringTokenizer(photoVersionHomeworkDTO.getTimestamp(), ".");
+            photoVersionHomeworkDTO.setTimestamp(st.nextToken());
             return photoVersionHomeworkDTO;
         }else throw new PhotoVersionHMNotFoundException();
 
@@ -1820,6 +1822,8 @@ public class VLServiceImpl implements VLService{
             }
             PhotoCorrectionDTO photoCorrectionDTO = modelMapper.map(p, PhotoCorrectionDTO.class);
             photoCorrectionDTO.setPicByte(decompressZLib(photoCorrectionDTO.getPicByte()));
+            StringTokenizer st = new StringTokenizer(photoCorrectionDTO.getTimestamp(), ".");
+            photoCorrectionDTO.setTimestamp(st.nextToken());
             return photoCorrectionDTO;
         }else throw new PhotoCorrectionNotFoundException();
 

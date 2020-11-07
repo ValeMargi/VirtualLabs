@@ -64,7 +64,7 @@ emailDomainValidator(control: FormControl) {
 idValidator(control: FormControl) {
   let id = control.value;
   let [_, domain] = id.toLowerCase();
-  if (!id.startsWith("s") && !id.startsWith("d")) {
+  if (!domain.startsWith("s") && !domain.startsWith("d")) {
     return {
       idDomain: {
         parsedDomain: domain

@@ -1492,7 +1492,12 @@ public class VLServiceImpl implements VLService{
                 List<Map<String, Object>> list = new ArrayList<>();
                 for(Assignment  a:assignmentList){
                     Map<String, Object> map = new HashMap<>();
-                    map.put("assignment", modelMapper.map(a, AssignmentDTO.class));
+                    AssignmentDTO assignmentDTO = modelMapper.map(a, AssignmentDTO.class);
+                    StringTokenizer stReleaseDate = new StringTokenizer(assignmentDTO.getReleaseDate(), ".");
+                    StringTokenizer stExpiration = new StringTokenizer(assignmentDTO.getExpiration(), ".");
+                    assignmentDTO.setReleaseDate(stReleaseDate.nextToken());
+                    assignmentDTO.setExpiration(stExpiration.nextToken());
+                    map.put("assignment", assignmentDTO);
                     map.put("grade", s.getHomeworks().stream().filter(h-> h.getAssignment().equals(a)).findFirst().get().getGrade());
                     map.put("status", s.getHomeworks().stream().filter(h-> h.getAssignment().equals(a)).findFirst().get().getStatus());
                     list.add(map);

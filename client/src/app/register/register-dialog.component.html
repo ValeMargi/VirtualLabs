@@ -40,6 +40,7 @@
         <mat-form-field class="formField">
         <input class="input" #id type="text" placeholder="Matricola" formControlName="id" matInput required>
         <mat-error class="inputErr" *ngIf="RegisterForm.get('id').hasError('required')">La matricola è richiesta</mat-error>
+        <mat-error class="inputErr" *ngIf="RegisterForm.get('id').hasError('idDomain')">La matricola deve iniziare con 'd' o 's'</mat-error>
         </mat-form-field>
 
         <!--Email-->
@@ -47,6 +48,7 @@
         <input class="input" #email type="email" (keypress)="forceLower(email.value)" placeholder="Email" formControlName="email" matInput required>
         <mat-error class="inputErr" *ngIf="RegisterForm.hasError('required','email')">Inserisci un'email istituzionale valida</mat-error>
         <mat-error class="inputErr" *ngIf="RegisterForm.get('email').hasError('emailDomain')">Utilizza il dominio: studenti.polito.it o polito.it</mat-error>
+        <mat-error class="inputErr" *ngIf="RegisterForm.get('email').hasError('idDomain')">La mail deve iniziare con una matricola valida</mat-error>
       </mat-form-field>
 
         <!--Password-->

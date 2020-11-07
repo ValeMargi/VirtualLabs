@@ -49,21 +49,21 @@ LoginForm: FormGroup;
   }
 
 
-emailDomainValidator(control: FormControl) {
-  let email = control.value;
-  if (email && email.indexOf("@") != -1) {
-    let [_, domain] = email.toLowerCase().split("@");
-    if (domain !== "studenti.polito.it" && domain !== "polito.it") {
-      return {
-        emailDomain: {
-          parsedDomain: domain
+  emailDomainValidator(control: FormControl) {
+    let email = control.value;
+    if (email && email.indexOf("@") != -1) {
+      let [_, domain] = email.toLowerCase().split("@");
+      if (domain !== "studenti.polito.it" && domain !== "polito.it") {
+        return {
+          emailDomain: {
+            parsedDomain: domain
+          }
         }
       }
     }
-  }
-  return null;
+    return null;
 
-}
+  }
 
   login(email: string, password:string) {
     if (!this.LoginForm.valid) {

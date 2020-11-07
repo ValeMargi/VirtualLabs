@@ -35,17 +35,15 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
     private formBuilder: FormBuilder) {
 
     this.RegisterForm = this.formBuilder.group({
-      name : new FormControl('', [Validators.required, Validators.minLength(3)]),
+      name : new FormControl('', [Validators.required]),
       surname : new FormControl('', [Validators.required]),
-      id : new FormControl('', [Validators.required]),
-      email: new FormControl('',[Validators.email, this.emailDomainValidator]),
+      id : new FormControl('', [Validators.required, this.idValidator]),
+      email: new FormControl('',[Validators.email, this.emailDomainValidator, this.idValidator]),
       password: ['', [Validators.required,Validators.minLength(8), Validators.maxLength(20)]],
       confirmPassword: ['',[Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
     }, { validator: this.checkPasswords });
 
 }
-
-
 
 emailDomainValidator(control: FormControl) {
   let email = control.value;
@@ -63,22 +61,18 @@ emailDomainValidator(control: FormControl) {
 
 }
 
-isEmailStudent(emailUser:string):boolean
-{
-    var  correct:boolean;
-    let regexp = new RegExp('([sS]{1}[0-9]+[@]{1}[sS]{1}[tT]{1}[uU]{1}[dD]{1}[eE]{1}[nN]{1}[tT]{1}[iI]{1}[.][pP]{1}[oO]{1}[Ll]{1}[iI]{1}[tT]{1}[oO][.][iI]{1}[tT]{1})');
-    correct = regexp.test(emailUser);
-    console.log(correct);
-    return correct;
-}
+idValidator(control: FormControl) {
+  let id = control.value;
+  let [_, domain] = id.toLowerCase();
+  if (!id.startsWith("s") && !id.startsWith("d")) {
+    return {
+      idDomain: {
+        parsedDomain: domain
+      }
+    }
+  }
 
-isEmailTeacher(emailUser:string):boolean
-{
-    var  correct:boolean;
-    let regexp = new RegExp('([dD]{1}[0-9]+[@]{1}[pP]{1}[oO]{1}[Ll]{1}[iI]{1}[tT]{1}[oO][.][iI]{1}[tT]{1})');
-    correct = regexp.test(emailUser);
-    console.log(correct);
-    return correct;
+  return null;
 }
 
 checkPasswords(group: FormGroup) { // here we have the 'passwords' group
@@ -158,11 +152,10 @@ register(firstName: string, name: string, id: string, email: string, password: s
 
   let idEmail: string[] = userJson.email.split("@");
 
-  if (userJson.id != idEmail[0]){
+  if (userJson.id != idEmail[0]) {
     window.alert("La tua email non corrisponde alla matricola inserita");
     return;
   }
-
   else if (userJson.id.startsWith("s") && idEmail[1] == "polito.it") {
     window.alert("Lo studente deve avere come dominio 'studenti.polito.it'");
     return;
@@ -171,6 +164,7 @@ register(firstName: string, name: string, id: string, email: string, password: s
     window.alert("Il docente deve avere come dominio 'polito.it'");
     return;
   }
+
   this.reg.emit({image: image, userJson: userJson});
 }
 

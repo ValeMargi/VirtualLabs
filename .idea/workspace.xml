@@ -2,23 +2,154 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7ed07955-a639-419d-b16c-eac7f12e2dfe" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/client/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/ib_logfile0" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/ib_logfile0" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/ibdata1" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/ibdata1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/mysql/innodb_index_stats.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/mysql/innodb_index_stats.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/mysql/innodb_table_stats.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/mysql/innodb_table_stats.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/assignment.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/assignment.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/avatar_student.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/avatar_student.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/course.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/course.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/hibernate_sequence.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/hibernate_sequence.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/homework.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/homework.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/photo_assignment.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/photo_assignment.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/photo_modelvm.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/photo_modelvm.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/professor_course.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/professor_course.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/student.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/student.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/student_course.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/student_course.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/token_registration.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/token_registration.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/users.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/users.ibd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/aria_log.00000001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/aria_log_control" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/ib_buffer_pool" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/ib_logfile0" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/ibdata1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/multi-master.info" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/column_stats.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/column_stats.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/column_stats.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/columns_priv.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/columns_priv.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/columns_priv.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/db.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/db.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/db.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/db.opt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/event.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/event.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/event.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/func.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/func.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/func.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/general_log.CSM" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/general_log.CSV" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/general_log.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/global_priv.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/global_priv.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/global_priv.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/gtid_slave_pos.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/gtid_slave_pos.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/help_category.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/help_category.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/help_category.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/help_keyword.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/help_keyword.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/help_keyword.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/help_relation.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/help_relation.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/help_relation.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/help_topic.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/help_topic.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/help_topic.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/index_stats.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/index_stats.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/index_stats.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/innodb_index_stats.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/innodb_index_stats.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/innodb_table_stats.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/innodb_table_stats.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/plugin.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/plugin.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/plugin.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/proc.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/proc.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/proc.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/procs_priv.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/procs_priv.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/procs_priv.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/proxies_priv.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/proxies_priv.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/proxies_priv.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/roles_mapping.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/roles_mapping.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/roles_mapping.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/servers.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/servers.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/servers.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/slow_log.CSM" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/slow_log.CSV" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/slow_log.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/table_stats.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/table_stats.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/table_stats.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/tables_priv.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/tables_priv.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/tables_priv.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone_leap_second.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone_leap_second.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone_leap_second.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone_name.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone_name.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone_name.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone_transition.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone_transition.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone_transition.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone_transition_type.MAD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone_transition_type.MAI" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/time_zone_transition_type.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/transaction_registry.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/transaction_registry.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/mysql/user.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/performance_schema/db.opt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/assignment.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/assignment.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/avatar_professor.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/avatar_professor.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/avatar_student.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/avatar_student.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/course.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/course.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/db.opt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/hibernate_sequence.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/hibernate_sequence.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/homework.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/homework.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/password_reset_token.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/password_reset_token.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/photo_assignment.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/photo_assignment.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/photo_correction.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/photo_correction.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/photo_modelvm.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/photo_modelvm.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/photo_version_homework.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/photo_version_homework.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/photovm.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/photovm.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/professor.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/professor.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/professor_course.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/professor_course.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/student.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/student.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/student_course.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/student_course.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/team.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/team.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/team_student.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/team_student.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/token.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/token.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/token_registration.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/token_registration.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/users.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/users.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/vm.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/vm.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/vm_owners.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/vm_owners.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/vm_student.frm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db_data/virtualLabs/vm_student.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +183,6 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
-    <property name="DatabaseDriversLRU" value="mysql" />
     <property name="RequestMappingsPanelOrder0" value="0" />
     <property name="RequestMappingsPanelOrder1" value="1" />
     <property name="RequestMappingsPanelWidth0" value="75" />
@@ -71,17 +201,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.VirtualLabsApplication">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="E2E Tests (ai20-lab05)" type="JavaScriptTestRunnerProtractor">
       <config-file value="$PROJECT_DIR$/client/e2e/protractor.conf.js" />
       <node-interpreter value="project" />
@@ -132,7 +251,7 @@
       <workItem from="1603534051207" duration="21000" />
       <workItem from="1603534403661" duration="96000" />
       <workItem from="1604740875942" duration="769000" />
-      <workItem from="1604741679241" duration="7218000" />
+      <workItem from="1604741679241" duration="3372000" />
     </task>
     <servers />
   </component>
@@ -143,30 +262,51 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="552" y="183" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1604748238292">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="552" y="183" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1604748238292" />
     <state x="740" y="307" width="424" height="491" key="FileChooserDialogImpl" timestamp="1602430348245">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
+    <state x="592" y="222" key="FileChooserDialogImpl/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222741323" />
     <state x="740" y="307" width="424" height="491" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1602430348245" />
     <state width="1877" height="285" key="GridCell.Tab.0.bottom" timestamp="1603534499862">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
+    <state width="1493" height="206" key="GridCell.Tab.0.bottom/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222762971" />
     <state width="1877" height="285" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1603534499862" />
     <state width="1877" height="285" key="GridCell.Tab.0.center" timestamp="1603534499862">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
+    <state width="1493" height="206" key="GridCell.Tab.0.center/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222762971" />
     <state width="1877" height="285" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1603534499862" />
     <state width="1877" height="285" key="GridCell.Tab.0.left" timestamp="1603534499862">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
+    <state width="1493" height="206" key="GridCell.Tab.0.left/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222762971" />
     <state width="1877" height="285" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1603534499862" />
     <state width="1877" height="285" key="GridCell.Tab.0.right" timestamp="1603534499862">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
+    <state width="1493" height="206" key="GridCell.Tab.0.right/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222762971" />
     <state width="1877" height="285" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1603534499862" />
+    <state width="1493" height="206" key="GridCell.Tab.1.bottom" timestamp="1595222762971">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state width="1493" height="206" key="GridCell.Tab.1.bottom/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222762971" />
+    <state width="1493" height="206" key="GridCell.Tab.1.center" timestamp="1595222762971">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state width="1493" height="206" key="GridCell.Tab.1.center/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222762971" />
+    <state width="1493" height="206" key="GridCell.Tab.1.left" timestamp="1595222762971">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state width="1493" height="206" key="GridCell.Tab.1.left/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222762971" />
+    <state width="1493" height="206" key="GridCell.Tab.1.right" timestamp="1595222762971">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state width="1493" height="206" key="GridCell.Tab.1.right/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595222762971" />
+    <state x="349" y="160" key="IDE.errors.dialog" timestamp="1595221856391">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="349" y="160" key="IDE.errors.dialog/0.0.1536.834/1920.0.1920.1050@0.0.1536.834" timestamp="1595221856391" />
     <state x="461" y="170" key="SettingsEditor" timestamp="1603534466291">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>

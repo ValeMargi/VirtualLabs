@@ -1,7 +1,7 @@
 <mat-card class="card">
   <mat-card-header class="header">
    <mat-card-title>
-     <button class = "iconClose" mat-icon-button color="primary" (click)="back()">
+     <button class = "iconClose" mat-icon-button color="primary" onclick="this.blur()" (click)="back()">
       <mat-icon>close</mat-icon></button>
             Versioni elaborato
         </mat-card-title>
@@ -23,11 +23,11 @@
                       <div style="display: flex;">
                         <div style="text-align: center; vertical-align: middle;">{{ ver.timestamp }}</div>
 
-                        <button class="bt-rev" mat-flat-button color="accent" (click)="openVersionImage(ver)">
+                        <button class="bt-rev" mat-flat-button color="accent" onclick="this.blur()" (click)="openVersionImage(ver)">
                           Visualizza
                       </button>
 
-                        <button class="bt-rev" mat-flat-button color="primary" (click)="showCorrections(ver)">
+                        <button class="bt-rev" mat-flat-button color="primary" onclick="this.blur()" (click)="showCorrections(ver)">
                             Revisioni <mat-icon>keyboard_arrow_right</mat-icon>
                         </button>
                     </div>
@@ -43,7 +43,7 @@
                           <div style="display: flex;">
                             <div style="text-align: center; vertical-align: middle;">{{ cor.timestamp }}</div>
 
-                            <button class="bt-rev" mat-flat-button color="accent" (click)="openCorrectionImage(cor)">
+                            <button class="bt-rev" mat-flat-button color="accent" onclick="this.blur()" (click)="openCorrectionImage(cor)">
                               Visualizza
                           </button>
                         </div>

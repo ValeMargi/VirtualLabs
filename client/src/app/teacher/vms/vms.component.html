@@ -9,7 +9,7 @@
 
         <!-- Bottone Modello Vm -->
         <div class="button-request" align="right">
-            <button mat-button  align ="end" mat-raised-button color="primary" (click)="routeToEditModel()">
+            <button mat-button  align ="end" mat-raised-button color="primary" onclick="this.blur()" (click)="routeToEditModel()">
                 <mat-icon>desktop_windows</mat-icon>Modifica modello VM
             </button>
         </div>
@@ -19,7 +19,7 @@
         <div class="vmsContainer" *ngIf="teamsVisibility">
             <div class="teamsContainer">
                 <mat-selection-list [multiple]="false">
-                    <mat-list-option *ngFor="let team of teams" [value]="team" (click)="selectTeam(team)"> 
+                    <mat-list-option *ngFor="let team of teams" [value]="team" (click)="selectTeam(team)">
                         {{ team.name }} </mat-list-option>
                 </mat-selection-list>
             </div>
@@ -27,5 +27,5 @@
     </mat-card-content>
 </mat-card>
 
-<app-team-vms-cont *ngIf="false"></app-team-vms-cont> 
+<app-team-vms-cont *ngIf="false"></app-team-vms-cont>
 <router-outlet (activate)="onRouterOutletActivate($event)" (deactivate)="onRouterOutletDeactivate($event)"></router-outlet>

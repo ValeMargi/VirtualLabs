@@ -1,0 +1,45 @@
+version: "2.1"
+services:
+
+  virtuallabs-server-backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      virtuallabs-server-db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://virtuallabs-server-db:3306/virtualLabs
+
+  virtuallabs-client-frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "4200:4200"
+    depends_on:
+      - virtuallabs-server-backend
+    environment:
+      ANGULAR_URL: virtuallabs-server-backend
+
+
+  virtuallabs-server-db:
+    image: mariadb:latest
+    restart: always
+    ports:
+      - "3307:3306"
+    volumes:
+        - ./db_data:/var/lib/mysql
+        - ./scripts:/docker-entrypoint-initdb.d:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: pwd
+      MYSQL_USER: root
+      MYSQL_DATABASE: virtualLabs
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10

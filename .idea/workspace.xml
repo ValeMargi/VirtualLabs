@@ -3,22 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="7ed07955-a639-419d-b16c-eac7f12e2dfe" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_data/ib_buffer_pool" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/ib_buffer_pool" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db_data/ib_logfile0" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/ib_logfile0" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db_data/ibdata1" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/ibdata1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/mysql/innodb_index_stats.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/mysql/innodb_index_stats.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/mysql/innodb_table_stats.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/mysql/innodb_table_stats.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/assignment.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/assignment.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/avatar_student.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/avatar_student.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/course.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/course.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/hibernate_sequence.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/hibernate_sequence.ibd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_data/ibtmp1" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/ibtmp1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/homework.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/homework.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/photo_assignment.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/photo_assignment.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/photo_modelvm.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/photo_modelvm.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/professor_course.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/professor_course.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/student.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/student.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/student_course.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/student_course.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/token_registration.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/token_registration.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_data/virtualLabs/users.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/db_data/virtualLabs/users.ibd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/it/polito/ai/virtualLabs/controllers/StudentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/it/polito/ai/virtualLabs/controllers/StudentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/it/polito/ai/virtualLabs/services/VLServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/it/polito/ai/virtualLabs/services/VLServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +52,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/server" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.notifications" />
   </component>
@@ -71,17 +62,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.VirtualLabsApplication">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="E2E Tests (ai20-lab05)" type="JavaScriptTestRunnerProtractor">
       <config-file value="$PROJECT_DIR$/client/e2e/protractor.conf.js" />
       <node-interpreter value="project" />
@@ -133,6 +113,7 @@
       <workItem from="1603534403661" duration="96000" />
       <workItem from="1604740875942" duration="769000" />
       <workItem from="1604741679241" duration="7218000" />
+      <workItem from="1604760533841" duration="3329000" />
     </task>
     <servers />
   </component>

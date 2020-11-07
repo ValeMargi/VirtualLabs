@@ -31,7 +31,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> getOne(@PathVariable String id) {
+    public Map<String, Object> getOne(@PassignmentsathVariable String id) {
         try{
             Map<String, Object> profile=vlService.getStudent(id);
             profile.put("student",ModelHelper.enrich((StudentDTO) profile.get("student")));

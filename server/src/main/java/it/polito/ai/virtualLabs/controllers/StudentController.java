@@ -48,7 +48,6 @@ public class StudentController {
             return vlService.getProfileStudent();
         }catch(StudentNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
-
         }
     }
 
@@ -63,7 +62,6 @@ public class StudentController {
     public List<CourseDTO> getCourses(@PathVariable String studentId) {
         try {
             return  vlService.getCoursesForStudent(studentId).stream().map(ModelHelper::enrich).collect(Collectors.toList());
-
         } catch (StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, studentId);
         }
@@ -132,7 +130,6 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(StudentNotEnrolledToCourseException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-
         }
     }
 
@@ -147,9 +144,10 @@ public class StudentController {
     public PhotoAssignmentDTO getAssignment(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.getAssignmentStudent( assignmentId);
-        } catch (CourseNotFoundException  | StudentNotFoundException
-                | PhotoAssignmentNotFoundException | AssignmentNotFoundException  e) {
+        } catch(StudentNotFoundException  | PhotoAssignmentNotFoundException | AssignmentNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch(PermissionDeniedException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 

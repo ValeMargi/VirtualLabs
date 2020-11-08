@@ -72,48 +72,7 @@ public class ProfessorController {
     }
 
 
-    /**
-     * Metodo: POST
-     * Authority: Docente
-     * @param courseName: riceve dal path il nome del corso
-     * @param file: nella richiesta viene inviata l'immagine associata al modello creato dal docente
-     * @param input: nella richiesta vengono inviati tutti i parametri associati al nuovo modello di VM creato
-     * @return: ritorna il DTO del modello VM appena creato
-     */
-    @PostMapping("/{courseName}/addModel")
-    public CourseDTO addModelVM( @PathVariable String courseName,  @RequestPart("file") @Valid @NotNull MultipartFile file,
-                                 @RequestPart("modelVM") Map<String, Object> input) {
-        if(file.isEmpty() || file.getContentType()==null)
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
-        if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
-                && !file.getContentType().equals("image/png"))
-            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"Formato "+file.getContentType()+" non valido: richiesto jpg/jpeg/png");
 
-        if (!input.containsKey("maxVcpu") || !input.containsKey("diskSpace")
-                || !input.containsKey("ram") ||  !input.containsKey("runningInstances")
-                || !input.containsKey("totInstances") )
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Parametri non conformi con la richiesta");
-        try{
-            CourseDTO courseDTO = new CourseDTO();
-            courseDTO.setMaxVcpu((int)input.get("maxVcpu"));
-            courseDTO.setDiskSpace((int)input.get("diskSpace"));
-            courseDTO.setRam((int)input.get("ram"));
-            courseDTO.setRunningInstances((int)input.get("runningInstances"));
-            courseDTO.setTotInstances((int)input.get("totInstances"));
-
-            Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
-            PhotoModelVM photoModelVM = new PhotoModelVM(image);
-            return vlService.addModelVM(courseDTO, courseName, photoModelVM);
-        }catch (CourseNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch(PermissionDeniedException e){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }catch(ImageSizeException | ModelVMAlreadytPresentException e){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch(IOException e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
-    }
 
     /**
      * Metodo per modificare le risorse (no photoModello) associate al modelloVM per il corso con courseName indicato

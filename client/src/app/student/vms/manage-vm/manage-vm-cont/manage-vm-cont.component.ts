@@ -19,6 +19,8 @@ export class ManageVmContComponent implements OnInit {
   STUDENTS_IN_TEAM: Student[] = [];
   TEAM: Team;
 
+  updated: boolean = false;
+
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
             private dialogRef: MatDialogRef<ManageVmContComponent>,
             private studentService: StudentService,
@@ -46,6 +48,7 @@ export class ManageVmContComponent implements OnInit {
 
     this.studentService.updateVMresources(courseName, vm.id, vm).subscribe(
       (data) => {
+        this.updated = true;
         this.VM.numVcpu = data.numVcpu;
         this.VM.diskSpace = data.diskSpace;
         this.VM.ram = data.ram;

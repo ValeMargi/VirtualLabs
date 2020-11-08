@@ -1535,7 +1535,7 @@ public class VLServiceImpl implements VLService{
                         Homework homework = homeworkRepository.findById(a.getHomeworks().stream()
                                 .filter(h->h.getStudent().getId().equals(s.getId())).findFirst()
                                 .get().getId()).get();
-                        if(homework.getStatus().equals("NULL")){
+                        if(homework.getStatus().equals("NULL") && !homework.getPermanent()){
                             homework.setStatus("LETTO");
                             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                             homework.setTimestamp(timestamp.toString());
@@ -1631,6 +1631,7 @@ public class VLServiceImpl implements VLService{
         } else throw new PermissionDeniedException();
     }
 
+    //VERIFICARW
     //@PreAuthorize("hasAuthority('student')")
     @Override
     public boolean updateStatusHomework( Long homeworkId, String status) {
@@ -1639,7 +1640,8 @@ public class VLServiceImpl implements VLService{
                 Optional<Homework> oh= homeworkRepository.findById(homeworkId);
                 if( oh.isPresent()){
                     Homework h = oh.get();
-                    h.setStatus(status);
+                    if(!h.getPermanent())
+                        h.setStatus(status);
                     homeworkRepository.saveAndFlush(h);
                     return true;
                 }else throw new HomeworkNotFoundException();

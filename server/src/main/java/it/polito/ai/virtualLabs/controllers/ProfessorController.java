@@ -205,6 +205,8 @@ public class ProfessorController {
 
             assignmentDTO.setReleaseDate(timestamp.toString());
             assignmentDTO.setExpiration(input.get("expiration").toString());
+            if(assignmentDTO.getExpiration().compareTo(assignmentDTO.getReleaseDate())<=0)
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Data di scadenza non valida");
 
             PhotoAssignmentDTO photoAssignmentDTO = new PhotoAssignmentDTO();
             photoAssignmentDTO.setNameFile(file.getOriginalFilename());

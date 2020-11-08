@@ -178,7 +178,7 @@ public class StudentController {
             return  vlService.addVM(vmdto, courseName, timestamp.toString());
         }catch (CourseNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch( ModelVMAlreadytPresentException | ResourcesVMNotRespectedException |
+        }catch( ModelVMNotSettedException | ResourcesVMNotRespectedException |
                 VMduplicatedException | CourseDisabledException | ImageSizeException | InvalidInputVMresources e){
             throw new    ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch(PermissionDeniedException p){
@@ -203,7 +203,7 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, p.getMessage());
-        }catch(ModelVMNotSettedException | CourseDisabledException e){
+        }catch( CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
@@ -333,7 +333,7 @@ public class StudentController {
             return  vlService.updateVMresources(VMid, vmdto);
         }catch (VMNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch (VMnotOffException | ResourcesVMNotRespectedException | VMduplicatedException e){
+        }catch (VMnotOffException | ResourcesVMNotRespectedException | VMduplicatedException | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

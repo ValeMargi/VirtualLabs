@@ -447,7 +447,6 @@ public class VLServiceImpl implements VLService{
                     throw new ProfessorNotFoundException();
                 else{
                     professors.forEach(c::setProfessor);
-                    String courseId = course.getName();
                     if (c.getProfessors().stream().anyMatch(pr -> pr.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))) {
                             //Controllo per verificare che il professore setta il modello per il corso con courseId per la prima volta
                             if (c.getPhotoModelVM() == null) {
@@ -470,7 +469,6 @@ public class VLServiceImpl implements VLService{
                                 return true;
                             } else throw new ModelVMAlreadytPresentException();
                         }else throw new PermissionDeniedException();
-
                 }
             }else throw new ProfessorNotFoundException();
         }
@@ -1282,6 +1280,7 @@ public class VLServiceImpl implements VLService{
                 Team t = teamRepository.getOne(vm.getTeam().getId());
                 if(t.getVms().stream().anyMatch(v->v.getNameVM().equals(vmdto.getNameVM()) && !v.getId().equals(VMid)))
                     throw new VMduplicatedException();
+                if(!t.getCourse().isEnabled()) throw new CourseDisabledException();
                if(!vm.getStatus().equals("off") ) throw new VMnotOffException();
                 if (
                         vmdto.getDiskSpace() <= (t.getDiskSpaceLeft()+vm.getDiskSpace()) &&

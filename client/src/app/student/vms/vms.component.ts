@@ -166,11 +166,15 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
 
     if (!isOwner) {
       window.alert("Devi essere owner della VM per modificarne le risorse");
+      const queryParams = {}
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
       return;
     }
 
     if (vm.status == "on") {
       window.alert("La VM deve essere spenta per apportare modifiche");
+      const queryParams = {}
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
       return;
     }
 

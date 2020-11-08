@@ -35,23 +35,15 @@ export class AddCourseContComponent implements OnInit {
     let file: File = content.file;
     let ids: string[] = content.ids;
 
-    if (course.min < 0 || course.max <= 0 || course.name.length == 0 || course.acronym.length == 0) {
+    if (course.min <= 0 || course.max <= 0 || course.name.length == 0 || course.acronym.length == 0) {
       window.alert("Controllare che i dati inseriti siano validi e riprovare");
       return;
     }
 
-    this.courseService.addCourse(course, ids).subscribe(
+    this.courseService.addCourse(course, file, ids).subscribe(
       (data) => {
         this.courseService.setCurrentCourse(course);
-        
-        this.teacherService.addModelVM(course.name, file, course).subscribe(
-          (data) => {
-            this.close();
-          },
-          (error) => {
-            window.alert(error.error.message);
-          }
-        );
+        this.close();
       },
       (error) => {
         window.alert(error.error.message);

@@ -38,10 +38,11 @@ export class CourseService {
     return this.http.get<Course>(`${this.API_COURSES}/${name}`);
   }
 
-  addCourse(course: Course, teachersId: string[]) {
+  addCourse(course: Course, file: File, teachersId: string[]) {
     let data: FormData = new FormData();
     data.append('course', new Blob([JSON.stringify(course)], {
     type: "application/json" }));
+    data.append("file", file, file.name);
     data.append("professors", new Blob([JSON.stringify(teachersId)], {
     type: "application/json" }));
 

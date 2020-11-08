@@ -72,7 +72,7 @@
             <ng-container matColumnDef="delete">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
               <td mat-cell *matCellDef="let row">
-                <button mat-button class="delete" (click)=deleteTeacher(row)>
+                <button mat-button class="delete"  onclick="this.blur()" (click)=deleteTeacher(row)>
                   <mat-icon>delete</mat-icon>
                 </button>
               </td>

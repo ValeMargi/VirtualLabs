@@ -4,12 +4,12 @@
 <h2 mat-dialog-title>Modifica corso</h2>
 <h4 class="statoCorso"> Stato del corso: <strong>{{status}}</strong> </h4>
 
-<button mat-raised-button type="button"  color="primary" (click)="enableCourse()">
+<button mat-raised-button type="button"  color="primary" (click)="enableCourse()" onclick="this.blur()" onfocus="this.blur()">
   Abilita/Disabilita
   <mat-icon>power_settings_new</mat-icon>
 </button>
 
-<button mat-raised-button type="button"
+<button mat-raised-button type="button" onclick="this.blur()"
 color="warn" class="btnElimina" (click)="deleteCourse()">
   Elimina
   <mat-icon>delete</mat-icon>

@@ -365,7 +365,7 @@ public class StudentController {
             photoVersionHomeworkDTO.setPicByte(vlService.compressZLib(file.getBytes()));
             photoVersionHomeworkDTO.setTimestamp(timestamp.toString());
             return vlService.uploadVersionHomework(homeworkId,photoVersionHomeworkDTO);
-        }catch(ImageSizeException | HomeworkIsPermanentException e){
+        }catch(ImageSizeException | HomeworkIsPermanentException | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch (HomeworkNotFoundException | VMNotFoundException | TeamNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

@@ -1607,6 +1607,8 @@ public class VLServiceImpl implements VLService{
             Optional<Homework> oh = homeworkRepository.findById(homeworkId);
             if (oh.isPresent()) {
                 Homework h = oh.get();
+                if(!h.getAssignment().getCourseAssignment().isEnabled())
+                    throw new CourseDisabledException();
                 if (h.getStudent().getId().equals(student)) {
                     if (h.getPermanent().equals(false)) {
                         Optional<Team> teamStudent = s.getTeams().stream().filter(t-> t.getCourse().equals(h.getAssignment().getCourseAssignment())).findAny();

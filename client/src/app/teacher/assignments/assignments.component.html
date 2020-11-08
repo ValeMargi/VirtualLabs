@@ -7,7 +7,7 @@
     <mat-card-subtitle>Seleziona una consegna</mat-card-subtitle>
     <!-- Bottone Crea Consegna -->
       <div class="button-request">
-        <button mat-button mat-raised-button color="primary" (click)="openDialogAss()">
+        <button mat-button mat-raised-button color="primary"  onclick="this.blur()" (click)="openDialogAss()">
             <mat-icon>assignment</mat-icon>Crea consegna </button>
       </div>
   </mat-card-header>
@@ -46,7 +46,7 @@
         <ng-container matColumnDef="showHomeworks">
           <th mat-header-cell *matHeaderCellDef> </th>
           <td mat-cell *matCellDef="let row">
-            <button mat-button class="buttonText" color="primary" (click)="showHomeworks(row)">
+            <button mat-button class="buttonText" color="primary"  onclick="this.blur()" (click)="showHomeworks(row)">
               Visualizza Elaborati
             </button>
         </ng-container>
@@ -55,7 +55,7 @@
          <ng-container matColumnDef="showAssignment">
           <th mat-header-cell *matHeaderCellDef> </th>
           <td mat-cell *matCellDef="let row">
-            <button mat-button class="buttonText" color="primary" (click)="openDialogImage(row)">
+            <button mat-button class="buttonText" color="primary"  onclick="this.blur()" (click)="openDialogImage(row)">
               <mat-icon>article</mat-icon>Visualizza Testo
             </button>
         </ng-container>

@@ -193,6 +193,11 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
     const dialogRef = this.dialog.open(ManageVmContComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
+      let index: number = this.vms.map(vm => vm.id).indexOf(vm.id);
+      const vmNew: VMOwners = new VMOwners(vm.id, vm.numVcpu, vm.diskSpace, vm.ram, vm.status, vm.nameVM, vm.timestamp, vm.owners);
+      this.vms[index] = vmNew;
+      this.manageTable();
+
       const queryParams = {}
       this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
     });

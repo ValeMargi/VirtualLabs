@@ -46,6 +46,10 @@ export class ManageVmContComponent implements OnInit {
 
     this.studentService.updateVMresources(courseName, vm.id, vm).subscribe(
       (data) => {
+        this.VM.numVcpu = data.numVcpu;
+        this.VM.diskSpace = data.diskSpace;
+        this.VM.ram = data.ram;
+
         if (members.length > 0) {
           this.studentService.addOwners(courseName, this.VM.id, members.map(m => m.id)).subscribe(
             (data) => {

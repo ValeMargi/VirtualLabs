@@ -113,7 +113,6 @@ public class ProfessorController {
         } catch(IOException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
-
     }
 
     /**
@@ -144,7 +143,6 @@ public class ProfessorController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }catch(CourseNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-
         }
     }
     /**
@@ -331,8 +329,9 @@ public class ProfessorController {
     public List<Map<String, Object>> allHomework(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlService.allHomework(courseName, assignmentId);
-        } catch (CourseNotFoundException  | ProfessorNotFoundException
-                | StudentNotFoundException | AssignmentNotFoundException e) {
+        } catch (CourseNotFoundException | StudentNotFoundException | AssignmentNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -392,10 +391,9 @@ public class ProfessorController {
             photoCorrectionDTO.setPicByte(  vlService.compressZLib(file.getBytes()));
             photoCorrectionDTO.setTimestamp(timestamp.toString());
             return vlService.uploadCorrection(homeworkId, versionHMid, photoCorrectionDTO, Boolean.parseBoolean(permanent), grade);
-
         }catch ( HomeworkNotFoundException | HomeworkVersionIdNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch(ImageSizeException | HomeworkIsPermanentException | GradeNotValidException e){
+        }catch(ImageSizeException  | GradeNotValidException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

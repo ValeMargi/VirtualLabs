@@ -250,7 +250,7 @@ public class VLServiceImpl implements VLService{
                     .stream()
                     .map(s -> modelMapper.map(s, StudentDTO.class))
                     .collect(Collectors.toList());
-        }catch(EntityNotFoundException ente){
+        }catch(EntityNotFoundException e){
             throw  new CourseNotFoundException();
         }
     }
@@ -398,7 +398,7 @@ public class VLServiceImpl implements VLService{
                     .stream()
                     .map(p -> modelMapper.map(p, ProfessorDTO.class))
                     .collect(Collectors.toList());
-        }catch(EntityNotFoundException ente){
+        }catch(EntityNotFoundException e){
             throw  new CourseNotFoundException();
         }
     }
@@ -423,13 +423,9 @@ public class VLServiceImpl implements VLService{
                     addedStudents.add(st);
             }
            return addedStudents;
-        }catch(CourseNotFoundException e){
+        }catch(CourseNotFoundException | CourseDisabledException | StudentNotFoundException e){
             throw e;
-        }catch(CourseDisabledException e){
-            throw e;
-        }catch(StudentNotFoundException e){
-            throw e;
-        }catch (RuntimeException exception){
+        } catch (RuntimeException exception){
             throw  new FormatFileNotValidException();
         }
     }
@@ -453,7 +449,6 @@ public class VLServiceImpl implements VLService{
                     professors.forEach(c::setProfessor);
                     return true;
                 }
-
             }else throw new ProfessorNotFoundException();
         }
         return false;
@@ -472,8 +467,7 @@ public class VLServiceImpl implements VLService{
             throw new ProfessorNotFoundException();
         else{
             if(getProfessorsForCourse(courseId).stream()
-                    .noneMatch(pf ->pf.getId()
-                            .equals(SecurityContextHolder.getContext().getAuthentication().getName()))){
+                                                .noneMatch(pf ->pf.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))){
                 throw new PermissionDeniedException();
             }else{
                 for(Professor professor: professors){
@@ -481,9 +475,7 @@ public class VLServiceImpl implements VLService{
                         c.setProfessor(professor);
                     else throw new ProfessorAlreadyPresentInCourseException();
                 }
-
                 return professors.stream().map(pro-> modelMapper.map(pro, ProfessorDTO.class)).collect(Collectors.toList());
-
             }
         }
     }
@@ -516,7 +508,7 @@ public class VLServiceImpl implements VLService{
                 c.setEnabled(true);
             else
                 throw  new CourseAlreadyEnabledException();
-        }catch(EntityNotFoundException enfe){
+        }catch(EntityNotFoundException e){
             throw new CourseNotFoundException();
         }
     }
@@ -533,7 +525,7 @@ public class VLServiceImpl implements VLService{
                 c.setEnabled(false);
             else
                 throw new CourseAlreadyEnabledException();
-        }catch(EntityNotFoundException enfe){
+        }catch(EntityNotFoundException e){
             throw new CourseNotFoundException();
         }
     }
@@ -545,7 +537,7 @@ public class VLServiceImpl implements VLService{
         try{
             Student s = studentRepository.getOne(studentId);
             return s.getCourses().stream().map(c->modelMapper.map(c, CourseDTO.class)).collect(Collectors.toList());
-        }catch (EntityNotFoundException enfe){
+        }catch (EntityNotFoundException e){
             throw new StudentNotFoundException();
         }
     }
@@ -555,7 +547,7 @@ public class VLServiceImpl implements VLService{
         try{
             Professor p = professorRepository.getOne(professorId);
             return p.getCourses().stream().map(c->modelMapper.map(c, CourseDTO.class)).collect(Collectors.toList());
-        }catch (EntityNotFoundException enfe){
+        }catch (EntityNotFoundException e){
             throw new ProfessorNotFoundException();
         }
     }
@@ -898,7 +890,7 @@ public class VLServiceImpl implements VLService{
                 }
                 t.getMembers().forEach(s-> notificationService.sendMessage(s.getEmail(),"Notification: Team "+t.getName()+ " created","Team creation success!"));
             }
-        }catch(EntityNotFoundException enf){
+        }catch(EntityNotFoundException e){
             throw  new TeamNotFoundException();
         }
     }
@@ -909,7 +901,7 @@ public class VLServiceImpl implements VLService{
             Team t = teamRepository.getOne(id);
             t.getMembers().forEach(s-> notificationService.sendMessage(s.getEmail(),"Notification: Team "+t.getName()+ " not created","A student has rejected the proposal. Team creation stopped!"));
             teamRepository.delete(t);
-        }catch(EntityNotFoundException enf){
+        }catch(EntityNotFoundException e){
             throw  new TeamNotFoundException();
         }
     }
@@ -953,7 +945,6 @@ public class VLServiceImpl implements VLService{
                     });
                     photoModelVMRepository.save(photoModelVM);
                     return modelMapper.map(c, CourseDTO.class);
-
                 } else throw new ModelVMAlreadytPresentException();
             }else throw new PermissionDeniedException();
         }else throw new CourseNotFoundException();
@@ -998,7 +989,6 @@ public class VLServiceImpl implements VLService{
                         t.setRunningInstancesLeft(t.getRunningInstancesLeft()-runningInstancesDecrease);
                     });
                     return modelMapper.map(c, CourseDTO.class);
-
                 } else throw new ModelVMNotSettedException();
             }else throw new PermissionDeniedException();
         }else throw new CourseNotFoundException();
@@ -1012,9 +1002,11 @@ public class VLServiceImpl implements VLService{
         Optional<Professor> op = professorRepository.findById(professor);
         if(op.isPresent()){
             Optional<Course> oc = courseRepository.findById(courseId);
-            if(!oc.isPresent()) throw new CourseNotFoundException();
+            if(!oc.isPresent())
+                throw new CourseNotFoundException();
             Course course = oc.get();
-            if(!course.getProfessors().contains(op.get())) throw new PermissionDeniedException();
+            if(!course.getProfessors().contains(op.get()))
+                throw new PermissionDeniedException();
             List<Team> teams = course.getTeams();
             int minVcpuTmp = Integer.MAX_VALUE;
             int minDiskSpaceTmp = Integer.MAX_VALUE;
@@ -1740,8 +1732,7 @@ public class VLServiceImpl implements VLService{
 
         String auth =  SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<PhotoVersionHomework> op = photoVersionHMRepository.findById(versionId);
-        if (op.isPresent())
-        {
+        if (op.isPresent()){
             PhotoVersionHomework p =op.get();
             Homework h = p.getHomework();
             if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("professor"))) {
@@ -1781,7 +1772,8 @@ public class VLServiceImpl implements VLService{
                     h.setStatus("RIVISTO");
                     h.setPermanent(permanent);
                     if(permanent) {
-                        if(grade==null || Integer.parseInt(grade) < 0 || Integer.parseInt(grade) > 30) throw new GradeNotValidException();
+                        if(grade==null || Integer.parseInt(grade) < 0 || Integer.parseInt(grade) > 30)
+                            throw new GradeNotValidException();
                         h.setGrade(grade);
                     }
                     h.setTimestamp(photoCorrection.getTimestamp());
@@ -1796,7 +1788,6 @@ public class VLServiceImpl implements VLService{
 
                     return m;
                 }else throw new HomeworkVersionIdNotFoundException();
-
             }else throw  new PermissionDeniedException();
         }throw new HomeworkNotFoundException();
     }

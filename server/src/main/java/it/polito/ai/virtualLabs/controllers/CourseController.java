@@ -191,6 +191,10 @@ public class CourseController {
         else
             try {
                 return vlService.EnrollAllFromCSV(new BufferedReader(new InputStreamReader(file.getInputStream())), courseName);
+            }catch (CourseNotFoundException | StudentNotFoundException e){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            }catch (CourseDisabledException e){
+                throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
             }catch(FormatFileNotValidException | IOException e){
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
             }
@@ -202,6 +206,8 @@ public class CourseController {
              return vlService.enrollAll(Arrays.asList(membersId), courseName);
         }catch (StudentNotFoundException | CourseNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (CourseDisabledException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }

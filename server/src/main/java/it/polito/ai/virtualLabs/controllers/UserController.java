@@ -58,9 +58,6 @@ public class UserController {
     private MessageSource messageSource;
 
     @Autowired
-    NotificationService notificationService;
-
-    @Autowired
     PasswordResetTokenRepository passwordTokenRepository;
 
     @PostMapping("/addUser")
@@ -138,7 +135,7 @@ public class UserController {
                 email = userId+"@studenti.polito.it";
             else if(user.getRole().equals("professor") )
                 email=userId+"@polito.it";
-            return notificationService.sendMessage(email, "Change password request",
+            return vlService.sendMessage(email, "Change password request",
                     " Click here to change password:\n\n"
                     +"http://localhost:8080/API/user/changePassword?token="+token );
         }

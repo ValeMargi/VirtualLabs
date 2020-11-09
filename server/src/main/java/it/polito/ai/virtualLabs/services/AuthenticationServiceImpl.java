@@ -37,9 +37,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     JwtUserDetailsService jwtUserDetailsService;
 
     @Autowired
-    NotificationService notificationService;
-
-    @Autowired
     PasswordResetTokenRepository passwordTokenRepository;
 
     @Autowired
@@ -57,6 +54,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     TokenRegistrationRepository tokenRegistrationRepository;
 
+    @Autowired
+    VLService vlService;
 
    @Override
    public Optional<UserDTO> addStudent(StudentDTO student, String password,  AvatarStudentDTO avatarStudentDTO) {
@@ -76,7 +75,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                t.setUserId(user.getId());
            //    t.setExpiryDate(Timestamp.from(Instant.now().plus(120000, ChronoUnit.MILLIS))); //for debug
                t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
-               notificationService.sendMessage(user.getId(),
+               vlService.sendMessage(user.getId(),
                        "Enrollment to the VirtualLabs app",
                        "You have been subscribed to the application.\n" +
                                "Your data to access are as follows::\n\n" +
@@ -112,7 +111,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             t.setUserId(user.getId());
             //t.setExpiryDate(Timestamp.from(Instant.now().plus(120000, ChronoUnit.MILLIS)));// for debug
             t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
-            notificationService.sendMessage( user.getId(),
+            vlService.sendMessage( user.getId(),
                     "Enrollment to the VirtualLabs app",
                     "You have been subscribed to the application.\n" +
                             "Your data to access are as follows::\n\n" +

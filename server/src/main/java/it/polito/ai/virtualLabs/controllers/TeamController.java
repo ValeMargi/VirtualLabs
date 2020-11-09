@@ -4,6 +4,7 @@ import it.polito.ai.virtualLabs.dtos.StudentDTO;
 import it.polito.ai.virtualLabs.dtos.TeamDTO;
 import it.polito.ai.virtualLabs.dtos.VMDTO;
 import it.polito.ai.virtualLabs.exceptions.*;
+import it.polito.ai.virtualLabs.services.NotificationService;
 import it.polito.ai.virtualLabs.services.VLService;
 import it.polito.ai.virtualLabs.services.VLServiceStudent;
 import it.polito.ai.virtualLabs.services.VLServiceStudentImpl;
@@ -165,6 +166,31 @@ public class TeamController {
         } catch (TeamNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch (TeamNotEnabledException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/notification/confirm/{token}")
+    @ResponseBody
+    public int confirmationPage(@PathVariable String token) {
+        try {
+            return vlService.confirm(token);
+        }catch (TeamNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (CourseDisabledException | TeamDisabledException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+    @GetMapping("/notification/reject/{token}")
+    @ResponseBody
+    public int rejectionPage(@PathVariable String token) {
+        try {
+            return vlService.reject(token);
+        }catch(TeamNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (CourseDisabledException | TeamDisabledException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }

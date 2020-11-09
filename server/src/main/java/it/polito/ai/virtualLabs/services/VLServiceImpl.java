@@ -8,6 +8,9 @@ import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +37,8 @@ import java.util.StringTokenizer;
 @Transactional
 @Log(topic="service")
 public class VLServiceImpl implements VLService{
+    @Autowired
+    public JavaMailSender emailSender;
 
     @Autowired
     StudentRepository studentRepository;
@@ -47,8 +52,6 @@ public class VLServiceImpl implements VLService{
     ProfessorRepository professorRepository;
     @Autowired
     TeamRepository teamRepository;
-    @Autowired
-    NotificationService notificationService;
     @Autowired
     TokenRepository tokenRepository;
     @Autowired
@@ -339,7 +342,7 @@ public class VLServiceImpl implements VLService{
                         evictTeam(tId);
                     });
                 }
-                t.getMembers().forEach(s-> notificationService.sendMessage(s.getEmail(),"Notification: Team "+t.getName()+ " created","Team creation success!"));
+                t.getMembers().forEach(s-> sendMessage(s.getEmail(),"Notification: Team "+t.getName()+ " created","Team creation success!"));
             }
         }catch(EntityNotFoundException e){
             throw  new TeamNotFoundException();
@@ -351,7 +354,7 @@ public class VLServiceImpl implements VLService{
         try{
             Team t = teamRepository.getOne(id);
             if(!t.getCourse().isEnabled()) throw new CourseDisabledException();
-            t.getMembers().forEach(s-> notificationService.sendMessage(s.getEmail(),"Notification: Team "+t.getName()+ " not created","A student has rejected the proposal. Team creation stopped!"));
+            t.getMembers().forEach(s-> sendMessage(s.getEmail(),"Notification: Team "+t.getName()+ " not created","A student has rejected the proposal. Team creation stopped!"));
             teamRepository.delete(t);
         }catch(EntityNotFoundException e){
             throw  new TeamNotFoundException();
@@ -464,4 +467,108 @@ public class VLServiceImpl implements VLService{
         }
         return outputStream.toByteArray();
     }
+
+    @Override
+    public boolean sendMessage(String address, String subject, String body) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo("testaivirtuallabs@gmail.com");
+        message.setSubject(subject);
+        message.setText(body);
+
+        try {
+            emailSender.send(message);
+            return true;
+        }
+        catch (MailException me) {
+            me.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Controllo se tutti gli studenti hanno accettato, elimina token dal repo e attivazione Team con invio email
+     * @param token
+     * @return
+     */
+    @Override
+    public Integer confirm(String token) {
+        Optional<Token> t = checkTokenValidity(token);
+        if(t.isPresent()){
+            if( tokenRepository.findAllByTeamId(t.get().getTeamId())
+                    .stream().filter(to-> to.getStatus().equals("accepted")).count() == teamRepository.getOne(t.get().getTeamId()).getMembers().size()) {
+                tokenRepository.findAllByTeamId(t.get().getTeamId()).forEach(tk-> tokenRepository.delete(tk));
+                activateTeam(t.get().getTeamId());
+                return 2;
+            }else
+                return 1;
+        }else
+            return 0;
+    }
+
+    @Override
+    public Integer reject(String token) {
+        Optional<Token> t = checkTokenValidity(token);
+        if( t.isPresent()){
+            //richiesta non scaduta
+            Optional<Team> oteam = teamRepository.findById(t.get().getTeamId());
+            if(!oteam.isPresent()) throw new TeamNotFoundException();
+            t.get().setStatus("rejected");
+            oteam.get().setStatus("disabled");
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            oteam.get().setDisabledTimestamp(now.toString());
+            //tokenRepository.deleteFromTokenByTeamId(t.get().getTeamId()); //TESTare
+            //VLService.evictTeam(t.get().getTeamId());
+            return  1;
+        }else
+            return 0;
+    }
+    @Override
+    public void notifyTeam(TeamDTO dto, List<String> memberIds, String creatorStudent, String courseId, Timestamp timeout) {
+        if(timeout.before(Timestamp.from(Instant.now())))
+            throw new TimeoutNotValidException();
+        for (String memberId : memberIds) {
+            Token t = new Token();
+            t.setId(UUID.randomUUID().toString());
+            t.setTeamId(dto.getId());
+            t.setStatus("pending");
+            t.setCourseId(courseId);
+            t.setStudent(studentRepository.getOne(memberId));
+            t.setExpiryDate(timeout);
+            tokenRepository.saveAndFlush(t);
+            sendMessage(memberId + "@studenti.polito.it",
+                    "Join the Team",
+                    "You have been added to the Team " + dto.getName() + "\n\n");
+        }
+        Token t = new Token();
+        t.setId(UUID.randomUUID().toString());
+        t.setTeamId(dto.getId());
+        t.setStatus("accepted");
+        t.setCourseId(courseId);
+        t.setStudent(studentRepository.getOne(creatorStudent));
+        t.setExpiryDate(timeout);
+        tokenRepository.saveAndFlush(t);
+    }
+    @Override
+    public Optional<Token> checkTokenValidity(String token){
+        Optional<Token> t= tokenRepository.findById(token);
+        if(t.isPresent()){
+            Optional<Team> oteam = teamRepository.findById(t.get().getTeamId());
+            if(!oteam.isPresent()) throw new TeamNotFoundException();
+            if(oteam.get().getStatus().equals("disabled")) throw new TeamDisabledException();
+            // se è ancora valido
+            if( t.get().getExpiryDate().compareTo(Timestamp.from(Instant.now()))>0){
+                t.get().setStatus("accepted");
+                return t;
+            }else{
+                t.get().setStatus("rejected");
+                oteam.get().setStatus("disabled");
+                Timestamp now = new Timestamp(System.currentTimeMillis());
+                oteam.get().setDisabledTimestamp(now.toString());
+                //tokenRepository.deleteById(token);
+                return Optional.empty();
+            }
+        }
+        return t;
+    }
+
 }

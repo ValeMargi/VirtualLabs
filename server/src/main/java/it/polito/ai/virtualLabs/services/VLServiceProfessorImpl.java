@@ -33,8 +33,6 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
     @Autowired
     TeamRepository teamRepository;
     @Autowired
-    NotificationService notificationService;
-    @Autowired
     TokenRepository tokenRepository;
     @Autowired
     it.polito.ai.virtualLabs.repositories.VMRepository VMRepository;

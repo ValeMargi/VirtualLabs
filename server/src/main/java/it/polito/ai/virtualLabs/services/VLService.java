@@ -31,6 +31,10 @@ public interface VLService {
      byte[] compressZLib(byte[] data);
      byte[] decompressZLib(byte[] data);
     void assignmentExpiredSetPermanentHW(Assignment a);
-
+    boolean sendMessage(String address, String subject, String body);
+    void notifyTeam(TeamDTO dto, List<String> memberIds, String creator, String courseId, Timestamp timeout);
+    Integer confirm(String token);
+    Integer reject(String token);
+    Optional<Token> checkTokenValidity(String token);
 
     }

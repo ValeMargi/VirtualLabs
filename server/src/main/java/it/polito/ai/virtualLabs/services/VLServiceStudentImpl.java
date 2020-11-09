@@ -30,8 +30,6 @@ public class VLServiceStudentImpl implements VLServiceStudent{
     @Autowired
     TeamRepository teamRepository;
     @Autowired
-    NotificationService notificationService;
-    @Autowired
     TokenRepository tokenRepository;
     @Autowired
     VMRepository VMRepository;
@@ -159,7 +157,7 @@ public class VLServiceStudentImpl implements VLServiceStudent{
             team.setStatus("active");
         else{
             memberIds.forEach(s-> team.addStudentIntoTeam(studentRepository.getOne(s)));
-            notificationService.notifyTeam(modelMapper.map(team, TeamDTO.class), memberIds, creatorStudent,  courseId, timeout);
+            vlService.notifyTeam(modelMapper.map(team, TeamDTO.class), memberIds, creatorStudent,  courseId, timeout);
         }
 
         Map<String, Object> map = new HashMap<>();

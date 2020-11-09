@@ -12,6 +12,11 @@ div {
   margin-right: 1em;
 }
 
+.risorseDisponibili{
+  background-color: rgba(128, 255, 0, 0.219);
+  margin-bottom: 2%;
+}
+
 mat-dialog-actions {
     float: right;
 }

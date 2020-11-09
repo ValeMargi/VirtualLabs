@@ -49,7 +49,7 @@ export class ManageModelComponent implements OnInit, OnChanges {
           max_disco : new FormControl('', [Validators.required, Validators.min(this.totRes.diskSpace)]),
           max_ram : new FormControl('', [Validators.required, Validators.min(this.totRes.ram)]),
           max_vm : new FormControl('', [Validators.required, Validators.min(this.totRes.total)]),
-          max_vm_active : new FormControl('', [Validators.required, Validators.min(this.totRes.running)])
+          max_vm_active : new FormControl('', [Validators.required, Validators.min(this.totRes.running), Validators.max(this.totRes.total)])
         });
 
         this.ModelVmForm.setValue({

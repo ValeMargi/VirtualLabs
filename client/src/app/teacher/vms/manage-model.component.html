@@ -1,6 +1,21 @@
 <form (keyup.enter)="saveModel(maxVcpu.value, maxDisk.value, ram.value, totInstances.value, runningInstances.value)">
   <h2 mat-dialog-title>Crea/modifica modello</h2>
   <mat-dialog-content>
+
+    <mat-card class="risorseDisponibili">
+      <mat-card-subtitle>
+        <strong>Massimo valore attualmente utilizzato per risorsa</strong>
+      </mat-card-subtitle>
+      <mat-card-content>
+        <h5>VCpu: <strong>{{totRes.vcpu}} </strong> </h5>
+        <h5>Spazio disco (GB): <strong> {{totRes.diskSpace}}</strong></h5>
+        <h5>Ram (GB): <strong>{{totRes.ram}} </strong></h5>
+        <h5>VM totali: <strong>{{totRes.total}} </strong></h5>
+        <h5>VM attive: <strong>{{totRes.running}} </strong></h5>
+      </mat-card-content>
+    </mat-card>
+    </mat-dialog-content>
+
     <!--RegisterForm-->
     <form [formGroup]="ModelVmForm">
 
@@ -37,10 +52,10 @@
           <input #runningInstances class="input" type="number" placeholder="Massimo VM attive" formControlName="max_vm_active" matInput min="1" required>
           <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('required')">Inserisci un numero massimo di VM attive</mat-error>
           <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('min')">Un team ha più VM attive</mat-error>
+          <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('max')">Non puoi inserire più Vm attive di quelle totali</mat-error>
       </mat-form-field><br><br>
 
   </form>
-  </mat-dialog-content>
 
   <mat-dialog-actions>
       <button mat-button mat-raised-button color="warn" (click)="close()">Annulla</button>

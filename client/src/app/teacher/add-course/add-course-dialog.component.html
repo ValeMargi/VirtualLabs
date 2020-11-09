@@ -32,12 +32,26 @@
       <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
     </mat-form-field><br><br>
 
-    <!--Foto iniziale VM-->
+    <mat-card class="gestioneVmCorso">
+      <mat-card-subtitle>
+        <strong>Gestione Vm Corso </strong>
+      </mat-card-subtitle>
 
-      Seleziona foto iniziale VM<br>
-      <input class="inputfile" type="file" formControlName="imageVM" accept="image/*" (change)="addVMImage($event)" required>
-      <mat-error *ngIf="AddCourseForm.get('imageVM').hasError('required')">Inserire la VM</mat-error>
-    <br>
+      <mat-card-content>
+
+        <!--Crea Modello-->
+        <button #bCreaModello mat-raised-button color="accent"> Crea Modello VM</button>
+        <mat-checkbox #default > Utilizza Valori di Default</mat-checkbox> <br>
+
+        <!--Foto iniziale VM-->
+        <strong>Seleziona foto iniziale VM </strong>
+        <input class="inputfile" type="file" formControlName="imageVM" accept="image/*" (change)="addVMImage($event)" required>
+        <mat-error *ngIf="AddCourseForm.get('imageVM').hasError('required')">Inserire la VM</mat-error><br>
+
+      </mat-card-content>
+
+    </mat-card>
+
 
     <!--Aggiungi Professore-->
     <mat-form-field class="matForm">

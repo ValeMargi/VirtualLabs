@@ -432,7 +432,12 @@ public class StudentController {
      * Metodo: GET
      * @param courseName:  riceve dal path il nome del corso
      * @param assignmentId: riceve dal path l'id di una consegna
-     * @return ritorna la lista di versioni di Homerwork per la consegna con assignmentId indicato e per corso courso con courseName indicato
+     * @return : ritorna una lista di mappe composte nel seguente formato
+     *                {
+     *                  version id:"...",
+     *                  timestamp :"...",
+     *                  nameFile : "..."
+     *              }
      */
     @GetMapping("/{courseName}/{assignmentId}/getVersions")
     public List<Map<String, Object>> getVersionsHWForStudent(@PathVariable String courseName, @PathVariable Long assignmentId) {
@@ -450,7 +455,13 @@ public class StudentController {
      * Metodo: GET
      * @param courseName:   riceve dal path il nome del corso
      * @param assignmentId: riceve dal path l'id di una consegna
-     * @return ritorna la lista di correzioni di Homerwork per la consegna con assignmentId indicato e per il corso con courseName indicato
+     * @return : ritorna una lista di mappe composte nel seguente formato
+     *                {
+     *                  correction id:"...",
+     *                  timestamp :"...",
+     *                  nameFile : "...",
+     *                  versionId: "..."
+     *              }
      */
     @GetMapping("/{courseName}/{assignmentId}/getCorrections")
     public List<Map<String, Object>> getCorrectionsForStudent(@PathVariable String courseName, @PathVariable Long assignmentId) {

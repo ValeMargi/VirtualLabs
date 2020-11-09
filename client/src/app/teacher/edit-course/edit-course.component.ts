@@ -16,9 +16,9 @@ import { Teacher } from 'src/app/models/teacher.model';
 })
 export class EditCourseComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
-  
+
   private sort: MatSort;
-  
+
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
     this.dataSource.sort = this.sort;
@@ -42,9 +42,10 @@ export class EditCourseComponent implements OnInit, OnChanges {
   @Output('edit') edit = new EventEmitter<any>();
 
   constructor(private matDialogRef: MatDialogRef<EditCourseComponent>,
-              private formBuilder: FormBuilder) { 
+              private formBuilder: FormBuilder) {
 
     this.EditCourseForm = this.formBuilder.group({
+      acronimo : new FormControl(''),
       max_iscrizioni : new FormControl('', [Validators.required, Validators.min(1), Validators.max(10)]),
       min_iscrizioni : new FormControl('', [Validators.required, Validators.min(1), Validators.max(10)]),
     });
@@ -53,6 +54,7 @@ export class EditCourseComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     if (this.course != undefined) {
       this.EditCourseForm.setValue({
+        acronimo : this.course.acronym,
         max_iscrizioni : this.course.max,
         min_iscrizioni : this.course.min
       });
@@ -66,6 +68,7 @@ export class EditCourseComponent implements OnInit, OnChanges {
       this.course = changes.course.currentValue;
 
       this.EditCourseForm.setValue({
+        acronimo: this.course.acronym,
         max_iscrizioni : this.course.max,
         min_iscrizioni : this.course.min
       });
@@ -100,7 +103,7 @@ export class EditCourseComponent implements OnInit, OnChanges {
   _filter(value: string): Teacher[] {
     const filterValue = value.toLowerCase();
 
-    return this.allTeachers.filter(option => 
+    return this.allTeachers.filter(option =>
       (!this.teachersInCourse.map(t => t.id).includes(option.id) && !this.teachersToAdd.includes(option)) &&
       (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
   }
@@ -146,13 +149,13 @@ export class EditCourseComponent implements OnInit, OnChanges {
     this.enable.emit();
   }
 
-  editCourse(min: number, max: number) {
+  editCourse(acronym: string, min: number, max: number) {
     if (this.teachersToAdd.length > 0) {
       this.add.emit(this.teachersToAdd.map(t => t.id));
     }
 
     if (this.EditCourseForm.valid) {
-      this.edit.emit({min: min, max: max});
+      this.edit.emit({acronym: acronym, min: min, max: max});
     }
     else {
       window.alert("Verificare che i valori inseriti rispettino tutti i vincoli e riprovare");

@@ -108,12 +108,15 @@ export class EditCourseContComponent implements OnInit {
   }
 
   editCourse(content: any) {
+    let acronym: string = content.acronym;
     let min: number = content.min;
     let max: number = content.max;
 
     let c: Course = this.COURSE;
+    c.acronym = acronym;
     c.max = max;
     c.min = min;
+
 
     this.courseService.modifyCourse(this.COURSE.name, c).subscribe(
       (data) => {
@@ -130,7 +133,7 @@ export class EditCourseContComponent implements OnInit {
         window.alert(error.error.message);
       }
     )
-    
+
   }
 
 }

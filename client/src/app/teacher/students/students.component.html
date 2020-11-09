@@ -33,6 +33,11 @@
 
   <!--Tabella Studenti-->
   <div class="tableContainer" *ngIf="tableVisibility">
+    <mat-card class="message" *ngIf="checkBoxAll">
+      <mat-card-subtitle>
+        <strong> Selezionare tutti gli studenti del corso? </strong><button mat-raised-button class="buttonClicca">Clicca Qui</button>
+      </mat-card-subtitle>
+    </mat-card>
     <table #table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef>

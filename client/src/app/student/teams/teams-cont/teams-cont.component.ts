@@ -112,6 +112,7 @@ export class TeamsContComponent implements OnInit, OnDestroy {
     this.teamService.getProposals(courseName).subscribe(
       (data) => {
         this.PROPOSALS = data;
+        console.log(data);
       },
       (error) => {
         window.alert(error.error.message);

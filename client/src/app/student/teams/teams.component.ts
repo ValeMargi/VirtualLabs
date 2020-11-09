@@ -91,6 +91,8 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
   ngOnInit(): void {
 
+    console.log(this.proposals);
+
     this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
       if (params['requestTeam']) {
         this. openRequestDialog();
@@ -167,11 +169,9 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
       if (s.status == "accepted") {
         text = text.concat("Richiesta accettata");
-        this.stateDisabled = !this.stateDisabled;
       }
       else if (s.status == "rejected"){
         text = text.concat("Richiesta rifiutata");
-        this.stateDisabled = !this.stateDisabled;
       }
       else if (s.status == "pending"){
         text = text.concat("In attesa di risposta");
@@ -194,11 +194,9 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
     if (s.status == "accepted") {
       text = text.concat("Richiesta accettata");
-      this.stateDisabled = !this.stateDisabled;
     }
     else if (s.status == "rejected"){
       text = text.concat("Richiesta rifiutata");
-      this.stateDisabled = false;
     }
     else if (s.status == "pending"){
       text = text.concat("In attesa di risposta");

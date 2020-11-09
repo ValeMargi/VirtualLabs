@@ -35,15 +35,15 @@
   <div class="tableContainer" *ngIf="tableVisibility">
     <mat-card class="message" *ngIf="checkBoxAll">
       <mat-card-subtitle>
-        <strong> Selezionare tutti gli studenti del corso? </strong><button mat-raised-button class="buttonClicca">Clicca Qui</button>
+        <strong> Selezionare tutti gli studenti del corso? </strong> <button class="buttonClicca" mat-raised-button (click)="selectAll()" >Clicca Qui</button>
       </mat-card-subtitle>
     </mat-card>
     <table #table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox #checkall (change)="selectAll($event.checked)"
-                                      [checked]="selectedStudents.hasValue() && allSelected()"
-                                      [indeterminate]="selectedStudents.hasValue() && !allSelected()">
+              <mat-checkbox #checkall (change)="selectCurrentPage($event.checked)"
+                                      [checked]="currentItemsSelected()"
+                                      [indeterminate]="selectedStudents.hasValue() && !currentItemsSelected()">
               </mat-checkbox>
             </th>
             <td mat-cell *matCellDef="let row"><mat-checkbox #checksingle (change)="selectStudent($event.checked, row)"
@@ -70,7 +70,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
         </table>
-        <mat-paginator  class="paginator"  [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+        <mat-paginator  class="paginator"  [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="onPageChanged($event)" ></mat-paginator>
 
   </div>
 

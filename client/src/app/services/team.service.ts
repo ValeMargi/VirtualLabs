@@ -62,12 +62,12 @@ export class TeamService {
 
   confirm(token: string) {
     //0 = non valido, 1 = conferma, 2 = creato
-    return this.http.get<number>(`http://localhost:8080/API/notification/confirm/${token}`);
+    return this.http.get<number>(`${this.API_TEAMS}/confirm/${token}`);
   }
 
   refuse(token: string) {
     //0 = non valido, 1 = respinto
-    return this.http.get<number>(`http://localhost:8080/API/notification/reject/${token}`);
+    return this.http.get<number>(`${this.API_TEAMS}/reject/${token}`);
   }
 
 }

@@ -35,7 +35,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   private paginator: MatPaginator;
   selection: any;
   selectionAmount: any;
-  checkBoxAll: boolean = false;;
+  checkBoxAll: boolean = false;
 
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
@@ -66,9 +66,11 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
+  pageIndex: number = 0;
 
   tableVisibility: boolean = true;
   addDisabled: boolean = true;
+
 
   constructor() {}
 
@@ -139,12 +141,11 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
       if (this.allSelected()) {
         this.checkall.checked = true;
         this.checkall.indeterminate = false;
-        this.checkBoxAll = true;
+
       }
       else {
         this.checkall.indeterminate = true;
         this.checkall.checked = false;
-        this.checkBoxAll = false;
       }
     }
     else {
@@ -162,8 +163,35 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
     }
   }
 
-  selectAll(isChecked) {
-    this.dataSource.data.forEach(s => this.selectStudent(isChecked, s));
+  selectAll(){
+    this.dataSource.data.forEach(s => this.selectStudent(true, s));
+  }
+
+  currentItemsSelected(){
+    let allChecked: boolean = true;
+    let initIndex = this.pageSize*this.pageIndex;
+
+    let selected = this.selectedStudents.selected;
+
+    for(let i = initIndex; i < (initIndex + this.pageSize); i++){
+      if(!selected.includes(this.dataSource.data[i])){
+        allChecked = false;
+      }
+    }
+    return allChecked;
+  }
+
+  selectCurrentPage(isChecked){
+    let initIndex = this.pageSize*this.pageIndex;
+    this.checkBoxAll = true;
+
+    for(let i = initIndex; i < (initIndex + this.pageSize); i++){
+      this.selectStudent(isChecked, this.dataSource.data[i]);
+    }
+  }
+
+  onPageChanged(event){
+      this.pageIndex = event.pageIndex;
   }
 
   allSelected() {
@@ -220,6 +248,5 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
     this.addDisabled = false;
   }
 
-  //Inserire metodo che seleziona solo gli studenti della pagina corrente
 
 }

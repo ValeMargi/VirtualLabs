@@ -229,7 +229,7 @@ public class VLServiceImpl implements VLService{
         return profile;
     }
 
-    @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
+    @PreAuthorize("hasAuthority('student')")
     @Override
     public Map<String, Object> getProfileStudent(){
         String auth = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -262,7 +262,7 @@ public class VLServiceImpl implements VLService{
         return profile;
     }
 
-    @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
+    @PreAuthorize("hasAuthority('professor')" )
     @Override
     public Map<String, Object> getProfileProfessor(){
         String auth = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -273,7 +273,7 @@ public class VLServiceImpl implements VLService{
         AvatarProfessorDTO avatarProfessorDTO = modelMapper.map(p.getPhotoProfessor(), AvatarProfessorDTO.class);
         avatarProfessorDTO.setPicByte(decompressZLib(avatarProfessorDTO.getPicByte()));
         Map<String, Object> profile = new HashMap<>();
-        profile.put("student", modelMapper.map(p, ProfessorDTO.class));
+        profile.put("professor", modelMapper.map(p, ProfessorDTO.class));
         profile.put("avatar", avatarProfessorDTO);
         return profile;
     }

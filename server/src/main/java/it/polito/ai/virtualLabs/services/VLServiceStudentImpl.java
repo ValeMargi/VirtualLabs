@@ -461,7 +461,7 @@ public class VLServiceStudentImpl implements VLServiceStudent{
 
     /*Visualizzare VM accessibili allo student in tab corso*/
     @Override
-    public List<VMDTO> allVMforStudent( String courseId) { //CourseId preso dal pathVariable
+    public List<VMDTO> allVMforStudent( String courseId) {
         String student =SecurityContextHolder.getContext().getAuthentication().getName();
         Student s = studentRepository.getOne(student);
         List<Team> teams = s.getTeams().stream().filter(c->c.getCourse().getName().equals(courseId)).collect(Collectors.toList());

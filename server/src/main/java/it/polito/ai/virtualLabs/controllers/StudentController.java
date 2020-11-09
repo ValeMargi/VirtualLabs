@@ -29,11 +29,21 @@ public class StudentController {
     @Autowired
     VLServiceStudent vlServiceStudent;
 
+    /**
+     * Metodo: GET
+     * @return: ritorna la lista di DTO degli studenti presenti nel sistema
+     */
     @GetMapping({"", "/"})
     public List<StudentDTO> all() {
         return vlService.getAllStudents().stream().map(ModelHelper::enrich).collect(Collectors.toList());
     }
 
+    /**
+     * Metodo: GET
+     * @param id: riceve dal path la matricola di uno studente
+     * @return: ritorna una mappa contenente il DTO dello studente avente come matricola il valore ricevuto come parametro del metodo e
+     *          il DTO dell'avatar dello studente
+     */
     @GetMapping("/{id}")
     public Map<String, Object> getOne(@PathVariable String id) {
         try{
@@ -46,6 +56,11 @@ public class StudentController {
         }
     }
 
+    /**
+     * Metodo: GET
+     * @return: ritorna una mappa contenente il DTO dello studente autenticato e
+     *          il DTO dell'avatar dello studente
+     */
     @GetMapping("/getProfile")
     public Map<String, Object> getProfile() {
         try{
@@ -56,12 +71,11 @@ public class StudentController {
     }
 
     /**
+     * Authority: Student
      * Metodo: GET
-     * Authority: Studente
-     * @param studentId: riceve dal path l'id di uno studente
-     * @return: ritorna una lista di DTO dei corsi a cui lo studente con studentId indicato è iscritto
+     * @param studentId: riceve dal path la matricola di uno studente
+     * @return: ritorna una lista di DTO dei corsi a cui lo studente con la matricola indicata nel path è iscritto
      */
-      /*GET mapping request to see the list of courses enrolled by a student with studentId*/
     @GetMapping("/{studentId}/courses")
     public List<CourseDTO> getCourses(@PathVariable String studentId) {
         try {
@@ -72,10 +86,10 @@ public class StudentController {
     }
 
     /**
-     * Authrority: Studente
-     * @param courseName
-     * @return: ritrona lista di VM dto con le informazioni
-     *          di tutte le VM del team di cui lo studente autenticato è membro
+     * Authority: Student
+
+     * @param courseName:  riceve dal path il nome di un Corso
+     * @return: ritorna la lista di DTO di VM con le informazioni di tutte le VM del team di cui lo studente autenticato è membro
      */
     @GetMapping("/VM/{courseName}")
     public List<VMDTO> allVMforStudent(@PathVariable String courseName) {
@@ -87,10 +101,11 @@ public class StudentController {
     }
 
     /**
-     * Authrority: Studente
-     * @param courseName
-     * @param VMid
-     * @return: ritrona  VM dto con l'immagine della VM con id pari a VMid
+     * Authority: Student
+     * Metodo: GET
+     * @param courseName: riceve dal path il nome di un Corso
+     * @param VMid: riceve dal path l'id di una VM
+     * @return: ritorna il DTO dell'immagine della VM con id pari a VMid
      */
     @GetMapping("/VM/{courseName}/{VMid}")
     public PhotoVMDTO getVMforStudent(@PathVariable String courseName, @PathVariable Long VMid) {
@@ -106,10 +121,12 @@ public class StudentController {
     }
 
     /**
+     * Authority: Student
+     * Metodo: GET
      * Metodo per verificare se lo studente autenticato è owner della VM con WMid indicata
-     * @param courseName
-     * @param VMid
-     * @return
+     * @param courseName:  riceve dal path il nome di un Corso
+     * @param VMid:riceve dal path l'id di una VM
+     * @return: ritorna true se l'utente autenticato è owner della VM con id pari a VMid ricevuto dal path
      */
     @GetMapping("/VM/{courseName}/{VMid}/owner")
     public boolean isOwner(  @PathVariable String courseName, @PathVariable Long VMid) {
@@ -123,10 +140,11 @@ public class StudentController {
     }
 
     /**
+     * Authority: Student
      * Metodo: GET
-     * Authority: Studente
-     * @param courseName: riceve dal path il nome del corso di cui si vuole elencare le consegne associate
-     * @return: ritorna la lista di map con AssignmentDTO associato al corso e i campi "grade" e "status"
+     * @param courseName: riceve dal path il nome di un Corso
+     * @return: ritorna per ogni consegna associata al corso una mappa contenente il DTO
+     *          dell'assignment, il campo "grade" e "status"
      */
     @GetMapping("/{courseName}/assignment")
     public List<Map<String,Object>> allAssignment(@PathVariable String courseName) {
@@ -140,11 +158,11 @@ public class StudentController {
     }
 
     /**
-     * Metodo: Get
-     * Authority: Studente
-     * @param courseName
-     * @param assignmentId
-     * @return informazioni assignment dello studente
+     * Authority: Student
+     * Metodo: GET
+     * @param courseName: riceve dal path il nome di un Corso
+     * @param assignmentId: riceve dal path l'id di una consegna associata al corso CourseName
+     * @return: ritorna il DTO dell'immagine della consegna con id uguale ad assignmentId
      */
     @GetMapping("/{courseName}/{assignmentId}/getAssignment")
     public PhotoAssignmentDTO getAssignment(@PathVariable String courseName, @PathVariable Long assignmentId) {
@@ -158,8 +176,8 @@ public class StudentController {
     }
 
     /**
+     * Authority: Student
      * Metodo: POST
-     * Authority: Studente
      * @param courseName:courseName: riceve dal path il nome del corso
      * @param input: nella richiesta vengono inviati tutti i parametri associati alla VM creata
      * @return: ritorna il DTO della VM appena creata
@@ -194,11 +212,12 @@ public class StudentController {
 
 
     /**
+     * Authority: Student
      * Metodo: POST
-     * Authority: Studente
      * @param courseName: riceve dal path il nome del corso
      * @param VMid: riceve dal path l'id della VM
-     * @param input: nel body della richiesta vengono inviati gli id dei membri del team che divenntano owner della VM
+     * @param input: nel corpo della richiesta vengono inviati gli id dei membri del team che diventano owner della VM
+     * @return: ritorna true o false a seconda dell'esito dell'operazione
      */
     @PostMapping("/{courseName}/{VMid}/addOwner")
     public boolean addOwner(  @PathVariable String courseName, @PathVariable Long VMid,@RequestBody String[] input) {
@@ -215,10 +234,12 @@ public class StudentController {
     }
 
     /**
-     * Metodo GET
-     * Authrority: Studente
-     * @param courseName, teamId, vmId
-     * @return: ritorna la lista di StudentDTO owner di una VM
+     * Authority: Student
+     * Metodo: GET
+     * @param courseName:riceve dal path il nome del corso
+     * @param teamId: riceve dal path l'id del team
+     * @param vmId: riceve dal path l'id della VM
+     * @return: ritorna la lista dei DTO degli studenti che sono owner della VM con id pari a vmId
      */
     @GetMapping("/VM/{courseName}/{teamId}/{vmId}")
     public List<StudentDTO> getOwners(@PathVariable String courseName, @PathVariable Long teamId, @PathVariable Long vmId) {
@@ -232,10 +253,11 @@ public class StudentController {
     }
 
     /**
+     * Authority: Student
      * Metodo: GET
-     * Authority: Studente
      * @param courseName: riceve dal path il nome del corso
-     * @param VMid: riceve dal path l'id della VM da attiavare
+     * @param VMid: riceve dal path l'id della VM da attivare
+     * @return: ritorna true o false a seconda dell'esito dell'operazione
      */
     @GetMapping("/{courseName}/{VMid}/activateVM")
     public boolean activateVM(  @PathVariable String courseName, @PathVariable Long VMid) {
@@ -251,10 +273,11 @@ public class StudentController {
     }
 
     /**
+     * Authority: Student
      * Metodo: GET
-     * Authority: Studente
      * @param courseName: riceve dal path il nome del corso
-     * @param VMid: riceve dal path l'id della VM da disattiavare
+     * @param VMid: riceve dal path l'id della VM da disattivare
+     * @return: ritorna true o false a seconda dell'esito dell'operazione
      */
     @GetMapping("/{courseName}/{VMid}/disableVM")
     public boolean disableVM(  @PathVariable String courseName, @PathVariable Long VMid) {
@@ -268,10 +291,11 @@ public class StudentController {
     }
 
     /**
+     * Authority: Student
      * Metodo: GET
-     * Authority: Studente
      * @param courseName: riceve dal path il nome del corso
      * @param VMid: riceve dal path l'id della VM da rimuovere
+     * @return: ritorna true o false a seconda dell'esito dell'operazione
      */
     @GetMapping("/{courseName}/{VMid}/removeVM")
     public boolean removeVM(  @PathVariable String courseName, @PathVariable Long VMid) {
@@ -287,11 +311,11 @@ public class StudentController {
     }
 
     /**
-     * Metodo per utilizzare una VM, carico una nuova immagine andando a sovrascrivere
-     * quella vecchia (id invariato= e aggiorno timestamp in vm
-     * @param courseName
-     * @param VMid
-     * @param file
+     * Authority: Student
+     * Metodo: POST
+     * @param courseName: riceve dal path il nome del corso
+     * @param VMid:  riceve dal path l'id della VM da utilizzare
+     * @param file: riceve l'immagine della nuova VM utilizzata
      */
     @PostMapping("/{courseName}/{VMid}/use")
     public boolean useVM( @PathVariable String courseName, @PathVariable Long VMid,
@@ -320,12 +344,14 @@ public class StudentController {
     }
 
     /**
-     * Metodo per aggiornare le risorse si una VM, può farlo solo lo studente owner della VM,
-     * VM deve essere off e i nuovi valori delle risorse devono rispettare i vincoli del team
-     * @param courseName
-     * @param VMid
-     * @param input
-     * @return
+     * Authority: Student
+     * Metodo: POST
+     * @param courseName: riceve dal path il nome del corso
+     * @param VMid:  riceve dal path l'id della VM da utilizzare
+     * @param input: riceve una mappa contente i campi delle risorse aggiornate del DTO della VM con id pari a VMid
+     *             OSS: per aggiornare le risorse di una VM, lo studente deve essere owner, la VM deve essere spenta
+     *             e i nuovi valori delle risorse devono rispettare i vincoli associati al ModelVM del corso
+     * @return: ritorna il DTO della VM modificata
      */
     @PostMapping("/{courseName}/{VMid}/update")
     public VMDTO updateVMresources( @PathVariable String courseName,  @PathVariable Long VMid,
@@ -348,12 +374,12 @@ public class StudentController {
         }
     }
     /**
+     * Authority: Student
      * Metodo: POST
-     * Authority: Studente
      * @param courseName: riceve dal path il nome del corso
      * @param assignmentId: riceve dal path l'id della consegna per cui lo studente vuole aggiungere un elaborato
      * @param homeworkId: riceve dal path l'id dell'eleborato a cui lo studente vuole caricare un'immagine
-     * @param file: nella richiesta viene inviata l'immagine caricata dallo studente
+     * @param file: nella richiesta viene inviata l'immagine caricata dallo studente corrispondente al nuovo elaborato
      * @throws IOException
      */
     @PostMapping("/{courseName}/{assignmentId}/{homeworkId}/uploadHomework")
@@ -383,11 +409,11 @@ public class StudentController {
     }
 
     /**
+     * Authority: Student
      * Metodo: GET
-     * Authority: Studente
      * @param courseName: riceve dal path il nome del corso di cui si vuole elencare gli elaborati per una certa consegna con id pari a assignmentId
      * @param assignmentId: riceve dal path l'id della consegna
-     * @return: ritorna la lista di elaborati svolti dagli studenti per la consegna indicata
+     * @return: ritorna la lista di DTO degli elaborati svolti dagli studenti per la consegna indicata
      */
     @GetMapping("/{courseName}/{assignmentId}/getHomework")
     public HomeworkDTO getHomework(@PathVariable String courseName, @PathVariable Long assignmentId) {
@@ -402,11 +428,11 @@ public class StudentController {
 
 
     /**
+     * Authority: Student
      * Metodo: GET
-     * Authority: Studente
-     * @param courseName
-     * @param assignmentId
-     * @return ritorna la lista di versioni di Homerwork per la consegna con assignmentId indicato e per il courso con courseName indicato
+     * @param courseName:  riceve dal path il nome del corso
+     * @param assignmentId: riceve dal path l'id di una consegna
+     * @return ritorna la lista di versioni di Homerwork per la consegna con assignmentId indicato e per corso courso con courseName indicato
      */
     @GetMapping("/{courseName}/{assignmentId}/getVersions")
     public List<Map<String, Object>> getVersionsHWForStudent(@PathVariable String courseName, @PathVariable Long assignmentId) {
@@ -420,11 +446,11 @@ public class StudentController {
     }
 
     /**
+     * Authority: Student
      * Metodo: GET
-     * Authority: Studente
-     * @param courseName
-     * @param assignmentId
-     * @return ritorna la lista di correzioni di Homerwork per la consegna con assignmentId indicato e per il courso con courseName indicato
+     * @param courseName:   riceve dal path il nome del corso
+     * @param assignmentId: riceve dal path l'id di una consegna
+     * @return ritorna la lista di correzioni di Homerwork per la consegna con assignmentId indicato e per il corso con courseName indicato
      */
     @GetMapping("/{courseName}/{assignmentId}/getCorrections")
     public List<Map<String, Object>> getCorrectionsForStudent(@PathVariable String courseName, @PathVariable Long assignmentId) {

@@ -45,7 +45,7 @@ public class CourseController {
 
     /**
      * Metodo: GET
-     * @param name: riceve dal path il nome di un Corso
+     * @param name: nome del corso richiesto
      * @return: ritorna il DTO del corso avente il nome ricevuto come parametro del metodo
      */
     @GetMapping("/{name}")
@@ -145,7 +145,7 @@ public class CourseController {
     /**
      * Metodo: POST
      * Authority: Professor
-     * @param courseName: riceve dal path il nome di un Corso
+     * @param courseName: nome del corso da modificare
      * @param enabled: flag (true/false) che indica se il Professore deve abilitare/disabilitare il dato corso
      */
     @PostMapping("/{courseName}/enable")
@@ -167,7 +167,7 @@ public class CourseController {
     /**
      * Metodo: POST
      * Authority: Professor
-     * @param courseName:riceve dal path il nome del Corso da rimuovere
+     * @param courseName:nome del corso da rimuovere
      * @return: ritorna l'esito della rimozione del corso indicato
      */
     @DeleteMapping("/{courseName}/remove")
@@ -184,8 +184,8 @@ public class CourseController {
     /**
      * Metodo: POST
      * Authority: Profesor
-     * @param courseName:riceve dal path il nome del Corso da modificare
-     * @param courseDTO:  DTO del corso da modificare contenente i nuovi parametri
+     * @param courseName: nome del Corso da modificare
+     * @param courseDTO: DTO del corso da modificare contenente i nuovi parametri
      * @return: ritorna l'esito della modifica del corso indicato
      */
     @PostMapping("/{courseName}/modify")

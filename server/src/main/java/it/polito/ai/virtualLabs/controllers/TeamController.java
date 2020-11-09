@@ -29,16 +29,18 @@ public class TeamController {
 
     /**
      * Metodo: POST
-     * Authority: Studente
-     * @param courseName: riceve dal path il nome di un Corso a cui lo studente autenticato è iscritto
-     * @param object: Nel corso della richiesta viene passato il nome del Team proposto dallo studente e la lista degli id degli studenti che formeranno il gruppo
-     *              Esempio Body: {"nameTeam": "Team1",
-     *                             "membersId": {"s1", "s2", "s2"}
-     *                            }
-     * @return: ritorna il DTO del Team appena creato (Long id;String name;int status;)
+     * Authority: Student
+     * @param courseName: nome del corso a cui lo studente autenticato è iscritto
+     * @param object:   mappa contenente il nome del Team proposto dallo studente e la lista degli ID degli studenti che formeranno il gruppo
+     *                  {
+     *                      "nameTeam": "...",
+     *                      "membersId": {...}
+     *                  }
+     * @return: ritorna il DTO del Team appena creato
      */
     @PostMapping("/{courseName}/proposeTeam")
     public Map<String,Object> proposeTeam(@PathVariable String courseName, @RequestBody Map<String, Object> object) {
+        //controllo che tutti i campi della mappa siano presenti
         if ( !object.containsKey("nameTeam") ||  !object.containsKey("timeout") || !object.containsKey("membersId"))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Parametri non conformi con la richiesta");
         try {
@@ -62,6 +64,28 @@ public class TeamController {
         }
     }
 
+    /**
+     * Metodo: GET
+     * Authority: Student
+     * @param courseName: nome del corso
+     * @return: ritorna una lista di mappe contenenti il nome del team, i dati del creatore del team, lo stato del team,
+     *           l'ID del token dell studente autenticato collegato al team, lo stato del token, la scadenza del token
+     *           e una ulteriore lista di mappe contenenti i dati degli studenti invitati al gruppo e lo stato delle loro richieste
+     *           {
+     *             teamname:"...",
+     *             creator:"...",
+     *             teamStatus."...",
+     *             tokenId:"...",
+     *             status:"...",
+     *             scadenza:"...",
+     *             students: {
+     *                 {
+     *                   student:"...",
+     *                   status:"..."
+     *                 }
+     *             }
+     *           }
+     */
     @GetMapping("/{courseName}/getProposals")
     public List<Map<String, Object>> getProposal(@PathVariable String courseName) {
         try {
@@ -74,11 +98,9 @@ public class TeamController {
     }
 
     /**
-     * Authority: Student and Professor
-     * @param courseName
-     * @return ritorna la lista di teamDTO per un dato corso
+     * @param courseName:nome del corso
+     * @return: ritorna la lista di DTO dei team del corso
      */
-    /*GET mapping request to see the list of groups of a given course*/
     @GetMapping("/{courseName}/forCourse")
     public List<TeamDTO> getTeamsForCourse(@PathVariable String courseName) {
         try {
@@ -88,11 +110,10 @@ public class TeamController {
         }
     }
 
-    /*POST mapping request to see the list of students enrolled in a team with id=teamId*/
     /**
      * Metodo: GET
-     * @param teamId: riceve dal path L'ID di un determinato Team
-     * @return: ritorna la lista di DTO degli studenti iscritti a team con id pari a teamId
+     * @param teamId: ID del team richiesto
+     * @return: ritorna la lista di DTO degli studenti appartenenti al team
      */
     @GetMapping("/{teamId}/members")
     public List<StudentDTO> getMembersTeam(@PathVariable Long teamId) {
@@ -104,11 +125,10 @@ public class TeamController {
     }
 
     /**
-     *
-     * @param studentId
-     * @return ritorna la lista di team DTO a cui lo studente con id=studentId è iscritto
+     * Authority: Student
+     * @param studentId: ID dello studente richiesto
+     * @return: ritorna la lista di DTO dei team a cui lo studente è iscritto
      */
-    /*GET mapping request to see the list of teams a particular student is enrolled in*/
     @GetMapping("/{studentId}/teams")
     public List<TeamDTO> getTeamsForStudent(@PathVariable String studentId) {
         try {
@@ -122,14 +142,15 @@ public class TeamController {
     }
 
     /**
-     *
-     * @param courseId, studentId
-     * @return ritorna il team DTO per il corso con id=courseId a cui lo studente con id=studentId è iscritto
+     * Authority: Student
+     * @param courseName: nome del corso
+     * @param studentId: ID dello studente richiesto
+     * @return: ritorna il DTO del team al quale lo studente appartiene per quel corso
      */
-    @GetMapping("/{courseId}/{studentId}/team")
-    public TeamDTO getTeamForStudent(@PathVariable String courseId, @PathVariable String studentId) {
+    @GetMapping("/{courseName}/{studentId}/team")
+    public TeamDTO getTeamForStudent(@PathVariable String courseName, @PathVariable String studentId) {
         try {
-            return vlServiceStudent.getTeamForStudent(courseId, studentId);
+            return vlServiceStudent.getTeamForStudent(courseName, studentId);
         } catch (CourseNotFoundException | StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,  e.getMessage());
         } catch (StudentNotEnrolledToCourseException e) {
@@ -139,7 +160,11 @@ public class TeamController {
         }
     }
 
-    /* GET mapping request to see the list of students who are part of a team in a given course*/
+    /**
+     * Authority: Student
+     * @param courseName: nome del corso
+     * @return: ritorna la lista di DTO degli studenti appartenenti a un team nel corso
+     */
     @GetMapping("/{courseName}/inTeam")
     public List<StudentDTO> getStudentsInTeams(@PathVariable String courseName) {
         try {
@@ -149,7 +174,11 @@ public class TeamController {
         }
     }
 
-    /* GET mapping request to see the list of students who are not yet part of a team in a given course*/
+    /**
+     * Authority: Student
+     * @param courseName: nome del corso
+     * @return: ritorna la lista di DTO degli studenti non appartenenti a un team nel corso
+     */
     @GetMapping("/{courseName}/notInTeam")
     public List<StudentDTO> getAvailableStudents(@PathVariable String courseName) {
         try {
@@ -159,6 +188,11 @@ public class TeamController {
         }
     }
 
+    /**
+     * @param courseName: nome del corso
+     * @param teamId: ID del team richiesto
+     * @return: ritorna la lista di DTO delle VM create dal team
+     */
     @GetMapping("/{courseName}/{teamId}/getVM")
     public List<VMDTO> getAllVMTeam(@PathVariable String courseName, @PathVariable Long teamId) {
         try{
@@ -170,7 +204,13 @@ public class TeamController {
         }
     }
 
-
+    /**
+     * @param token: token collegato alla creazione del team
+     * @return: ritorna un intero che identifica l'esito della richiesta di adesione al team:
+     *          - 0 se il token non è più presente
+     *          - 1 se l'adesione è andata a buon fine ma il team non è ancora attivo
+     *          - 2 se l'adesione è andata a buon fine e il team viene attivato
+     */
     @GetMapping("/notification/confirm/{token}")
     @ResponseBody
     public int confirmationPage(@PathVariable String token) {
@@ -183,6 +223,12 @@ public class TeamController {
         }
     }
 
+    /**
+     * @param token: token collegato alla creazione del team
+     * @return: ritorna un intero che identifica l'esito della richiesta di rifiuto di adesione al team:
+     *          - 0 se il token non è più presente
+     *          - 1 se il rifiuto è andato a buon fine
+     */
     @GetMapping("/notification/reject/{token}")
     @ResponseBody
     public int rejectionPage(@PathVariable String token) {

@@ -65,7 +65,7 @@ public class UserController {
      *                          "email":"..."
      *                           "password":"..."
      *                     }
-     * @return
+     * @return: ritorna il DTO dell'utente appena aggiunto se l'iscrizione è andata a buon fine, altrimenti l'optional vuoto
      * @throws IOException
      */
     @PostMapping("/addUser")
@@ -120,7 +120,7 @@ public class UserController {
     /**
      * Metodo: POST
      * @param token: token associato alla registrazione di un utente
-     * @return
+     * @return: viene effettuata una redirect alla pagina corrispondente all'esito della conferma di registrazione
      */
     @GetMapping("/registration/confirm/{token}")
     public ResponseEntity<Void> confirmationPage(@PathVariable String token) {
@@ -138,6 +138,7 @@ public class UserController {
     /**
      * Metodo: POST
      * @param userId: matricola dell'utente che vuole resettare la password
+     * @return: ritorna un booleano a true se l'operazione ha avuto successo, false altrimenti
      */
     @PostMapping("/user/resetPassword")
     @ResponseStatus(HttpStatus.OK)
@@ -163,10 +164,8 @@ public class UserController {
 
     /**
      * Metodo: GET
-     * @param locale
-     * @param model
-     * @param token
-     * @return
+     * @param token: token collegato alla richiesta di cambio password da parte dell'utente
+     * @return: viene effettuata una redirect alla pagina corrispondente all'esito del cambio password
      */
     @GetMapping("/user/changePassword")
     public ResponseEntity<Void> showChangePasswordPage(Locale locale, Model model, @RequestParam("token") String token) {
@@ -184,13 +183,12 @@ public class UserController {
     }
 
     /**
-     * @param locale
      * @param input mappa contenente la coppia
      *             {
      *              "token":"token associato nel metodo showChangePasswordPage ",
      *              "newPassword":"..."
      *              }
-     * @return
+     * @return: ritorna un booleano a true se il cambio password ha avuto successo, false altrimenti
      */
     @PostMapping("/user/savePassword")
     @ResponseStatus(HttpStatus.OK)
@@ -210,14 +208,14 @@ public class UserController {
     }
 
     /**
-     * Metodo per aggiornare password quando l'utente è già loggato
+     * Metodo per aggiornare password quando l'utente ha già effettuato il log in
      * @param locale
-     * @param input : mappa contenente la coppia
+     * @param input : mappa contenente la password precedente alla modifica e la nuova password che l'utente vuole utilizzare
      *             {
      *              "oldPassword": "...",
      *              "newPassword": "..."
      *              }
-     * @return
+     * @return: ritorna un booleano a true se l'operazione ha avuto successo, altrimenti viene sollevata un'eccezione
      */
     // change user password -> aggiornamento pass da utente loggato
     @PostMapping("/user/updatePassword")
@@ -238,7 +236,7 @@ public class UserController {
     /**
      * Metodo POST
      * @param file: file con il nuovo avatar
-     * @return
+     * @return: ritorna un booleano a true se l'operazione di cambio avatar ha avuto successo, false altrimenti (o viene sollevata un'eccezione)
      * @throws IOException
      */
     @PostMapping("/user/updateAvatar")

@@ -96,7 +96,7 @@ public class ProfessorController {
             courseDTO.setRunningInstances((int)input.get("runningInstances"));
             courseDTO.setTotInstances((int)input.get("totInstances"));
             return vlService.updateModelVM(courseDTO, courseName);
-        }catch(ModelVMNotSettedException | ResourcesVMNotRespectedException  e){
+        }catch(ModelVMNotSettedException | ResourcesVMNotRespectedException | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch ( PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -116,6 +116,8 @@ public class ProfessorController {
             return vlService.getVMforProfessor(courseName, VMid);
         } catch (TeamNotFoundException | CourseNotFoundException | VMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (CourseDisabledException | VMnotEnabledException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch ( PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
@@ -216,7 +218,7 @@ public class ProfessorController {
             return vlService.addAssignment(assignmentDTO, photoAssignmentDTO, courseName);
         }catch ( CourseNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch(ImageSizeException | AssignmentAlreadyExistException e){
+        }catch(ImageSizeException | AssignmentAlreadyExistException | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -354,7 +356,7 @@ public class ProfessorController {
             return vlService.uploadCorrection(homeworkId, versionHMid, photoCorrectionDTO, Boolean.parseBoolean(permanent), grade);
         }catch ( HomeworkNotFoundException | HomeworkVersionIdNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch(ImageSizeException  | GradeNotValidException e){
+        }catch(ImageSizeException  | GradeNotValidException | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

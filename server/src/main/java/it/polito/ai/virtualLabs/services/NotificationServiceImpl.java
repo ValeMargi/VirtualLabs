@@ -40,7 +40,7 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public boolean sendMessage(String address, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("virtuallabs.ai2020@gmail.com");
+        message.setTo("testaivirtuallabs@gmail.com");
         message.setSubject(subject);
         message.setText(body);
 

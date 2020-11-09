@@ -94,6 +94,8 @@ public class StudentController {
             return vlService.getVMforStudent(courseName, VMid);
         } catch (TeamNotFoundException  | VMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (CourseDisabledException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
@@ -275,6 +277,8 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, p.getMessage());
+        }catch (CourseDisabledException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -302,7 +306,7 @@ public class StudentController {
             return vlService.useVM(VMid, timestamp.toString(), photoVMDTO);
         }catch (  VMNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch (VMnotEnabledException | ImageSizeException e){
+        }catch (VMnotEnabledException | ImageSizeException | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

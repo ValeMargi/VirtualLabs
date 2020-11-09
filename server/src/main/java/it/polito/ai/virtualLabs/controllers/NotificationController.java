@@ -1,5 +1,7 @@
 package it.polito.ai.virtualLabs.controllers;
 
+import it.polito.ai.virtualLabs.exceptions.CourseDisabledException;
+import it.polito.ai.virtualLabs.exceptions.TeamDisabledException;
 import it.polito.ai.virtualLabs.exceptions.TeamNotFoundException;
 import it.polito.ai.virtualLabs.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class NotificationController {
             return notificationService.confirm(token);
         }catch (TeamNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (CourseDisabledException | TeamDisabledException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -38,6 +42,8 @@ public class NotificationController {
             return notificationService.reject(token);
         }catch(TeamNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (CourseDisabledException | TeamDisabledException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 }

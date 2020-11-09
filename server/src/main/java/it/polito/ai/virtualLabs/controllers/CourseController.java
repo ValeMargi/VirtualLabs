@@ -194,7 +194,7 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }catch (CardinalityNotAccetableException e){
+        }catch (CardinalityNotAccetableException | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
@@ -216,7 +216,7 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw  new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }catch(ProfessorAlreadyPresentInCourseException e){
+        }catch(ProfessorAlreadyPresentInCourseException | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }

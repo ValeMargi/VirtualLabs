@@ -52,6 +52,7 @@
           <input #runningInstances class="input" type="number" placeholder="Massimo VM attive" formControlName="max_vm_active" matInput min="1" required>
           <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('required')">Inserisci un numero massimo di VM attive</mat-error>
           <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('min')">Un team ha più VM attive</mat-error>
+          <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('max')">Non puoi inserire più Vm attive di quelle totali</mat-error>
       </mat-form-field><br><br>
 
   </form>

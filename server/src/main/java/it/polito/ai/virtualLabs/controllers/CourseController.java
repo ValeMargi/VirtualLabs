@@ -5,6 +5,7 @@ import it.polito.ai.virtualLabs.entities.Image;
 import it.polito.ai.virtualLabs.entities.PhotoModelVM;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
+import it.polito.ai.virtualLabs.services.VLServiceProfessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,8 @@ public class CourseController {
 
     @Autowired
     VLService vlService;
+    @Autowired
+    VLServiceProfessor vlServiceProfessor;
 
     @GetMapping({"", "/"})
     public List<CourseDTO> all(){
@@ -75,7 +78,7 @@ public class CourseController {
         try {
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
             PhotoModelVM photoModelVM = new PhotoModelVM(image);
-            if (vlService.addCourse(courseDTO, Arrays.asList(professorsId), photoModelVM)) {
+            if (vlServiceProfessor.addCourse(courseDTO, Arrays.asList(professorsId), photoModelVM)) {
                 return ModelHelper.enrich(courseDTO);
             } else
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "Esiste già un corso con lo stesso nome");
@@ -145,9 +148,9 @@ public class CourseController {
     public void enableCourse(@PathVariable String courseName, @RequestBody String enabled){
         try {
             if(Boolean.parseBoolean(enabled))
-                vlService.enableCourse(courseName);
+                vlServiceProfessor.enableCourse(courseName);
             else
-                vlService.disableCourse(courseName);
+                vlServiceProfessor.disableCourse(courseName);
         }catch(CourseNotFoundException e ){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch (PermissionDeniedException e){
@@ -166,7 +169,7 @@ public class CourseController {
     @DeleteMapping("/{courseName}/remove")
     public boolean removeCourse(@PathVariable String courseName){
         try{
-            return vlService.removeCourse(courseName);
+            return vlServiceProfessor.removeCourse(courseName);
         }catch(CourseNotFoundException | ProfessorNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
@@ -189,7 +192,7 @@ public class CourseController {
     @PostMapping("/{courseName}/modify")
     public boolean modifyCourse(@PathVariable String courseName, @RequestBody CourseDTO courseDTO){
         try{
-            return vlService.modifyCourse(courseDTO);
+            return vlServiceProfessor.modifyCourse(courseDTO);
         }catch(CourseNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
@@ -211,7 +214,7 @@ public class CourseController {
     @PostMapping({"/{courseName}/addProfessors"})
     public List<ProfessorDTO> addProfessorsToCourse(@RequestBody String[] professorsId, @PathVariable String courseName){
         try{
-            return vlService.addProfessorsToCourse(courseName, Arrays.asList(professorsId)).stream().map(ModelHelper::enrich).collect(Collectors.toList());
+            return vlServiceProfessor.addProfessorsToCourse(courseName, Arrays.asList(professorsId)).stream().map(ModelHelper::enrich).collect(Collectors.toList());
         }catch(CourseNotFoundException | ProfessorNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
@@ -231,7 +234,7 @@ public class CourseController {
     @ResponseStatus(HttpStatus.CREATED)
     public void enrollOne(@RequestBody String memberId, @PathVariable String courseName){
         try{
-            if (!vlService.addStudentToCourse(memberId, courseName))
+            if (!vlServiceProfessor.addStudentToCourse(memberId, courseName))
                 throw new StudentAlreadyInCourseException();
         }catch (StudentNotFoundException | CourseNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -257,7 +260,7 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"Formato "+file.getContentType()+" non valido: richiesto text/csv");
         else
             try {
-                return vlService.EnrollAllFromCSV(new BufferedReader(new InputStreamReader(file.getInputStream())), courseName);
+                return vlServiceProfessor.EnrollAllFromCSV(new BufferedReader(new InputStreamReader(file.getInputStream())), courseName);
             }catch (CourseNotFoundException | StudentNotFoundException e){
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
             }catch (CourseDisabledException e){
@@ -270,7 +273,7 @@ public class CourseController {
     @PostMapping("/{courseName}/enrollAll")
     public List<Boolean> enrollAll(@RequestBody String[] membersId, @PathVariable String courseName){
         try{
-             return vlService.enrollAll(Arrays.asList(membersId), courseName);
+             return vlServiceProfessor.enrollAll(Arrays.asList(membersId), courseName);
         }catch (StudentNotFoundException | CourseNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch (CourseDisabledException e){
@@ -283,7 +286,7 @@ public class CourseController {
     @PostMapping("/{courseName}/removeStudents")
     public List<StudentDTO> deleteStudentsFromCourse(@PathVariable String courseName, @RequestBody String[] studentsId){
         try{
-            return vlService.deleteStudentsFromCourse(Arrays.asList(studentsId), courseName);
+            return vlServiceProfessor.deleteStudentsFromCourse(Arrays.asList(studentsId), courseName);
         }catch (StudentNotFoundException | CourseNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
@@ -317,7 +320,7 @@ public class CourseController {
     @GetMapping("/{courseName}/enrolledInfo")
     List<Map<String, Object>> getEnrolledStudentsAllInfo(@PathVariable String courseName){
         try{
-            return vlService.getEnrolledStudentsAllInfo(courseName);
+            return vlServiceProfessor.getEnrolledStudentsAllInfo(courseName);
         }catch(CourseNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -378,7 +381,7 @@ public class CourseController {
     @GetMapping("/{courseName}/maxResources")
     public Map<String, Object> getMaxResources(@PathVariable String courseName){
         try{
-            return vlService.getMaxResources(courseName);
+            return vlServiceProfessor.getMaxResources(courseName);
         }catch(ProfessorNotFoundException | CourseNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch (PermissionDeniedException e){

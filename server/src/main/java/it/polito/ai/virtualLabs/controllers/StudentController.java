@@ -3,6 +3,8 @@ package it.polito.ai.virtualLabs.controllers;
 import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
+import it.polito.ai.virtualLabs.services.VLServiceProfessor;
+import it.polito.ai.virtualLabs.services.VLServiceStudent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,8 @@ public class StudentController {
 
     @Autowired
     VLService vlService;
+    @Autowired
+    VLServiceStudent vlServiceStudent;
 
     @GetMapping({"", "/"})
     public List<StudentDTO> all() {
@@ -61,7 +65,7 @@ public class StudentController {
     @GetMapping("/{studentId}/courses")
     public List<CourseDTO> getCourses(@PathVariable String studentId) {
         try {
-            return  vlService.getCoursesForStudent(studentId).stream().map(ModelHelper::enrich).collect(Collectors.toList());
+            return  vlServiceStudent.getCoursesForStudent(studentId).stream().map(ModelHelper::enrich).collect(Collectors.toList());
         } catch (StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, studentId);
         }
@@ -76,7 +80,7 @@ public class StudentController {
     @GetMapping("/VM/{courseName}")
     public List<VMDTO> allVMforStudent(@PathVariable String courseName) {
         try{
-            return vlService.allVMforStudent(courseName);
+            return vlServiceStudent.allVMforStudent(courseName);
         } catch (TeamNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -91,7 +95,7 @@ public class StudentController {
     @GetMapping("/VM/{courseName}/{VMid}")
     public PhotoVMDTO getVMforStudent(@PathVariable String courseName, @PathVariable Long VMid) {
         try{
-            return vlService.getVMforStudent(courseName, VMid);
+            return vlServiceStudent.getVMforStudent(courseName, VMid);
         } catch (TeamNotFoundException  | VMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch (CourseDisabledException e){
@@ -110,7 +114,7 @@ public class StudentController {
     @GetMapping("/VM/{courseName}/{VMid}/owner")
     public boolean isOwner(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
-            return vlService.isOwner( VMid);
+            return vlServiceStudent.isOwner( VMid);
         } catch (VMNotFoundException | StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
@@ -127,7 +131,7 @@ public class StudentController {
     @GetMapping("/{courseName}/assignment")
     public List<Map<String,Object>> allAssignment(@PathVariable String courseName) {
         try{
-            return  vlService.allAssignmentStudent(courseName);
+            return  vlServiceStudent.allAssignmentStudent(courseName);
         } catch (StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(StudentNotEnrolledToCourseException e){
@@ -145,7 +149,7 @@ public class StudentController {
     @GetMapping("/{courseName}/{assignmentId}/getAssignment")
     public PhotoAssignmentDTO getAssignment(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
-            return  vlService.getAssignmentStudent( assignmentId);
+            return  vlServiceStudent.getAssignmentStudent( assignmentId);
         } catch(StudentNotFoundException  | PhotoAssignmentNotFoundException | AssignmentNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
@@ -177,7 +181,7 @@ public class StudentController {
             vmdto.setNameVM(input.get("nameVM").toString());
             vmdto.setRam(Integer.parseInt(input.get("ram").toString()));
             vmdto.setStatus("off");
-            return  vlService.addVM(vmdto, courseName, timestamp.toString());
+            return  vlServiceStudent.addVM(vmdto, courseName, timestamp.toString());
         }catch (CourseNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch( ModelVMNotSettedException | ResourcesVMNotRespectedException |
@@ -200,7 +204,7 @@ public class StudentController {
     public boolean addOwner(  @PathVariable String courseName, @PathVariable Long VMid,@RequestBody String[] input) {
         try {
             List<String> membersId = Arrays.asList(input);
-            return  vlService.addOwner(VMid, courseName, membersId);
+            return  vlServiceStudent.addOwner(VMid, courseName, membersId);
         } catch (VMNotFoundException | CourseNotFoundException | StudentNotFoundException  e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p){
@@ -219,7 +223,7 @@ public class StudentController {
     @GetMapping("/VM/{courseName}/{teamId}/{vmId}")
     public List<StudentDTO> getOwners(@PathVariable String courseName, @PathVariable Long teamId, @PathVariable Long vmId) {
         try{
-            return vlService.getOwnersForStudent(vmId);
+            return vlServiceStudent.getOwnersForStudent(vmId);
         } catch (StudentNotFoundException | VMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
@@ -236,7 +240,7 @@ public class StudentController {
     @GetMapping("/{courseName}/{VMid}/activateVM")
     public boolean activateVM(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
-            return vlService.activateVM(VMid);
+            return vlServiceStudent.activateVM(VMid);
         } catch (VMNotFoundException   e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p){
@@ -255,7 +259,7 @@ public class StudentController {
     @GetMapping("/{courseName}/{VMid}/disableVM")
     public boolean disableVM(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
-            return vlService.disableVM(VMid);
+            return vlServiceStudent.disableVM(VMid);
         } catch (VMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p) {
@@ -272,7 +276,7 @@ public class StudentController {
     @GetMapping("/{courseName}/{VMid}/removeVM")
     public boolean removeVM(  @PathVariable String courseName, @PathVariable Long VMid) {
         try{
-            return  vlService.removeVM(VMid);
+            return  vlServiceStudent.removeVM(VMid);
         } catch (VMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p) {
@@ -303,7 +307,7 @@ public class StudentController {
             photoVMDTO.setNameFile(file.getOriginalFilename());
             photoVMDTO.setType(file.getContentType());
             photoVMDTO.setPicByte(vlService.compressZLib(file.getBytes()));
-            return vlService.useVM(VMid, timestamp.toString(), photoVMDTO);
+            return vlServiceStudent.useVM(VMid, timestamp.toString(), photoVMDTO);
         }catch (  VMNotFoundException  e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch (VMnotEnabledException | ImageSizeException | CourseDisabledException e){
@@ -334,7 +338,7 @@ public class StudentController {
             vmdto.setDiskSpace((int)input.get("diskSpace"));
             vmdto.setNumVcpu((int)input.get("numVcpu"));
             vmdto.setRam((int)input.get("ram"));
-            return  vlService.updateVMresources(VMid, vmdto);
+            return  vlServiceStudent.updateVMresources(VMid, vmdto);
         }catch (VMNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch (VMnotOffException | ResourcesVMNotRespectedException | VMduplicatedException | CourseDisabledException e){
@@ -368,7 +372,7 @@ public class StudentController {
             photoVersionHomeworkDTO.setType(file.getContentType());
             photoVersionHomeworkDTO.setPicByte(vlService.compressZLib(file.getBytes()));
             photoVersionHomeworkDTO.setTimestamp(timestamp.toString());
-            return vlService.uploadVersionHomework(homeworkId,photoVersionHomeworkDTO);
+            return vlServiceStudent.uploadVersionHomework(homeworkId,photoVersionHomeworkDTO);
         }catch(ImageSizeException | HomeworkIsPermanentException | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch (HomeworkNotFoundException | VMNotFoundException | TeamNotFoundException e){
@@ -388,7 +392,7 @@ public class StudentController {
     @GetMapping("/{courseName}/{assignmentId}/getHomework")
     public HomeworkDTO getHomework(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
-            return  vlService.getHomework( assignmentId);
+            return  vlServiceStudent.getHomework( assignmentId);
         }catch (HomeworkNotFoundException | AssignmentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
@@ -407,7 +411,7 @@ public class StudentController {
     @GetMapping("/{courseName}/{assignmentId}/getVersions")
     public List<Map<String, Object>> getVersionsHWForStudent(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
-            return  vlService.getVersionsHWForStudent(assignmentId);
+            return  vlServiceStudent.getVersionsHWForStudent(assignmentId);
         } catch (HomeworkNotFoundException | AssignmentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
@@ -425,7 +429,7 @@ public class StudentController {
     @GetMapping("/{courseName}/{assignmentId}/getCorrections")
     public List<Map<String, Object>> getCorrectionsForStudent(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
-            return  vlService.getCorrectionsForStudent(assignmentId);
+            return  vlServiceStudent.getCorrectionsForStudent(assignmentId);
         } catch (HomeworkNotFoundException |  AssignmentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){

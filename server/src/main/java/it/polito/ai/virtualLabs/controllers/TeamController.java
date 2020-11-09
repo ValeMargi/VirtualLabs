@@ -5,6 +5,8 @@ import it.polito.ai.virtualLabs.dtos.TeamDTO;
 import it.polito.ai.virtualLabs.dtos.VMDTO;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
+import it.polito.ai.virtualLabs.services.VLServiceStudent;
+import it.polito.ai.virtualLabs.services.VLServiceStudentImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 public class TeamController {
     @Autowired
     VLService vlService;
+    @Autowired
+    VLServiceStudent vlServiceStudent;
 
     /**
      * Metodo: POST
@@ -41,7 +45,7 @@ public class TeamController {
             Timestamp timeout = Timestamp.valueOf(object.get("timeout").toString());
             List<String> membersId= (List<String>)object.get("membersId");
             membersId.forEach(member -> member = member.trim());
-            return vlService.proposeTeam(courseName, nameTeam, membersId, timeout);
+            return vlServiceStudent.proposeTeam(courseName, nameTeam, membersId, timeout);
         } catch (CourseNotFoundException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }catch(PermissionDeniedException e){
@@ -60,7 +64,7 @@ public class TeamController {
     @GetMapping("/{courseName}/getProposals")
     public List<Map<String, Object>> getProposal(@PathVariable String courseName) {
         try {
-            return vlService.getProposals(courseName);
+            return vlServiceStudent.getProposals(courseName);
         }catch( StudentAlreadyInTeamException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch (TeamNotFoundException | StudentNotFoundException | TokenNotFoundException e){
@@ -107,7 +111,7 @@ public class TeamController {
     @GetMapping("/{studentId}/teams")
     public List<TeamDTO> getTeamsForStudent(@PathVariable String studentId) {
         try {
-            return vlService.getTeamsForStudent(studentId).stream().map(ModelHelper::enrich).collect(Collectors.toList());
+            return vlServiceStudent.getTeamsForStudent(studentId).stream().map(ModelHelper::enrich).collect(Collectors.toList());
         } catch (StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedDataAccessException p){
@@ -124,7 +128,7 @@ public class TeamController {
     @GetMapping("/{courseId}/{studentId}/team")
     public TeamDTO getTeamForStudent(@PathVariable String courseId, @PathVariable String studentId) {
         try {
-            return vlService.getTeamForStudent(courseId, studentId);
+            return vlServiceStudent.getTeamForStudent(courseId, studentId);
         } catch (CourseNotFoundException | StudentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,  e.getMessage());
         } catch (StudentNotEnrolledToCourseException e) {
@@ -138,7 +142,7 @@ public class TeamController {
     @GetMapping("/{courseName}/inTeam")
     public List<StudentDTO> getStudentsInTeams(@PathVariable String courseName) {
         try {
-            return vlService.getStudentsInTeams(courseName).stream().map(ModelHelper::enrich).collect(Collectors.toList());
+            return vlServiceStudent.getStudentsInTeams(courseName).stream().map(ModelHelper::enrich).collect(Collectors.toList());
         } catch (CourseNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -148,7 +152,7 @@ public class TeamController {
     @GetMapping("/{courseName}/notInTeam")
     public List<StudentDTO> getAvailableStudents(@PathVariable String courseName) {
         try {
-            return vlService.getAvailableStudents(courseName).stream().map(ModelHelper::enrich).collect(Collectors.toList());
+            return vlServiceStudent.getAvailableStudents(courseName).stream().map(ModelHelper::enrich).collect(Collectors.toList());
         } catch (CourseNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

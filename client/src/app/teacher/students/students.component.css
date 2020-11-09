@@ -7,6 +7,17 @@
   margin-left: 2%;
   margin-top: 2%;
 }
+
+.buttonClicca{
+  margin-left:2%;
+  background-color: lavender;
+}
+
+.message{
+  margin:2%;
+  width: 87%;
+}
+
 .mat-table{
   margin:2%;
   width: 90%;

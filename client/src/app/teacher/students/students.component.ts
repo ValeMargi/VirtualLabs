@@ -33,7 +33,10 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
 
   private sort: MatSort;
   private paginator: MatPaginator;
-  
+  selection: any;
+  selectionAmount: any;
+  checkBoxAll: boolean = false;;
+
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
     this.setDataSourceAttributes();
@@ -136,10 +139,12 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
       if (this.allSelected()) {
         this.checkall.checked = true;
         this.checkall.indeterminate = false;
+        this.checkBoxAll = true;
       }
       else {
         this.checkall.indeterminate = true;
         this.checkall.checked = false;
+        this.checkBoxAll = false;
       }
     }
     else {
@@ -147,6 +152,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
 
       if (this.selectedStudents.selected.length == 0) {
         this.checkall.indeterminate = false;
+        this.checkBoxAll = false;
       }
       else {
         this.checkall.indeterminate = true;
@@ -213,5 +219,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
     this.studentToAdd = student;
     this.addDisabled = false;
   }
+
+  //Inserire metodo che seleziona solo gli studenti della pagina corrente
 
 }

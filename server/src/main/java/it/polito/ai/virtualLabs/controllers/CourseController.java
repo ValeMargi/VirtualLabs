@@ -34,6 +34,10 @@ public class CourseController {
     @Autowired
     VLServiceProfessor vlServiceProfessor;
 
+    /**
+     * Metodo: GET
+     * @return: ritorna la lista di DTO dei corsi presenti nel sistema
+     */
     @GetMapping({"", "/"})
     public List<CourseDTO> all(){
         return vlService.getAllCourses().stream().map(ModelHelper::enrich).collect(Collectors.toList());
@@ -42,9 +46,7 @@ public class CourseController {
     /**
      * Metodo: GET
      * @param name: riceve dal path il nome di un Corso
-     * @return: ritorna il DTO (String name, acronym;
-     *                          int min, max; boolean enabled;)
-     *          del corso associato (tramite link cliccabile)
+     * @return: ritorna il DTO del corso avente il nome ricevuto come parametro del metodo
      */
     @GetMapping("/{name}")
     public CourseDTO getOne(@PathVariable String name){
@@ -56,22 +58,24 @@ public class CourseController {
     }
 
     /**
-     * Metodo: POST
-     * Authority: Docente
-     * @param courseDTO: parametro acquisito dal corpo della richiesta
-     *                 (String name, acronym;  int min, max; boolean enabled;)
-     * @return: ritorna il DTO del corso
+     * Metodo: Post
+     * @param courseDTO: DTO del corso contenente i dati del corso e del modello VM
+     * @param professorsId: lista degli ID dei professori da rendere gestori del corso
+     * @param file: immagine del modello VM
+     * @return
      */
     @PostMapping({"", "/"})
     public CourseDTO addCourse(@RequestPart("course") CourseDTO courseDTO,
                                @RequestPart("professors") String[] professorsId,
                                @RequestPart("file") @Valid @NotNull MultipartFile file) {
+        //controllo validità del contenuto del file
         if(file.isEmpty() || file.getContentType()==null)
             throw new ResponseStatusException(HttpStatus.CONFLICT);
+        //controllo formato del file
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"Formato "+file.getContentType()+" non valido: richiesto jpg/jpeg/png");
-
+        //controllo validità parametri del modello VM
         if (courseDTO.getMaxVcpu()<=0 || courseDTO.getDiskSpace()<=0 || courseDTO.getRam()<=0
                 || courseDTO.getRunningInstances()<=0 || courseDTO.getTotInstances()<=0 )
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Parametri non conformi con la richiesta");
@@ -140,7 +144,7 @@ public class CourseController {
     /*POST mapping request to enable / disable course "name"*/
     /**
      * Metodo: POST
-     * Authority: Docente
+     * Authority: Professor
      * @param courseName: riceve dal path il nome di un Corso
      * @param enabled: flag (true/false) che indica se il Professore deve abilitare/disabilitare il dato corso
      */
@@ -162,8 +166,8 @@ public class CourseController {
 
     /**
      * Metodo: POST
-     * Authority: Docente
-     * @param courseName:riceve dal path il nome di un Corso da rimuovere
+     * Authority: Professor
+     * @param courseName:riceve dal path il nome del Corso da rimuovere
      * @return: ritorna l'esito della rimozione del corso indicato
      */
     @DeleteMapping("/{courseName}/remove")
@@ -179,14 +183,9 @@ public class CourseController {
 
     /**
      * Metodo: POST
-     * Authority: Docente
-     * @param courseName:riceve dal path il nome di un Corso da modificare
-     * @param courseDTO:  Nel corpo della richiesta viene passato il DTO del corso modificato"
-     *      *               Esempio Body: {"name": "...",
-     *                                     "acronym": "...",
-     *                                     "min":"...",
-     *                                     "max":"...",
-     *                                     "enabled":"...."}
+     * Authority: Profesor
+     * @param courseName:riceve dal path il nome del Corso da modificare
+     * @param courseDTO:  DTO del corso da modificare contenente i nuovi parametri
      * @return: ritorna l'esito della modifica del corso indicato
      */
     @PostMapping("/{courseName}/modify")
@@ -202,14 +201,12 @@ public class CourseController {
         }
     }
 
-
     /**
      * Metodo: POST
-     * Authority: Docente
-     * @param professorsId: parametro acquisito dal corspo della richiesta (riceve una lista di String idProfessor MATRICOLA es p1,p2,p3;)
-     * @param courseName:  riceve dal path il nome di un Corso
-     * @return: ritorna il DTO del professore aggiunto al corso con CourseName indicato
-     * @return: ritorna il DTO del professore aggiaddAssunto al corso con CourseName indicato
+     * Authority: Professor
+     * @param professorsId: lista degli ID dei professori da rendere gestori del corso
+     * @param courseName:  nome del corso al quale aggiungere i professori
+     * @return: ritorna la lista di DTO deik professori aggiunti al corso con CourseName indicato
      */
     @PostMapping({"/{courseName}/addProfessors"})
     public List<ProfessorDTO> addProfessorsToCourse(@RequestBody String[] professorsId, @PathVariable String courseName){
@@ -226,9 +223,9 @@ public class CourseController {
 
     /**
      * Metodo: POST
-     * Authority: Docente
-     * @param memberId: id dello studente da aggiungere
-     * @param courseName: riceve dal path il nome di un Corso
+     * Authority: Professor
+     * @param memberId: ID dello studente da iscrivere al corso
+     * @param courseName: nome del corso al quale iscrivere lo studente
      */
     @PostMapping("/{courseName}/enrollOne")
     @ResponseStatus(HttpStatus.CREATED)
@@ -247,15 +244,17 @@ public class CourseController {
 
     /**
      * Metodo: POST
-     * Authority: Docente
-     * @param courseName: riceve dal path il nome di un Corso
-     * @param file: riceve un file in cui sono presenti gli id degli studenti da iscrivere al corso con nome pari a courseName
-     * @return: ritorna una lista di boolean per tener traccia se l'aggiunta di ogni studente al dato corso ha avuto successo o meno
+     * Authority: Professor
+     * @param courseName: nome del corso al quale iscrivere gli studenti
+     * @param file: file in cui sono presenti gli ID degli studenti da iscrivere al corso
+     * @return: ritorna una lista di boolean per tenere traccia degli studenti aggiunti con successo
      */
     @PostMapping("/{courseName}/enrollMany")
     public List<StudentDTO> enrollStudents(@PathVariable String courseName, @RequestPart("file") MultipartFile file){
+        //controllo sulla validità del contenuto del file
         if(file.isEmpty() || file.getContentType()==null)
             throw new ResponseStatusException(HttpStatus.CONFLICT);
+        //controllo sulla validità del formato del file
         if( !file.getContentType().equals("text/csv") && !file.getContentType().equals("application/vnd.ms-excel"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"Formato "+file.getContentType()+" non valido: richiesto text/csv");
         else
@@ -270,6 +269,12 @@ public class CourseController {
             }
     }
 
+    /**
+     * Metodo: POST
+     * @param membersId: lista degli ID da iscrivere al corso
+     * @param courseName: nome del corso al quale iscrivere gli studenti
+     * @return: ritorna una lista di boolean per tenere traccia degli studenti aggiunti con successo
+     */
     @PostMapping("/{courseName}/enrollAll")
     public List<Boolean> enrollAll(@RequestBody String[] membersId, @PathVariable String courseName){
         try{
@@ -283,6 +288,12 @@ public class CourseController {
         }
     }
 
+    /**
+     * Metodo: POST
+     * @param courseName: nome del corso dal quale rimuovere studenti
+     * @param studentsId: lista degli ID degli studenti da rimuovere dal corso
+     * @return: ritorna la lista dei DTO degli studenti rimossi dal corso
+     */
     @PostMapping("/{courseName}/removeStudents")
     public List<StudentDTO> deleteStudentsFromCourse(@PathVariable String courseName, @RequestBody String[] studentsId){
         try{
@@ -299,10 +310,9 @@ public class CourseController {
 
     /**
      * Metodo: GET
-     * @param courseName: riceve dal path il nome di un Corso
-     * @return: ritorna la lista di StudentDTO degli studenti iscritti al dato Corso
+     * @param courseName: nome del corso del quale si vuole ottenere la lista degli studenti iscritti
+     * @return: ritorna la lista dei DTO degli studenti iscritti al corso
      */
-    /*GET mapping request to see the list of students enrolled in the course "name"*/
     @GetMapping("/{courseName}/enrolled")
     public List<StudentDTO> enrolledStudents(@PathVariable  String courseName){
         try {
@@ -313,9 +323,13 @@ public class CourseController {
     }
 
     /**
-     * Metodo: FET
-     * @param courseName
-     * @return Lista con per ogni studente il StudentDTO e nameTeam inscritto al corso courseName
+     * Metodo: GET
+     * @param courseName: nome del corso dal quale ricavare le informazioni
+     * @return: ritorna una lista di mappe composte dalla coppia
+     *          {
+     *              student:"...",
+     *              teamName:"..."
+     *          }
      */
     @GetMapping("/{courseName}/enrolledInfo")
     List<Map<String, Object>> getEnrolledStudentsAllInfo(@PathVariable String courseName){
@@ -326,6 +340,11 @@ public class CourseController {
         }
     }
 
+    /**
+     * Metodo: GET
+     * @param courseName: nome del corso dal quale ricavare le informazioni
+     * @return: ritorna la lista dei DTO dei professori che gestiscono il corso
+     */
     @GetMapping("/{courseName}/getProfessors")
     public List<ProfessorDTO> getProfessorsForCourse(@PathVariable String courseName){
         try{
@@ -337,12 +356,11 @@ public class CourseController {
 
     /**
      * Metodo:GET
-     * Authority: Docente e Studente
-     * @param courseName
-     * @param assignmentId
-     * @param homeworkId
-     * @param versionId
-     * @return DTO di PhotoVersionHomework per un dato homework
+     * @param courseName: nome del corso dal quale ricavare le informazioni
+     * @param assignmentId: ID della consegna collegata all'elaborato
+     * @param homeworkId: ID dell'elaborato del quale si vuole ricavare l'immagine
+     * @param versionId: ID della versione dell'elaborato
+     * @return: ritorna il DTO dell'immagine della versione dell'elaborato richiesta
      */
     @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/{versionId}/version")
     public PhotoVersionHomeworkDTO getVersionHW(@PathVariable String courseName, @PathVariable Long assignmentId,
@@ -358,12 +376,11 @@ public class CourseController {
 
     /**
      * Metodo:GET
-     * Authority: Docente e Studente
-     * @param courseName
-     * @param assignmentId
-     * @param homeworkId
-     * @param correctionId
-     * @return DTO di PhotoCorrection per un dato homework
+     * @param courseName: nome del corso dal quale ricavare le informazioni
+     * @param assignmentId: ID della consegna collegata all'elaborato
+     * @param homeworkId: ID dell'elaborato del quale si vuole ricavare l'immagine
+     * @param correctionId: ID della correzione
+     * @return: ritorna il DTO dell'immagine della correzione dell'elaborato richiesta
      */
     @GetMapping("/{courseName}/{assignmentId}/{homeworkId}/{correctionId}/correction")
     public PhotoCorrectionDTO getCorrectionHW(@PathVariable String courseName, @PathVariable Long assignmentId,
@@ -377,7 +394,18 @@ public class CourseController {
         }
     }
 
-
+    /**
+     * Metodo: GET
+     * @param courseName: nome del corso dal quale ricavare le informazioni
+     * @return: ritorna una mappa per avere il massimo di risorse utilizzate per ogni tipo tra i vari team
+     * {
+     *     vcpu:"...",
+     *     diskSpace:"...",
+     *     ram:"...",
+     *     running:"...",
+     *     total:"..."
+     * }
+     */
     @GetMapping("/{courseName}/maxResources")
     public Map<String, Object> getMaxResources(@PathVariable String courseName){
         try{

@@ -22,6 +22,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
@@ -91,11 +93,23 @@ public class VLServiceImpl implements VLService{
         for(Token token: tokenRepository.findAll() )
         {
             if( token.getExpiryDate().compareTo(now)<0){
-                tokenRepository.deleteFromTokenByTeamId(token.getTeamId());
-                if( teamRepository.findById(token.getTeamId()).isPresent())
-                    evictTeam(token.getTeamId());
+               Optional<Team> oteam = teamRepository.findById(token.getTeamId());
+               if(!oteam.isPresent()) throw new TeamNotFoundException();
+               oteam.get().setStatus("disabled");
+               oteam.get().setDisabledTimestamp(now.toString());
+
+              //  tokenRepository.deleteFromTokenByTeamId(token.getTeamId());
+                //if( teamRepository.findById(token.getTeamId()).isPresent())
+                  //  evictTeam(token.getTeamId());
             }
         }
+        for(Team team: teamRepository.findAllByStatusEquals("disabled")){
+            if( team.getDisabledTimestamp().compareTo(Timestamp.from(Instant.now().plus(5, ChronoUnit.MILLIS)).toString())<0){
+                tokenRepository.deleteFromTokenByTeamId(team.getId());
+                evictTeam(team.getId());
+            }
+        }
+
         /*Per controllare scadenza elaborati*/
         for(Assignment a: assignmentRepository.findAll()){
             if(a.getExpiration().compareTo(now.toString())<=0){
@@ -341,7 +355,7 @@ public class VLServiceImpl implements VLService{
                     if (ot.isPresent()) {
                         // rimuovo VM, homework, corrections, membro dal team
                         Team team = ot.get();
-                        if (team.getStatus() == 1) {
+                        if (team.getStatus().equals("active")) {
                             List<VM> VMstudent = student.getStudentsVM().stream()
                                     .filter(v -> v.getCourse().getName().equals(courseName))
                                     .collect(Collectors.toList());
@@ -596,7 +610,7 @@ public class VLServiceImpl implements VLService{
                 for(int j=teams.size()-1; j>=0; j--) {
                     Team tmpTeam = teams.get(j);
                     // rimuovo VM, homework, corrections, membro dal team
-                    if (tmpTeam.getStatus() == 1) {
+                    if (tmpTeam.getStatus().equals("active")) {
                         List<VM> VMcourse = c.getVms();
 
                         for ( int i=VMcourse.size()-1; i>=0; i--) {
@@ -693,7 +707,7 @@ public class VLServiceImpl implements VLService{
     public List<TeamDTO> getTeamsForStudent(String studentId){
         try {
             Student s = studentRepository.getOne(studentId);
-            return s.getTeams().stream().filter(t-> t.getStatus()==1).map(t -> modelMapper.map(t, TeamDTO.class)).collect(Collectors.toList());
+            return s.getTeams().stream().filter(t-> t.getStatus().equals("active")).map(t -> modelMapper.map(t, TeamDTO.class)).collect(Collectors.toList());
         }catch(EntityNotFoundException e){
             throw new StudentNotFoundException();
         }
@@ -712,7 +726,7 @@ public class VLServiceImpl implements VLService{
             if(!os.get().getCourses().contains(oc.get()))
                 throw new StudentNotEnrolledToCourseException();
             List<TeamDTO> list = oc.get().getTeams().stream()
-                                        .filter(team -> team.getMembers().contains(os.get())  && team.getStatus()==1)
+                                        .filter(team -> team.getMembers().contains(os.get())  && team.getStatus().equals("active"))
                                         .map(team -> modelMapper.map(team, TeamDTO.class)).collect(Collectors.toList());
 
             if (list.size() != 1) {
@@ -770,7 +784,7 @@ public class VLServiceImpl implements VLService{
                 .map(s->studentRepository.getOne(s))
                 .map(Student::getTeams)
                 .filter( lt-> !lt.isEmpty())
-                .map( lt-> lt.stream().filter(l-> l.getStatus()==1).map(Team::getCourse)
+                .map( lt-> lt.stream().filter(l-> l.getStatus().equals("active")).map(Team::getCourse)
                         .anyMatch(c-> c.getName().equals(courseId))).collect(Collectors.toList()).contains(true))
             throw  new StudentAlreadyInTeamException();
 
@@ -784,7 +798,7 @@ public class VLServiceImpl implements VLService{
         Team team = new Team();
         team.setName(name);
         team.setCourse(course.get());
-        team.setStatus(0);
+        team.setStatus("pending");
         team.setCreatorId(creatorStudent);
 
         if( course.get().getPhotoModelVM()!=null){
@@ -798,7 +812,7 @@ public class VLServiceImpl implements VLService{
         team.addStudentIntoTeam(studentRepository.getOne(creatorStudent));
         teamRepository.save(team);
         if(memberIds.isEmpty())
-            team.setStatus(1);
+            team.setStatus("active");
         else{
             memberIds.forEach(s-> team.addStudentIntoTeam(studentRepository.getOne(s)));
             notificationService.notifyTeam(modelMapper.map(team, TeamDTO.class), memberIds, creatorStudent,  courseId, timeout);
@@ -829,7 +843,7 @@ public class VLServiceImpl implements VLService{
         Optional<Student> os = studentRepository.findById(student);
         if(!os.isPresent()) throw new StudentNotFoundException(); //PermissionDenied
         Student s = os.get();
-        if(s.getTeams().stream().anyMatch(t-> t.getCourse().getName().equals(courseId) && t.getStatus()==1))
+        if(s.getTeams().stream().anyMatch(t-> t.getCourse().getName().equals(courseId) && t.getStatus().equals("active")))
             throw new StudentAlreadyInTeamException();
         List<Long> teamList = s.getTokens().stream()
                 .filter(t-> t.getCourseId().equals(courseId)).map(Token::getTeamId).collect(Collectors.toList());
@@ -845,6 +859,7 @@ public class VLServiceImpl implements VLService{
             Map<String, Object> m = new HashMap<>();
             m.put("teamName", team.getName());
             m.put("creator", stu.getName()+" "+ stu.getFirstName()+" "+"("+stu.getId()+")");
+            m.put("teamStatus", team.getStatus());
             Optional<Token> otoken = s.getTokens().stream().filter(t-> t.getTeamId().equals(teamId)).findFirst();
             if(!otoken.isPresent()) throw new TokenNotFoundException();
             Token tokenStudent = otoken.get();
@@ -874,7 +889,7 @@ public class VLServiceImpl implements VLService{
     public List<TeamDTO> getTeamForCourse(String courseName){
         try{
             Course course =courseRepository.getOne(courseName);
-            return  course.getTeams().stream().filter(t-> t.getStatus()==1).map(t-> modelMapper.map(t, TeamDTO.class)).collect(Collectors.toList());
+            return  course.getTeams().stream().filter(t-> t.getStatus().equals("active")).map(t-> modelMapper.map(t, TeamDTO.class)).collect(Collectors.toList());
         }catch(EntityNotFoundException enfe){
             throw new CourseNotFoundException();
         }
@@ -908,7 +923,7 @@ public class VLServiceImpl implements VLService{
             if(teamRepository.existsById(id)){
                 Team t = teamRepository.findById(id).get();
                 if(!t.getCourse().isEnabled()) throw new CourseDisabledException();
-                t.setStatus(1);
+                t.setStatus("active");
                 for(Student s: t.getMembers()){
                     tokenRepository.findAllByStudent(s).stream().map(Token::getTeamId).forEach(tId -> {
                         tokenRepository.findAllByTeamId(tId).forEach(tk-> tokenRepository.delete(tk));
@@ -1040,11 +1055,11 @@ public class VLServiceImpl implements VLService{
             if(!course.getProfessors().contains(op.get()))
                 throw new PermissionDeniedException();
             List<Team> teams = course.getTeams();
-            int minVcpuTmp = Integer.MAX_VALUE;
-            int minDiskSpaceTmp = Integer.MAX_VALUE;
-            int minRamTmp = Integer.MAX_VALUE;
-            int minRunning = Integer.MAX_VALUE;
-            int minTotal = Integer.MAX_VALUE;
+            int minVcpuTmp = course.getMaxVcpu();
+            int minDiskSpaceTmp = course.getDiskSpace();
+            int minRamTmp = course.getRam();
+            int minRunning = course.getRunningInstances();
+            int minTotal = course.getTotInstances();
             for(Team t:teams){
                 if( t.getMaxVcpuLeft() < minVcpuTmp )
                     minVcpuTmp = t.getMaxVcpuLeft();
@@ -1346,7 +1361,7 @@ public class VLServiceImpl implements VLService{
         if( !ot.isPresent())
             throw new TeamNotFoundException();
         Team t = ot.get();
-        if( t.getStatus()==0)
+        if( !t.getStatus().equals("active"))
             throw new TeamNotEnabledException();
         return t.getVms().stream().map(te-> modelMapper.map(te, VMDTO.class)).collect(Collectors.toList());
 

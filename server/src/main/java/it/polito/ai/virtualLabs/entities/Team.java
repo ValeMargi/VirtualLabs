@@ -13,9 +13,9 @@ public class Team {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private  String name, creatorId;
-    private int status; /*active, pending, disabled*/
+    private String status; /*active, pending, disabled*/
     private int maxVcpuLeft, diskSpaceLeft, ramLeft, runningInstancesLeft, totInstancesLeft;
-
+    private String disabledTimestamp;
 
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "team_student",

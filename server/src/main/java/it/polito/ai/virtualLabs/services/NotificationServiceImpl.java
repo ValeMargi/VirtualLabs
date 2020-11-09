@@ -1,6 +1,7 @@
 package it.polito.ai.virtualLabs.services;
 
 import it.polito.ai.virtualLabs.dtos.TeamDTO;
+import it.polito.ai.virtualLabs.entities.Team;
 import it.polito.ai.virtualLabs.entities.Token;
 import it.polito.ai.virtualLabs.repositories.StudentRepository;
 import it.polito.ai.virtualLabs.repositories.TeamRepository;
@@ -64,7 +65,7 @@ public class NotificationServiceImpl implements NotificationService{
         Optional<Token> t = checkTokenValidity(token);
         if(t.isPresent()){
             if( tokenRepository.findAllByTeamId(t.get().getTeamId())
-                    .stream().filter(Token::getStatus).count() == teamRepository.getOne(t.get().getTeamId()).getMembers().size()) {
+                    .stream().filter(to-> to.getStatus().equals("accepted")).count() == teamRepository.getOne(t.get().getTeamId()).getMembers().size()) {
                 tokenRepository.findAllByTeamId(t.get().getTeamId()).forEach(tk-> tokenRepository.delete(tk));
                 VLService.activateTeam(t.get().getTeamId());
                 return 2;
@@ -78,10 +79,16 @@ public class NotificationServiceImpl implements NotificationService{
     public Integer reject(String token) {
         Optional<Token> t = checkTokenValidity(token);
         if( t.isPresent()){
-                tokenRepository.deleteFromTokenByTeamId(t.get().getTeamId()); //TESTare
-               // tokenRepository.findAllByTeamId(t.get().getTeamId()).forEach(tk-> tokenRepository.delete(tk));
-                VLService.evictTeam(t.get().getTeamId());
-                return  1;
+            //richiesta non scaduta
+            Optional<Team> oteam = teamRepository.findById(t.get().getTeamId());
+            if(!oteam.isPresent()) throw new TeamNotFoundException();
+            t.get().setStatus("rejected");
+            oteam.get().setStatus("disabled");
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            oteam.get().setDisabledTimestamp(now.toString());
+            //tokenRepository.deleteFromTokenByTeamId(t.get().getTeamId()); //TESTare
+            //VLService.evictTeam(t.get().getTeamId());
+            return  1;
         }else
             return 0;
     }
@@ -93,7 +100,7 @@ public class NotificationServiceImpl implements NotificationService{
             Token t = new Token();
             t.setId(UUID.randomUUID().toString());
             t.setTeamId(dto.getId());
-            t.setStatus(false);
+            t.setStatus("pending");
             t.setCourseId(courseId);
             t.setStudent(studentRepository.getOne(memberId));
             t.setExpiryDate(timeout);
@@ -105,7 +112,7 @@ public class NotificationServiceImpl implements NotificationService{
         Token t = new Token();
         t.setId(UUID.randomUUID().toString());
         t.setTeamId(dto.getId());
-        t.setStatus(true);
+        t.setStatus("accepted");
         t.setCourseId(courseId);
         t.setStudent(studentRepository.getOne(creatorStudent));
         t.setExpiryDate(timeout);
@@ -115,12 +122,19 @@ public class NotificationServiceImpl implements NotificationService{
     public Optional<Token> checkTokenValidity(String token){
         Optional<Token> t= tokenRepository.findById(token);
         if(t.isPresent()){
+            Optional<Team> oteam = teamRepository.findById(t.get().getTeamId());
+            if(!oteam.isPresent()) throw new TeamNotFoundException();
+            if(oteam.get().getStatus().equals("disabled")) throw new TeamDisabledException();
             // se è ancora valido
             if( t.get().getExpiryDate().compareTo(Timestamp.from(Instant.now()))>0){
-                t.get().setStatus(true);
+                t.get().setStatus("accepted");
                 return t;
             }else{
-                tokenRepository.deleteById(token);
+                t.get().setStatus("rejected");
+                oteam.get().setStatus("disabled");
+                Timestamp now = new Timestamp(System.currentTimeMillis());
+                oteam.get().setDisabledTimestamp(now.toString());
+                //tokenRepository.deleteById(token);
                 return Optional.empty();
             }
         }

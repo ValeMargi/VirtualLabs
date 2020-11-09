@@ -16,7 +16,7 @@ public class Token {
     private String courseId;
     private Long teamId;
     private Timestamp expiryDate;
-    private Boolean status; //false: in attesa, true:accettato
+    private String status;
 
     @ManyToOne
     @JoinColumn(name="student_id")

@@ -51,11 +51,13 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   dataSourceProposals = new MatTableDataSource<Proposal>();
 
   //Table Request Accepted
-  displayedColumnsRequestAccepted: string[] = ['teamName', 'creator', 'students'];
-  dataSourceProposalsAccepted = new MatTableDataSource<Proposal>();
+  displayedColumnsRequestReceive: string[] = ['teamName', 'creator', 'students'];
+  dataSourceProposalsReceive = new MatTableDataSource<Proposal>();
 
   //My proposal
   myProposal: Proposal;
+
+
 
   @Input() team: Team;
   @Input() proposals: Proposal[] = [];
@@ -65,13 +67,14 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   @Output('refuse') refuse = new EventEmitter<string>();
 
   lengthProposals;
-  lengthProposalsAccepted;
+  lengthProposalsReceive;
   lengthMembers;
   teamName: string;
 
   propsVisibility: boolean = false;
-  propsAcceptedVisibility: boolean = false;
+  proposReceivedVisibility: boolean = false;
   myPropVisibility: boolean = false;
+  stateDisabled: boolean = false;
 
   invited: string[] = [];
 
@@ -162,12 +165,18 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
       let text: string = '';
       text = text.concat(s.student + " ➥ ");
 
-      if (s.status == true) {
+      if (s.status == "accepted") {
         text = text.concat("Richiesta accettata");
+        this.stateDisabled = !this.stateDisabled;
       }
-      else {
+      else if (s.status == "rejected"){
+        text = text.concat("Richiesta rifiutata");
+        this.stateDisabled = !this.stateDisabled;
+      }
+      else if (s.status == "pending"){
         text = text.concat("In attesa di risposta");
       }
+
 
       this.invited.push(text);
     });
@@ -183,10 +192,15 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     let text: string = '';
     text = text.concat(s.student + " ➥ ");
 
-    if (s.status == true) {
+    if (s.status == "accepted") {
       text = text.concat("Richiesta accettata");
+      this.stateDisabled = !this.stateDisabled;
     }
-    else {
+    else if (s.status == "rejected"){
+      text = text.concat("Richiesta rifiutata");
+      this.stateDisabled = false;
+    }
+    else if (s.status == "pending"){
       text = text.concat("In attesa di risposta");
     }
 
@@ -194,13 +208,13 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   setTableProposals() {
+    const propsPending: Proposal[] = [];
     const props: Proposal[] = [];
-    const propsAccepted: Proposal[] = [];
     this.myProposal = null;
 
     if (this.proposals.length == 0) {
       this.propsVisibility = false;
-      this.propsAcceptedVisibility = false;
+      this.proposReceivedVisibility = false;
       this.myPropVisibility = false;
       return;
     }
@@ -219,11 +233,11 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
           p.students[0] = {student: "(Nessun altro partecipante)"}
         }
 
-        if (p.status) {
-          propsAccepted.push(p);
-        }
-        else {
+        if (p.status == "accepted" || p.status =="rejects") {
           props.push(p);
+        }
+        else if (p.status =="pending"){
+          propsPending.push(p);
         }
       }
     });
@@ -235,30 +249,30 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
       this.myPropVisibility = false;
     }
 
-    if (props.length > 0) {
+    if (propsPending.length > 0) {
       this.propsVisibility = true;
     }
     else {
       this.propsVisibility = false;
     }
 
-    if (propsAccepted.length > 0) {
-      this.propsAcceptedVisibility = true;
+    if (props.length > 0 ) {
+      this.proposReceivedVisibility = true;
     }
     else {
-      this.propsAcceptedVisibility = false;
+      this.proposReceivedVisibility = false;
     }
 
     if (this.propsVisibility) {
-      this.dataSourceProposals = new MatTableDataSource<Proposal>(props);
+      this.dataSourceProposals = new MatTableDataSource<Proposal>(propsPending);
       this.setDataSourceProposalsAttributes();
-      this.lengthProposals = props.length;
+      this.lengthProposals = propsPending.length;
     }
 
-    if (this.propsAcceptedVisibility) {
-      this.dataSourceProposalsAccepted = new MatTableDataSource<Proposal>(propsAccepted);
+    if (this.proposReceivedVisibility) {
+      this.dataSourceProposalsReceive = new MatTableDataSource<Proposal>(props);
       this.setDataSourceProposalsAcceptedAttributes();
-      this.lengthProposalsAccepted = propsAccepted.length;
+      this.lengthProposalsReceive = props.length;
     }
   }
 
@@ -280,7 +294,7 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
   setDataSourceProposalsAcceptedAttributes() {
     //this.dataSourceProposalsAccepted.paginator = this.paginator;
-    this.dataSourceProposalsAccepted.sort = this.sort;
+    this.dataSourceProposalsReceive.sort = this.sort;
   }
 
   acceptProposal(token: string) {

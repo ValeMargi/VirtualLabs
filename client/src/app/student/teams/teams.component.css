@@ -1,6 +1,3 @@
-.button-request {
-}
-
 .mat-table{
   margin:2%;
   width: 100%;
@@ -12,8 +9,8 @@
   margin-top: 2%;
 }
 
-.contMyProp{
-
+btnRifiuta{
+  margin-right:2%;
 }
 
 .myProposal{

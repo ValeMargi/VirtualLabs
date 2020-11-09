@@ -41,27 +41,36 @@ public class UserController {
 
     @Autowired
     JwtUserDetailsService jwtUserDetailsService;
-
     @Autowired
     ModelMapper modelMapper;
-
     @Autowired
     AuthenticationService authenticationService;
-
     @Autowired
     VLService vlService;
-
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     private MessageSource messageSource;
-
     @Autowired
     PasswordResetTokenRepository passwordTokenRepository;
 
+    /**
+     *Metodo: POST
+     * @param file avatar associato all'utente che si sta registrando
+     * @param registerData Mappa contenente i campi:
+     *                     {
+     *                          "firstName":"...",
+     *                          "Name":"...",
+     *                          "id":"...",
+     *                          "email":"..."
+     *                           "password":"..."
+     *                     }
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/addUser")
-    public Optional<UserDTO> registerUser(@RequestPart("file") @Valid @NotNull MultipartFile file, @Valid @RequestPart("registerData") Map<String, String> registerData) throws IOException {
+    public Optional<UserDTO> registerUser(@RequestPart("file") @Valid @NotNull MultipartFile file,
+                                          @Valid @RequestPart("registerData") Map<String, String> registerData) throws IOException {
         if(file.isEmpty() || file.getContentType()==null)
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
@@ -108,7 +117,11 @@ public class UserController {
         }
     }
 
-
+    /**
+     * Metodo: POST
+     * @param token: token associato alla registrazione di un utente
+     * @return
+     */
     @GetMapping("/registration/confirm/{token}")
     public ResponseEntity<Void> confirmationPage(@PathVariable String token) {
         HttpHeaders headers = new HttpHeaders();
@@ -122,6 +135,10 @@ public class UserController {
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
+    /**
+     * Metodo: POST
+     * @param userId: matricola dell'utente che vuole resettare la password
+     */
     @PostMapping("/user/resetPassword")
     @ResponseStatus(HttpStatus.OK)
     public boolean resetPassword(HttpServletRequest request, @RequestBody String userId) {
@@ -144,7 +161,13 @@ public class UserController {
         }
     }
 
-
+    /**
+     * Metodo: GET
+     * @param locale
+     * @param model
+     * @param token
+     * @return
+     */
     @GetMapping("/user/changePassword")
     public ResponseEntity<Void> showChangePasswordPage(Locale locale, Model model, @RequestParam("token") String token) {
         String result = authenticationService.validatePasswordResetToken(token);
@@ -161,9 +184,12 @@ public class UserController {
     }
 
     /**
-     * metodoche riceve un json con token e newPassword  la nuova password resettata
      * @param locale
-     * @param input {"token":"token ricevuto nel metodo precedente ", "newPassword":"passwordNuova"}
+     * @param input mappa contenente la coppia
+     *             {
+     *              "token":"token associato nel metodo showChangePasswordPage ",
+     *              "newPassword":"..."
+     *              }
      * @return
      */
     @PostMapping("/user/savePassword")
@@ -186,7 +212,11 @@ public class UserController {
     /**
      * Metodo per aggiornare password quando l'utente è già loggato
      * @param locale
-     * @param input : riceve oldPassword, newPassword
+     * @param input : mappa contenente la coppia
+     *             {
+     *              "oldPassword": "...",
+     *              "newPassword": "..."
+     *              }
      * @return
      */
     // change user password -> aggiornamento pass da utente loggato
@@ -205,6 +235,12 @@ public class UserController {
     }
 
 
+    /**
+     * Metodo POST
+     * @param file: file con il nuovo avatar
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/user/updateAvatar")
     public boolean changeAvatar(@RequestPart("file") @Valid @NotNull MultipartFile file) throws IOException {
        boolean res = false;

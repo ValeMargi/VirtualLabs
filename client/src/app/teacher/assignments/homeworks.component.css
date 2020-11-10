@@ -34,3 +34,15 @@ overflow: hidden;
     text-align: center;
     margin-top: 10%;
 }
+
+.filter {
+  margin-left:50%;
+  margin-bottom: 1em;
+  display: inline-block;
+  margin-top: 1em;
+}
+
+.noHomeworks {
+  margin-top: 1em;
+  text-align: center;
+}

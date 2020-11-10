@@ -10,6 +10,7 @@ import { Location } from '@angular/common';
 import { Student } from 'src/app/models/student.model';
 import { HomeworkStudent } from 'src/app/models/homework-student.model';
 import { Assignment } from 'src/app/models/assignment.model';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-homeworks',
@@ -42,10 +43,13 @@ export class HomeworksComponent implements OnInit, OnChanges {
   @Input() assignment: Assignment;
   @Output('update') update = new EventEmitter<number>();
 
-  homeworksToShow: any[] = [];
   versionsVisibility: boolean = false;
   tableVisibility: boolean = false;
   assignmentName: string = "";
+  myControl = new FormControl();
+  statuses: string[] = ['NULL', 'LETTO', 'CONSEGNATO', 'RIVISTO'];
+  selectedOptions: string[] = [];
+  filteredHomeworks: HomeworkStudent[] = [];
 
   constructor(private router: Router,
               private route: ActivatedRoute,
@@ -53,13 +57,13 @@ export class HomeworksComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.manageTableVisibility();
     this.manageTable();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.homeworkStudents != null) {
       this.homeworkStudents = changes.homeworkStudents.currentValue;
+      this.filterHomeworks(this.selectedOptions);
     }
 
     if (changes.assignment != null) {
@@ -70,7 +74,6 @@ export class HomeworksComponent implements OnInit, OnChanges {
       }
     }
 
-    this.manageTableVisibility();
     this.manageTable();
   }
 
@@ -84,9 +87,10 @@ export class HomeworksComponent implements OnInit, OnChanges {
   }
 
   manageTable() {
-    this.dataSource = new MatTableDataSource<HomeworkStudent>(this.homeworkStudents);
+    this.dataSource = new MatTableDataSource<HomeworkStudent>(this.filteredHomeworks);
     this.setDataSourceAttributes();
-    this.length = this.homeworkStudents.length;
+    this.length = this.filteredHomeworks.length;
+    this.manageTableVisibility();
   }
 
   setDataSourceAttributes() {
@@ -99,12 +103,42 @@ export class HomeworksComponent implements OnInit, OnChanges {
   }
 
   manageTableVisibility() {
-    if (this.homeworkStudents.length > 0) {
+    if (this.filteredHomeworks.length > 0) {
       this.tableVisibility = true;
     }
     else {
       this.tableVisibility = false;
     }
+  }
+
+  selectOption(option: string) {
+    if (this.selectedOptions.includes(option)) {
+      this.selectedOptions.splice(this.selectedOptions.indexOf(option), 1);
+    }
+    else {
+      this.selectedOptions.push(option);
+    }
+
+    this.filterHomeworks(this.selectedOptions);
+  }
+
+  filterHomeworks(options: string[]) {
+    this.filteredHomeworks = new Array();
+
+    if (options.length == 0) {
+      this.filteredHomeworks = this.homeworkStudents;
+    }
+    else {
+      options.forEach(status => {
+        this.homeworkStudents.forEach(hw => {
+          if (hw.status == status) {
+            this.filteredHomeworks.push(hw);
+          }
+        })
+      });
+    }
+
+    this.manageTable();
   }
 
   onRouterOutletActivate(event: any) {

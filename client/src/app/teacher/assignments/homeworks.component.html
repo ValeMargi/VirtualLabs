@@ -1,15 +1,28 @@
 <!--Elaborati Studenti-->
 <mat-card class="card" *ngIf="!versionsVisibility">
     <mat-card-header>
-     <mat-card-title>
-      <button class="iconButton" mat-icon-button color="primary" (click)="backAssignmetsTable()">
-        <mat-icon>arrow_back</mat-icon></button>
-      Elaborati </mat-card-title>
-     <mat-card-subtitle class="subTitle">Titolo: <strong> {{assignmentName}}</strong> </mat-card-subtitle>
+        <mat-card-title>
+        <button class="iconButton" mat-icon-button color="primary" (click)="backAssignmetsTable()">
+            <mat-icon>arrow_back</mat-icon></button>
+            Elaborati </mat-card-title>
+        <mat-card-subtitle class="subTitle">Titolo: <strong> {{assignmentName}}</strong> </mat-card-subtitle>
+        
+        <mat-form-field appearance="fill" class="filter">
+            <mat-label>Filtra per stato</mat-label>
+            <mat-select [formControl]="myControl" multiple>
+              <mat-select-trigger>
+                {{myControl.value ? myControl.value[0] : ''}}
+                <span *ngIf="myControl.value?.length > 1">
+                  (+{{myControl.value.length - 1}} {{myControl.value?.length === 2 ? 'altro' : 'altri'}})
+                </span>
+              </mat-select-trigger>
+              <mat-option *ngFor="let option of statuses" [value]="option" (click)="selectOption(option)">{{option}}</mat-option>
+            </mat-select>
+          </mat-form-field>
     </mat-card-header>
 
     <mat-card-content>
-        <div>
+        <div *ngIf="tableVisibility">
             <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
                 <ng-container matColumnDef="id">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Matricola </th>
@@ -50,6 +63,9 @@
             <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
 
             </mat-paginator>
+        </div>
+        <div class="noHomeworks" *ngIf="!tableVisibility">
+            <h3>Nessun homework trovato</h3>
         </div>
     </mat-card-content>
 </mat-card>

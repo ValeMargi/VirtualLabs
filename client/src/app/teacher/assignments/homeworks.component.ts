@@ -138,6 +138,7 @@ export class HomeworksComponent implements OnInit, OnChanges {
       });
     }
 
+    this.filteredHomeworks.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
     this.manageTable();
   }
 

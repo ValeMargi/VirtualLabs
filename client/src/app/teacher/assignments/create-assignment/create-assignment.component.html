@@ -20,8 +20,17 @@
 
 <!--Data di scadenza-->
 <mat-form-field>
-    <input #expire type="date" placeholder="Scadenza" name="oneWeek" [ngModel]="oneWeek | date:'yyyy-MM-dd'" matInput required>
-    <!--<mat-error *ngIf="CreateAssignmentForm.get('expire').hasError('required')">Inserisci una data successiva a quella corrente</mat-error>-->
+  <input
+  #expire
+    matInput
+    [matDatepicker]="dp"
+    placeholder="Scadenza richiesta"
+    formControlName="date"
+    [formControl]="dateControl"
+    [min]="minDate"
+>
+<mat-datepicker-toggle matSuffix [for]="dp"> </mat-datepicker-toggle>
+<mat-datepicker #dp> </mat-datepicker>
  </mat-form-field>
 
 <!--inserire il carimento di un immagine-->

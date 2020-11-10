@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, Output, EventEmitter, Input } from '@
 import { MatDialogRef } from '@angular/material/dialog';
 import { Assignment } from 'src/app/models/assignment.model';
 
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import * as moment from 'moment';
 
 @Component({
@@ -16,12 +16,19 @@ export class CreateAssignmentComponent implements OnInit, AfterViewInit {
   currentDate;
   oneWeek;
 
+  dateTimeout: Date;
+  minDate: Date;
+  dateControl = new FormControl(new Date());
+
   @Input() querying: boolean;
   @Output('create') create = new EventEmitter<any>();
 
   constructor(
     private matDialogRef: MatDialogRef<CreateAssignmentComponent>,
     private formBuilder: FormBuilder) {
+
+      const currentDate = new Date();
+      this.minDate = new Date(currentDate);
     }
 
   ngAfterViewInit() {}

@@ -16,7 +16,7 @@
     </mat-card>
     </mat-dialog-content>
 
-    <!--RegisterForm-->
+
     <form [formGroup]="ModelVmForm">
 
       <!--Massimo VCPU-->
@@ -42,17 +42,17 @@
 
       <!--Massimo VM-->
       <mat-form-field>
-          <input #totInstances class="input" type="number" placeholder="Massimo VM" formControlName="max_vm" matInput min="1" required>
+          <input #totInstances class="input" type="number" placeholder="Massimo VM" formControlName="max_vm" matInput min="1" required  (keyup)="sendValueMaxVM(totInstances.value)">
           <mat-error *ngIf="ModelVmForm.get('max_vm').hasError('required')">Inserisci un numero massimo di VM</mat-error>
           <mat-error *ngIf="ModelVmForm.get('max_vm').hasError('min')">Un team ha più VM</mat-error>
       </mat-form-field><br><br>
 
       <!--Massimo VM attive-->
       <mat-form-field>
-          <input #runningInstances class="input" type="number" placeholder="Massimo VM attive" formControlName="max_vm_active" matInput min="1" required>
+          <input #runningInstances class="input" type="number" placeholder="Massimo VM attive" formControlName="max_vm_active" matInput min="1" (keyup)="sendValueMaxVMActive(totInstances.value,runningInstances.value)" required>
           <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('required')">Inserisci un numero massimo di VM attive</mat-error>
           <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('min')">Un team ha più VM attive</mat-error>
-          <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('max')">Non puoi inserire più Vm attive di quelle totali</mat-error>
+          <mat-error *ngIf="runningInstances.value > totInstances.value "> Errore!</mat-error>
       </mat-form-field><br><br>
 
   </form>

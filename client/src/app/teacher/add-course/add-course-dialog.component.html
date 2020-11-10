@@ -1,99 +1,135 @@
-<form (keyup.enter)="addCourse(courseName.value, acronym.value, min.value, max.value)">
-  <h2 mat-dialog-title><mat-icon>school</mat-icon> Crea corso</h2>
+<div class="dialogAdd">
+  <h2 mat-dialog-title>
+    <button  mat-mini-fab class="backButton"  color="primary" *ngIf="!pageOneVisibility" (click)="backPage()"> <mat-icon>arrow_back</mat-icon> </button>
+    Crea corso
+    <h3  *ngIf="!pageOneVisibility" style="background-color: rgba(114, 114, 224, 0.459)"> <strong> Gestione Vm</strong></h3>
+
+  </h2>
   <mat-dialog-content>
-    <!--RegisterForm-->
-    <form [formGroup]="AddCourseForm">
 
-    <!--Nome Corso-->
-    <mat-form-field class="matForm">
-      <input #courseName class="input" type="text" placeholder="Nome del corso" formControlName="name" matInput required>
-      <mat-error *ngIf="AddCourseForm.get('name').hasError('required')">Il nome è richiesto</mat-error>
-    </mat-form-field><br><br>
+    <div class="pageOne" *ngIf="pageOneVisibility">
+       <form [formGroup]="AddCourseForm">
 
-    <!--Acronimo-->
-    <mat-form-field class="matForm">
-      <input #acronym class="input" type="text" placeholder="Acronimo" formControlName="acronym" matInput required>
-      <mat-error *ngIf="AddCourseForm.get('acronym').hasError('required')">L'acronimo deve avere almeno 2 lettere</mat-error>
-    </mat-form-field><br><br>
+        <!--Nome Corso-->
+        <mat-form-field class="matForm">
+          <input [(ngModel)]="courseName" class="input" type="text" placeholder="Nome del corso" formControlName="name" matInput required>
+          <mat-error *ngIf="AddCourseForm.get('name').hasError('required')">Il nome è richiesto</mat-error>
+        </mat-form-field><br><br>
 
-    <!--Massimo Membri-->
-    <mat-form-field class="matForm">
-      <input #max class="input" type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput max="10" min="1" required>
-      <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di membri</mat-error>
-      <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
-      <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
-    </mat-form-field><br><br>
+        <!--Acronimo-->
+        <mat-form-field class="matForm">
+          <input [(ngModel)]="acronym" class="input" type="text" placeholder="Acronimo" formControlName="acronym" matInput required>
+          <mat-error *ngIf="AddCourseForm.get('acronym').hasError('required')">L'acronimo deve avere almeno 2 lettere</mat-error>
+        </mat-form-field><br><br>
 
-    <!--Minimo Membri-->
-    <mat-form-field class="matForm">
-      <input #min class="input" type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="1" max="10" required>
-      <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero minimo di membri</mat-error>
-      <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
-      <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
-    </mat-form-field><br><br>
+        <!--Massimo Membri-->
+        <mat-form-field class="matForm">
+          <input [(ngModel)]="maxMembers" class="input" type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput max="10" min="1" required>
+          <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di membri</mat-error>
+          <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
+          <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
+        </mat-form-field><br><br>
 
-    <mat-card class="gestioneVmCorso">
-      <mat-card-subtitle>
-        <strong>Gestione Vm Corso </strong>
-      </mat-card-subtitle>
+        <!--Minimo Membri-->
+        <mat-form-field class="matForm">
+          <input [(ngModel)]="minMembers" class="input" type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="1" max="10" required>
+          <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero minimo di membri</mat-error>
+          <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
+          <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
+        </mat-form-field><br><br>
 
-      <mat-card-content>
+        <!--Aggiungi Professore-->
+        <mat-form-field class="matForm" style="width:70%">
+          <input #input type="search" placeholder="Aggiungi professore" matInput [formControl]="myControl" [matAutocomplete]="auto">
+              <mat-autocomplete   #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onTeacherSelected($event.option.value)">
+              <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                  {{option.name}} {{option.firstName}} ({{option.id}})
+              </mat-option>
+              </mat-autocomplete>
+        </mat-form-field>
 
-        <!--Crea Modello-->
-        <button #bCreaModello mat-raised-button color="accent"> Crea Modello VM</button>
-        <mat-checkbox #default > Utilizza Valori di Default</mat-checkbox> <br>
-
-        <!--Foto iniziale VM-->
-        <strong>Seleziona foto iniziale VM </strong>
-        <input class="inputfile" type="file" formControlName="imageVM" accept="image/*" (change)="addVMImage($event)" required>
-        <mat-error *ngIf="AddCourseForm.get('imageVM').hasError('required')">Inserire la VM</mat-error><br>
-
-      </mat-card-content>
-
-    </mat-card>
+          <button mat-mini-fab color="primary" (click)="addTeacher()"> <mat-icon>add</mat-icon> </button>
 
 
-    <!--Aggiungi Professore-->
-    <mat-form-field class="matForm">
-      <input #input type="search" placeholder="Aggiungi professore" matInput [formControl]="myControl" [matAutocomplete]="auto">
-          <mat-autocomplete   #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onTeacherSelected($event.option.value)">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-              {{option.name}} {{option.firstName}} ({{option.id}})
-          </mat-option>
-          </mat-autocomplete>
-    </mat-form-field>
+      </form>
 
-   <button mat-mini-fab color="primary" (click)="addTeacher()">
-     <mat-icon>add</mat-icon>
-    </button>
-
-    </form>
-   <!--Tabella Docenti del Corso-->
-    <div class="tableContainer" *ngIf="tableVisibility">
-        <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
-            <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-                <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+      <!--Tabella Docenti del Corso-->
+      <div class="tableContainer" *ngIf="tableVisibility">
+          <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
+              <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                  <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Cognome </th>
+                  <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="firstName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+                  <td mat-cell *matCellDef="let row"> {{row.firstName}} </td>
+              </ng-container>
+              <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
+                <td mat-cell *matCellDef="let row">
+                  <button mat-button class="delete"  onclick="this.blur()" (click)=deleteTeacher(row)>
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
             </ng-container>
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cognome </th>
-                <td mat-cell *matCellDef="let row"> {{row.name}} </td>
-            </ng-container>
-            <ng-container matColumnDef="firstName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
-                <td mat-cell *matCellDef="let row"> {{row.firstName}} </td>
-            </ng-container>
-            <ng-container matColumnDef="delete">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
-              <td mat-cell *matCellDef="let row">
-                <button mat-button class="delete"  onclick="this.blur()" (click)=deleteTeacher(row)>
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </td>
-          </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+      </div>
+
+    </div>
+
+    <div class="pageTwo" *ngIf="pageTwoVisibility">
+
+       <mat-checkbox #default
+                      [checked] = "valueDefault"
+                      (change) = "setDefaultValue($event.checked)">
+                      Utilizza Valori di Default</mat-checkbox>
+
+              <form [formGroup]="ModelVmForm">
+
+                <!--Massimo VCPU-->
+                <mat-form-field class="matForm">
+                    <input [(ngModel)]="maxVcpu" class="input" type="number" placeholder="Massimo VCPU" formControlName="max_vcpu" matInput min="1" required>
+                    <mat-error *ngIf="ModelVmForm.get('max_vcpu').hasError('required')">Inserisci un numero massimo di vcpu</mat-error>
+                </mat-form-field><br><br>
+
+                <!--Massimo disco-->
+                <mat-form-field class="matForm">
+                    <input [(ngModel)]="maxDisk" class="input" type="number" placeholder="Massimo disco (GB)" formControlName="max_disco" matInput min="1" required>
+                    <mat-error *ngIf="ModelVmForm.get('max_disco').hasError('required')">Inserisci una dimensione massima del disco</mat-error>
+                </mat-form-field><br><br>
+
+                <!--Massima RAM-->
+                <mat-form-field class="matForm">
+                    <input [(ngModel)]="ram" class="input" type="number" placeholder="Massima RAM (GB)" formControlName="max_ram" matInput min="1" required>
+                    <mat-error *ngIf="ModelVmForm.get('max_ram').hasError('required')">Inserisci una dimensione massima della RAM</mat-error>
+                </mat-form-field><br><br>
+
+                <!--Massimo VM-->
+                <mat-form-field class="matForm">
+                    <input [(ngModel)]="totInstances" class="input" type="number" placeholder="Massimo VM" formControlName="max_vm" matInput min="1" required>
+                    <mat-error *ngIf="ModelVmForm.get('max_vm').hasError('required')">Inserisci un numero massimo di VM</mat-error>
+                </mat-form-field><br><br>
+
+                <!--Massimo VM attive-->
+                <mat-form-field class="matForm">
+                    <input [(ngModel)]="runningInstances" class="input" type="number" placeholder="Massimo VM attive" formControlName="max_vm_active" matInput min="1" required>
+                    <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('required')">Inserisci un numero massimo di VM attive</mat-error>
+                </mat-form-field><br><br>
+
+                 <!--Foto iniziale VM-->
+
+                  <strong>Seleziona foto iniziale VM </strong>
+                  <input class="inputfile" type="file" formControlName="imageVM" accept="image/*" (change)="addVMImage($event)" required>
+                  <mat-error *ngIf="ModelVmForm.get('imageVM').hasError('required')">Inserire la VM</mat-error><br>
+
+
+            </form>
     </div>
 
   </mat-dialog-content>
@@ -103,8 +139,10 @@
 
   <mat-dialog-actions>
     <button mat-button mat-raised-button color="warn" (click)="close()">Annulla</button>
-    <button mat-button mat-raised-button color="primary" (click)="addCourse(courseName.value, acronym.value, min.value, max.value)">Crea</button>
+    <button mat-button mat-raised-button color="primary" *ngIf="pageOneVisibility" [disabled]="!AddCourseForm.valid" (click)="nextPage()"> Prosegui</button>
+    <button mat-button mat-raised-button color="primary" *ngIf="!pageOneVisibility"
+    (click)="addCourse(courseName, acronym, minMembers, maxMembers,
+    maxVcpu, maxDisk ,ram,totInstances, runningInstances)"
+    >Crea</button>
   </mat-dialog-actions>
-
-
-</form>
+</div>

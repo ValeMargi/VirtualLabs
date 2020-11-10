@@ -18,6 +18,9 @@ export class ManageModelComponent implements OnInit, OnChanges {
   @Output() update: EventEmitter<Course> = new EventEmitter<Course>();
 
   ModelVmForm: FormGroup;
+  UpVms: boolean = false;
+  maxVM: number;
+  maxVMActive: number;
 
   constructor(private formBuilder: FormBuilder,
               private dialogRef: MatDialogRef<ManageModelComponent>
@@ -49,7 +52,7 @@ export class ManageModelComponent implements OnInit, OnChanges {
           max_disco : new FormControl('', [Validators.required, Validators.min(this.totRes.diskSpace)]),
           max_ram : new FormControl('', [Validators.required, Validators.min(this.totRes.ram)]),
           max_vm : new FormControl('', [Validators.required, Validators.min(this.totRes.total)]),
-          max_vm_active : new FormControl('', [Validators.required, Validators.min(this.totRes.running), Validators.max(this.totRes.total)])
+          max_vm_active : new FormControl('', [Validators.required, Validators.min(this.totRes.running), Validators.max(this.maxVM)])
         });
 
         this.ModelVmForm.setValue({
@@ -62,6 +65,34 @@ export class ManageModelComponent implements OnInit, OnChanges {
       }
     }
   }
+
+
+
+  sendValueMaxVM(value: number){
+    this.maxVM = value;
+  }
+
+  sendValueMaxVMActive(maxVMActive: number, maxVm: number){
+    this.maxVMActive =  maxVMActive;
+    this.maxVM = maxVm;
+    console.log("maxVMActive:"+this.maxVMActive);
+
+    if(this.maxVMActive > this.maxVM){
+      console.log("vero:");
+      return "Non puoi inserire più Vm attive di quelle totali";
+    }
+
+  }
+
+  getErrorMessage(){
+    if(this.maxVMActive > this.maxVM){
+      this.UpVms = true;
+      console.log("vero:"+this.UpVms);
+      return "Non puoi inserire più Vm attive di quelle totali";
+    }
+  }
+  //Non puoi inserire più Vm attive di quelle totali
+
 
   saveModel(maxVcpu: number, maxDisk: number, ram: number, totInstances: number, runningInstances: number) {
     if (!this.ModelVmForm.valid) {

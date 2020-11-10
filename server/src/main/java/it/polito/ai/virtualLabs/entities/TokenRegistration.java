@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 @Entity
 @Data
 public class TokenRegistration {
-        @Id @GeneratedValue(strategy = GenerationType.AUTO)
+        @Id 
         private String id;
         private String userId;
         private Timestamp expiryDate;

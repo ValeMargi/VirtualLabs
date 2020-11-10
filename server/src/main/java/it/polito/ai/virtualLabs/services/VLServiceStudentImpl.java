@@ -64,8 +64,6 @@ public class VLServiceStudentImpl implements VLServiceStudent{
 
     /**
      * Metodo per ritornare la lista di DTO dei team di cui uno studente è membro
-     * @param studentId
-     * @return
      */
     @Override
     public List<TeamDTO> getTeamsForStudent(String studentId){
@@ -77,6 +75,9 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         }
     }
 
+    /**
+     * Metodo per ritornare il team al quale lo studente è iscritto per un determinato corso
+     */
     @Override
     public TeamDTO getTeamForStudent(String courseId, String studentId) {
         try {
@@ -103,30 +104,29 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         }
     }
 
+    /**
+     * Metodo utillizzato per creare una proposta di team per un determinato corso, controllando che tutti i vincoli siano rispettati
+     * e chiamando il metodo per generare le email di invito agli studenti ricevuti tramite una lista di ID
+     */
     @Override
     public Map<String,Object> proposeTeam(String courseId, String name, List<String> memberIds, Timestamp timeout){
         Optional<Course> course = courseRepository.findById(courseId);
         String creatorStudent = SecurityContextHolder.getContext().getAuthentication().getName();
-        //AGGIUNTO
         Optional<Student> os = studentRepository.findById(creatorStudent);
-        if(!os.isPresent()) throw new StudentNotFoundException(); //PermissionDenied
+        if(!os.isPresent()) throw new StudentNotFoundException();
         Student creator = os.get();
-        //
         if( memberIds.contains(creatorStudent))
             throw new PermissionDeniedException();
-
         if( !course.isPresent())
             throw  new CourseNotFoundException();
         if(!course.get().isEnabled())
             throw new CourseDisabledException();
+        if(course.get().getTeams().stream().anyMatch(t ->t.getName().equals(name)))
+            throw new NameTeamIntoCourseAlreadyPresentException();
 
         List<String> enrolledStudents= vlService.getEnrolledStudents(courseId).stream()
                 .map(StudentDTO::getId)
                 .collect(Collectors.toList());
-
-        if(course.get().getTeams().stream().anyMatch(t ->t.getName().equals(name)))
-            throw new NameTeamIntoCourseAlreadyPresentException();
-
         if ( !enrolledStudents.containsAll(memberIds) || !enrolledStudents.contains(creatorStudent))
             throw  new StudentNotEnrolledToCourseException();
 
@@ -167,7 +167,6 @@ public class VLServiceStudentImpl implements VLServiceStudent{
             memberIds.forEach(s-> team.addStudentIntoTeam(studentRepository.getOne(s)));
             vlService.notifyTeam(modelMapper.map(team, TeamDTO.class), memberIds, creatorStudent,  courseId, timeout);
         }
-
         Map<String, Object> map = new HashMap<>();
         map.put("teamName", team.getName());
         map.put("creator", creator.getName()+" "+ creator.getFirstName()+" "+"("+creator.getId()+")");
@@ -181,21 +180,22 @@ public class VLServiceStudentImpl implements VLServiceStudent{
             l2.add(m2);
         }
         map.put("students", l2);
-        return map; // modelMapper.map(team, TeamDTO.class);
+        return map;
     }
 
-    /*Metodo per ottenere le proposte di Team*/
+    /**
+     * Metodo per ritornare la lista di proposte di team per un determinato corso per l'utente autenticato
+     */
     @Override
     public   List<Map<String, Object>> getProposals(String courseId) {
         String student = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Student> os = studentRepository.findById(student);
-        if(!os.isPresent()) throw new StudentNotFoundException(); //PermissionDenied
+        if(!os.isPresent()) throw new StudentNotFoundException();
         Student s = os.get();
         if(s.getTeams().stream().anyMatch(t-> t.getCourse().getName().equals(courseId) && t.getStatus().equals("active")))
             throw new StudentAlreadyInTeamException();
         List<Long> teamList = s.getTokens().stream()
                 .filter(t-> t.getCourseId().equals(courseId)).map(Token::getTeamId).collect(Collectors.toList());
-
         List<Map<String, Object>> l = new ArrayList<>();
         for( Long teamId : teamList) {
             Optional<Team> oteam= teamRepository.findById(teamId);
@@ -213,10 +213,8 @@ public class VLServiceStudentImpl implements VLServiceStudent{
             Token tokenStudent = otoken.get();
             String currentToken = tokenStudent.getId();
             m.put("tokenId", currentToken);
-            // se status==true, proposta già accettata
             m.put("status", tokenStudent.getStatus());
             m.put("scadenza", tokenStudent.getExpiryDate());
-
             List<Map<String, Object>> l2 = new ArrayList<>();
             for(Token token: tokenRepository.findAllByTeamId(teamId).stream()
                     .filter(t->!t.getStudent().equals(s) && !t.getStudent().equals(stu)).collect(Collectors.toList())){
@@ -231,6 +229,9 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         return l;
     }
 
+    /**
+     * Metodo per ritornare la lista di DTO degli studenti che appartengono ad un team per un determinato corso
+     */
     @Override
     public List<StudentDTO> getStudentsInTeams(String courseName){
         if( courseRepository.findById(courseName).isPresent())
@@ -240,6 +241,9 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         else throw new CourseNotFoundException();
     }
 
+    /**
+     * Metodo per ritornare la lista di DTO degli studenti che non appartengono ad un team per un determinato corso
+     */
     @Override
     public List<StudentDTO>  getAvailableStudents(String courseName){
         if( courseRepository.findById(courseName).isPresent())
@@ -250,17 +254,12 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         else throw new CourseNotFoundException();
     }
 
-    /*Ogni gruppo può avere più VM e ogni VM ha l'identificativo del team e tutti i membri
-     * del team possono accederci ma solo chi ha creato la VM è owner*/
+
     /**
-     *Controllo l'esistenza di una VM se è già presente una VM con lo stesso nome per lo stesso team all'interno del corso
-     * @param vmdto: contiene tutte le caratteristiche della VM compilate nel form per la creazione di una VM per gruppo
-     * @param courseId: identificativo del corso
-     * @return
+     * Metodo per aggiungere una VM (parametri e foto) controllando che i vincoli siano rispettati e decrementando le risorse disponibili per il team
      */
     @Override
     public VMDTO addVM(VMDTO vmdto, String courseId, String timestamp) {
-
         String studentAuth= SecurityContextHolder.getContext().getAuthentication().getName();
         if( getStudentsInTeams(courseId).stream().anyMatch(s-> s.getId().equals(studentAuth))){
             Optional<Course> oc = courseRepository.findById(courseId);
@@ -281,18 +280,14 @@ public class VLServiceStudentImpl implements VLServiceStudent{
                     throw new InvalidInputVMresources();
                 VM vm = modelMapper.map(vmdto, VM.class);
                 vm.setCourse(c);
-
                 PhotoModelVM photoModelVM = c.getPhotoModelVM();
-
                 PhotoVM photoVM = new PhotoVM();
                 photoVM.setNameFile(photoModelVM.getNameFile());
                 photoVM.setType(photoModelVM.getType());
                 photoVM.setPicByte(photoModelVM.getPicByte());
                 photoVM.setTimestamp(timestamp);
-
                 vm.setPhotoVM(photoVM);
                 vm.addStudentToOwnerList(s);
-
                 t.getMembers().forEach(vm::addStudentToMemberList);
                 vm.setTeam(t);
                 t.setDiskSpaceLeft(t.getDiskSpaceLeft()-vmdto.getDiskSpace());
@@ -307,9 +302,11 @@ public class VLServiceStudentImpl implements VLServiceStudent{
     }
 
 
-    /*Metodo per rendere determinati membri del team owner di una data VM*/
+    /**
+     * Metodo per aggiungere agli owner di una VM gli studenti dei quali viene passato l'ID in una lista
+     */
     @Override
-    public boolean addOwner(Long VMid, String courseId, List<String> studentsId) { //CourseId preso dal pathVariable
+    public boolean addOwner(Long VMid, String courseId, List<String> studentsId) {
         Optional<VM> ovm= VMRepository.findById(VMid);
         if (ovm.isPresent() ) {
             VM vm =ovm.get();
@@ -322,12 +319,10 @@ public class VLServiceStudentImpl implements VLServiceStudent{
             if(!vm.getCourse().equals(c))
                 throw new PermissionDeniedException();
             String studentAuth = SecurityContextHolder.getContext().getAuthentication().getName();
-            if (vm.getOwnersVM().stream().anyMatch(s->s.getId().equals(studentAuth))) //lo student autenticato è già owner della VM, può quindi aggiungere altri owner
-            {
-                if(vm.getMembersVM().stream().map(Student::getId).collect(Collectors.toList()).containsAll(studentsId)) //tutti lgi studenti fanno parte del team
-                {
+            if (vm.getOwnersVM().stream().anyMatch(s->s.getId().equals(studentAuth))){
+                if(vm.getMembersVM().stream().map(Student::getId).collect(Collectors.toList()).containsAll(studentsId)){
                     if( studentsId.stream().map(s-> vm.addStudentToOwnerList(studentRepository.getOne(s))).anyMatch(r->r.equals(false)))
-                        throw new RuntimeException("One or more students are already owner");
+                        throw new StudentAlreadyOwnerException();
                     else{
                         VMRepository.saveAndFlush(vm);
                         return true;
@@ -337,6 +332,9 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         }else throw new VMNotFoundException();
     }
 
+    /**
+     * Metodo che ritorna la lista di DTO degli studenti owner di una determinata VM
+     */
     @Override
     public List<StudentDTO> getOwnersForStudent(Long VMid) {
         String student = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -352,7 +350,9 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         }else throw new StudentNotFoundException();
     }
 
-    /*Metodo per attivare VM, controllo se l'utente autenticato è un owner della VM*/
+    /**
+     * Metodo per accendere una VM
+     */
     @Override
     public boolean activateVM(Long VMid ){ //CourseId preso dal pathVariable
         Optional<VM> ovm = VMRepository.findById(VMid);
@@ -372,7 +372,9 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         return true;
     }
 
-    /*Metodo per utilizzare VM, controllo se l'utente autenticato è un membro della VM*/
+    /**
+     * Metodo per usare una VM, ovvero caricare una versione aggiornata della foto della VM
+     */
     @Override
     public boolean useVM(Long VMid, String timestamp, PhotoVMDTO photoVMDTO ){
         Optional<VM> ovm = VMRepository.findById(VMid);
@@ -393,9 +395,11 @@ public class VLServiceStudentImpl implements VLServiceStudent{
 
     }
 
-    /*Metodo per spegnere VM, controllo se l'utente autenticato è un owner della VM*/
+    /**
+     * Metodo per spegnere una VM
+     */
     @Override
-    public boolean disableVM(Long VMid ){ //CourseId preso dal pathVariable
+    public boolean disableVM(Long VMid ){
         Optional<VM> ovm = VMRepository.findById(VMid);
         if (ovm.isPresent()) {
             VM vm = ovm.get();
@@ -407,7 +411,10 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         } else throw new VMNotFoundException();
         return true;
     }
-    /*Metodo per cancellare VM, controllo se l'utente autenticato è un owner della VM*/
+
+    /**
+     * Metodo per rimuovere una VM, rendendo nuovamente disponibili le risorse al team
+     */
     @Override
     public boolean removeVM(Long VMid){
         Optional<VM> ovm = VMRepository.findById(VMid);
@@ -438,7 +445,9 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         return true;
     }
 
-    /*Metodo per modificare risorse VM owner*/
+    /**
+     * Metodo per aggiornare le risorse utilizzate da una VM, propagando le modifiche al team
+     */
     @Override
     public VMDTO updateVMresources(Long VMid,VMDTO vmdto) {
         Optional<VM> ovm = VMRepository.findById(VMid);
@@ -467,7 +476,9 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         }else throw new VMNotFoundException();
     }
 
-    /*Visualizzare VM accessibili allo student in tab corso*/
+    /**
+     * Metodo per ritornare una lista di DTO delle VM collegate al team a cui appartiene uno studente per un determinato corso
+     */
     @Override
     public List<VMDTO> allVMforStudent( String courseId) {
         String student =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -480,7 +491,9 @@ public class VLServiceStudentImpl implements VLServiceStudent{
 
     }
 
-    /*Visualizzare VM con un certo VMid  allo student in tab corso*/
+    /**
+     * Metodo per ritornare la foto di una determinata VM
+     */
     @Override
     public PhotoVMDTO getVMforStudent( String courseId, Long VMid) {
         String student =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -503,9 +516,11 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         }else throw new TeamNotFoundException();
     }
 
-    /*Per vedere chi è owner*/
+    /**
+     * Metodo per verificare se l'utente autenticato è owner di una determinata VM
+     */
     @Override
-    public boolean isOwner(  Long VMid) {
+    public boolean isOwner(Long VMid) {
         String student =SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Student> os = studentRepository.findById(student);
         if(os.isPresent()){
@@ -520,9 +535,11 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         }else throw new StudentNotFoundException();
     }
 
-    /*Metodo per ritornare le consegne di un dato corso*/
+    /**
+     * Metodo per ritornare una lista di mappe contenenti le consegne dello studente autenticato per un determinato corso, con il voto e lo stato della consegna
+     */
     @Override
-    public List<Map<String, Object>> allAssignmentStudent(  String courseId) { //CourseId preso dal pathVariable
+    public List<Map<String, Object>> allAssignmentStudent( String courseId){
         String student = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Student> os = studentRepository.findById(student);
         if (os.isPresent()) {
@@ -547,7 +564,10 @@ public class VLServiceStudentImpl implements VLServiceStudent{
             }throw new StudentNotEnrolledToCourseException();
         }else throw new StudentNotFoundException();
     }
-    /*Metodo per ritornare la consegna di un dato corso*/
+
+    /**
+     * Metodo ritornare l'immagine di una determinata consegna, aggiornando lo stato se era a NULL, impostando anche il nuovo timestamp di ultima modifica dello stato
+     */
     @Override
     public PhotoAssignmentDTO getAssignmentStudent( Long assignmentId ) {
         String student = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -580,8 +600,10 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         }else throw new StudentNotFoundException();
     }
 
-    /*SERVICE ELABORATI*/
-    @Override //uploadHomework
+    /**
+     * Metodo per caricare una versione di elaborato per un determinato elaborato
+     */
+    @Override
     public PhotoVersionHomeworkDTO uploadVersionHomework (Long homeworkId, PhotoVersionHomeworkDTO photoVersionHomeworkDTO) {
         String student = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Student> os = studentRepository.findById(student);
@@ -616,27 +638,9 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         } else throw new PermissionDeniedException();
     }
 
-    //VERIFICARW
-    //@PreAuthorize("hasAuthority('student')")
-   /* @Override
-    public boolean updateStatusHomework( Long homeworkId, String status) {
-        boolean isAuthenticated =SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
-        if(isAuthenticated){
-            Optional<Homework> oh= homeworkRepository.findById(homeworkId);
-            if( oh.isPresent()){
-                Homework h = oh.get();
-                if(!h.getPermanent())
-                    h.setStatus(status);
-                homeworkRepository.saveAndFlush(h);
-                return true;
-            }else throw new HomeworkNotFoundException();
-        }else throw new PermissionDeniedException();
-    }
-
-    /*
-    */
-
-
+    /**
+     * Metodo per ritornare il DTO dell'elaborato collegato all'utente autenticato per una data consegna
+     */
     @Override
     public  HomeworkDTO getHomework(Long assignmentId){
         Optional<Assignment> oa = assignmentRepository.findById(assignmentId);
@@ -651,6 +655,10 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         }else throw new AssignmentNotFoundException();
     }
 
+    /**
+     * Metodo per ritornare una lista di mappe contenenti l'id, il timestamp e il nome dell'immagine delle versioni elaborati collegate
+     * all'elaborato dello studente autenticato per una determinata consegna
+     */
     @Override
     public  List<Map<String, Object>> getVersionsHWForStudent(Long assignmentId){
         Optional<Assignment> oa = assignmentRepository.findById(assignmentId);
@@ -660,7 +668,6 @@ public class VLServiceStudentImpl implements VLServiceStudent{
             if(a.getCourseAssignment().getStudents().stream().anyMatch(s->s.getId().equals(studentAuth))){
                 List<PhotoVersionHomework> versions = a.getHomeworks().stream().filter(h->h.getStudent().getId().equals(studentAuth)).
                         findFirst().get().getVersions();
-                // versionsList.stream().forEach(p->p.setPicByte(decompressZLib(p.getPicByte())));
                 List<Map<String, Object>> l = new ArrayList<>();
                 for( PhotoVersionHomework v: versions) {
                     Map<String, Object> m = new HashMap<>();
@@ -675,6 +682,10 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         }else throw new AssignmentNotFoundException();
     }
 
+    /**
+     * Metodo per ritornare una lista di mappe contenenti l'id, il timestamp e il nome dell'immagine delle correzioni elaborati collegate
+     * all'elaborato (del quale l'ID è inserito nella mappa) dello studente autenticato per una determinata consegna
+     */
     @Override
     public List<Map<String, Object>> getCorrectionsForStudent(Long assignmentId){
         Optional<Assignment> oa = assignmentRepository.findById(assignmentId);

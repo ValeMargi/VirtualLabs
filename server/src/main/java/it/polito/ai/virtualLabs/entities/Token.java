@@ -16,6 +16,12 @@ public class Token {
     private String courseId;
     private Long teamId;
     private Timestamp expiryDate;
+    /**
+     * la stringa status può avere 3 valori:
+     *  - "accepted": se lo studente ha accettato l'invito al team
+     *  - "pending": se lo studente non ha ancora dato una risposta all'invito al team
+     *  - "rejected": se lo studente ha rifiutato l'invito al team
+     */
     private String status;
 
     @ManyToOne

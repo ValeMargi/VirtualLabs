@@ -13,8 +13,19 @@ public class Team {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private  String name, creatorId;
-    private String status; /*active, pending, disabled*/
+    /**
+     * la stringa status può avere 3 valori:
+     *  - "active": se tutti gli studenti hanno accettato l'invito e il team è stato attivato
+     *  - "pending": se uno o più studenti non hanno ancora rispto all'invito di partecipazione al team
+     *  - "disabled": se uno studente ha rifiutato l'invito al team
+     */
+    private String status;
     private int maxVcpuLeft, diskSpaceLeft, ramLeft, runningInstancesLeft, totInstancesLeft;
+    /**
+     * timestamp che indica la data in cui il team è passato allo stato "disabled" (perché uno studente ha rifiutato o
+     * perché la data di scadenza della proposta è stata superata). Viene utilizzato per eliminare la proposta dopo un intervallo
+     * di tempo.
+     */
     private String disabledTimestamp;
 
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)

@@ -28,7 +28,6 @@ public interface VLServiceStudent {
     List<Map<String, Object>> allAssignmentStudent(  String courseId);
     PhotoAssignmentDTO getAssignmentStudent( Long assignmentId);
     PhotoVersionHomeworkDTO uploadVersionHomework( Long homeworkId, PhotoVersionHomeworkDTO photoVersionHomeworkDTO);
-  //  boolean updateStatusHomework( Long homeworkId, String status);
     HomeworkDTO getHomework(Long assignmentId);
     List<Map<String, Object>> getVersionsHWForStudent(Long assignmentId);
     List<Map<String, Object>> getCorrectionsForStudent(Long assignmentId);

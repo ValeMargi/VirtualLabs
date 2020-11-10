@@ -35,8 +35,6 @@ public class Professor {
     @OneToOne(mappedBy = "professor")
     private UserDAO userDAO;
 
-
-
     public  void setPhotoProfessor(AvatarProfessor a){
         if( a!= null && a!=photoProfessor){
             photoProfessor = a;

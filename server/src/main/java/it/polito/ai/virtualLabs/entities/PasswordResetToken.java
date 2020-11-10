@@ -13,7 +13,6 @@ import java.util.Date;
 public class PasswordResetToken {
     private static final int EXPIRATION = 60 * 24;
 
-    //@Id @GeneratedValue(generator="optimized-sequence")
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -40,9 +39,9 @@ public class PasswordResetToken {
         return new Date(cal.getTime().getTime());
     }
 
-    public void updateToken(final String token) {
+  /*  public void updateToken(final String token) {
         this.token = token;
         this.expiryDate = calculateExpiryDate(EXPIRATION);
-    }
+    }*/
 
 }

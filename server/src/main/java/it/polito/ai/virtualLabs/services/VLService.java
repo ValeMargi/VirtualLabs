@@ -2,8 +2,6 @@ package it.polito.ai.virtualLabs.services;
 
 import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.entities.*;
-
-import java.io.Reader;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;

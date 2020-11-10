@@ -34,7 +34,7 @@ public class Student{
     @ManyToMany(mappedBy ="ownersVM")
     private List<VM> ownersVM = new ArrayList<>();
 
-   @OneToOne //(fetch = FetchType.EAGER) default
+    @OneToOne //(fetch = FetchType.EAGER) default
     @JoinColumn(name="image_id")
     AvatarStudent photoStudent;
 
@@ -132,7 +132,7 @@ public class Student{
          if(t!=null && !tokens.contains(t))
          {
               tokens.add(t);
-              t.setStudent(this);
+              t.setStudentToken(this);
          }
     }
 

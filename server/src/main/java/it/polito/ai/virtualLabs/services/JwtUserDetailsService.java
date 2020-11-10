@@ -24,10 +24,8 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private PasswordEncoder bcryptEncoder;
-
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
@@ -43,7 +41,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getId(), user.getPassword(),
                 roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
     }
-
 
     public UserDAO save(UserDTO userDTO, Student s, Professor p){
         UserDAO user= new UserDAO();

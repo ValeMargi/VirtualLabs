@@ -9,7 +9,6 @@ import it.polito.ai.virtualLabs.repositories.PasswordResetTokenRepository;
 import it.polito.ai.virtualLabs.repositories.UserRepository;
 import it.polito.ai.virtualLabs.services.AuthenticationService;
 import it.polito.ai.virtualLabs.services.JwtUserDetailsService;
-import it.polito.ai.virtualLabs.services.NotificationService;
 import it.polito.ai.virtualLabs.services.VLService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

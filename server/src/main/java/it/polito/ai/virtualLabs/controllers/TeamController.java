@@ -4,10 +4,8 @@ import it.polito.ai.virtualLabs.dtos.StudentDTO;
 import it.polito.ai.virtualLabs.dtos.TeamDTO;
 import it.polito.ai.virtualLabs.dtos.VMDTO;
 import it.polito.ai.virtualLabs.exceptions.*;
-import it.polito.ai.virtualLabs.services.NotificationService;
 import it.polito.ai.virtualLabs.services.VLService;
 import it.polito.ai.virtualLabs.services.VLServiceStudent;
-import it.polito.ai.virtualLabs.services.VLServiceStudentImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -211,7 +209,7 @@ public class TeamController {
      *          - 1 se l'adesione è andata a buon fine ma il team non è ancora attivo
      *          - 2 se l'adesione è andata a buon fine e il team viene attivato
      */
-    @GetMapping("/confirm/{token}")
+    @GetMapping("/notification/confirm/{token}")
     @ResponseBody
     public int confirmationPage(@PathVariable String token) {
         try {
@@ -229,7 +227,7 @@ public class TeamController {
      *          - 0 se il token non è più presente
      *          - 1 se il rifiuto è andato a buon fine
      */
-    @GetMapping("/reject/{token}")
+    @GetMapping("/notification/reject/{token}")
     @ResponseBody
     public int rejectionPage(@PathVariable String token) {
         try {

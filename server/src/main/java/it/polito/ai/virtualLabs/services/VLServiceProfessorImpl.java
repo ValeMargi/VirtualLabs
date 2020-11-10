@@ -55,6 +55,10 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
     @Autowired
     VLServiceProfessor vlServiceProfessor;
 
+    /**
+     * Metodo per ritornare una lista di mappe con le informazioni degli iscritti iscritti
+     * al corso con nome pari a courseName e con i relativi team se presenti
+     */
       public List<Map<String, Object>> getEnrolledStudentsAllInfo(String courseName){
         List<Map<String, Object>> l = new ArrayList<>();
 
@@ -70,10 +74,12 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
             }
             l.add(map);
         }
-
         return l;
     }
 
+    /**
+     * Metodo per aggiungere uno studente al corso
+     */
     @Override
     public boolean addStudentToCourse(String studentId, String courseName) {
         Optional<Student> student = studentRepository.findById(studentId);
@@ -108,11 +114,17 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }
     }
 
+    /**
+     * Metodo per aggiungere una lista di studenti al corso
+     */
     @Override
     public List<Boolean> enrollAll(List<String> studentsIds, String courseName){
         return  studentsIds.stream().map( s -> vlServiceProfessor.addStudentToCourse(s, courseName)).collect(Collectors.toList());
     }
 
+    /**
+     * Metodo per eliminare una lista di studenti da un corso
+     */
     @Override
     public List<StudentDTO> deleteStudentsFromCourse(List<String> studentsIds, String courseName){
         Optional<Course> course = courseRepository.findById(courseName);
@@ -187,7 +199,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }
     }
 
-
+    /**
+     * Metodo per aggiungere gli studenti ad un corso tramite file CSV
+     */
     @Override
     public  List<StudentDTO> EnrollAllFromCSV(Reader r, String courseName){
         try {
@@ -210,7 +224,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
     }
 
 
-    /*SERVICE CORSO*/
+    /**
+     * Metodo per aggiungere un corso al sistema
+     */
     @Override
     public boolean addCourse(CourseDTO course, List<String> professorsId, PhotoModelVM photoModelVM) {
         if ( !courseRepository.findById(course.getName()).isPresent())  {
@@ -253,9 +269,12 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         return false;
     }
 
+    /**
+     * Metodo per aggiungere un professore come titolare del corso con nome pari a courseName
+     */
     @Override
-    public List<ProfessorDTO> addProfessorsToCourse(String courseId, List<String> professorsId) {
-        Optional<Course> oc= courseRepository.findById(courseId);
+    public List<ProfessorDTO> addProfessorsToCourse(String courseName, List<String> professorsId) {
+        Optional<Course> oc= courseRepository.findById(courseName);
         if ( !oc.isPresent())  {
             throw new CourseNotFoundException();
         }
@@ -265,7 +284,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         if(professors.size()!=professorsId.size())
             throw new ProfessorNotFoundException();
         else{
-            if(vlService.getProfessorsForCourse(courseId).stream()
+            if(vlService.getProfessorsForCourse(courseName).stream()
                     .noneMatch(pf ->pf.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))){
                 throw new PermissionDeniedException();
             }else{
@@ -279,6 +298,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }
     }
 
+    /**
+     * Metodo per abilitare il corso
+     */
     @Override
     public void enableCourse(String courseName) {
         try{
@@ -295,6 +317,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }
     }
 
+    /**
+     * Metodo per disabilitare il corso
+     */
     @Override
     public void disableCourse(String courseName) {
         try{
@@ -311,6 +336,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }
     }
 
+    /**
+     * Metodo per ritornare la lista di DTO dei corsi di cui il professore con matricola professorId è titolare
+     */
     @Override
     public List<CourseDTO> getCoursesForProfessor(String professorId){
         try{
@@ -321,7 +349,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }
     }
 
-    /*Metodo per cancellare corso*/
+    /**
+     * Metodo per rimuovere il corso
+     */
     @Override
     public boolean removeCourse(String courseId) {
         Optional<Course> oc= courseRepository.findById(courseId);
@@ -406,7 +436,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }else throw new CourseNotFoundException();
     }
 
-    /*Metodo per modificare corso (modificare min,max,acronimo)*/
+    /**
+     * Metodo per modificare i parametri di un corso come min, max e acronimo
+     */
     @Override
     public boolean modifyCourse(CourseDTO course) {
         Optional<Course> oc=courseRepository.findById(course.getName());
@@ -430,6 +462,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
 
     /*SERVICE MODELLO VM*/
     /*professor può caricare solo un modello per corso e può modificare i parametri per ogni gruppo*/
+
     /**
      *
      * @param courseDTO: contiene le informazioni del modello VM creato dal professor per il corso con courseId indicato
@@ -437,6 +470,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
      * @param photoModelVM: screenshot del modello VM creato
      * @return
      */
+    /*
     @Override
     public CourseDTO addModelVM(CourseDTO courseDTO, String courseId, PhotoModelVM photoModelVM) {
         Optional<Course> oc = courseRepository.findById(courseId);
@@ -467,8 +501,11 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }else throw new CourseNotFoundException();
 
     }
+*/
 
-    /*Metodo per modificare risorse vm da parte docente*/
+    /**
+     * metodo per modificare le risorse associate al modello di VM di un dato corso
+     */
     @Override
     public CourseDTO updateModelVM(CourseDTO courseDTO, String courseName ) {
         Optional<Course> oc = courseRepository.findById(courseName);
@@ -515,6 +552,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
     }
 
 
+    /**
+     * Metodo per ritornare le risorse di VM massime utilizzate in un corso
+     */
     @Override
     public Map<String, Object> getMaxResources(String courseId){
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -544,7 +584,6 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                 if( t.getTotInstancesLeft() < minTotal)
                     minTotal = t.getTotInstancesLeft();
             }
-
             Map<String, Object> resources = new HashMap<>();
             resources.put("vcpu", (course.getMaxVcpu()-minVcpuTmp));
             resources.put("diskSpace", (course.getDiskSpace()-minDiskSpaceTmp));
@@ -556,6 +595,8 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
 
     }
 
+    /**Metodo per ritornare la lista di DTO degli studenti che sono owner della VM con id pari a VMid
+     */
     @Override
     public List<StudentDTO> getOwnersForProfessor(Long VMid) {
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -572,7 +613,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
     }
 
 
-    /*Visualizzare VM accessibili al professor in tab corso*/
+    /**
+     * Metodo per ritornare la lista di DTO delle VM di un dato corso
+     */
     @Override
     public List<VMDTO> allVMforCourse(String courseId) { //CourseId preso dal pathVariable
         Optional<Course> oc= courseRepository.findById(courseId);
@@ -586,6 +629,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
     }
 
 
+    /**
+     * Metodo per ritornare l'immagine di una VM
+     */
     @Override
     public PhotoVMDTO getVMforProfessor(String courseId, Long VMid) {
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -610,6 +656,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }else throw new TeamNotFoundException();
     }
 
+    /**
+     * Metodo per ritornare le risorser di una VM per un dato team
+     */
     @Override
     public Map<String, Object> getResourcesVM(Long teamId){
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -628,11 +677,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         return resources;
     }
 
-    /*student owner modifica risorse associate a VM se è spenta e se non superano i limiti imposti dal gruppo*/
-
-
-
-    /*SERVICE CONSEGNA*/
+    /**
+     * Metodo per aggiungere una consegna al corso
+     */
     @Override
     public AssignmentDTO addAssignment( AssignmentDTO assignmentDTO,PhotoAssignmentDTO photoAssignmentDTO,  String courseId) { //CourseId preso dal pathVariable
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -641,7 +688,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
             Course c = oc.get();
             if(c.getProfessors().stream().anyMatch(p->p.getId().equals(professor))){
                 if(!c.isEnabled()) throw new CourseDisabledException();
-                if(c.getAssignments().stream().noneMatch(a->a.getNameAssignment().equals(assignmentDTO.getAssignmentName()))) {
+                if(c.getAssignments().stream().noneMatch(a->a.getAssignmentName().equals(assignmentDTO.getAssignmentName()))) {
                     Assignment assignment= modelMapper.map(assignmentDTO, Assignment.class);
                     PhotoAssignment photoAssignment = modelMapper.map(photoAssignmentDTO, PhotoAssignment.class);
                     assignment.setCourseAssignment(c);
@@ -669,7 +716,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }else throw new CourseNotFoundException();
     }
 
-    /*Metodo per ritornare le consegne di un dato corso*/
+    /**
+     * Metodo per ritornare la lista di DTO delle consegne presenti in un dato corso
+     */
     @Override
     public List<AssignmentDTO> allAssignment(  String courseId) { //CourseId preso dal pathVariable
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -693,7 +742,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
     }
 
 
-    /*Metodo per ritornare la consegna di un dato corso*/
+    /**
+     * Metodo per ritornare l'immagine associata ad una data consegna
+     */
     @Override
     public PhotoAssignmentDTO getAssignmentProfessor(Long assignmentId ) {
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -716,7 +767,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
     }
 
 
-    /*Metodo per ritornare la consegna di un dato corso*/
+    /**
+     * Metodo per ritornare il DTO di una data consegn
+     */
     @Override
     public AssignmentDTO getAssignmentDTOProfessor(Long assignmentId ) {
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
@@ -733,6 +786,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }else throw new ProfessorNotFoundException();
     }
 
+    /**
+     * Metodo per ritornare una lista di mappe contenenti tutti gli elaborati per un data consegna per il corso con nome pari a courseName
+     */
     @Override
     public List<Map<String, Object>> allHomework(String courseName, Long assignmentId){
         Optional<Course> oc= courseRepository.findById(courseName);
@@ -762,11 +818,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
     }
 
     /**
-     *
-     * @param homeworkId
-     * @return si ritorna una lista di Map<String,Object> dove vengono inseriti id e timestamp e nome dell'immagine associata alla versione
-     * di tutte le versioni di Homerwork per un certo corso
-     * (evitando così di inviare anche tutte le immagini)
+     *Metodo per ritornare una lista di mappe con l'id, timestamp e nome dell'immagine associata alla versione per un dato elaborato
      */
     @Override
     public  List<Map<String, Object>> getVersionsHWForProfessor( Long homeworkId){
@@ -790,7 +842,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }else throw new HomeworkNotFoundException();
     }
 
-    /*Metodo per consegnare correzione*/
+    /**
+     * Metodo per caricare l'immagine di una correzione e assegnare un voto all'elaborato
+     */
     @Override
     public Map<String, Object> uploadCorrection(Long homeworkId, Long versionHMid,
                                                 PhotoCorrectionDTO photoCorrectionDTO,Boolean permanent, String grade) {
@@ -829,6 +883,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
         }throw new HomeworkNotFoundException();
     }
 
+    /**
+     * Metodo per ritornare una lista di mappe contenenti le informaizoni associate alle correzioni di un dato elaborato
+     */
     @Override
     public  List<Map<String, Object>>  getCorrectionsForProfessor( Long homeworkId){
         Optional<Homework> oh = homeworkRepository.findById(homeworkId);

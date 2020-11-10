@@ -38,12 +38,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 // Use BCryptPasswordEncoder
 
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
-
-
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
     @Bean
@@ -59,9 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf().disable()
                 // dont authenticate this particular request
                 .authorizeRequests().antMatchers("/login").permitAll()
-
-                // .antMatchers("/register").per()
-                .antMatchers("/API/notification/**").permitAll()
+                 .antMatchers("/API/teams/notification/**").permitAll()
                 .antMatchers("/API/addUser").permitAll()
                 .antMatchers("/API/registration/confirm/**").permitAll()
                 .antMatchers("/API/user/resetPassword").permitAll()
@@ -77,33 +72,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
-
-   /* @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.addFilter(digestAuthenticationFilter())              // register digest entry point
-                .exceptionHandling().authenticationEntryPoint(digestEntryPoint())       // on exception ask for digest authentication
-                .and()
-                .httpBasic()                      // it indicate basic authentication is requires
-                .and()
-                .authorizeRequests()
-                .antMatchers( "/home").permitAll() // /home will be accessible directly, no need of any authentication
-                .anyRequest().authenticated();
-    }
-
-    DigestAuthenticationFilter digestAuthenticationFilter() throws Exception {
-        DigestAuthenticationFilter digestAuthenticationFilter = new DigestAuthenticationFilter();
-        digestAuthenticationFilter.setUserDetailsService(userDetailsServiceBean());
-        digestAuthenticationFilter.setAuthenticationEntryPoint(digestEntryPoint());
-        return digestAuthenticationFilter;
-    }
-
-    @Bean
-    DigestAuthenticationEntryPoint digestEntryPoint() {
-        DigestAuthenticationEntryPoint bauth = new DigestAuthenticationEntryPoint();
-        bauth.setRealmName("Digest WF Realm");
-        bauth.setKey("MySecureKey");
-        return bauth;
-    }*/
-
 }

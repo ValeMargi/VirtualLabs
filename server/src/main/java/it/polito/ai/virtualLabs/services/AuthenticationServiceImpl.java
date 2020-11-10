@@ -3,14 +3,12 @@ package it.polito.ai.virtualLabs.services;
 import it.polito.ai.virtualLabs.dtos.*;
 import it.polito.ai.virtualLabs.entities.*;
 import it.polito.ai.virtualLabs.entities.TokenRegistration;
-import it.polito.ai.virtualLabs.exceptions.StudentDuplicateException;
 import it.polito.ai.virtualLabs.exceptions.UserAlreadyPresentException;
 import it.polito.ai.virtualLabs.repositories.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
@@ -26,37 +24,31 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     StudentRepository studentRepository;
-
     @Autowired
     ModelMapper modelMapper;
-
     @Autowired
     ProfessorRepository professorRepository;
-
     @Autowired
     JwtUserDetailsService jwtUserDetailsService;
-
     @Autowired
     PasswordResetTokenRepository passwordTokenRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     AvatarStudentRepository avatarStudentRepository;
-
     @Autowired
     AvatarProfessorRepository avatarProfessorRepository;
-
     @Autowired
     TokenRegistrationRepository tokenRegistrationRepository;
-
     @Autowired
     VLService vlService;
 
+    /**
+     * Metodo per aggiungere l'utente STUDENTE al sistema
+     * settando inizialmente il flag activate a false
+     */
    @Override
    public Optional<UserDTO> addStudent(StudentDTO student, String password,  AvatarStudentDTO avatarStudentDTO) {
        if (  !studentRepository.findById(student.getId()).isPresent() )  {
@@ -73,8 +65,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                TokenRegistration t = new TokenRegistration();
                t.setId(UUID.randomUUID().toString());
                t.setUserId(user.getId());
-           //    t.setExpiryDate(Timestamp.from(Instant.now().plus(120000, ChronoUnit.MILLIS))); //for debug
-               t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
+               t.setExpiryDate(Timestamp.from(Instant.now().plus(5, ChronoUnit.MINUTES)));
                vlService.sendMessage(user.getId(),
                        "Enrollment to the VirtualLabs app",
                        "You have been subscribed to the application.\n" +
@@ -92,10 +83,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
            }
 
+    /**
+     * Metodo per aggiungere l'utente PROFESSORE al sistema
+     */
     @Override
     public Optional<UserDTO> addProfessor(ProfessorDTO professor, String password,  AvatarProfessorDTO avatarProfessorDTO) {
-        if ( !professorRepository.findById(professor.getId()).isPresent() )  {
-            Professor p = modelMapper.map( professor, Professor.class);
+        if (!professorRepository.findById(professor.getId()).isPresent()) {
+            Professor p = modelMapper.map(professor, Professor.class);
             professorRepository.saveAndFlush(p);
             AvatarProfessor avatarProfessor = modelMapper.map(avatarProfessorDTO, AvatarProfessor.class);
             p.setPhotoProfessor(avatarProfessor);
@@ -109,25 +103,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             TokenRegistration t = new TokenRegistration();
             t.setId(UUID.randomUUID().toString());
             t.setUserId(user.getId());
-            //t.setExpiryDate(Timestamp.from(Instant.now().plus(120000, ChronoUnit.MILLIS)));// for debug
             t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
-            vlService.sendMessage( user.getId(),
+            vlService.sendMessage(user.getId(),
                     "Enrollment to the VirtualLabs app",
                     "You have been subscribed to the application.\n" +
                             "Your data to access are as follows::\n\n" +
-                            "Email:  " + user.getId() +"@polito.it"+"\n"+
+                            "Email:  " + user.getId() + "@polito.it" + "\n" +
                             "Click here to activate the registration:\n\n" +
-                            "http://localhost:8080/API/registration/confirm/"+ t.getId()
+                            "http://localhost:8080/API/registration/confirm/" + t.getId()
             );
             avatarProfessorRepository.saveAndFlush(avatarProfessor);
             professorRepository.save(p);
             tokenRegistrationRepository.save(t);
             jwtUserDetailsService.save(user, null, p);
             return Optional.ofNullable(user);
-            }else throw new UserAlreadyPresentException();
+        } else throw new UserAlreadyPresentException();
+    }
 
-        }
-
+    /**
+     * Metodo per accettare la registrazione di un utente al sistema
+     */
     @Override
     public boolean confirmRegistration(String token) {
         Optional<TokenRegistration> t = checkTokenValidity(token);
@@ -139,6 +134,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return false;
     }
 
+    /**
+     * Metodo per verificare la validità del token associato alla fase di registrazione di un utente al sistema,
+     * controllando che sia ancora presente nel database e che non sia scaduto
+     */
     @Override
     public Optional<TokenRegistration> checkTokenValidity(String token){
         Optional<TokenRegistration> t= tokenRegistrationRepository.findById(token);
@@ -157,28 +156,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return Optional.empty();
    }
 
+    /**
+     * Metodo per aggiornare il flag activate a true dopo aver confermato
+     * la registrazione di un utente al sistema tramite link inviato via email
+     */
     @Override
     public void activateUser(String userId){
        Optional<UserDAO> user = userRepository.findById(userId);
        if(user.isPresent()){
            user.get().setActivate(true);
        }
-
     }
 
-    /*If the User database is empty, the admin user
-    with the "admin" role/authority is inserted*/
-    @PostConstruct()
-    public void insertAdmin(){
-        if(!this.userRepository.existsById("admin")){
-            UserDTO admin= new UserDTO();
-            admin.setPassword("admin");
-            admin.setRole("admin");
-            admin.setId("admin"); //??
-            jwtUserDetailsService.save(admin, null, null);
-        }
-    }
-
+    /**
+     * Funzioni di libreria per l'implementazione del recupero password
+     */
     @Override
     public void createPasswordResetTokenForUser(final UserDAO user, final String token) {
         final PasswordResetToken myToken = new PasswordResetToken(token, user);
@@ -216,9 +208,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return passwordEncoder.matches(oldPassword, user.getPassword());
     }
 
-
-
-
-
+    /*If the User database is empty, the admin user
+    with the "admin" role/authority is inserted*/
+    @PostConstruct()
+    public void insertAdmin(){
+        if(!this.userRepository.existsById("admin")){
+            UserDTO admin= new UserDTO();
+            admin.setPassword("admin");
+            admin.setRole("admin");
+            admin.setId("admin");
+            jwtUserDetailsService.save(admin, null, null);
+        }
+    }
 }
 

@@ -14,7 +14,7 @@ public class Assignment {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
-    private  String nameAssignment;
+    private  String assignmentName;
     private String releaseDate, expiration;
 
     @ManyToOne

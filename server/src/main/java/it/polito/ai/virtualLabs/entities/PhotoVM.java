@@ -10,13 +10,12 @@ import javax.persistence.*;
 @Entity(name = "PhotoVM")
 public class PhotoVM extends Image{
 
-   @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private  Long id;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String timestamp;
+
     @OneToOne(mappedBy = "photoVM")
     private VM vm;
-
-    String timestamp;
-
 
     void setVM(VM v){
         if(v!=null && vm!=v){

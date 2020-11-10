@@ -7,7 +7,6 @@ import it.polito.ai.virtualLabs.repositories.*;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,8 +16,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.Basic;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
@@ -41,7 +38,6 @@ import java.util.StringTokenizer;
 public class VLServiceImpl implements VLService{
     @Autowired
     public JavaMailSender emailSender;
-
     @Autowired
     StudentRepository studentRepository;
     @Autowired
@@ -88,10 +84,23 @@ public class VLServiceImpl implements VLService{
     /*To check if the tokens contained in the repository have expired,
      if so, they are removed from the repository and the corresponding
      Team in the repository Team is removed.*/
+
+    /**
+     * Metodo che viene eseguito ogni 20sec per controllare:
+     * - la validità dei token associati al recupera password, se scaduti questi vengono rimossi dal database;
+     * - la validità dei token associati alle proposte di creazione team non andati a buon fine e, in particolare,
+     *   dopo 5 minuti dall'aver rifiutato la partecipazione ad un team, il token viene rimosso dal database
+     *   e il team associato viene eliminato;
+     * - la scadenza di una consegna, se una consegna è scaduta il flag permanent è settato a true
+     *   e se sono presenti versioni di elaborati viene associato ad essi un voto pari a 0;
+     * - la validità dei token associati alla registrazione di un utente al sistema,
+     *   se scaduti questi vengono rimossi dal database e la registrazione viene annullata
+     */
     @Transactional
     @Scheduled(initialDelay = 1000, fixedRate = 20000)
      public void run(){
         Timestamp now = new Timestamp(System.currentTimeMillis());
+
         passwordResetTokenRepository.deleteAllExpiredSince(now);
 
         for(Token token: tokenRepository.findAll() )
@@ -101,12 +110,12 @@ public class VLServiceImpl implements VLService{
                if(!oteam.isPresent()) throw new TeamNotFoundException();
                oteam.get().setStatus("disabled");
                oteam.get().setDisabledTimestamp(now.toString());
-
               //  tokenRepository.deleteFromTokenByTeamId(token.getTeamId());
                 //if( teamRepository.findById(token.getTeamId()).isPresent())
                   //  evictTeam(token.getTeamId());
             }
         }
+
         for(Team team: teamRepository.findAllByStatusEquals("disabled")){
             if( team.getDisabledTimestamp().compareTo(Timestamp.from(Instant.now().plus(5, ChronoUnit.MINUTES)).toString())<0){
                 tokenRepository.deleteFromTokenByTeamId(team.getId());
@@ -153,6 +162,9 @@ public class VLServiceImpl implements VLService{
 
     }
 
+    /**
+     * Metodo per ritornare la lista di DTO degli studenti iscritti al sistema
+     */
     @Override
     public List<StudentDTO> getAllStudents() {
         return studentRepository.findAll()
@@ -161,6 +173,9 @@ public class VLServiceImpl implements VLService{
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Metodo per ritornare la lista di DTO degi professori iscritti al sistema
+     */
     @Override
     public List<ProfessorDTO> getAllProfessors() {
         return professorRepository.findAll()
@@ -169,13 +184,18 @@ public class VLServiceImpl implements VLService{
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Metodo per ritornare il DTO del corso (se presente) avente come nome "courseName"
+     */
     @Override
-    public Optional<CourseDTO> getCourse(String name) {
-        return courseRepository.findById(name)
+    public Optional<CourseDTO> getCourse(String courseName) {
+        return courseRepository.findById(courseName)
                 .map(c -> modelMapper.map(c, CourseDTO.class));
     }
 
-
+    /**
+     * Metodo per ritornare la lista di DTO dei corsi presenti nel sistema
+     */
     @Override
     public List<CourseDTO> getAllCourses() {
         return courseRepository.findAll()
@@ -184,6 +204,9 @@ public class VLServiceImpl implements VLService{
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Metodo per aggiornare l'avatar dell'utente iscritto al sistema
+     */
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
     public boolean changeAvatar(AvatarProfessorDTO avatarProfessorDTO, AvatarStudentDTO avatarStudentDTO){
@@ -215,7 +238,9 @@ public class VLServiceImpl implements VLService{
         }else return false;
     }
 
-    /*SERVICE student*/
+    /**
+     * Metodo per ritornare le informazioni associate allo studente con matricola pari a studentId
+     */
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
     public Map<String, Object> getStudent(String studentId) {
@@ -231,6 +256,9 @@ public class VLServiceImpl implements VLService{
         return profile;
     }
 
+    /**
+     * Metodo per ritornare le informazioni associate allo studente autenticato
+     */
     @PreAuthorize("hasAuthority('student')")
     @Override
     public Map<String, Object> getProfileStudent(){
@@ -248,7 +276,9 @@ public class VLServiceImpl implements VLService{
     }
 
 
-
+    /**
+     * Metodo per ritornare le informazioni associate al professore con matricola pari a professorId
+     */
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
     public  Map<String, Object> getProfessor(String professorId) {
@@ -264,6 +294,9 @@ public class VLServiceImpl implements VLService{
         return profile;
     }
 
+    /**
+     * Metodo per ritornare le informazioni associate al professore autenticato
+     */
     @PreAuthorize("hasAuthority('professor')" )
     @Override
     public Map<String, Object> getProfileProfessor(){
@@ -280,6 +313,9 @@ public class VLServiceImpl implements VLService{
         return profile;
     }
 
+    /**
+     * Metodo per ritornare la lista di DTO degli studenti iscritti al corso con nome pari a courseName
+     */
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
     public List<StudentDTO> getEnrolledStudents(String courseName) {
@@ -294,6 +330,9 @@ public class VLServiceImpl implements VLService{
         }
     }
 
+    /**
+     * Metodo per ritornare la lista di DTO dei professori titolati del corso con nome pari a courseName
+     */
     @PreAuthorize("hasAuthority('professor') || hasAnyAuthority('student')")
     @Override
     public List<ProfessorDTO> getProfessorsForCourse(String courseName) {
@@ -308,6 +347,9 @@ public class VLServiceImpl implements VLService{
         }
     }
 
+    /**
+     * Metodo per ritornare la lista di DTO degli studenti membri di un team con id pari a TeamId
+     */
     @Override
     public List<StudentDTO> getMembers(Long TeamId) {
         try {
@@ -319,6 +361,9 @@ public class VLServiceImpl implements VLService{
 
     }
 
+    /**
+     * Metodo per ritornare la lista di DTO dei team presenti nel corso con nome pari a courseName
+     */
     @PreAuthorize("hasAuthority('student') || hasAuthority('professor')")
     @Override
     public List<TeamDTO> getTeamForCourse(String courseName){
@@ -331,6 +376,9 @@ public class VLServiceImpl implements VLService{
 
     }
 
+    /**
+     * Metodo per attivare un team dopo che tutti gli invitati abbiano accettato la proposta
+     */
     @Override
     public  void activateTeam(Long id){
         try{
@@ -351,6 +399,9 @@ public class VLServiceImpl implements VLService{
         }
     }
 
+    /**
+     * Metodo per disattivare un team quando almeno un invitato rifiuta la proposta
+     */
     @Override
     public void evictTeam(Long id){
         try{
@@ -365,6 +416,9 @@ public class VLServiceImpl implements VLService{
         }
     }
 
+    /**
+     * Metodo per ritornare la lista di DTO delle VM di un team con id pari a teamId
+     */
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
     public  List<VMDTO> getAllVMTeam(  Long teamId){
@@ -379,6 +433,9 @@ public class VLServiceImpl implements VLService{
 
     }
 
+    /**
+     * Metodo per ritornare l'immagine della versione di un elaborato
+     */
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
     public  PhotoVersionHomeworkDTO getVersionHW(Long versionId){
@@ -404,6 +461,9 @@ public class VLServiceImpl implements VLService{
 
     }
 
+    /**
+     * Metodo per ritornare l'immagine della correzione con id pari a correctionId
+     */
     @PreAuthorize("hasAuthority('professor') || hasAuthority('student')")
     @Override
     public  PhotoCorrectionDTO getCorrectionHW(Long correctionId){
@@ -490,7 +550,8 @@ public class VLServiceImpl implements VLService{
     }
 
     /**
-     * Controllo se tutti gli studenti hanno accettato, elimina token dal repo e attivazione Team con invio email
+     * Metodo per confermare la partecipazione ad un team, se il token è associato all'ultimo
+     * partecipante che deve accettare la proposta, il team viene attivato
      * @param token
      * @return
      */
@@ -509,6 +570,9 @@ public class VLServiceImpl implements VLService{
             return 0;
     }
 
+    /**
+     * Metodo per rifiutare la partecipazione ad un team
+     */
     @Override
     public Integer reject(String token) {
         Optional<Token> t = checkTokenValidity(token);
@@ -520,12 +584,19 @@ public class VLServiceImpl implements VLService{
             oteam.get().setStatus("disabled");
             Timestamp now = new Timestamp(System.currentTimeMillis());
             oteam.get().setDisabledTimestamp(now.toString());
-            //tokenRepository.deleteFromTokenByTeamId(t.get().getTeamId()); //TESTare
-            //VLService.evictTeam(t.get().getTeamId());
             return  1;
         }else
             return 0;
     }
+
+    /**
+     * Metodo per inviare email allo studente quando viene aggiunto alla proposta di un team
+     * @param dto
+     * @param memberIds
+     * @param creatorStudent
+     * @param courseId
+     * @param timeout
+     */
     @Override
     public void notifyTeam(TeamDTO dto, List<String> memberIds, String creatorStudent, String courseId, Timestamp timeout) {
         if(timeout.before(Timestamp.from(Instant.now())))
@@ -536,7 +607,7 @@ public class VLServiceImpl implements VLService{
             t.setTeamId(dto.getId());
             t.setStatus("pending");
             t.setCourseId(courseId);
-            t.setStudent(studentRepository.getOne(memberId));
+            t.setStudentToken(studentRepository.getOne(memberId));
             t.setExpiryDate(timeout);
             tokenRepository.saveAndFlush(t);
             sendMessage(memberId + "@studenti.polito.it",
@@ -548,10 +619,16 @@ public class VLServiceImpl implements VLService{
         t.setTeamId(dto.getId());
         t.setStatus("accepted");
         t.setCourseId(courseId);
-        t.setStudent(studentRepository.getOne(creatorStudent));
+        t.setStudentToken(studentRepository.getOne(creatorStudent));
         t.setExpiryDate(timeout);
         tokenRepository.saveAndFlush(t);
     }
+
+    /**
+     * Metodo per controllare la validità del token associato allo studente invitato a partecipare in un team
+     * @param token
+     * @return
+     */
     @Override
     public Optional<Token> checkTokenValidity(String token){
         Optional<Token> t= tokenRepository.findById(token);
@@ -568,7 +645,6 @@ public class VLServiceImpl implements VLService{
                 oteam.get().setStatus("disabled");
                 Timestamp now = new Timestamp(System.currentTimeMillis());
                 oteam.get().setDisabledTimestamp(now.toString());
-                //tokenRepository.deleteById(token);
                 return Optional.empty();
             }
         }

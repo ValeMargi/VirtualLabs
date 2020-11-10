@@ -20,7 +20,7 @@ public class UserDAO {
     @JsonIgnore
     private String password;
     @Column
-    private  String role;
+    private String role;
     @Column
     private Boolean activate;
 

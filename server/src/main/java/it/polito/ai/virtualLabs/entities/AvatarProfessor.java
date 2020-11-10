@@ -17,7 +17,6 @@ public class AvatarProfessor extends Image{
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
 
-
     @OneToOne(mappedBy = "photoProfessor")
     private Professor professor;
 

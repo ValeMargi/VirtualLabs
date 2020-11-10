@@ -12,10 +12,9 @@ import java.util.List;
 @Data
 @ToString(exclude = {"professors", "students"})
 public class Course {
-
-    private String acronym;
     @Id
     private String name;
+    private String acronym;
     private int min, max; //about teams
     private boolean enabled;
 

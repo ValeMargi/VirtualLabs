@@ -49,6 +49,9 @@ public class VLServiceStudentImpl implements VLServiceStudent{
     VLService vlService;
 
 
+    /**
+     * Metodo per ritornare la lista di DTO dei corsi a cui lo studente con matricola pari a studentId è iscritto
+     */
     @Override
     public List<CourseDTO> getCoursesForStudent(String studentId){
         try{
@@ -59,6 +62,11 @@ public class VLServiceStudentImpl implements VLServiceStudent{
         }
     }
 
+    /**
+     * Metodo per ritornare la lista di DTO dei team di cui uno studente è membro
+     * @param studentId
+     * @return
+     */
     @Override
     public List<TeamDTO> getTeamsForStudent(String studentId){
         try {

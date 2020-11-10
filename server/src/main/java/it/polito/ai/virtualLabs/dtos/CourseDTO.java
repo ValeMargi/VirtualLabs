@@ -8,8 +8,6 @@ public class CourseDTO extends RepresentationModel<CourseDTO> {
     private String name, acronym;
     private int min, max;
     private boolean enabled;
-
-    //ModelVM
     private int maxVcpu, diskSpace, ram, runningInstances, totInstances;
 
 }

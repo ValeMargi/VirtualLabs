@@ -10,7 +10,6 @@ public class ProfessorDTO extends RepresentationModel<ProfessorDTO> {
     private String id;
     private String name, firstName, email;
 
-
     public ProfessorDTO(String id, String firstName, String name, String email) {
         this.id = id;
         this.firstName = firstName;

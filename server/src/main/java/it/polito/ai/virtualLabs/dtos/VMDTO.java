@@ -9,8 +9,9 @@ import org.springframework.hateoas.RepresentationModel;
 @EqualsAndHashCode(callSuper = true)
 public class VMDTO extends RepresentationModel<VMDTO> {
     private Long id;
+    private String nameVM;
     private int  numVcpu, diskSpace, ram;
     private String status;
-    private String nameVM;
+
 
 }

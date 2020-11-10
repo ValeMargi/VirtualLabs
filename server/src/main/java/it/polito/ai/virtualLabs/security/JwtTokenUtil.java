@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Component
 public class JwtTokenUtil implements Serializable {
     private static final long serialVersionUID = -2550185165626007488L;
+    //Validità token session pari a 1h
     public static final long JWT_TOKEN_VALIDITY = 60 * 60;
     @Value("${jwt.secret}")
     private String secret;
@@ -64,6 +65,9 @@ public class JwtTokenUtil implements Serializable {
         return expiration.before(new Date());
     }
 
+    /**
+     * Token genetare inserendo i parametri dello studente/professore a seconda dell'utente autenticato
+     */
     //generate token for user
     public String generateToken(UserDetails userDetails, UserDAO userDAO) {
         Map<String, Object> claims = new HashMap<>();
@@ -82,7 +86,6 @@ public class JwtTokenUtil implements Serializable {
         }catch(ImageSizeException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
-
         return doGenerateToken(claims, userDetails.getUsername());
     }
 

@@ -13,11 +13,10 @@ public class PhotoAssignment extends  Image {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
+    private String timestamp;
 
     @OneToOne(mappedBy = "photoAssignment")
     private Assignment assignment;
-
-    private String timestamp;
 
     public void setAssignment(Assignment a){
         if( a!=null && assignment != a){

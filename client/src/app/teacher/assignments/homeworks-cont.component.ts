@@ -59,6 +59,7 @@ export class HomeworksContComponent implements OnInit, OnDestroy {
           tmp.push(hws);
         });
 
+        tmp.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
         this.HOMEWORKS_STUDENTS = tmp;
       },
       (error) => {

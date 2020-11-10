@@ -7,6 +7,7 @@ import it.polito.ai.virtualLabs.repositories.*;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Basic;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
@@ -88,6 +90,7 @@ public class VLServiceImpl implements VLService{
      Team in the repository Team is removed.*/
     @Transactional
     @Scheduled(initialDelay = 1000, fixedRate = 20000)
+    @Bean
     public void run(){
         Timestamp now = new Timestamp(System.currentTimeMillis());
         passwordResetTokenRepository.deleteAllExpiredSince(now);
@@ -352,7 +355,9 @@ public class VLServiceImpl implements VLService{
     @Override
     public void evictTeam(Long id){
         try{
-            Team t = teamRepository.getOne(id);
+            Optional<Team> ot = teamRepository.findById(id);
+            if(!ot.isPresent()) throw new TeamNotFoundException();
+            Team t=ot.get();
             if(!t.getCourse().isEnabled()) throw new CourseDisabledException();
             t.getMembers().forEach(s-> sendMessage(s.getEmail(),"Notification: Team "+t.getName()+ " not created","A student has rejected the proposal. Team creation stopped!"));
             teamRepository.delete(t);

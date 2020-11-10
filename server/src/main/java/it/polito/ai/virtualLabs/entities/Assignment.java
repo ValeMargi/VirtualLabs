@@ -26,8 +26,7 @@ public class Assignment {
     PhotoAssignment photoAssignment;
 
     // AGGIUNTO 23/10 fetch = FetchType.EAGER,
-    //fetch = FetchType.EAGER,
-    @OneToMany(mappedBy = "assignment")
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "assignment")
     private List<Homework> homeworks= new ArrayList<>();
 
 

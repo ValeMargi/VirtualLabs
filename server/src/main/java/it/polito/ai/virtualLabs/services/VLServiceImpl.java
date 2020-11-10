@@ -90,8 +90,7 @@ public class VLServiceImpl implements VLService{
      Team in the repository Team is removed.*/
     @Transactional
     @Scheduled(initialDelay = 1000, fixedRate = 20000)
-    @Bean
-    public void run(){
+     public void run(){
         Timestamp now = new Timestamp(System.currentTimeMillis());
         passwordResetTokenRepository.deleteAllExpiredSince(now);
 

@@ -1,109 +1,94 @@
+<h2 mat-dialog-title>Modifica corso</h2>
 <form (keyup.enter)="editCourse(acronimo.value,min.value, max.value)">
-
-
-  <h2 mat-dialog-title>Modifica corso</h2>
-  <h4 class="statoCorso"> Stato del corso: <strong>{{status}}</strong> </h4>
-
-  <button mat-raised-button type="button"  color="primary" (click)="enableCourse()" onclick="this.blur()" onfocus="this.blur()">
-    Abilita/Disabilita
-    <mat-icon>power_settings_new</mat-icon>
-  </button>
-
-  <button mat-raised-button type="button" onclick="this.blur()"
-  color="warn" class="btnElimina" (click)="deleteCourse()">
-    Elimina
-    <mat-icon>delete</mat-icon>
-  </button>
-  <br>
-
-
   <mat-dialog-content class="content">
-      <form [formGroup]="EditCourseForm">
+    <h4 class="statusCourse"> Stato del corso: <strong>{{status}}</strong> </h4>
+
+    <button mat-raised-button class="actionBtn" type="button" color="primary" (click)="enableCourse()" onclick="this.blur()" onfocus="this.blur()">
+      Abilita/Disabilita
+      <mat-icon>power_settings_new</mat-icon>
+    </button>
+    <br>
+    <button mat-raised-button class="actionBtn" type="button" onclick="this.blur()" color="warn" (click)="deleteCourse()">
+      Elimina
+      <mat-icon>delete</mat-icon>
+    </button>
+
+    <form [formGroup]="EditCourseForm" class="formEdit">
+      <br>
+
+        <!--Acronimo Corso-->
+        <mat-form-field>
+          <input #acronimo type="text" placeholder="Acronimo" formControlName="acronimo" matInput value="course.acronym">
+        </mat-form-field>
         <br>
 
-          <!--Acronimo Corso-->
+        <!--Massimo Membri-->
+          <mat-form-field >
+            <input #max  type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput max="10" min="1" value="course.max" required>
+            <mat-error *ngIf="EditCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di membri</mat-error>
+            <mat-error *ngIf="EditCourseForm.get('max_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
+            <mat-error *ngIf="EditCourseForm.get('max_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
+        </mat-form-field><br>
+
+
+        <!--Minimo Membri-->
+          <mat-form-field >
+            <input #min type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="1" max="10" value="course.min" required>
+            <mat-error *ngIf="EditCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero minimo di membri</mat-error>
+            <mat-error *ngIf="EditCourseForm.get('min_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
+            <mat-error *ngIf="EditCourseForm.get('min_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
+        </mat-form-field><br><br>
+
+        <div class="tableName"> <h3><strong>Professori del corso</strong></h3></div>
+
+          <!--Aggiunta Professore-->
           <mat-form-field>
-            <input #acronimo type="text" placeholder="Acronimo" formControlName="acronimo" matInput value="course.acronym">
-          </mat-form-field>
-          <br>
+          <input #input type="search" placeholder="Aggiungi professore" matInput [formControl]="myControl" [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onTeacherSelected($event.option.value)">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+              {{option.name}} {{option.firstName}} ({{option.id}})
+          </mat-option>
+          </mat-autocomplete>
+      </mat-form-field>
+      <button mat-mini-fab color="primary" (click)="addTeacher()">
+          <mat-icon>add</mat-icon>
+      </button>
+      <mat-divider></mat-divider>
 
-          <!--Massimo Membri-->
-            <mat-form-field >
-              <input #max  type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput max="10" min="1" value="course.max" required>
-              <mat-error *ngIf="EditCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di membri</mat-error>
-              <mat-error *ngIf="EditCourseForm.get('max_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
-              <mat-error *ngIf="EditCourseForm.get('max_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
-          </mat-form-field><br>
-
-
-          <!--Minimo Membri-->
-            <mat-form-field >
-              <input #min type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="1" max="10" value="course.min" required>
-              <mat-error *ngIf="EditCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero minimo di membri</mat-error>
-              <mat-error *ngIf="EditCourseForm.get('min_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
-              <mat-error *ngIf="EditCourseForm.get('min_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
-          </mat-form-field><br><br>
-
-
-
-
-          <div class="tableName"> <h3><strong>Professori del corso</strong></h3></div>
-
-
-           <!--Aggiunta Professore-->
-           <mat-form-field>
-            <input #input type="search" placeholder="Aggiungi professore" matInput [formControl]="myControl" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onTeacherSelected($event.option.value)">
-            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                {{option.name}} {{option.firstName}} ({{option.id}})
-            </mat-option>
-            </mat-autocomplete>
-        </mat-form-field>
-        <button mat-mini-fab color="primary" (click)="addTeacher()">
-            <mat-icon>add</mat-icon>
-        </button>
-        <mat-divider></mat-divider>
-
-           <!--Tabella Docenti del Corso-->
-          <div class="tableContainer" *ngIf="tableVisibility">
-              <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
-                  <ng-container matColumnDef="id">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-                      <td mat-cell *matCellDef="let row"> {{row.id}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="name">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Cognome </th>
-                      <td mat-cell *matCellDef="let row"> {{row.name}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="firstName">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
-                      <td mat-cell *matCellDef="let row"> {{row.firstName}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="delete">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
-                  <td mat-cell *matCellDef="let row">
-                      <button mat-button *ngIf="teachersToAdd.includes(row)" class="delete" (click)=deleteTeacher(row)>
-                      <mat-icon>delete</mat-icon>
-                      </button>
-                  </td>
-              </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-              </table>
-          </div><br>
-
-      </form>
-      <br>
-      <div>
-
-      </div>
-      <br>
+          <!--Tabella Docenti del Corso-->
+        <div class="tableContainer" *ngIf="tableVisibility">
+            <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                    <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cognome </th>
+                    <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+                </ng-container>
+                <ng-container matColumnDef="firstName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+                    <td mat-cell *matCellDef="let row"> {{row.firstName}} </td>
+                </ng-container>
+                <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
+                <td mat-cell *matCellDef="let row">
+                    <button mat-button *ngIf="teachersToAdd.includes(row)" class="delete" (click)=deleteTeacher(row)>
+                    <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+        </div><br>
+    </form>
+    <br>
+    <br>
   </mat-dialog-content>
 
   <mat-dialog-actions>
       <button mat-button mat-raised-button (click)="close()">Annulla</button>
       <button mat-button mat-raised-button color="primary" (click)="editCourse(acronimo.value, min.value, max.value)">Salva</button>
   </mat-dialog-actions>
-
-
-  </form>
+</form>

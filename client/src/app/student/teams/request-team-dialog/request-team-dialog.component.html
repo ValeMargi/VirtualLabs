@@ -18,6 +18,7 @@
           placeholder="Scadenza richiesta"
           formControlName="date"
           [formControl]="dateControl"
+          [min]="currentDate"
       >
       <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
       <mat-datepicker #dp></mat-datepicker>

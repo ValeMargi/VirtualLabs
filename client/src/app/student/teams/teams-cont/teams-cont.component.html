@@ -1,2 +1,3 @@
-<app-teams [team]="TEAM" [proposals]="PROPOSALS" [members] ="MEMBERS" [querying]="QUERYING"
+<app-teams [myProposal]="MY_PROPOSAL" [propsAccepted]="PROPS_ACCEPTED" [propsPending]="PROPS_PENDING" [propsRejected]="PROPS_REJECTED" 
+            [team]="TEAM" [members] ="MEMBERS" [querying]="QUERYING"
             (accept)="acceptProposal($event)" (refuse)="refuseProposal($event)"></app-teams>

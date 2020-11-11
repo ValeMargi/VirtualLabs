@@ -30,15 +30,16 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
     this.setDataSourceTeamAttributes();
-    this.setDataSourceProposalsAttributes();
-    this.setDataSourceProposalsAcceptedAttributes();
+    this.setDataSourceAcceptedAttributes();
+    this.setDataSourcePendingAttributes();
+    this.setDataSourceRejectedAttributes();
   }
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
     this.setDataSourceTeamAttributes();
-    this.setDataSourceProposalsAttributes();
-    this.setDataSourceProposalsAcceptedAttributes();
+    //this.setDataSourceProposalsAttributes();
+    //this.setDataSourceProposalsAcceptedAttributes();
   }
 
   //Table Team
@@ -46,37 +47,39 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   dataSourceTeam = new MatTableDataSource<Student>();
   tableTeamVisibility:boolean = true;
 
-  //Table Request
+  //Tabella Richieste Pending
   displayedColumnsRequest: string[] = ['teamName', 'creator', 'students', 'choice'];
-  dataSourceProposals = new MatTableDataSource<Proposal>();
+  dataSourcePending = new MatTableDataSource<Proposal>();
 
-  //Table Request Accepted
-  displayedColumnsRequestReceive: string[] = ['teamName', 'creator', 'students'];
-  dataSourceProposalsReceive = new MatTableDataSource<Proposal>();
+  //Tabella richieste accettate
+  dataSourceAccepted = new MatTableDataSource<Proposal>();
 
-  //My proposal
-  myProposal: Proposal;
-
-
+  //Tabella richieste rifiutate
+  //displayedColumnsResponded: string[] = ['teamName', 'creator', 'students', 'status'];
+  dataSourceRejected = new MatTableDataSource<Proposal>();
 
   @Input() team: Team;
-  @Input() proposals: Proposal[] = [];
+  @Input() myProposal: Proposal;
+  @Input() propsAccepted: Proposal[] = [];
+  @Input() propsPending: Proposal[] = [];
+  @Input() propsRejected: Proposal[] = [];
   @Input() members: Student[] = [];
   @Input() querying: boolean;
   @Output('accept') accept = new EventEmitter<string>();
   @Output('refuse') refuse = new EventEmitter<string>();
 
-  lengthProposals;
-  lengthProposalsReceive;
+  lengthPending;
+  lengthAccepted;
+  lengthRejected;
   lengthMembers;
   teamName: string;
 
-  propsVisibility: boolean = false;
-  proposReceivedVisibility: boolean = false;
+  propsAcceptedVisibility: boolean = false;
+  propsRejectedVisibility: boolean = false;
+  propsPendingVisibility: boolean = false;
   myPropVisibility: boolean = false;
+  doPropVisibility: boolean = false;
   stateDisabled: boolean = false;
-
-  invited: string[] = [];
 
   length = 5;
   pageSize = 5;
@@ -85,17 +88,13 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   routeQueryParams$: Subscription;
 
   constructor(private dialog: MatDialog,
-              private studentService: StudentService,
               private router: Router,
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-
-    console.log(this.proposals);
-
     this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
       if (params['requestTeam']) {
-        this. openRequestDialog();
+        this.openRequestDialog();
       }
     });
   }
@@ -129,6 +128,10 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
 
       if (this.team != null) {
         this.teamName = this.team.name;
+        this.doPropVisibility = false;
+      }
+      else {
+        this.doPropVisibility = true;
       }
     }
 
@@ -141,49 +144,42 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
       this.querying = changes.querying.currentValue;
     }
 
-    if (changes.proposals != null) {
-      this.proposals = changes.proposals.currentValue;
+    if (changes.myProposal != null) {
+      this.myProposal = changes.myProposal.currentValue;
 
-      if (this.proposals != null) {
-        this.setTableProposals();
+      if (this.myProposal != null) {
+        this.setMyProposal();
       }
-      else {
-        this.propsVisibility = false;
-        this.myPropVisibility = false;
-      }
-
-      this.getInvitations();
-    }
-  }
-
-  getInvitations() {
-    if (this.myProposal == null) {
-      return '';
     }
 
-    this.invited = [];
+    if (changes.propsAccepted != null) {
+      this.propsAccepted = changes.propsAccepted.currentValue;
 
-    this.myProposal.students.forEach(s => {
-      let text: string = '';
-      text = text.concat(s.student + " ➥ ");
-
-      if (s.status == "accepted") {
-        text = text.concat("Richiesta accettata");
+      if (this.propsAccepted != null) {
+        this.setTablePropsAccepted();
       }
-      else if (s.status == "rejected"){
-        text = text.concat("Richiesta rifiutata");
+    }
+
+    if (changes.propsPending != null) {
+      this.propsPending = changes.propsPending.currentValue;
+
+      if (this.propsPending != null) {
+        this.setTablePropsPending();
       }
-      else if (s.status == "pending"){
-        text = text.concat("In attesa di risposta");
+    }
+
+    if (changes.propsRejected != null) {
+      this.propsRejected = changes.propsRejected.currentValue;
+
+      if (this.propsRejected != null) {
+        this.setTablePropsRejected();
       }
+    }
 
-
-      this.invited.push(text);
-    });
-
-    return this.invited;
+    this.manageVisibilities();
   }
 
+  //riceve uno studente della proposal, ci aggiunge lo stato 
   getOthers(s: any) {
     if (s.student == "(Nessun altro partecipante)") {
       return s.student;
@@ -195,82 +191,67 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     if (s.status == "accepted") {
       text = text.concat("Richiesta accettata");
     }
-    else if (s.status == "rejected"){
+    else if (s.status == "rejected") {
       text = text.concat("Richiesta rifiutata");
     }
-    else if (s.status == "pending"){
+    else if (s.status == "pending") {
       text = text.concat("In attesa di risposta");
     }
 
     return text;
   }
 
-  setTableProposals() {
-    const propsPending: Proposal[] = [];
-    const props: Proposal[] = [];
-    this.myProposal = null;
+  setMyProposal() {
+    
+  }
 
-    if (this.proposals.length == 0) {
-      this.propsVisibility = false;
-      this.proposReceivedVisibility = false;
-      this.myPropVisibility = false;
-      return;
-    }
+  setTablePropsAccepted() {
+    this.dataSourceAccepted = new MatTableDataSource<Proposal>(this.propsAccepted);
+    this.setDataSourceAcceptedAttributes();
+    this.lengthAccepted = this.propsAccepted.length;
+  }
 
-    const student: Student = this.studentService.currentStudent;
-    const studentInfo: string = student.name + " " + student.firstName + " (" + student.id + ")";
+  setTablePropsPending() {
+    this.dataSourcePending = new MatTableDataSource<Proposal>(this.propsPending);
+    this.setDataSourceAcceptedAttributes();
+    this.lengthPending = this.propsPending.length;
+  }
 
-    this.proposals.forEach(p => {
-      if (p.creator == studentInfo) {
-        this.myProposal = p;
-        this.getInvitations();
-      }
-      else {
-        if (p.students.length == 0) {
-          p.students = new Array(1);
-          p.students[0] = {student: "(Nessun altro partecipante)"}
-        }
+  setTablePropsRejected() {
+    this.dataSourceRejected = new MatTableDataSource<Proposal>(this.propsRejected);
+    this.setDataSourceAcceptedAttributes();
+    this.lengthRejected = this.propsRejected.length;
+  }
 
-        if (p.status == "accepted" || p.status =="rejects") {
-          props.push(p);
-        }
-        else if (p.status =="pending"){
-          propsPending.push(p);
-        }
-      }
-    });
-
+  manageVisibilities() {
     if (this.myProposal != null) {
       this.myPropVisibility = true;
+      this.doPropVisibility = false;
     }
     else {
       this.myPropVisibility = false;
+      this.doPropVisibility = true;
     }
 
-    if (propsPending.length > 0) {
-      this.propsVisibility = true;
+    if (this.propsAccepted.length > 0) {
+      this.propsAcceptedVisibility = true;
     }
     else {
-      this.propsVisibility = false;
+      this.propsAcceptedVisibility = false;
     }
 
-    if (props.length > 0 ) {
-      this.proposReceivedVisibility = true;
+    if (this.propsPending.length > 0) {
+      this.propsPendingVisibility = true;
     }
     else {
-      this.proposReceivedVisibility = false;
+      this.propsPendingVisibility = false;
     }
 
-    if (this.propsVisibility) {
-      this.dataSourceProposals = new MatTableDataSource<Proposal>(propsPending);
-      this.setDataSourceProposalsAttributes();
-      this.lengthProposals = propsPending.length;
+    if (this.propsRejected.length > 0) {
+      this.propsRejectedVisibility = true;
     }
-
-    if (this.proposReceivedVisibility) {
-      this.dataSourceProposalsReceive = new MatTableDataSource<Proposal>(props);
-      this.setDataSourceProposalsAcceptedAttributes();
-      this.lengthProposalsReceive = props.length;
+    else {
+      this.propsRejectedVisibility = false;
     }
   }
 
@@ -285,14 +266,19 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
     this.dataSourceTeam.sort = this.sort;
   }
 
-  setDataSourceProposalsAttributes() {
+  setDataSourceAcceptedAttributes() {
     //this.dataSourceProposals.paginator = this.paginator;
-    this.dataSourceProposals.sort = this.sort;
+    this.dataSourceAccepted.sort = this.sort;
   }
 
-  setDataSourceProposalsAcceptedAttributes() {
+  setDataSourcePendingAttributes() {
     //this.dataSourceProposalsAccepted.paginator = this.paginator;
-    this.dataSourceProposalsReceive.sort = this.sort;
+    this.dataSourcePending.sort = this.sort;
+  }
+
+  setDataSourceRejectedAttributes() {
+    //this.dataSourceProposalsAccepted.paginator = this.paginator;
+    this.dataSourceRejected.sort = this.sort;
   }
 
   acceptProposal(token: string) {

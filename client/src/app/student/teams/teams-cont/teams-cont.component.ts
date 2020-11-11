@@ -19,11 +19,15 @@ export class TeamsContComponent implements OnInit, OnDestroy {
 
   constructor(private teamService: TeamService,
               private courseService: CourseService,
+              private studentService: StudentService,
               private router: Router,
               private route: ActivatedRoute) { }
 
   TEAM: Team;
-  PROPOSALS: Proposal[];
+  MY_PROPOSAL: Proposal;
+  PROPS_ACCEPTED: Proposal[] = [];
+  PROPS_PENDING: Proposal[] = [];
+  PROPS_REJECTED: Proposal[] = [];
   MEMBERS: Student[] = [];
   QUERYING: boolean = false;
 
@@ -35,27 +39,20 @@ export class TeamsContComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.PROPOSALS = [];
-      this.MEMBERS = [];
-
       this.getTeam(courseName);
 
       this.teamService.proposal.subscribe(
         (data) => {
           if (data.students.length == 0) {
             //solo 1 partecipante, team creato
-            this.PROPOSALS = new Array();
+            this.MY_PROPOSAL = null;
+            this.PROPS_ACCEPTED = new Array();
+            this.PROPS_REJECTED = new Array();
             this.getTeam(this.route.snapshot.params.courses);
           }
           else {
             //aggiornamento proposals
-            let array: Proposal[] = this.PROPOSALS;
-            this.PROPOSALS = new Array();
-            array.push(data);
-
-            array.forEach(prop => {
-              this.PROPOSALS.push(prop);
-            });
+            this.getProposals(courseName);
           }
         },
         (error) => {
@@ -111,8 +108,40 @@ export class TeamsContComponent implements OnInit, OnDestroy {
   getProposals(courseName: string) {
     this.teamService.getProposals(courseName).subscribe(
       (data) => {
-        this.PROPOSALS = data;
-        console.log(data);
+        console.log(data)
+        const student: Student = this.studentService.currentStudent;
+        const studentInfo: string = student.name + " " + student.firstName + " (" + student.id + ")";
+
+        let accepted: Proposal[] = new Array();
+        let pending: Proposal[] = new Array();
+        let rejected: Proposal[] = new Array();
+
+        data.forEach(p => {
+          if (p.creator == studentInfo) {
+            this.MY_PROPOSAL = p;
+          }
+          else {
+            if (p.students.length == 0) {
+              p.students = new Array(1);
+              p.students[0] = {student: "(Nessun altro partecipante)"}
+            }
+
+            if (p.status == "accepted") {
+              accepted.push(p);
+            }
+            else if (p.status =="rejected") {
+              rejected.push(p);
+            }
+            else if (p.status =="pending") {
+              pending.push(p);
+            }
+          }
+        });
+
+        this.PROPS_ACCEPTED = accepted;
+        this.PROPS_PENDING = pending;
+        this.PROPS_REJECTED = rejected;
+
       },
       (error) => {
         window.alert(error.error.message);
@@ -144,7 +173,9 @@ export class TeamsContComponent implements OnInit, OnDestroy {
           }
           case 2: {
             //team creato
-            this.PROPOSALS = new Array();
+            this.MY_PROPOSAL = null;
+            this.PROPS_ACCEPTED = new Array();
+            this.PROPS_REJECTED = new Array();
             this.getTeam(this.route.snapshot.params.courses);
             this.QUERYING = false;
             break;

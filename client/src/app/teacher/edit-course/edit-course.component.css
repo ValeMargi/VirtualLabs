@@ -1,17 +1,21 @@
 .content {
-    position: relative;
-    display: inline-block;
-    text-align: center;
-    min-height: 20em;
-}
-.btnElimina{
-  margin-left:1%;
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  min-height: 20em;
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
-.statoCorso{
+.actionBtn {
+  margin: 2%;
+}
+
+.statusCourse{
 margin-top: 0;
 color: rgb(133, 133, 133);
 }
+
 
 .left {
   float: left;

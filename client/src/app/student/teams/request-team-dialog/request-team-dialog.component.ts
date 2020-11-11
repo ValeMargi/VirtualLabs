@@ -38,6 +38,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   dateControl = new FormControl(new Date());
   filteredOptions: Observable<Student[]>;
   dateTimeout: Date;
+  currentDate: Date;
 
   selectedPhoto: File;
   private studentSelected: Student;
@@ -49,8 +50,8 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   @Output('propose') propose = new EventEmitter<any>();
 
   constructor(private formBuilder: FormBuilder) {
-    const currentDate = new Date();
-    const oneWeek = new Date(currentDate);
+    this.currentDate = new Date();
+    const oneWeek = new Date(this.currentDate);
     oneWeek.setDate(oneWeek.getDate() + 7);
 
     this.CreateTeamForm = this.formBuilder.group({

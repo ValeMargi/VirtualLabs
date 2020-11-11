@@ -157,7 +157,7 @@ public class VLServiceStudentImpl implements VLServiceStudent{
             team.setMaxVcpuLeft(c.getMaxVcpu());
             team.setRamLeft(c.getRam());
             team.setRunningInstancesLeft(c.getRunningInstances());
-            team.setTotInstancesLeft(c.getRunningInstances());
+            team.setTotInstancesLeft(c.getTotInstances());
         }
         team.addStudentIntoTeam(studentRepository.getOne(creatorStudent));
         teamRepository.save(team);

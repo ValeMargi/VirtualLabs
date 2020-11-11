@@ -26,6 +26,7 @@ import {LoginDialogComponent} from './login/login-dialog.component';
 import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.component';
 import { TeamVmsContComponent } from './teacher/vms/team-vms-cont.component';
 import { ChangePasswordContComponent } from './change-password/change-password-cont/change-password-cont.component';
+import { RequestTeamDialogContComponent } from './student/teams/request-team-dialog/request-team-dialog-cont/request-team-dialog-cont.component';
 
 
 const routes: Routes = [
@@ -46,8 +47,8 @@ const routes: Routes = [
               component: AssignmentsContComponentStudent,
               children: [
                 { path: ':idA/versions', 
-                canActivate: [AuthGuard],
-                component: VersionsContComponentStudent
+                  canActivate: [AuthGuard],
+                  component: VersionsContComponentStudent
                 }
               ],
             },
@@ -55,6 +56,12 @@ const routes: Routes = [
               path: ':courses/teams',
               canActivate: [AuthGuard],
               component: TeamsContComponent,
+              children: [
+                { path: 'request',
+                  canActivate: [AuthGuard],
+                  component: RequestTeamDialogContComponent
+                }
+              ],
             },
             {
               path: ':courses/vms',

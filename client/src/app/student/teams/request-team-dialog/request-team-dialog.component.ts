@@ -1,6 +1,7 @@
 import { MatDatepicker } from '@angular/material/datepicker';
 import { Component, OnInit, Input,Output,EventEmitter, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Location } from '@angular/common';
 import { DateAdapter } from '@angular/material/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
@@ -49,7 +50,8 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   @Input() availableStudents: Student[] = [];
   @Output('propose') propose = new EventEmitter<any>();
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+              private location: Location) {
     this.currentDate = new Date();
     const oneWeek = new Date(this.currentDate);
     oneWeek.setDate(oneWeek.getDate() + 7);
@@ -153,6 +155,10 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
     else {
       window.alert("Controllare di aver inserito dei campi validi e riprovare");
     }
+  }
+
+  backToTeams() {
+    this.location.back();
   }
 }
 

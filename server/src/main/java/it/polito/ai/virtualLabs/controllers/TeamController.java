@@ -209,7 +209,7 @@ public class TeamController {
      *          - 1 se l'adesione è andata a buon fine ma il team non è ancora attivo
      *          - 2 se l'adesione è andata a buon fine e il team viene attivato
      */
-    @GetMapping("/notification/confirm/{token}")
+    @GetMapping("/confirm/{token}")
     @ResponseBody
     public int confirmationPage(@PathVariable String token) {
         try {
@@ -227,7 +227,7 @@ public class TeamController {
      *          - 0 se il token non è più presente
      *          - 1 se il rifiuto è andato a buon fine
      */
-    @GetMapping("/notification/reject/{token}")
+    @GetMapping("/reject/{token}")
     @ResponseBody
     public int rejectionPage(@PathVariable String token) {
         try {

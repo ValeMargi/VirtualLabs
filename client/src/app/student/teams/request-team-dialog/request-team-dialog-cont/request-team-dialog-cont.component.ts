@@ -21,8 +21,7 @@ export class RequestTeamDialogContComponent implements OnInit {
 
   constructor(private courseService: CourseService,
               private teamService: TeamService,
-              private route: ActivatedRoute,
-              private matDialogRef: MatDialogRef<RequestTeamDialogContComponent>) { }
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     const course: Course = this.courseService.currentCourse.getValue();
@@ -66,7 +65,6 @@ export class RequestTeamDialogContComponent implements OnInit {
     this.teamService.proposeTeam(this.courseService.currentCourse.getValue().name, teamName, timeout, membersId).subscribe(
       (data) => {
         this.QUERYING = false;
-        this.matDialogRef.close();
         this.teamService.proposal.emit(data);
       },
       (error) =>{

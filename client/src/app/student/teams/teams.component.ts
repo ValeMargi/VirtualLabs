@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
   templateUrl: '../teams/teams.component.html',
   styleUrls: ['../teams/teams.component.css']
 })
-export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
+export class TeamsComponent implements OnInit, OnChanges {
 
   @ViewChild('table') table: MatTable<Element>;
 
@@ -81,45 +81,35 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   doPropVisibility: boolean = false;
   stateDisabled: boolean = false;
 
+  requestVisibility: boolean = false;
+
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
   routeQueryParams$: Subscription;
 
-  constructor(private dialog: MatDialog,
-              private router: Router,
+  constructor(private router: Router,
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
+    /*this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
       if (params['requestTeam']) {
         this.openRequestDialog();
       }
-    });
+    });*/
   }
 
-  routeToRequest() {
-    this.router.navigate([], {queryParams: {requestTeam : "true"}});
+  showRequestTeam() {
+    this.router.navigate(['request'], { relativeTo: this.route });
   }
 
-  openRequestDialog() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.autoFocus = true;
-    dialogConfig.disableClose = false;
-    dialogConfig.minWidth = "40%";
-    dialogConfig.id = "Request Team";
-
-    const dialogRef = this.dialog.open(RequestTeamDialogContComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(result => {
-      const queryParams = {}
-      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
-    });
+  onRouterOutletActivate(event) {
+    this.requestVisibility = true;
   }
 
-  ngAfterViewInit(): void {
-
+  onRouterOutletDeactivate(event) {
+    this.requestVisibility = false;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -290,6 +280,6 @@ export class TeamsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngOnDestroy() {
-    this.routeQueryParams$.unsubscribe();
+    //this.routeQueryParams$.unsubscribe();
   }
 }

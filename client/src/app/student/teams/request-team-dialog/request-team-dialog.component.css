@@ -1,6 +1,15 @@
+.card {
+  width: 90%;
+  margin-left: 2%;
+  margin-top: 2%;
+}
 
-.card{
-  width: 90%
+.matTable {
+  width: 100%;
+}
+
+.iconButton:hover {
+  background-color:#001ea34d;
 }
 
 .button{

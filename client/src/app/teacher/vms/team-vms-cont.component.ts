@@ -36,8 +36,9 @@ export class TeamVmsContComponent implements OnInit, OnDestroy {
           vms.forEach(vm => {
             this.teacherService.getOwners(courseName, params.idT, vm.id).subscribe(
               (data) => {
+                this.VMs = new Array();
                 array.push(new VMOwners(vm.id, vm.numVcpu, vm.diskSpace, vm.ram, vm.status, vm.nameVM, vm.timestamp, data))
-                this.VMs = array;
+                array.forEach(vmow => this.VMs.push(vmow));
               }, 
               (error) => {
                 window.alert(error.error.message);

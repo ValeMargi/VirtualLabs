@@ -36,6 +36,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   selection: any;
   selectionAmount: any;
   checkBoxAll: boolean = false;
+  clicked: boolean = false;
 
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
@@ -60,6 +61,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   myControl = new FormControl();
   selectedCSV: File;
 
+
   filteredOptions: Observable<Student[]>;
   studentToAdd: Student = null;
 
@@ -67,6 +69,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   pageIndex: number = 0;
+  previousPageIndex: number;
 
   tableVisibility: boolean = true;
   addDisabled: boolean = true;
@@ -164,8 +167,15 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   selectAll(){
+    this.checkBoxAll = false;
     this.dataSource.data.forEach(s => this.selectStudent(true, s));
   }
+
+  deselectAll(){
+
+    this.dataSource.data.forEach(s => this.selectStudent(false, s));
+  }
+
 
   currentItemsSelected(){
     let allChecked: boolean = true;
@@ -183,15 +193,34 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
 
   selectCurrentPage(isChecked){
     let initIndex = this.pageSize*this.pageIndex;
-    this.checkBoxAll = true;
 
+    if(this.pageSize > this.length || this.previousPageIndex < this.pageIndex){
+      this.checkBoxAll = false;
+    }
+
+    if(!isChecked) {
+      this.checkBoxAll = false;
+      this.dataSource.data.forEach(s => this.selectStudent(false, s));
+      this.clicked = false;
+    }else{
+      this.checkBoxAll = true;
+    }
+    console.log(isChecked);
     for(let i = initIndex; i < (initIndex + this.pageSize); i++){
       this.selectStudent(isChecked, this.dataSource.data[i]);
     }
   }
 
+  stateCheckBoxAll(): boolean{
+    return this.checkBoxAll;
+  }
+
+
   onPageChanged(event){
+    console.log(event);
+      this.previousPageIndex = event.previousPageIndex;
       this.pageIndex = event.pageIndex;
+      this.pageSize = event.pageSize;
   }
 
   allSelected() {

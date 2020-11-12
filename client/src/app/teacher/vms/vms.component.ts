@@ -14,14 +14,14 @@ import { Subscription } from 'rxjs/internal/Subscription';
 })
 export class VmsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() teams: Team[];
-  
+
   teamVMsVisibility: boolean = false;
   teamsVisibility: boolean = false;
 
   routeQueryParams$: Subscription;
 
-  constructor(private matDialog: MatDialog, 
-              private router: Router, 
+  constructor(private matDialog: MatDialog,
+              private router: Router,
               private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -68,7 +68,7 @@ export class VmsComponent implements OnInit, OnChanges, OnDestroy {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = false;
+    dialogConfig.autoFocus = true;
 
     const dialogRef = this.matDialog.open(ManageModelContComponent, dialogConfig);
 

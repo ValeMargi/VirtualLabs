@@ -3,9 +3,10 @@ import { MatDialog, MatDialogRef, MatDialogConfig } from '@angular/material/dial
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
 import { LoginDialogComponent } from '../login/login-dialog.component';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormBuilder, FormGroupDirective, NgForm } from '@angular/forms';
 import { LoginContComponent } from '../login/login-cont/login-cont.component';
 import { Md5 } from 'ts-md5/dist/md5';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 
 @Component({
@@ -22,6 +23,8 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
   avatarImg: boolean = true;
 
   private md5: Md5;
+
+  matcher = new MyErrorStateMatcher();
 
   @Input() querying: boolean;
   @Input() ok: boolean;
@@ -75,11 +78,19 @@ idValidator(control: FormControl) {
   return null;
 }
 
-checkPasswords(group: FormGroup) { // here we have the 'passwords' group
-    let pass = group.controls.password.value;
-    let confirmPass = group.controls.confirmPassword.value;
+checkPasswords(group: FormGroup) {
+    let pass: string = group.controls.password.value;
+    let confirmPass: string = group.controls.confirmPassword.value;
 
-    return pass === confirmPass ? null : { notSame: true }
+    if(pass === confirmPass){
+      console.log(pass+" "+confirmPass);
+      console.log("Uguali");
+      return null;
+    }else{
+      console.log(pass+" "+confirmPass);
+      console.log("Diverse");
+      return { notSame: true };
+    }
   }
 
 ngOnInit() {
@@ -179,4 +190,14 @@ onFileChanged(imageInput) {
   }
 }
 
+}
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl, form: FormGroupDirective | NgForm): boolean {
+    const invalidParent = !!(
+      control.parent.touched
+      && control.parent.invalid
+      && control.parent.hasError('notSame'));
+    return (invalidParent);
+  }
 }

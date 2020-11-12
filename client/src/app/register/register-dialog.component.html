@@ -12,7 +12,7 @@
         <img class="img" src="avatar-placeholder.png" *ngIf="avatarImg" />
         <img class="img" [src]="previewPhoto" />
         </div>
-        
+
         <div class="camera-box">
           <input class="inputfile" type="file" name="pic" accept="image/*"
             (change)="onFileChanged($event)" >
@@ -53,7 +53,7 @@
 
         <!--Password-->
         <mat-form-field class="formField">
-        <input class="input" #password type="password" placeholder="Password" formControlName="password" matInput required minlength="8">
+        <input class="input" #password type="password" placeholder="Password" formControlName="password" matInput required>
         <mat-error class="input" *ngIf="RegisterForm.hasError('required', 'password')">Inserisci una password</mat-error>
         <mat-error class="inputErr" *ngIf="RegisterForm.hasError('minlength','password')">Inserisci almeno 8 caratteri</mat-error>
         <mat-error class="inputErr" *ngIf="RegisterForm.hasError('maxlength','password')">Inserisci non più di 20 caratteri</mat-error>
@@ -61,11 +61,9 @@
 
         <!--ConfirmPassword-->
         <mat-form-field class="formField">
-        <input class="input" #passwordRepeat type="password" placeholder="Ripeti password" formControlName="confirmPassword" matInput required minlength="8">
+        <input class="input" #passwordRepeat type="password" placeholder="Ripeti password" formControlName="confirmPassword" matInput [errorStateMatcher]="matcher">
         <mat-error class="input" *ngIf="RegisterForm.hasError('notSame')"> Le due password non coincidono</mat-error>
-        <mat-error class="inputErr" *ngIf="RegisterForm.get('confirmPassword').hasError('minlength')">Inserisci almeno 8 caratteri</mat-error>
-        <mat-error class="inputErr" *ngIf="RegisterForm.get('confirmPassword').hasError('maxlength')">Inserisci non più di 20 caratteri</mat-error>
-        </mat-form-field>
+      </mat-form-field>
 
       </form>
     </div><br>

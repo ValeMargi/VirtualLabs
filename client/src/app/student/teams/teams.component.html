@@ -17,7 +17,8 @@
   <mat-card class="card" *ngIf="myPropVisibility">
     <mat-card-header>
         <mat-card-title>Le mie proposte</mat-card-title>
-        <mat-card-subtitle>Il tuo team sarà creato non appena tutti gli invitati avranno accettato la proposta</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="myProposal.teamStatus == 'pending'">Il tuo team sarà creato non appena tutti gli invitati avranno accettato la proposta</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="myProposal.teamStatus == 'disabled'">Uno degli invitati ha rifiutato la tua proposta, sarà eliminata automaticamente entro 5 minuti</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content class="contMyProp">
@@ -122,7 +123,7 @@
   <mat-card class="card" *ngIf="propsRejectedVisibility">
     <mat-card-header>
       <mat-card-title>Richieste rifiutate</mat-card-title>
-      <mat-card-subtitle>Non verrà creato alcun team per queste proposte, saranno cancellate entro 12 ore</mat-card-subtitle>
+      <mat-card-subtitle>Non verrà creato alcun team per queste proposte, saranno cancellate entro 5 minuti</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>

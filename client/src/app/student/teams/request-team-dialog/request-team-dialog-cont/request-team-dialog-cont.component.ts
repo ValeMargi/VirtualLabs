@@ -22,8 +22,7 @@ export class RequestTeamDialogContComponent implements OnInit {
 
   constructor(private courseService: CourseService,
               private teamService: TeamService,
-              private location: Location,
-              private route: ActivatedRoute) { }
+              private location: Location) { }
 
   ngOnInit(): void {
     const course: Course = this.courseService.currentCourse.getValue();

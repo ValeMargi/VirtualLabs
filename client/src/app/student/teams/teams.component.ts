@@ -216,11 +216,23 @@ export class TeamsComponent implements OnInit, OnChanges {
   manageVisibilities() {
     if (this.myProposal != null) {
       this.myPropVisibility = true;
-      this.doPropVisibility = false;
+
+      if (this.myProposal.teamStatus == "pending") {
+        this.doPropVisibility = false;
+      }
+      else {
+        this.doPropVisibility = true;
+      }
     }
     else {
       this.myPropVisibility = false;
-      this.doPropVisibility = true;
+
+      if (this.team == null) {
+        this.doPropVisibility = true;
+      }
+      else {
+        this.doPropVisibility = false;
+      }
     }
 
     if (this.propsAccepted.length > 0) {

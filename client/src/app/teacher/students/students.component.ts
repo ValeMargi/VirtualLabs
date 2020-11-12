@@ -27,7 +27,7 @@ import { StudentGroup } from 'src/app/models/student-group.model';
 export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
   @ViewChild('sidenav') sidenav: MatSidenav;
-  @ViewChild('checkall') checkall: MatCheckbox;
+  @ViewChild('checkall') checkall: MatCheckbox ;
   @ViewChild('checksingle') checksingle: MatCheckbox;
   @ViewChild('input') input: MatInput
 
@@ -65,14 +65,19 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   filteredOptions: Observable<Student[]>;
   studentToAdd: Student = null;
 
+  pageEvent: boolean;
+
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   pageIndex: number = 0;
   previousPageIndex: number;
+  totalPages: number;
 
   tableVisibility: boolean = true;
   addDisabled: boolean = true;
+
+  checkBoxMaster: MatCheckbox;
 
 
   constructor() {}
@@ -137,6 +142,52 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
       (option.name.toString().toLowerCase().includes(filterValue) || option.firstName.toString().toLowerCase().includes(filterValue)));
   }
 
+  selectStudentOnCurrenPage(isChecked){
+    let initIndex = this.pageSize*this.pageIndex;
+
+    if(this.pageSize < this.length){
+      this.checkBoxAll = true;
+    }
+
+    if(!isChecked) {
+      console.log("UnChecked ");
+      this.checkBoxAll = false;
+      this.dataSource.data.forEach(s => this.selectStudent(false, s));
+      this.clicked = false;
+      this.checkall.indeterminate=false;
+
+    }else{
+      console.log("Checked ");
+      console.log("Primo "+this.pageSize );
+      console.log("Secondo "+this.length);
+
+      for(let i = initIndex; i < (initIndex + this.pageSize); i++){
+        this.selectStudent(isChecked, this.dataSource.data[i]);
+      }
+
+      if(this.allSelectedOnPage()){
+        this.checkall.indeterminate=false;
+        this.checkall.checked = true;
+      }
+      else {
+        this.checkBoxAll = false;
+        this.checkall.indeterminate=false;
+      }
+
+    }
+
+  }
+
+  indeterminateState():boolean{
+    let state: boolean;
+    if((this.selectedStudents.selected.length === 0) && !this.currentItemsSelected() && this.checkBoxAll){
+      console.log("the state all'interno is:"+(this.selectedStudents.hasValue() && !this.currentItemsSelected()) )
+      state = true;
+      return state;
+    }
+    return null;
+  }
+
   selectStudent(isChecked, row) {
     if (isChecked) {
       this.selectedStudents.select(row);
@@ -147,6 +198,7 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
 
       }
       else {
+
         this.checkall.indeterminate = true;
         this.checkall.checked = false;
       }
@@ -172,15 +224,15 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   deselectAll(){
-
     this.dataSource.data.forEach(s => this.selectStudent(false, s));
   }
 
+  modifyStateCheckbox(){
 
+  }
   currentItemsSelected(){
     let allChecked: boolean = true;
     let initIndex = this.pageSize*this.pageIndex;
-
     let selected = this.selectedStudents.selected;
 
     for(let i = initIndex; i < (initIndex + this.pageSize); i++){
@@ -188,33 +240,9 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
         allChecked = false;
       }
     }
+
     return allChecked;
   }
-
-  selectCurrentPage(isChecked){
-    let initIndex = this.pageSize*this.pageIndex;
-
-    if(this.pageSize > this.length || this.previousPageIndex < this.pageIndex){
-      this.checkBoxAll = false;
-    }
-
-    if(!isChecked) {
-      this.checkBoxAll = false;
-      this.dataSource.data.forEach(s => this.selectStudent(false, s));
-      this.clicked = false;
-    }else{
-      this.checkBoxAll = true;
-    }
-    console.log(isChecked);
-    for(let i = initIndex; i < (initIndex + this.pageSize); i++){
-      this.selectStudent(isChecked, this.dataSource.data[i]);
-    }
-  }
-
-  stateCheckBoxAll(): boolean{
-    return this.checkBoxAll;
-  }
-
 
   onPageChanged(event){
     console.log(event);
@@ -225,6 +253,10 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
 
   allSelected() {
     return this.dataSource.data.length == this.selectedStudents.selected.length;
+  }
+
+  allSelectedOnPage(){
+    return this.pageSize === this.selectedStudents.selected.length;
   }
 
   onSearchChange(searchValue: string) {
@@ -239,7 +271,6 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
   deleteStudent() {
     if (this.selectedStudents.selected.length > 0) {
       this.toRemove.emit(this.selectedStudents.selected);
-      //this.dataSource._updateChangeSubscription();
       this.selectedStudents.clear();
     }
   }

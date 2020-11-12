@@ -11,6 +11,9 @@ import { map, startWith } from 'rxjs/operators';
 import { Course } from 'src/app/models/course.model';
 import { Student } from 'src/app/models/student.model';
 import { CourseService } from 'src/app/services/course.service';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-request-team-dialog',
@@ -19,21 +22,29 @@ import { CourseService } from 'src/app/services/course.service';
 })
 export class RequestTeamDialogComponent implements OnInit, OnChanges {
   @ViewChild('table') table: MatTable<Element>;
+  @ViewChild('checkall') checkall: MatCheckbox;
+  @ViewChild('checksingle') checksingle: MatCheckbox;
   
-  private sort: MatSort;
+  sort: MatSort;
+  paginator: MatPaginator;
   
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
     this.dataSource.sort = this.sort;
   }
 
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.dataSource.paginator = this.paginator;
+  }
+
   CreateTeamForm: FormGroup;
   min: number;
   max: number;
 
-  displayedColumns: string[] = ['id', 'name', 'firstName', 'delete'];
+  displayedColumns: string[] = ['select', 'id', 'name', 'firstName'];
   dataSource = new MatTableDataSource<Student>();
-  tableVisibility: boolean = false;
+  selectedStudents = new SelectionModel<Student>(true, []);
 
   myControl = new FormControl();
   dateControl = new FormControl(new Date());
@@ -41,9 +52,13 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   dateTimeout: Date;
   currentDate: Date;
 
-  selectedPhoto: File;
-  private studentSelected: Student;
   studentsToAdd: Student[] = [];
+
+  length = 5;
+  pageSize = 5;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+  pageIndex: number = 0;
+  previousPageIndex: number;
 
   @Input() querying: boolean;
   @Input() course: Course;
@@ -63,8 +78,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-
-    this.setupFiter();
+    
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -83,17 +97,11 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
 
     if (changes.availableStudents != null) {
       this.availableStudents = changes.availableStudents.currentValue;
-      this.setupFiter();
+      this.dataSource = new MatTableDataSource<Student>(this.availableStudents);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.length = this.availableStudents.length;
     }
-  }
-
-  setupFiter() {
-    this.filteredOptions = this.myControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value.name),
-        map(value => this._filter(value))
-      );
   }
 
   _filter(value: string): Student[] {
@@ -111,34 +119,83 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
       return "";
   }
 
-  onStudentSelected(student: Student) {
-    this.studentSelected = student;
-  }
+  selectStudent(isChecked: boolean, row: Student) {
+    if (isChecked) {
+      this.selectedStudents.select(row);
+      this.studentsToAdd.push(row);
 
-  addStudent() {
-    if (this.studentSelected != null && !this.studentsToAdd.includes(this.studentSelected)) {
-      this.studentsToAdd.push(this.studentSelected);
-      this.dataSource = new MatTableDataSource<Student>(this.studentsToAdd);
-      this.dataSource.sort = this.sort;
-      this.tableVisibility = true;
-      this.myControl.reset("");
-      this.setupFiter();
+      if (this.allSelected()) {
+        this.checkall.checked = true;
+        this.checkall.indeterminate = false;
+
+      }
+      else {
+        this.checkall.indeterminate = true;
+        this.checkall.checked = false;
+      }
     }
-  }
+    else {
+      this.selectedStudents.deselect(row);
+      this.studentsToAdd.splice(this.studentsToAdd.indexOf(row), 1);
 
-  deleteStudent(student: Student) {
-    if (student != null && this.studentsToAdd.includes(student)) {
-      this.studentsToAdd.splice(this.studentsToAdd.indexOf(student), 1);
-      this.dataSource = new MatTableDataSource<Student>(this.studentsToAdd);
-      this.dataSource.sort = this.sort;
-
-      if (this.studentsToAdd.length == 0) {
-        this.tableVisibility = false;
+      if (this.selectedStudents.selected.length == 0) {
+        this.checkall.indeterminate = false;
+      }
+      else {
+        this.checkall.indeterminate = true;
       }
 
-      this.setupFiter();
+      this.checkall.checked = false;
     }
   }
+
+  selectAll() {
+    this.dataSource.data.forEach(s => this.selectStudent(true, s));
+  }
+
+  deselectAll() {
+    this.dataSource.data.forEach(s => this.selectStudent(false, s));
+  }
+
+  currentItemsSelected(){
+    let allChecked: boolean = true;
+    let initIndex = this.pageSize*this.pageIndex;
+
+    let selected = this.selectedStudents.selected;
+
+    for(let i = initIndex; i < (initIndex + this.pageSize); i++){
+      if(!selected.includes(this.dataSource.data[i])){
+        allChecked = false;
+      }
+    }
+    return allChecked;
+  }
+
+  selectCurrentPage(isChecked){
+    let initIndex = this.pageSize*this.pageIndex;
+
+    if(this.pageSize > this.length || this.previousPageIndex < this.pageIndex){
+    }
+
+    if (!isChecked) {
+      this.dataSource.data.forEach(s => this.selectStudent(false, s));
+    }
+
+    for(let i = initIndex; i < (initIndex + this.pageSize); i++){
+      this.selectStudent(isChecked, this.dataSource.data[i]);
+    }
+  }
+
+  onPageChanged(event){
+    this.previousPageIndex = event.previousPageIndex;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+  }
+
+  allSelected() {
+    return this.dataSource.data.length == this.selectedStudents.selected.length;
+  }
+  
 
   proposeTeam(nameTeam: string, expire: string) {
     if (this.studentsToAdd.length + 1 < this.min || this.studentsToAdd.length + 1> this.max) {

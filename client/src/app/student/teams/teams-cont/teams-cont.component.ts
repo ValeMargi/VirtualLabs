@@ -8,6 +8,7 @@ import { Course } from 'src/app/models/course.model';
 import { Proposal } from 'src/app/models/proposal.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { min } from 'rxjs/operators';
 @Component({
   selector: 'app-teams-cont',
   templateUrl: '../teams-cont/teams-cont.component.html',
@@ -24,7 +25,7 @@ export class TeamsContComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute) { }
 
   TEAM: Team;
-  MY_PROPOSAL: Proposal;
+  MY_PROPOSALS: Proposal[] = [];
   PROPS_ACCEPTED: Proposal[] = [];
   PROPS_PENDING: Proposal[] = [];
   PROPS_REJECTED: Proposal[] = [];
@@ -45,8 +46,9 @@ export class TeamsContComponent implements OnInit, OnDestroy {
         (data) => {
           if (data.students.length == 0) {
             //solo 1 partecipante, team creato
-            this.MY_PROPOSAL = null;
+            this.MY_PROPOSALS = new Array();
             this.PROPS_ACCEPTED = new Array();
+            this.PROPS_PENDING = new Array();
             this.PROPS_REJECTED = new Array();
             this.getTeam(this.route.snapshot.params.courses);
           }
@@ -112,13 +114,14 @@ export class TeamsContComponent implements OnInit, OnDestroy {
         const student: Student = this.studentService.currentStudent;
         const studentInfo: string = student.name + " " + student.firstName + " (" + student.id + ")";
 
+        let mine: Proposal[] = new Array();
         let accepted: Proposal[] = new Array();
         let pending: Proposal[] = new Array();
         let rejected: Proposal[] = new Array();
 
         data.forEach(p => {
           if (p.creator == studentInfo) {
-            this.MY_PROPOSAL = p;
+            mine.push(p);
           }
           else {
             if (p.students.length == 0) {
@@ -138,6 +141,7 @@ export class TeamsContComponent implements OnInit, OnDestroy {
           }
         });
 
+        this.MY_PROPOSALS = mine;
         this.PROPS_ACCEPTED = accepted;
         this.PROPS_PENDING = pending;
         this.PROPS_REJECTED = rejected;
@@ -173,7 +177,7 @@ export class TeamsContComponent implements OnInit, OnDestroy {
           }
           case 2: {
             //team creato
-            this.MY_PROPOSAL = null;
+            this.MY_PROPOSALS = new Array();
             this.PROPS_ACCEPTED = new Array();
             this.PROPS_REJECTED = new Array();
             this.getTeam(this.route.snapshot.params.courses);

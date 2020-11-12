@@ -17,23 +17,22 @@
   <mat-card class="card" *ngIf="myPropVisibility">
     <mat-card-header>
         <mat-card-title>Le mie proposte</mat-card-title>
-        <mat-card-subtitle *ngIf="myProposal.teamStatus == 'pending'">Il tuo team sarà creato non appena tutti gli invitati avranno accettato la proposta</mat-card-subtitle>
-        <mat-card-subtitle *ngIf="myProposal.teamStatus == 'disabled'">Uno degli invitati ha rifiutato la tua proposta, sarà eliminata automaticamente entro 5 minuti</mat-card-subtitle>
     </mat-card-header>
 
-    <mat-card-content class="contMyProp">
+    <ng-container *ngFor="let prop of myProposals">
+      <mat-card-content class="contMyProp">
+        <mat-card class="myProposal">
+          <mat-card-header>
+            <mat-card-title> <strong> ► Nome del tuo team:</strong> {{prop.teamName}} </mat-card-title>
+            <mat-card-subtitle *ngIf="prop.teamStatus == 'pending'">Il tuo team sarà creato non appena tutti gli invitati avranno accettato la proposta</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="prop.teamStatus == 'disabled'">Uno degli invitati ha rifiutato la tua proposta, sarà eliminata automaticamente entro 5 minuti</mat-card-subtitle>
+          </mat-card-header>
 
-      <mat-card class="myProposal">
-        <mat-card-header>
-          <mat-card-title> <strong> ► Nome del tuo team:</strong> {{myProposal.teamName}} </mat-card-title>
-
-        </mat-card-header>
-
-        <strong>Invitati nel team:</strong>
-        <div *ngFor="let student of myProposal.students"> {{getOthers(student)}} <br></div>
-      </mat-card>
-
-    </mat-card-content>
+          <strong>Invitati nel team:</strong>
+          <div *ngFor="let student of prop.students"> {{getOthers(student)}} <br></div>
+        </mat-card>
+      </mat-card-content>
+    </ng-container>
   </mat-card>
 
   <!--Tabella Gruppo-->
@@ -65,6 +64,67 @@
               </mat-paginator>
             </div>
       </mat-card-content>
+  </mat-card>
+
+  <!--Tabella Richieste in sospeso gruppo-->
+  <mat-card class="card" *ngIf="propsPendingVisibility">
+    <mat-card-header>
+      <mat-card-title>Richieste in sospeso</mat-card-title>
+      <mat-card-subtitle>Accetta o rifiuta una proposta di partecipazione</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
+      <div class="tableContainer">
+        <table #table mat-table [dataSource]="dataSourcePending" matSort class="matTable" >
+            <ng-container matColumnDef="teamName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome team </th>
+                <td mat-cell *matCellDef="let row"> {{row.teamName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="creator">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Creatore team </th>
+              <td mat-cell *matCellDef="let row"> {{row.creator}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="students">
+              <th mat-header-cell mat-sort-header *matHeaderCellDef> Altri partecipanti </th>
+              <td *matCellDef="let row">
+                <ng-container *ngFor="let i of row.students">
+                  ∎ {{getOthers(i)}}
+                  <br/>
+                </ng-container>
+
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="choice">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Scelta</th>
+              <td mat-cell *matCellDef="let row">
+                <ng-container *ngIf="row.teamStatus == 'pending'">
+                  <!--Accetta Proposta-->
+                  <button mat-raised-button color="primary" *ngIf="!stateDisabled" (click)="acceptProposal(row.tokenId)">
+                    <mat-icon>done</mat-icon>Accetta
+                  </button>
+
+                  <!--Rifiuta Proposta-->
+                  <button class="btnRifiuta" mat-raised-button color="primary" *ngIf="!stateDisabled" (click)="refuseProposal(row.tokenId)">
+                    <mat-icon>clear</mat-icon>Rifiuta
+                  </button>
+                </ng-container>
+                <ng-container *ngIf="row.teamStatus == 'disabled'">
+                  Proposta disabilitata
+                </ng-container>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsRequest"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsRequest"></tr>
+        </table>
+
+        <mat-paginator class="paginator" [length]="lengthPending" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
+
+        </mat-paginator>
+      </div>
+    </mat-card-content>
   </mat-card>
 
   <!--Tabella Richieste accettate gruppo-->
@@ -160,67 +220,6 @@
         </table>
 
         <mat-paginator class="paginator" [length]="lengthRejected" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
-
-        </mat-paginator>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <!--Tabella Richieste in sospeso gruppo-->
-  <mat-card class="card" *ngIf="propsPendingVisibility">
-    <mat-card-header>
-      <mat-card-title>Richieste in sospeso</mat-card-title>
-      <mat-card-subtitle>Accetta o rifiuta una proposta di partecipazione</mat-card-subtitle>
-    </mat-card-header>
-
-    <mat-card-content>
-      <mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
-      <div class="tableContainer">
-        <table #table mat-table [dataSource]="dataSourcePending" matSort class="matTable" >
-            <ng-container matColumnDef="teamName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome team </th>
-                <td mat-cell *matCellDef="let row"> {{row.teamName}} </td>
-            </ng-container>
-            <ng-container matColumnDef="creator">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Creatore team </th>
-              <td mat-cell *matCellDef="let row"> {{row.creator}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="students">
-              <th mat-header-cell mat-sort-header *matHeaderCellDef> Altri partecipanti </th>
-              <td *matCellDef="let row">
-                <ng-container *ngFor="let i of row.students">
-                  ∎ {{getOthers(i)}}
-                  <br/>
-                </ng-container>
-
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="choice">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Scelta</th>
-              <td mat-cell *matCellDef="let row">
-                <ng-container *ngIf="row.teamStatus == 'pending'">
-                  <!--Accetta Proposta-->
-                  <button mat-raised-button color="primary" *ngIf="!stateDisabled" (click)="acceptProposal(row.tokenId)">
-                    <mat-icon>done</mat-icon>Accetta
-                  </button>
-
-                  <!--Rifiuta Proposta-->
-                  <button class="btnRifiuta" mat-raised-button color="primary" *ngIf="!stateDisabled" (click)="refuseProposal(row.tokenId)">
-                    <mat-icon>clear</mat-icon>Rifiuta
-                  </button>
-                </ng-container>
-                <ng-container *ngIf="row.teamStatus == 'disabled'">
-                  Proposta disabilitata
-                </ng-container>
-              </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumnsRequest"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumnsRequest"></tr>
-        </table>
-
-        <mat-paginator class="paginator" [length]="lengthPending" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
 
         </mat-paginator>
       </div>

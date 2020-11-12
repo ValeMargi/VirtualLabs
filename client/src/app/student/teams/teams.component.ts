@@ -59,7 +59,7 @@ export class TeamsComponent implements OnInit, OnChanges {
   dataSourceRejected = new MatTableDataSource<Proposal>();
 
   @Input() team: Team;
-  @Input() myProposal: Proposal;
+  @Input() myProposals: Proposal[] = [];
   @Input() propsAccepted: Proposal[] = [];
   @Input() propsPending: Proposal[] = [];
   @Input() propsRejected: Proposal[] = [];
@@ -93,11 +93,7 @@ export class TeamsComponent implements OnInit, OnChanges {
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    /*this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
-      if (params['requestTeam']) {
-        this.openRequestDialog();
-      }
-    });*/
+
   }
 
   showRequestTeam() {
@@ -118,10 +114,6 @@ export class TeamsComponent implements OnInit, OnChanges {
 
       if (this.team != null) {
         this.teamName = this.team.name;
-        this.doPropVisibility = false;
-      }
-      else {
-        this.doPropVisibility = true;
       }
     }
 
@@ -134,11 +126,11 @@ export class TeamsComponent implements OnInit, OnChanges {
       this.querying = changes.querying.currentValue;
     }
 
-    if (changes.myProposal != null) {
-      this.myProposal = changes.myProposal.currentValue;
+    if (changes.myProposals != null) {
+      this.myProposals = changes.myProposals.currentValue;
 
-      if (this.myProposal != null) {
-        this.setMyProposal();
+      if (this.myProposals != null) {
+        //this.setMyProposals();
       }
     }
 
@@ -191,10 +183,6 @@ export class TeamsComponent implements OnInit, OnChanges {
     return text;
   }
 
-  setMyProposal() {
-    
-  }
-
   setTablePropsAccepted() {
     this.dataSourceAccepted = new MatTableDataSource<Proposal>(this.propsAccepted);
     this.setDataSourceAcceptedAttributes();
@@ -214,15 +202,22 @@ export class TeamsComponent implements OnInit, OnChanges {
   }
 
   manageVisibilities() {
-    if (this.myProposal != null) {
+    if (this.myProposals.length > 0) {
       this.myPropVisibility = true;
+      let pending: number = 0;
+      this.myProposals.forEach(p => {
+        if (p.teamStatus == "pending") {
+          pending++;
+        }
+      });
 
-      if (this.myProposal.teamStatus == "pending") {
-        this.doPropVisibility = false;
-      }
-      else {
+      if (pending == 0) {
         this.doPropVisibility = true;
       }
+      else {
+        this.doPropVisibility = false;
+      }
+
     }
     else {
       this.myPropVisibility = false;
@@ -292,6 +287,6 @@ export class TeamsComponent implements OnInit, OnChanges {
   }
 
   ngOnDestroy() {
-    //this.routeQueryParams$.unsubscribe();
+
   }
 }

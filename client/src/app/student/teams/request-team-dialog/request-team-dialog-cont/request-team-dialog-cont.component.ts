@@ -7,6 +7,7 @@ import { Student } from 'src/app/models/student.model';
 import { StudentService } from 'src/app/services/student.service';
 import { Course } from 'src/app/models/course.model';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-request-team-dialog-cont',
@@ -21,6 +22,7 @@ export class RequestTeamDialogContComponent implements OnInit {
 
   constructor(private courseService: CourseService,
               private teamService: TeamService,
+              private location: Location,
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -65,6 +67,7 @@ export class RequestTeamDialogContComponent implements OnInit {
     this.teamService.proposeTeam(this.courseService.currentCourse.getValue().name, teamName, timeout, membersId).subscribe(
       (data) => {
         this.QUERYING = false;
+        this.location.back();
         this.teamService.proposal.emit(data);
       },
       (error) =>{

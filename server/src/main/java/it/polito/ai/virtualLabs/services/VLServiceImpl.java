@@ -387,10 +387,14 @@ public class VLServiceImpl implements VLService{
                 if(!t.getCourse().isEnabled()) throw new CourseDisabledException();
                 t.setStatus("active");
                 for(Student s: t.getMembers()){
-                    tokenRepository.findAllByStudent(s).stream().map(Token::getTeamId).forEach(tId -> {
-                        tokenRepository.findAllByTeamId(tId).forEach(tk-> tokenRepository.delete(tk));
-                        evictTeam(tId);
-                    });
+                    List<Token> tokensStudent = tokenRepository.findAllByStudent(s);
+                    tokensStudent.forEach(to-> to.setStatus("rejected"));
+                    tokensStudent.stream().map(Token::getTeamId).forEach(tId ->  {
+                            Team team =teamRepository.getOne(tId);
+                            team.setStatus("disabled");
+                            Timestamp now = new Timestamp(System.currentTimeMillis());
+                            team.setDisabledTimestamp(now.toString());
+                            });
                 }
                 t.getMembers().forEach(s-> sendMessage(s.getEmail(),"Notification: Team "+t.getName()+ " created","Team creation success!"));
             }
@@ -561,7 +565,11 @@ public class VLServiceImpl implements VLService{
         if(t.isPresent()){
             if( tokenRepository.findAllByTeamId(t.get().getTeamId())
                     .stream().filter(to-> to.getStatus().equals("accepted")).count() == teamRepository.getOne(t.get().getTeamId()).getMembers().size()) {
+                //rimuoviamo token associati al team creato
                 tokenRepository.findAllByTeamId(t.get().getTeamId()).forEach(tk-> tokenRepository.delete(tk));
+                //settiamo a rejected i token dello studente dei team restanti
+                tokenRepository.findAllByStudent(t.get().getStudent()).stream().forEach(tk->tk.setStatus("rejected"));
+
                 activateTeam(t.get().getTeamId());
                 return 2;
             }else

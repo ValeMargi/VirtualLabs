@@ -117,7 +117,7 @@ public class VLServiceImpl implements VLService{
         }
 
         for(Team team: teamRepository.findAllByStatusEquals("disabled")){
-            if( team.getDisabledTimestamp().compareTo(Timestamp.from(Instant.now().plus(5, ChronoUnit.MINUTES)).toString())<0){
+            if( team.getDisabledTimestamp().compareTo(Timestamp.from(Instant.now().minus(5, ChronoUnit.MINUTES)).toString())<0){
                 tokenRepository.deleteFromTokenByTeamId(team.getId());
                 evictTeam(team.getId());
             }

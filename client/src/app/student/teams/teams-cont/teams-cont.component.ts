@@ -179,6 +179,7 @@ export class TeamsContComponent implements OnInit, OnDestroy {
             //team creato
             this.MY_PROPOSALS = new Array();
             this.PROPS_ACCEPTED = new Array();
+            this.PROPS_PENDING = new Array();
             this.PROPS_REJECTED = new Array();
             this.getTeam(this.route.snapshot.params.courses);
             this.QUERYING = false;

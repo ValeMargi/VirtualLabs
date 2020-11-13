@@ -51,6 +51,7 @@
           <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('required')">Inserisci un numero massimo di VM attive</mat-error>
           <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('min')">Un team ha più VM attive</mat-error>
           <mat-error *ngIf="ModelVmForm.hasError('ErrorVmActivated')"> Non puoi inserire un valore maggiore delle Vm disponibili</mat-error>
+
       </mat-form-field><br><br>
     </form>
   </mat-dialog-content>

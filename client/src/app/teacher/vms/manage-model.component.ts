@@ -94,6 +94,29 @@ export class ManageModelComponent implements OnInit, OnChanges {
       return { ErrorVmActivated: true };
     }
   }
+
+  requiredValidator(group: FormGroup){
+    let max_vm_active: number = group.controls.max_vm_active.value;
+    console.log("eseguo il controllo");
+
+    if(max_vm_active != null){
+      return {RequiredVmActivated: true};
+    }else{
+      return null;
+    }
+  }
+
+  minValidator(group: FormGroup){
+    let max_vm_active: number = group.controls.max_vm_active.value;
+
+    if(max_vm_active < ((this.totRes.running) > 0 ? this.totRes.running : 1) ){
+      return null;
+    }else{
+      return {minVmActivated: true};
+    }
+  }
+
+
   saveModel(maxVcpu: number, maxDisk: number, ram: number, totInstances: number, runningInstances: number) {
     if (!this.ModelVmForm.valid) {
       window.alert("Controllare che i dati inseriti rispettino tutti i vincoli e riprovare");
@@ -117,12 +140,15 @@ export class ManageModelComponent implements OnInit, OnChanges {
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl, form: FormGroupDirective | NgForm): boolean {
+
+    const invalidCtrl = !!(control && control.invalid && control.dirty);
+
     const invalidParent = !!(
       control.parent.touched
       && control.parent.invalid
       && control.parent.hasError('ErrorVmActivated')
       );
 
-    return (invalidParent);
+    return (invalidParent || invalidCtrl);
   }
 }

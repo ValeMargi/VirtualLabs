@@ -868,8 +868,11 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                     h.setStatus("RIVISTO");
                     h.setPermanent(permanent);
                     if(permanent) {
+                        if( photoVersionHMRepository.findLastByHomeworkId(homeworkId).getId()!=versionHMid)
+                            throw new NewVersionHMisPresentException();
                         if(grade==null || Integer.parseInt(grade) < 0 || Integer.parseInt(grade) > 30)
                             throw new GradeNotValidException();
+
                         h.setGrade(grade);
                     }
                     h.setTimestamp(photoCorrection.getTimestamp());

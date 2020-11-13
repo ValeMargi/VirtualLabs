@@ -390,7 +390,7 @@ public class ProfessorController {
             return vlServiceProfessor.uploadCorrection(homeworkId, versionHMid, photoCorrectionDTO, Boolean.parseBoolean(permanent), grade);
         }catch ( HomeworkNotFoundException | HomeworkVersionIdNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch(ImageSizeException  | GradeNotValidException | CourseDisabledException e){
+        }catch(ImageSizeException  | GradeNotValidException | CourseDisabledException | NewVersionHMisPresentException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

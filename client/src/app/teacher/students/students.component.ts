@@ -147,7 +147,9 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
       this.selectedStudents.clear();
     }
     else {
-      for (let i = initIndex; i < (initIndex + this.pageSize); i++){
+      const remaining = this.dataSource.data.length - initIndex;
+      const limit = (remaining >= this.pageSize) ? this.pageSize : remaining;
+      for (let i = initIndex; i < initIndex + limit; i++) {
         this.selectStudent(true, this.dataSource.data[i]);
       }
     }
@@ -202,9 +204,9 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
       return false;
     }
 
-    //console.log(selected)
-
-    for(let i = initIndex; i < (initIndex + this.pageSize); i++){
+    const remaining = this.dataSource.data.length - initIndex;
+    const limit = (remaining >= this.pageSize) ? this.pageSize : remaining;
+    for (let i = initIndex; i < initIndex + limit; i++) {
       if(!selected.includes(this.dataSource.data[i])){
         allChecked = false;
       }
@@ -226,7 +228,9 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
       return false;
     }
 
-    for(let i = initIndex; i < (initIndex + this.pageSize); i++) {
+    const remaining = this.dataSource.data.length - initIndex;
+    const limit = (remaining >= this.pageSize) ? this.pageSize : remaining;
+    for (let i = initIndex; i < initIndex + limit; i++) {
       if (selected.includes(this.dataSource.data[i])){
         checked = true;
       }

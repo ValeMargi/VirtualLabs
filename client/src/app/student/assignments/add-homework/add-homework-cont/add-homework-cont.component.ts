@@ -37,6 +37,11 @@ export class AddHomeworkContComponent implements OnInit {
       (error) => {
         window.alert(error.error.message);
         this.QUERYING = false;
+
+        if (error.error.status == 409) {
+          this.matDialogRef.close();
+          this.studentService.verUpload.emit(null);
+        }
       }
     );
   }

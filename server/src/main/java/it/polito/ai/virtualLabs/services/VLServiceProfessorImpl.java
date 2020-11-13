@@ -462,7 +462,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                     .noneMatch(pf ->pf.getId().equals(idProfessor)))
                 throw new PermissionDeniedException();
             c.setAcronym(course.getAcronym());
-            if(course.getMax() > course.getMin()) {
+            if(course.getMax() >= course.getMin()) {
                 c.setMax(course.getMax());
                 c.setMin(course.getMin());
             }else throw  new CardinalityNotAccetableException();

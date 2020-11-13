@@ -46,8 +46,7 @@
             <th mat-header-cell *matHeaderCellDef>
               <mat-checkbox #checkall (change) = "selectStudentOnCurrenPage($event.checked)"
                                       [checked] = "currentItemsAllSelected()"
-                                      [indeterminate] = "currentItemsSelected()"
-                                      >
+                                      [indeterminate] = "currentItemsSelected()">
               </mat-checkbox>
             </th>
             <td mat-cell *matCellDef="let row">

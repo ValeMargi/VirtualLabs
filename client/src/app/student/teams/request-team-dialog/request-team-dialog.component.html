@@ -36,35 +36,19 @@
         <mat-error *ngIf="CreateTeamForm.get('date').hasError('required')">Seleziona un timeout richiesta</mat-error>
       </mat-form-field>
       <br>
-
-      <!--<div *ngIf="max > 1 && availableStudents.length >= min - 1">
-        <mat-form-field class="gruppo">
-          <mat-label>Questo corso accetta da {{min}} a {{max}} partecipanti per team</mat-label>
-          <input #input type="search" placeholder="Aggiungi partecipante" matInput [formControl]="myControl" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onStudentSelected($event.option.value)">
-              <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                  {{option.name}} {{option.firstName}} ({{option.id}})
-              </mat-option>
-            </mat-autocomplete>
-        </mat-form-field>
-
-        <button mat-mini-fab color="primary" [disabled]="studentsToAdd.length == max - 1" (click)="addStudent()">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>-->
       <br>
-      <h3>Questo corso accetta da {{min}} a {{max}} partecipanti per team</h3>
-      <h3 *ngIf="min == 1">(Se non selezioni nessuno, il team sarà creato solo con te come partecipante)</h3>
+      <h3 *ngIf="min != max">Questo corso accetta da {{min}} a {{max}} partecipanti per team</h3>
+      <h3 *ngIf="min == max">Questo corso accetta esattamente {{min}} partecipanti per team</h3>
+      <h3 *ngIf="min == 1 && min != max">(Se non selezioni nessuno, il team sarà creato solo con te come partecipante)</h3>
       <br>
       <!--Tabella studenti-->
       <div class="tableContainer" *ngIf="max > 1">
           <table #table mat-table [dataSource]="dataSource" matSort class="matTable">
             <ng-container matColumnDef="select">
               <th mat-header-cell *matHeaderCellDef>
-                <mat-checkbox #checkall (change)="selectCurrentPage($event.checked)"
-                                        [checked]="currentItemsSelected()"
-                                        [indeterminate]="selectedStudents.hasValue() && !currentItemsSelected()"
-                                        >
+                <mat-checkbox #checkall (change) = "selectStudentOnCurrenPage($event.checked)"
+                                        [checked] = "currentItemsAllSelected()"
+                                        [indeterminate] = "currentItemsSelected()">
                 </mat-checkbox>
               </th>
               <td mat-cell *matCellDef="let row"><mat-checkbox #checksingle (change)="selectStudent($event.checked, row)"

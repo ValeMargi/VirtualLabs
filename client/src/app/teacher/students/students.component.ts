@@ -183,10 +183,6 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
     this.dataSource.data.forEach(s => this.selectStudent(true, s));
   }
 
-  deselectAll(){
-    this.dataSource.data.forEach(s => this.selectStudent(false, s));
-  }
-
   currentItemsAllSelected() {
     if (!this.selectedStudents.hasValue()) {
       return false;

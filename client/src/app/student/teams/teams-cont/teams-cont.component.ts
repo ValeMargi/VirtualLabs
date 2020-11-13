@@ -115,7 +115,6 @@ export class TeamsContComponent implements OnInit, OnDestroy {
   getProposals(courseName: string) {
     this.teamService.getProposals(courseName).subscribe(
       (data) => {
-        console.log(data)
         const student: Student = this.studentService.currentStudent;
         const studentInfo: string = student.name + " " + student.firstName + " (" + student.id + ")";
 

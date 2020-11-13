@@ -2,8 +2,9 @@ import { Component, OnInit, AfterViewInit, Output, EventEmitter, Input } from '@
 import { MatDialogRef } from '@angular/material/dialog';
 import { Assignment } from 'src/app/models/assignment.model';
 
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-assignment',
@@ -13,8 +14,6 @@ import * as moment from 'moment';
 export class CreateAssignmentComponent implements OnInit, AfterViewInit {
   CreateAssignmentForm: FormGroup;
   selectedPhoto: File;
-  currentDate;
-  oneWeek;
 
   dateTimeout: Date;
   minDate: Date;
@@ -23,20 +22,25 @@ export class CreateAssignmentComponent implements OnInit, AfterViewInit {
   @Input() querying: boolean;
   @Output('create') create = new EventEmitter<any>();
 
-  constructor(
-    private matDialogRef: MatDialogRef<CreateAssignmentComponent>,
-    private formBuilder: FormBuilder) {
+  constructor(private matDialogRef: MatDialogRef<CreateAssignmentComponent>,
+              private formBuilder: FormBuilder) {
 
       const currentDate = new Date();
+      const oneWeek = new Date(currentDate);
+      oneWeek.setDate(oneWeek.getDate() + 7);
       this.minDate = new Date(currentDate);
+
+      this.CreateAssignmentForm = this.formBuilder.group({
+        name : new FormControl('', [Validators.required]),
+        release: new FormControl(moment(currentDate).format("YYYY-MM-DD"), [Validators.required]),
+        date : new FormControl(oneWeek, [Validators.required])
+      });
     }
 
   ngAfterViewInit() {}
 
   ngOnInit(): void {
-    this.currentDate = new Date();
-    this.oneWeek = new Date(this.currentDate);
-    this.oneWeek.setDate(this.oneWeek.getDate() + 7);
+
   }
 
   close() {

@@ -4,42 +4,42 @@
 <mat-dialog-content>
 
 <!--RegisterForm-->
-<form>
+<form [formGroup]="CreateAssignmentForm">
 
-<!--Nome della consegna-->
-<mat-form-field>
-    <input #name type="text" placeholder="Nome della consegna" matInput required>
-    <!--<mat-error *ngIf="CreateAssignmentForm.get('name').hasError('required')">Inserisci un nome</mat-error>-->
-</mat-form-field><br><br>
+  <!--Nome della consegna-->
+  <mat-form-field>
+      <input #name type="text" placeholder="Nome della consegna" formControlName="name" matInput required>
+      <mat-error *ngIf="CreateAssignmentForm.get('name').hasError('required')">Inserisci un nome</mat-error>
+  </mat-form-field><br><br>
 
-<!--Data creazione-->
-<mat-form-field>
-    <input #release type="date" placeholder="Creazione" name="currentDate" [ngModel]="currentDate | date:'yyyy-MM-dd'" matInput readonly required>
-    <!--<mat-error *ngIf="CreateAssignmentForm.get('currentDate').hasError('required')">Inserisci la data corrente</mat-error>-->
-</mat-form-field><br><br>
+  <!--Data creazione-->
+  <mat-form-field>
+      <input #release type="date" placeholder="Creazione" name="currentDate" formControlName="release" matInput readonly required>
+      <mat-error *ngIf="CreateAssignmentForm.get('release').hasError('required')">Inserisci la data corrente</mat-error>
+  </mat-form-field><br><br>
 
-<!--Data di scadenza-->
-<mat-form-field>
-  <input
-  #expire
-    matInput
-    [matDatepicker]="dp"
-    placeholder="Scadenza richiesta"
-    formControlName="date"
-    [formControl]="dateControl"
-    [min]="minDate"
->
-<mat-datepicker-toggle matSuffix [for]="dp"> </mat-datepicker-toggle>
-<mat-datepicker #dp> </mat-datepicker>
- </mat-form-field>
+  <!--Data di scadenza-->
+  <mat-form-field>
+    <input
+    #expire
+      matInput
+      [matDatepicker]="dp"
+      placeholder="Scadenza richiesta"
+      formControlName="date"
+      [formControl]="dateControl"
+      [min]="minDate"
+  >
+  <mat-datepicker-toggle matSuffix [for]="dp"> </mat-datepicker-toggle>
+  <mat-datepicker #dp> </mat-datepicker>
+  </mat-form-field>
+</form>
 
 <!--inserire il carimento di un immagine-->
 <br>
-Selezionare immagine della consegna
+Selezionare immagine della consegna <br>
 <input class="inputfile" type="file" accept="image/*" (change)="addAssImage($event)" required>
 <!--<mat-error *ngIf="CreateAssignmentForm.get('image').hasError('required')">Caricare un'immagine per la consegna</mat-error>-->
 
-</form>
 </mat-dialog-content>
 <br>
 <mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>

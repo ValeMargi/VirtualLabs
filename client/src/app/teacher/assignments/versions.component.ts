@@ -31,11 +31,9 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private location: Location,
               private route: ActivatedRoute,
               private router: Router,
-              private authService: AuthService,
               private dialog: MatDialog) { }
 
   ngOnInit(): void {
-
     this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
       if (params['uploadCorrection']) {
         this.uploadCorrection();
@@ -150,7 +148,6 @@ export class VersionsComponent implements OnInit, OnChanges, OnDestroy {
 
     this.dialog.open(ViewImageContComponent, dialogConfig);
   }
-
 
   ngOnDestroy() {
     this.routeQueryParams$.unsubscribe();

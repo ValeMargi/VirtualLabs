@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild, Version, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ViewChild, Version, Output, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { AssignmentsContComponent } from './assignments-cont.component';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -14,6 +14,7 @@ import { VersionsComponent } from './versions.component';
 import { HomeworksComponent } from './homeworks.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { Subscription } from 'rxjs/internal/Subscription';
 import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
 
 @Component({
@@ -21,7 +22,7 @@ import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-
   templateUrl: './assignments.component.html',
   styleUrls: ['./assignments.component.css']
 })
-export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
+export class AssignmentsComponent implements OnInit, OnChanges, OnDestroy {
 
   @ViewChild('table') table: MatTable<Element>;
   @Output() titolo:string;
@@ -53,6 +54,8 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
   tableHomeworkVisibility: boolean = false;
   buttonHomeworkVisibility:boolean = false;
 
+  routeQueryParams$: Subscription;
+
   length = 5;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
@@ -62,12 +65,20 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
               private route: ActivatedRoute,
               private location: Location) { }
 
-  ngAfterViewInit(): void {
-  }
 
   ngOnInit(): void {
+    this.routeQueryParams$ = this.route.queryParams.subscribe(params => {
+      if (params['createAssignment']) {
+        this.openDialogAss();
+      }
+    });
+
     this.manageAssVisibility();
     this.setTable();
+  }
+
+  ngOnDestroy() {
+    this.routeQueryParams$.unsubscribe();
   }
 
   setTable() {
@@ -116,6 +127,10 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
     this.router.navigate([ass.id, 'homeworks'], { relativeTo: this.route });
   }
 
+  routeToCreateAssignment() {
+    this.router.navigate([], {queryParams: {createAssignment : "true"}});
+  }
+
   openDialogAss() {
     const dialogConfig = new MatDialogConfig();
 
@@ -126,7 +141,12 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges {
         title: 'AssignmentCreate'
     };
 
-    this.matDialog.open(CreateAssignmentContComponent, dialogConfig);
+    const dialogRef = this.matDialog.open(CreateAssignmentContComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      const queryParams = {}
+      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
+    });
   }
 
 

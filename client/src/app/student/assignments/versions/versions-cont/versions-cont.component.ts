@@ -41,14 +41,9 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
 
       this.studentService.getHomework(courseName, this.id).subscribe(
         (data) =>  {
-          if (data.status == "NULL" && moment(new Date()).format("YYYY-MM-DD HH:mm:ss") < data.timestamp) {
+          if (data.status == "NULL") {
             window.alert("Devi prima leggere il testo per accedere a questa sezione");
             this.location.back()
-            return;
-          }
-          else {
-            window.alert("Non puoi accedere a questa sezione perché non hai letto il testo prima della scadenza");
-            this.location.back();
             return;
           }
 

@@ -13,6 +13,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { ViewImageContComponent } from 'src/app/view-image/view-image-cont/view-image-cont.component';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AssignmentGrade } from 'src/app/models/assignment-grade.model';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-assignments-student',
@@ -118,6 +119,11 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
 
     if (!this.hasVM) {
       window.alert("Il team deve avere almeno una VM per accedere a questa sessione");
+      return;
+    }
+
+    if (moment(new Date()).format("YYYY-MM-DD HH:mm:ss") >= ass.expiration) {
+      window.alert("Non puoi accedere a questa sezione perché non hai letto il testo prima della scadenza");
       return;
     }
 

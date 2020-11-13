@@ -122,7 +122,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
       return;
     }
 
-    if (ass.grade == '0' && moment(new Date()).format("YYYY-MM-DD HH:mm:ss") >= ass.expiration) {
+    if ((ass.status == "NULL" || ass.status == "LETTO") && ass.grade == '0' && moment(new Date()).format("YYYY-MM-DD HH:mm:ss") >= ass.expiration) {
       window.alert("Non puoi accedere a questa sezione perché non hai consegnato prima della scadenza");
       return;
     }

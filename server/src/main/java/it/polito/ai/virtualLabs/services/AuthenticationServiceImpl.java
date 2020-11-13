@@ -103,7 +103,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             TokenRegistration t = new TokenRegistration();
             t.setId(UUID.randomUUID().toString());
             t.setUserId(user.getId());
-            t.setExpiryDate(Timestamp.from(Instant.now().plus(2, ChronoUnit.HOURS)));
+            t.setExpiryDate(Timestamp.from(Instant.now().plus(5, ChronoUnit.MINUTES)));
             vlService.sendMessage(user.getId(),
                     "Enrollment to the VirtualLabs app",
                     "You have been subscribed to the application.\n" +

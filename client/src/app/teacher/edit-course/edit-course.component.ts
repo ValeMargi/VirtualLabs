@@ -46,8 +46,8 @@ export class EditCourseComponent implements OnInit, OnChanges {
 
     this.EditCourseForm = this.formBuilder.group({
       acronimo : new FormControl(''),
-      max_iscrizioni : new FormControl('', [Validators.required, Validators.min(1)]),
-      min_iscrizioni : new FormControl('', [Validators.required, Validators.min(1)]),
+      max_membri : new FormControl('', [Validators.required, Validators.min(1)]),
+      min_membri : new FormControl('', [Validators.required, Validators.min(1)]),
     });
   }
 
@@ -55,8 +55,8 @@ export class EditCourseComponent implements OnInit, OnChanges {
     if (this.course != undefined) {
       this.EditCourseForm.setValue({
         acronimo : this.course.acronym,
-        max_iscrizioni : this.course.max,
-        min_iscrizioni : this.course.min
+        max_membri : this.course.max,
+        min_membri : this.course.min
       });
     }
 
@@ -69,8 +69,8 @@ export class EditCourseComponent implements OnInit, OnChanges {
 
       this.EditCourseForm.setValue({
         acronimo: this.course.acronym,
-        max_iscrizioni : this.course.max,
-        min_iscrizioni : this.course.min
+        max_membri : this.course.max,
+        min_membri : this.course.min
       });
     }
 

@@ -24,17 +24,17 @@
 
         <!--Massimo Membri-->
           <mat-form-field >
-            <input #max type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput min="1" value="course.max" required>
-            <mat-error *ngIf="EditCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di membri</mat-error>
-            <mat-error *ngIf="EditCourseForm.get('max_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
+            <input #max type="number" placeholder="Massimo membri gruppo" formControlName="max_membri" matInput min="1" value="course.max" required>
+            <mat-error *ngIf="EditCourseForm.get('max_membri').hasError('required')">Inserisci un numero massimo di membri</mat-error>
+            <mat-error *ngIf="EditCourseForm.get('max_membri').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
         </mat-form-field><br>
 
 
         <!--Minimo Membri-->
           <mat-form-field >
-            <input #min type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="1" value="course.min" required>
-            <mat-error *ngIf="EditCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero minimo di membri</mat-error>
-            <mat-error *ngIf="EditCourseForm.get('min_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
+            <input #min type="number" placeholder="Minimo membri gruppo" formControlName="min_membri" matInput min="1" value="course.min" required>
+            <mat-error *ngIf="EditCourseForm.get('min_membri').hasError('required')">Inserisci un numero minimo di membri</mat-error>
+            <mat-error *ngIf="EditCourseForm.get('min_membri').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
         </mat-form-field><br><br>
 
         <div class="tableName"> <h3><strong>Professori del corso</strong></h3></div>

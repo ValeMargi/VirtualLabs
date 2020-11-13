@@ -69,15 +69,15 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
       this.AddCourseForm = this.formBuilder.group({
         name : new FormControl('', [Validators.required]),
         acronym : new FormControl('', [Validators.required]),
-        max_iscrizioni : new FormControl('', [Validators.required, Validators.min(1)]),
-        min_iscrizioni : new FormControl('', [Validators.required, Validators.min(1)]),
+        max_membri : new FormControl('', [Validators.required, Validators.min(1)]),
+        min_membri : new FormControl('', [Validators.required, Validators.min(1)]),
       });
 
       this.AddCourseForm.setValue({
         name: "",
         acronym: "",
-        max_iscrizioni : 4,
-        min_iscrizioni : 1
+        max_membri : 4,
+        min_membri : 1
       });
 
       this.ModelVmForm = this.formBuilder.group({

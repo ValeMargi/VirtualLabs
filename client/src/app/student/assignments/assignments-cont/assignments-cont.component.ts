@@ -25,6 +25,7 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
   constructor(private studentService: StudentService,
               private courseService: CourseService,
               private teamService: TeamService,
+              private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute) {
 
@@ -103,6 +104,10 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
   }
 
   updateAssignments() {
+    if (this.authService.isLoggedOut()) {
+      return;
+    }
+
     this.studentService.allAssignments(this.courseName).subscribe(
       (data) =>  {
         let array: AssignmentGrade[] = new Array();

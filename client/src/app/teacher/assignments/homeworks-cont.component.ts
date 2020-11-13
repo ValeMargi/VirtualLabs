@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Student } from 'src/app/models/student.model';
 import { HomeworkStudent } from 'src/app/models/homework-student.model';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-homeworks-cont',
@@ -22,6 +23,7 @@ export class HomeworksContComponent implements OnInit, OnDestroy {
 
   constructor(private teacherService: TeacherService,
               private courseService: CourseService,
+              private authService: AuthService,
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -49,6 +51,10 @@ export class HomeworksContComponent implements OnInit, OnDestroy {
   }
 
   updateHomeworks(idA: number) {
+    if (this.authService.isLoggedOut()) {
+      return;
+    }
+
     this.teacherService.allHomework(this.courseService.currentCourse.getValue().name, idA).subscribe(
       (data) => {
         let tmp: HomeworkStudent[] = [];

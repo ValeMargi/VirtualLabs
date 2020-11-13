@@ -26,8 +26,7 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private studentService: StudentService,
               private courseService: CourseService,
-              private route: ActivatedRoute,
-              private location: Location) { }
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.route$ = this.route.params.subscribe(params => {
@@ -41,12 +40,6 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
 
       this.studentService.getHomework(courseName, this.id).subscribe(
         (data) =>  {
-          if (data.status == "NULL") {
-            window.alert("Devi prima leggere il testo per accedere a questa sezione");
-            this.location.back()
-            return;
-          }
-
           this.HOMEWORK = data;
         },
         (error) => {

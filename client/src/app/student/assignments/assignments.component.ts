@@ -111,7 +111,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
     this.update.emit();
   }
 
-  showVersions(ass: Assignment) {
+  showVersions(ass: AssignmentGrade) {
     if (!this.hasTeam) {
       window.alert("Bisogna essere in un team per accedere a questa sezione");
       return;
@@ -122,8 +122,12 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
       return;
     }
 
-    if (moment(new Date()).format("YYYY-MM-DD HH:mm:ss") >= ass.expiration) {
-      window.alert("Non puoi accedere a questa sezione perché non hai letto il testo prima della scadenza");
+    if (ass.grade == '0' && moment(new Date()).format("YYYY-MM-DD HH:mm:ss") >= ass.expiration) {
+      window.alert("Non puoi accedere a questa sezione perché non hai consegnato prima della scadenza");
+      return;
+    }
+    else if (ass.status == "NULL") {
+      window.alert("Devi prima leggere il testo per accedere a questa sezione");
       return;
     }
 

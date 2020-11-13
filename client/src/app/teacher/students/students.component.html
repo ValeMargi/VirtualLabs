@@ -36,7 +36,7 @@
     <mat-card class="message" *ngIf="checkBoxAll">
       <mat-card-subtitle>
         <strong> Tutte gli studenti in questa pagina sono stati selezionati.</strong>
-        <button class="buttonClicca" [disabled]="clicked" mat-raised-button (click)="selectAll(); clicked = true;" >
+        <button class="buttonClicca" mat-raised-button (click)="selectAll()" >
           Seleziona tutti gli studenti del corso </button>
 
       </mat-card-subtitle>
@@ -45,8 +45,8 @@
         <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef>
               <mat-checkbox #checkall (change) = "selectStudentOnCurrenPage($event.checked)"
-                                      [checked] = "currentItemsSelected()"
-                                      [indeterminate] = "indeterminateState()"
+                                      [checked] = "currentItemsAllSelected()"
+                                      [indeterminate] = "currentItemsSelected()"
                                       >
               </mat-checkbox>
             </th>

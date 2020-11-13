@@ -19,23 +19,21 @@
         <!--Acronimo-->
         <mat-form-field class="matForm">
           <input [(ngModel)]="acronym" class="input" type="text" placeholder="Acronimo" formControlName="acronym" matInput required>
-          <mat-error *ngIf="AddCourseForm.get('acronym').hasError('required')">L'acronimo deve avere almeno 2 lettere</mat-error>
+          <mat-error *ngIf="AddCourseForm.get('acronym').hasError('required')">L'acronimo è richiesto</mat-error>
         </mat-form-field><br><br>
 
         <!--Massimo Membri-->
         <mat-form-field class="matForm">
-          <input [(ngModel)]="maxMembers" class="input" type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput max="10" min="1" required>
+          <input [(ngModel)]="maxMembers" class="input" type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput min="1" required>
           <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di membri</mat-error>
           <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
-          <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
         </mat-form-field><br><br>
 
         <!--Minimo Membri-->
         <mat-form-field class="matForm">
-          <input [(ngModel)]="minMembers" class="input" type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="1" max="10" required>
+          <input [(ngModel)]="minMembers" class="input" type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="1" required>
           <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero minimo di membri</mat-error>
           <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
-          <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
         </mat-form-field><br><br>
 
         <!--Aggiungi Professore-->
@@ -96,24 +94,28 @@
                 <mat-form-field class="matForm">
                     <input [(ngModel)]="maxVcpu" class="input" type="number" placeholder="Massimo VCPU" formControlName="max_vcpu" matInput min="1" required>
                     <mat-error *ngIf="ModelVmForm.get('max_vcpu').hasError('required')">Inserisci un numero massimo di vcpu</mat-error>
+                    <mat-error *ngIf="ModelVmForm.get('max_vcpu').hasError('min')">Inserire un valore maggiore di 0</mat-error>
                 </mat-form-field><br><br>
 
                 <!--Massimo disco-->
                 <mat-form-field class="matForm">
                     <input [(ngModel)]="maxDisk" class="input" type="number" placeholder="Massimo disco (GB)" formControlName="max_disco" matInput min="1" required>
                     <mat-error *ngIf="ModelVmForm.get('max_disco').hasError('required')">Inserisci una dimensione massima del disco</mat-error>
+                    <mat-error *ngIf="ModelVmForm.get('max_disco').hasError('min')">Inserire un valore maggiore di 0</mat-error>
                 </mat-form-field><br><br>
 
                 <!--Massima RAM-->
                 <mat-form-field class="matForm">
                     <input [(ngModel)]="ram" class="input" type="number" placeholder="Massima RAM (GB)" formControlName="max_ram" matInput min="1" required>
                     <mat-error *ngIf="ModelVmForm.get('max_ram').hasError('required')">Inserisci una dimensione massima della RAM</mat-error>
+                    <mat-error *ngIf="ModelVmForm.get('max_ram').hasError('min')">Inserire un valore maggiore di 0</mat-error>
                 </mat-form-field><br><br>
 
                 <!--Massimo VM-->
                 <mat-form-field class="matForm">
                     <input [(ngModel)]="totInstances" class="input" type="number" placeholder="Massimo VM" formControlName="max_vm" matInput min="1" required>
                     <mat-error *ngIf="ModelVmForm.get('max_vm').hasError('required')">Inserisci un numero massimo di VM</mat-error>
+                    <mat-error *ngIf="ModelVmForm.get('max_vm').hasError('min')">Inserire un valore maggiore di 0</mat-error>
                 </mat-form-field><br><br>
 
                 <!--Massimo VM attive-->

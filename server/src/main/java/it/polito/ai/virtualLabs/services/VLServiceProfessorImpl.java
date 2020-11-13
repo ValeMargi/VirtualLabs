@@ -240,6 +240,10 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                 if(professors.size()!=professorsId.size())
                     throw new ProfessorNotFoundException();
                 else{
+                    if( course.getRunningInstances()>course.getTotInstances() || course.getMaxVcpu()<=0 ||
+                        course.getDiskSpace()<=0 || course.getRam()<=0 ||
+                        course.getTotInstances()<=0 || course.getRunningInstances()<=0)
+                        throw new ResourcesVMNotRespectedException();
                     professors.forEach(c::setProfessor);
                     if (c.getProfessors().stream().anyMatch(pr -> pr.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))) {
                         //Controllo per verificare che il professore setta il modello per il corso con courseId per la prima volta
@@ -516,9 +520,10 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                 //Controllo per verificare che il professore setta il modello per il corso con courseId per la prima volta
                 if (c.getPhotoModelVM() != null) {
                     List<Team> teams = teamRepository.findAllById(c.getTeams().stream().map(Team::getId).collect(Collectors.toList()));
-                    if( courseDTO.getRunningInstances()>courseDTO.getTotInstances())
+                    if( courseDTO.getRunningInstances()>courseDTO.getTotInstances() || courseDTO.getMaxVcpu()<=0 ||
+                        courseDTO.getDiskSpace()<=0 || courseDTO.getRam()<=0 ||
+                        courseDTO.getTotInstances()<=0 || courseDTO.getRunningInstances()<=0)
                         throw new ResourcesVMNotRespectedException();
-
                     int diskSpaceDecrease = c.getDiskSpace()-courseDTO.getDiskSpace();
                     int vcpuDecrease = c.getMaxVcpu()-courseDTO.getMaxVcpu();
                     int ramDecrease = c.getRam() - courseDTO.getRam();

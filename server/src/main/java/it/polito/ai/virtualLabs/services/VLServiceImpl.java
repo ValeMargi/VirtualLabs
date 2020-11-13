@@ -123,7 +123,7 @@ public class VLServiceImpl implements VLService{
             }
         }
 
-        /*Per controllare scadenza elaborati*/
+        /*Per controllare scadenza consegne*/
         for(Assignment a: assignmentRepository.findAll()){
             if(a.getExpiration().compareTo(now.toString())<=0){
                 assignmentExpiredSetPermanentHW(a);

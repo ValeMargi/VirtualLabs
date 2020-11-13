@@ -35,22 +35,27 @@
   <div class="tableContainer" *ngIf="tableVisibility">
     <mat-card class="message" *ngIf="checkBoxAll">
       <mat-card-subtitle>
-        <strong> Selezionare tutti gli studenti del corso? </strong> <button class="buttonClicca" [disabled]="clicked" mat-raised-button (click)="selectAll(); clicked = true;" >Clicca Qui</button>
+        <strong> Tutte gli studenti in questa pagina sono stati selezionati.</strong>
+        <button class="buttonClicca" [disabled]="clicked" mat-raised-button (click)="selectAll(); clicked = true;" >
+          Seleziona tutti gli studenti del corso </button>
 
       </mat-card-subtitle>
     </mat-card>
     <table #table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox #checkall (change)="selectCurrentPage($event.checked)"
-                                      [checked]="currentItemsSelected()"
-                                      [indeterminate]="selectedStudents.hasValue() && !currentItemsSelected()"
+              <mat-checkbox #checkall (change) = "selectStudentOnCurrenPage($event.checked)"
+                                      [checked] = "currentItemsSelected()"
+                                      [indeterminate] = "indeterminateState()"
                                       >
               </mat-checkbox>
             </th>
-            <td mat-cell *matCellDef="let row"><mat-checkbox #checksingle (change)="selectStudent($event.checked, row)"
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox #checksingle
+                                (change)="selectStudent($event.checked, row)"
                                 (click)="$event.stopPropagation()"
-                                [checked]="selectedStudents.isSelected(row)"></mat-checkbox></td>
+                                [checked]="selectedStudents.isSelected(row)">
+                              </mat-checkbox></td>
         </ng-container>
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Matricola </th>

@@ -16,8 +16,12 @@
                     <td mat-cell *matCellDef="let row"> {{row.nameVM}} </td>
                 </ng-container>
                 <ng-container matColumnDef="owners">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Proprietario </th>
-                    <td mat-cell *matCellDef="let row"> {{getOwners(row.owners)}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Proprietari </th>
+                    <td mat-cell *matCellDef="let row"> 
+                        <ng-container *ngFor="let owner of row.owners">
+                            ∎ {{owner.name}} {{owner.firstName}} <br>
+                        </ng-container> 
+                    </td>
                 </ng-container>
                 <ng-container matColumnDef="status">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato </th>
@@ -35,13 +39,19 @@
 
             <mat-paginator class="paginator" [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
             </mat-paginator><br>
-            <div *ngIf="resources != null">
-                <h4>VCpu utilizzate: {{resources.vcpu}}</h4>
-                <h4>Spazio utilizzato: {{resources.diskSpace}}</h4>
-                <h4>RAM utilizzata: {{resources.ram}}</h4>
-                <h4>Macchine accese: {{resources.running}}</h4>
-                <h4>Macchine totali: {{resources.total}}</h4>
-            </div>
+
+            <mat-card class="resources" *ngIf="resources != null">
+                <mat-card-subtitle>
+                  <strong>Risorse attualmente in utilizzo</strong>
+                </mat-card-subtitle>
+                <mat-card-content>
+                  <h5>VCpu: <strong>{{resources.vcpu}}</strong> </h5>
+                  <h5>Spazio disco: <strong>{{resources.diskSpace}} GB</strong></h5>
+                  <h5>Ram: <strong>{{resources.ram}} GB</strong></h5>
+                  <h5>Macchine totali: <strong>{{resources.total}}</strong></h5>
+                  <h5>Macchne accese: <strong>{{resources.running}}</strong></h5>
+                </mat-card-content>
+            </mat-card>
         </div>
         <div class="noVMs" *ngIf="!VMsVisibility">
             <h3>Nessuna VM per questo gruppo</h3>

@@ -106,10 +106,10 @@ export class TeamVmsComponent implements OnInit, OnChanges {
   }
 
   openVM(vm: VM) {
-    /*if (vm.status == "off") {
+    if (vm.status == "off") {
       window.alert("La VM deve essere accesa per essere avviata");
       return;
-    }*/
+    }
 
     const dialogConfig = new MatDialogConfig();
 

@@ -14,9 +14,17 @@ div {
 
 .risorseDisponibili{
   background-color: rgba(128, 255, 0, 0.219);
-  margin-bottom: 2%;
+  margin-right: 5%;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  height: 80%;
+  width: auto;
+}
+
+mat-dialog-content {
+  display: flex;
 }
 
 mat-dialog-actions {
-    float: right;
+  float: right;
 }

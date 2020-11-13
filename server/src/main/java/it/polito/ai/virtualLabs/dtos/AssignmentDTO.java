@@ -9,5 +9,5 @@ public class AssignmentDTO  extends RepresentationModel<AssignmentDTO> {
     private  Long id;
     private String assignmentName;
     private String releaseDate, expiration;
-
+    private Boolean alreadyExpired;
 }

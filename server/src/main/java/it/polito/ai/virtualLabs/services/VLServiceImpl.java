@@ -125,7 +125,7 @@ public class VLServiceImpl implements VLService{
 
         /*Per controllare scadenza consegne*/
         for(Assignment a: assignmentRepository.findAll()){
-            if(a.getExpiration().compareTo(now.toString())<=0){
+            if(a.getExpiration().compareTo(now.toString())<=0 && !a.getAlreadyExpired()){
                 assignmentExpiredSetPermanentHW(a);
             }
         }
@@ -148,11 +148,12 @@ public class VLServiceImpl implements VLService{
 
     @Override
     public void assignmentExpiredSetPermanentHW(Assignment a){
+        a.setAlreadyExpired(true);
         List<Homework> homeworks = a.getHomeworks();
+       // List<Homework> homeworks = homeworkRepository.findAllByAssignment_Id(a.getId());
         for(Homework h: homeworks){
             h.setPermanent(true);
-            if(!photoVersionHMRepository.findAllByHomework(h).isEmpty()) {
-                if (h.getVersions().isEmpty()) //TESTARE
+            if(photoVersionHMRepository.findAllByHomework(h).isEmpty()) {
                     h.setGrade("0");
             }
             homeworkRepository.save(h);

@@ -16,6 +16,7 @@ public class Assignment {
     private  Long id;
     private  String assignmentName;
     private String releaseDate, expiration;
+    private Boolean alreadyExpired;
 
     @ManyToOne
     @JoinColumn(name="course_id")

@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.io.Reader;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 @Service
@@ -104,9 +107,14 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                 Homework h = new Homework();
                 h.setAssignment(a);
                 h.setStatus("NULL");
-                h.setPermanent(false);
+                if(a.getExpiration().compareTo(Timestamp.from(Instant.now()).toString())<0){
+                    h.setPermanent(true);
+                    h.setGrade("0");
+                }else {
+                    h.setPermanent(false);
+                    h.setGrade("-1");
+                }
                 h.setTimestamp("/");
-                h.setGrade("-1");
                 h.setStudent(s);
                 homeworkRepository.saveAndFlush(h);
             }
@@ -698,6 +706,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                     PhotoAssignment photoAssignment = modelMapper.map(photoAssignmentDTO, PhotoAssignment.class);
                     assignment.setCourseAssignment(c);
                     assignment.setPhotoAssignment(photoAssignment);
+                    assignment.setAlreadyExpired(false);
                     for(Student s: c.getStudents()){
                         Homework h = new Homework();
                         h.setStatus("NULL");

@@ -19,23 +19,21 @@
         <!--Acronimo-->
         <mat-form-field class="matForm">
           <input [(ngModel)]="acronym" class="input" type="text" placeholder="Acronimo" formControlName="acronym" matInput required>
-          <mat-error *ngIf="AddCourseForm.get('acronym').hasError('required')">L'acronimo deve avere almeno 2 lettere</mat-error>
+          <mat-error *ngIf="AddCourseForm.get('acronym').hasError('required')">L'acronimo è richiesto</mat-error>
         </mat-form-field><br><br>
 
         <!--Massimo Membri-->
         <mat-form-field class="matForm">
-          <input [(ngModel)]="maxMembers" class="input" type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput max="10" min="1" required>
+          <input [(ngModel)]="maxMembers" class="input" type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" matInput min="1" required>
           <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di membri</mat-error>
           <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
-          <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
         </mat-form-field><br><br>
 
         <!--Minimo Membri-->
         <mat-form-field class="matForm">
-          <input [(ngModel)]="minMembers" class="input" type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="1" max="10" required>
+          <input [(ngModel)]="minMembers" class="input" type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" matInput min="1" required>
           <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero minimo di membri</mat-error>
           <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
-          <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('max')">Un gruppo non può avere più di 10 membri</mat-error>
         </mat-form-field><br><br>
 
         <!--Aggiungi Professore-->

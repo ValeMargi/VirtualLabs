@@ -67,10 +67,10 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
               private route: ActivatedRoute) {
 
       this.AddCourseForm = this.formBuilder.group({
-        name : new FormControl('', [Validators.required, Validators.minLength(3)]),
-        acronym : new FormControl('', [Validators.required, Validators.minLength(2)]),
-        max_iscrizioni : new FormControl('', [Validators.required, Validators.min(1), Validators.max(10)]),
-        min_iscrizioni : new FormControl('', [Validators.required, Validators.min(1), Validators.max(10)]),
+        name : new FormControl('', [Validators.required]),
+        acronym : new FormControl('', [Validators.required]),
+        max_iscrizioni : new FormControl('', [Validators.required, Validators.min(1)]),
+        min_iscrizioni : new FormControl('', [Validators.required, Validators.min(1)]),
       });
 
       this.AddCourseForm.setValue({

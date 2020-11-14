@@ -64,7 +64,6 @@ import { CreateVmsContComponent } from './student/vms/create-vms/create-vms-cont
 import { AddCourseContComponent } from './teacher/add-course/add-course-cont.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { FooterComponent } from './footer/footer.component';
-import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.component';
 import { VersionsComponent as VersionsComponentStudent } from './student/assignments/versions/versions.component';
 import { VersionsContComponent as VersionsContComponentStudent } from './student/assignments/versions/versions-cont/versions-cont.component';
 import { RegisterSuccessComponent } from './register-success/register-success.component';
@@ -143,7 +142,6 @@ export const MY_FORMATS = {
     AddCourseContComponent,
     ForgotPasswordComponent,
     FooterComponent,
-    UserNotAllowedComponent,
     VersionsComponentStudent,
     VersionsContComponentStudent,
     RegisterSuccessComponent,

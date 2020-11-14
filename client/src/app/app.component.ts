@@ -181,15 +181,27 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       if (event instanceof NavigationEnd) {
         if (event.urlAfterRedirects.indexOf("home") == 1) {
           this.homeVisibility = true;
+          this.notFoundVisibility = false;
         }
         else {
           this.homeVisibility = false;
 
-          if (this.courseService.currentCourse.getValue().name == "" && this.router.url.match("course")) {
-            this.courseService.currentCourse.getValue().name = this.router.url.split("/")[3];
+          if (event.urlAfterRedirects.indexOf("page-not-found") == 1) {
+            this.notFoundVisibility = true;
+          }
+          else {
+            this.notFoundVisibility = false;
+
+            if (this.courseService.currentCourse.getValue().name == "" && this.router.url.match("course")) {
+              this.courseService.currentCourse.getValue().name = this.router.url.split("/")[3];
+            }
           }
         }
       }
+    });
+
+    this.route$ = this.route.params.subscribe(params => {
+      
     });
 
     this.routeQueryParams$ = this.route.queryParams.subscribe(params => {

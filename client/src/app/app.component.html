@@ -29,12 +29,11 @@
     </mat-toolbar-row>
   </mat-toolbar>
 
-  <app-page-not-found *ngIf="notFoundVisibility"></app-page-not-found>
-
-  <mat-sidenav-container class="mat-sidenav-container" *ngIf="!notFoundVisibility">
+  <mat-sidenav-container class="mat-sidenav-container">
 
     <app-home *ngIf="homeVisibility"></app-home>
     <app-register-success *ngIf="registerSuccess"></app-register-success>
+    <app-page-not-found *ngIf="notFoundVisibility"></app-page-not-found>
 
     <mat-sidenav #sidenav mode="side" closed class="sidenav">
       <div class="sidenavContainer">
@@ -61,7 +60,7 @@
 
     </mat-sidenav>
 
-    <mat-sidenav-content *ngIf="!homeVisibility && !registerSuccess">
+    <mat-sidenav-content *ngIf="!homeVisibility && !registerSuccess && !notFoundVisibility">
       <nav mat-tab-nav-bar *ngIf="teacherVisibility && LoginSuccess">
         <a mat-tab-link [active]="activeTab == 0" [routerLink]="[getRoute(0)]">Studenti
 

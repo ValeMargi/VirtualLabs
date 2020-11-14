@@ -23,7 +23,6 @@ import { TeamsContComponent } from './student/teams/teams-cont/teams-cont.compon
 import { RegisterSuccessComponent } from './register-success/register-success.component';
 import { AuthGuard} from './auth/auth.guard';
 import {LoginDialogComponent} from './login/login-dialog.component';
-import { UserNotAllowedComponent } from './not-allowed/user-not-allowed.component';
 import { TeamVmsContComponent } from './teacher/vms/team-vms-cont.component';
 import { ChangePasswordContComponent } from './change-password/change-password-cont/change-password-cont.component';
 import { RequestTeamDialogContComponent } from './student/teams/request-team-dialog/request-team-dialog-cont/request-team-dialog-cont.component';
@@ -33,7 +32,6 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'page-not-found', component: PageNotFoundComponent },
   { path: 'register/confirmation', component: RegisterSuccessComponent },
-  { path: ':role/course/:courses/:tab/not-allowed', component: UserNotAllowedComponent },
   { path: 'user/password-reset', component: ChangePasswordContComponent },
   {
       path: 'student',
@@ -110,7 +108,8 @@ const routes: Routes = [
         }
     ]
   },
-  { path: '', redirectTo: 'home', pathMatch: 'full' }
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: 'page-not-found', pathMatch: 'full' }
 ];
 
 @NgModule({

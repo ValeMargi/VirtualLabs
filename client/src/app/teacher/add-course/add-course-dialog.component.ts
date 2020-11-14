@@ -247,7 +247,7 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
     console.log(totInstances);
     console.log(runnigInstance);
 
-    let course = new Course(name.toLowerCase().split(' ').join('-'), acronym.toUpperCase(), min, max, 1, maxCpu, maxDisk, ram, totInstances, runnigInstance);
+    let course = new Course(name.toLowerCase().split(' ').join('-'), acronym.toUpperCase(), min, max, 1, maxCpu, maxDisk, ram, runnigInstance, totInstances );
 
     this.add.emit({course: course, file: this.selectedPhoto, ids: this.teachersToAdd.map(t => t.id)});
   }

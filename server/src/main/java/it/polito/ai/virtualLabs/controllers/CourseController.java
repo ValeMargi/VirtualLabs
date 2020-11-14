@@ -75,10 +75,6 @@ public class CourseController {
         if( !file.getContentType().equals("image/jpg") && !file.getContentType().equals("image/jpeg")
                 && !file.getContentType().equals("image/png"))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"Formato "+file.getContentType()+" non valido: richiesto jpg/jpeg/png");
-        //controllo validità parametri del modello VM
-        if (courseDTO.getMaxVcpu()<=0 || courseDTO.getDiskSpace()<=0 || courseDTO.getRam()<=0
-                || courseDTO.getRunningInstances()<=0 || courseDTO.getTotInstances()<=0 )
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Parametri non conformi con la richiesta");
         try {
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), vlService.compressZLib(file.getBytes()));
             PhotoModelVM photoModelVM = new PhotoModelVM(image);

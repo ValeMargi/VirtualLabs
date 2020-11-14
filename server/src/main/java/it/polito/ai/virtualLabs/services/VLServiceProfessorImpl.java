@@ -248,6 +248,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                 if(professors.size()!=professorsId.size())
                     throw new ProfessorNotFoundException();
                 else{
+                    if( course.getMin()>course.getMax()) throw new CardinalityNotAccetableException();
                     if( course.getRunningInstances()>course.getTotInstances() || course.getMaxVcpu()<=0 ||
                         course.getDiskSpace()<=0 || course.getRam()<=0 ||
                         course.getTotInstances()<=0 || course.getRunningInstances()<=0)

@@ -86,7 +86,8 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, p.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }catch(ImageSizeException | ModelVMAlreadytPresentException e){
+        }catch(ImageSizeException | ModelVMAlreadytPresentException |
+                CardinalityNotAccetableException | ResourcesVMNotRespectedException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch(IOException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());

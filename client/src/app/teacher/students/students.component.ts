@@ -153,13 +153,6 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
         this.selectStudent(true, this.dataSource.data[i]);
       }
     }
-
-    if (this.currentItemsAllSelected() && !this.allSelected()) {
-      this.checkBoxAll = true
-    }
-    else {
-      this.checkBoxAll = false;
-    }
   }
 
   selectStudent(isChecked, row) {
@@ -168,13 +161,6 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
     }
     else {
       this.selectedStudents.deselect(row);
-    }
-
-    if (this.currentItemsAllSelected() && !this.allSelected()) {
-      this.checkBoxAll = true
-    }
-    else {
-      this.checkBoxAll = false;
     }
   }
 
@@ -206,6 +192,13 @@ export class StudentsComponent implements AfterViewInit, OnInit, OnChanges {
       if(!selected.includes(this.dataSource.data[i])){
         allChecked = false;
       }
+    }
+
+    if (allChecked && !this.allSelected()) {
+      this.checkBoxAll = true
+    }
+    else {
+      this.checkBoxAll = false;
     }
 
     return allChecked;

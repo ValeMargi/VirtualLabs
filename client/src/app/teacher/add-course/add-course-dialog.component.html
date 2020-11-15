@@ -24,16 +24,20 @@
 
         <!--Massimo Membri-->
         <mat-form-field class="matForm">
-          <input [(ngModel)]="maxMembers" class="input" type="number" placeholder="Massimo membri gruppo" formControlName="max_membri" matInput min="1" required>
-          <mat-error *ngIf="AddCourseForm.get('max_membri').hasError('required')">Inserisci un numero massimo di membri</mat-error>
-          <mat-error *ngIf="AddCourseForm.get('max_membri').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
+
+          <input [(ngModel)]="maxMembers" class="input" type="number" placeholder="Massimo membri gruppo" formControlName="max_iscrizioni" [errorStateMatcher]="matcher" matInput min="1" required>
+          <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('required')">Inserisci un numero massimo di membri</mat-error>
+          <mat-error *ngIf="AddCourseForm.get('max_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
+          <mat-error *ngIf="AddCourseForm.hasError('ErrorMembersMax')"> Impossibile inserire un valore più piccolo del minimo dei membri</mat-error>
+
         </mat-form-field><br><br>
 
         <!--Minimo Membri-->
         <mat-form-field class="matForm">
-          <input [(ngModel)]="minMembers" class="input" type="number" placeholder="Minimo membri gruppo" formControlName="min_membri" matInput min="1" required>
-          <mat-error *ngIf="AddCourseForm.get('min_membri').hasError('required')">Inserisci un numero minimo di membri</mat-error>
-          <mat-error *ngIf="AddCourseForm.get('min_membri').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
+          <input [(ngModel)]="minMembers" class="input" type="number" placeholder="Minimo membri gruppo" formControlName="min_iscrizioni" [errorStateMatcher]="matcher" matInput min="1" required>
+          <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('required')">Inserisci un numero minimo di membri</mat-error>
+          <mat-error *ngIf="AddCourseForm.get('min_iscrizioni').hasError('min')">Un gruppo non può avere meno di 1 membro</mat-error>
+          <mat-error *ngIf="AddCourseForm.hasError('ErrorMembersMin')"> Non puoi inserire un valore maggiore del massimo dei membri</mat-error>
         </mat-form-field><br><br>
 
         <!--Aggiungi Professore-->
@@ -92,7 +96,7 @@
 
                 <!--Massimo VCPU-->
                 <mat-form-field class="matForm">
-                    <input [(ngModel)]="maxVcpu" class="input" type="number" placeholder="Massimo VCPU" formControlName="max_vcpu" matInput min="1" required>
+                    <input [(ngModel)]="maxVcpu" class="input" type="number" placeholder="Massimo VCPU"  (change)="!valueDefault" formControlName="max_vcpu" matInput min="1" required (keyup)="!valueDefault">
                     <mat-error *ngIf="ModelVmForm.get('max_vcpu').hasError('required')">Inserisci un numero massimo di vcpu</mat-error>
                     <mat-error *ngIf="ModelVmForm.get('max_vcpu').hasError('min')">Inserire un valore maggiore di 0</mat-error>
                 </mat-form-field><br><br>
@@ -120,9 +124,11 @@
 
                 <!--Massimo VM attive-->
                 <mat-form-field class="matForm">
-                    <input [(ngModel)]="runningInstances" class="input" type="number" placeholder="Massimo VM attive" formControlName="max_vm_active" matInput min="1" required>
+                    <input [(ngModel)]="runningInstances" class="input" type="number" placeholder="Massimo VM attive" formControlName="max_vm_active" [errorStateMatcher]="matcher" matInput min="1" required>
                     <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('required')">Inserisci un numero massimo di VM attive</mat-error>
                     <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('min')">Inserire un valore maggiore di 0</mat-error>
+                    <mat-error *ngIf="ModelVmForm.hasError('ErrorVmActivated')"> Non puoi inserire un valore maggiore delle Vm disponibili</mat-error>
+
                 </mat-form-field><br><br>
 
                  <!--Foto iniziale VM-->

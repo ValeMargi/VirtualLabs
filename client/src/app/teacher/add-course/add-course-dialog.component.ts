@@ -8,9 +8,10 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Teacher } from 'src/app/models/teacher.model';
 import { AddCourseContComponent } from './add-course-cont.component';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormBuilder, FormGroupDirective, NgForm, ValidationErrors } from '@angular/forms';
 import { ManageModelContComponent } from '../vms/manage-model-cont.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 @Component({
   selector: 'app-add-course-dialog',
@@ -53,6 +54,8 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
   pageOneVisibility: boolean = true;
   pageTwoVisibility: boolean = false;
 
+  matcher = new MyErrorStateMatcher();
+
   selectedPhoto: File;
   private teacherSelected: Teacher;
   private teachersToAdd: Teacher[] = [];
@@ -69,9 +72,9 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
       this.AddCourseForm = this.formBuilder.group({
         name : new FormControl('', [Validators.required]),
         acronym : new FormControl('', [Validators.required]),
-        max_membri : new FormControl('', [Validators.required, Validators.min(1)]),
-        min_membri : new FormControl('', [Validators.required, Validators.min(1)]),
-      });
+        max_iscrizioni : new FormControl('', [Validators.required, Validators.min(1)]),
+        min_iscrizioni : new FormControl('', [Validators.required, Validators.min(1)]),
+      },{ validator: Validators.compose([CustomValidators.maxMemberValidator, CustomValidators.minMemberValidator])});
 
       this.AddCourseForm.setValue({
         name: "",
@@ -87,7 +90,7 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
         max_vm : new FormControl('', [Validators.required, Validators.min(1)]),
         max_vm_active : new FormControl('', [Validators.required, Validators.min(1)]),
         imageVM: new FormControl('', [Validators.required])
-      });
+      }, {validator: this.maxVmValidator});
 
      }
 
@@ -151,6 +154,17 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
     this.teacherSelected = teacher;
   }
 
+  maxVmValidator(group: FormGroup) {
+    let max_vm: number = group.controls.max_vm.value;
+    let max_vm_active: number = group.controls.max_vm_active.value;
+
+    if(max_vm_active <= max_vm){
+      return null;
+    }else{
+      return { ErrorVmActivated: true };
+    }
+  }
+
   addTeacher() {
     if (this.teacherSelected != null && !this.teachersToAdd.includes(this.teacherSelected)) {
       this.teachersToAdd.push(this.teacherSelected);
@@ -164,8 +178,7 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
   }
 
   setDefaultValue( defaultCheck: boolean){
-
-    console.log("checked");
+    this.valueDefault = defaultCheck;
 
     if(defaultCheck){
       this.ModelVmForm.setValue({
@@ -178,38 +191,18 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
       });
 
       console.log("checked");
-    }
-
-
-    this.valueDefault = defaultCheck;
-
-    if(!defaultCheck){
+    }else{
       this.ModelVmForm.setValue({
-        max_vcpu: 0,
-        max_disco: 0,
-        max_ram: 0,
-        max_vm: 0,
-        max_vm_active: 0,
+        max_vcpu: "",
+        max_disco: "",
+        max_ram: "",
+        max_vm: "",
+        max_vm_active: "",
         imageVM: ""
       });
 
       console.log("Un-checked");
     }
-  }
-
-  valueReset(): boolean{
-
-    console.log("De-checked");
-
-    this.ModelVmForm.setValue({
-      max_vcpu: 0,
-      max_disco: 0,
-      max_ram: 0,
-      max_vm: 0,
-      max_vm_active: 0,
-      imageVM: ""
-    });
-    return this.valueDefault;
   }
 
 
@@ -268,4 +261,58 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
     });
   }
 
+}
+
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl, form: FormGroupDirective | NgForm): boolean {
+
+    const invalidCtrl = !!(control && control.invalid && control.dirty);
+
+    const invalidParent = !!(
+      control.parent.touched
+      && control.parent.invalid
+      && control.parent.hasError('ErrorVmActivated')
+      && control.parent.hasError('ErrorMembersMax')
+      );
+
+    const invalidParent2 = !!(
+      control.parent.touched
+      && control.parent.invalid
+      && control.parent.hasError('ErrorMembersMax')
+      );
+
+    const invalidParent3 = !!(
+      control.parent.touched
+      && control.parent.invalid
+      && control.parent.hasError('ErrorMembersMin')
+      );
+
+    return (invalidParent || invalidCtrl || invalidParent2 || invalidParent3);
+  }
+}
+
+export class CustomValidators {
+
+  static minMemberValidator(group: FormGroup): ValidationErrors {
+    let maxMember: number = group.controls.max_iscrizioni.value;
+    let minMember: number = group.controls.min_iscrizioni.value;
+
+    if(minMember <= maxMember){
+      return null;
+    }else{
+      return { ErrorMembersMin: true };
+    }
+  }
+
+  static maxMemberValidator(group: FormGroup): ValidationErrors {
+    let maxMember: number = group.controls.max_iscrizioni.value;
+    let minMember: number = group.controls.min_iscrizioni.value;
+
+    if(maxMember >= minMember){
+      return null;
+    }else{
+      return { ErrorMembersMax: true };
+    }
+  }
 }

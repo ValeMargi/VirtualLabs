@@ -220,11 +220,13 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
             List<StudentDTO> students = csvToBean.parse();
             List<StudentDTO> addedStudents = new ArrayList<>();
             for (StudentDTO st:students){
-                if(addStudentToCourse(st.getId(),courseName))
-                    addedStudents.add(st);
+                if( modelMapper.map(studentRepository.getOne(st.getId()), StudentDTO.class).equals(st)) {
+                    if (addStudentToCourse(st.getId(), courseName))
+                        addedStudents.add(st);
+                }else throw new InfoStudentsCSVWrongException();
             }
             return addedStudents;
-        }catch(CourseNotFoundException | CourseDisabledException | StudentNotFoundException e){
+        }catch(CourseNotFoundException | CourseDisabledException | StudentNotFoundException | InfoStudentsCSVWrongException e){
             throw e;
         } catch (RuntimeException exception){
             throw  new FormatFileNotValidException();

@@ -214,7 +214,7 @@ public class CourseController {
                 return vlServiceProfessor.EnrollAllFromCSV(new BufferedReader(new InputStreamReader(file.getInputStream())), courseName);
             }catch (CourseNotFoundException | StudentNotFoundException e){
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-            }catch (CourseDisabledException e){
+            }catch (CourseDisabledException | InfoStudentsCSVWrongException e){
                 throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
             }catch(FormatFileNotValidException | IOException e){
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());

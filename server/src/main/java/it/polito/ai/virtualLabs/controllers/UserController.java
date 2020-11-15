@@ -167,7 +167,7 @@ public class UserController {
      * @return: viene effettuata una redirect alla pagina corrispondente all'esito del cambio password
      */
     @GetMapping("/user/changePassword")
-    public ResponseEntity<Void> showChangePasswordPage(Locale locale, Model model, @RequestParam("token") String token) {
+    public ResponseEntity<Void> showChangePasswordPage(@RequestParam("token") String token) {
         String result = authenticationService.validatePasswordResetToken(token);
         HttpHeaders headers = new HttpHeaders();
 
@@ -175,8 +175,9 @@ public class UserController {
             headers.setLocation(URI.create("http://localhost:4200/user/password-reset?token=" + token));
         }
         else {
-            String message = messageSource.getMessage("auth.message." + result, null, locale);
-            headers.setLocation(URI.create("http://localhost:4200/user/password-reset?error=" + message));
+            String message = "Errore nel token per recupero password";
+            message = message.replaceAll(" ", "-");
+            headers.setLocation(URI.create("http://localhost:4200/user/password-reset?error="+message));
         }
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }

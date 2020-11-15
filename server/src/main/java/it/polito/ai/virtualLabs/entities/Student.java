@@ -18,6 +18,7 @@ public class Student{
     @CsvBindByName
     private String name, firstName;
     @Email
+    @CsvBindByName
     private String email;
 
     @ManyToMany(mappedBy ="members")

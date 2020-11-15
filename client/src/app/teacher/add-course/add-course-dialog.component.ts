@@ -210,7 +210,7 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
   }
 
   addCourse(name: string, acronym: string, min: number, max: number, maxCpu: number, maxDisk: number, ram: number,totInstances: number, runnigInstance: number) {
-    if(!this.AddCourseForm.valid || !this.ModelVmForm.valid){
+    if(!this.AddCourseForm.valid || (!this.ModelVmForm.valid && !this.valueDefault)) {
       window.alert("Controllare che i dati inseriti rispettino tutti i vincoli");
       return;
     }

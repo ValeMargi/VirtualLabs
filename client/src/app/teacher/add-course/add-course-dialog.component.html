@@ -87,58 +87,55 @@
 
     <div class="pageTwo" *ngIf="pageTwoVisibility">
 
-       <mat-checkbox #default
-                      [checked] = "valueDefault"
+      <mat-checkbox #default
+                      [checked] = "isDefault()"
                       (change) = "setDefaultValue($event.checked)">
                       Utilizza Valori di Default</mat-checkbox>
 
-              <form [formGroup]="ModelVmForm">
+      <form [formGroup]="ModelVmForm">
 
-                <!--Massimo VCPU-->
-                <mat-form-field class="matForm">
-                    <input [(ngModel)]="maxVcpu" class="input" type="number" placeholder="Massimo VCPU" (keypress)="deselectDefault()" formControlName="max_vcpu" matInput min="1" required (keyup)="!valueDefault">
-                    <mat-error *ngIf="ModelVmForm.get('max_vcpu').hasError('required')">Inserisci un numero massimo di vcpu</mat-error>
-                    <mat-error *ngIf="ModelVmForm.get('max_vcpu').hasError('min')">Inserire un valore maggiore di 0</mat-error>
-                </mat-form-field><br><br>
+        <!--Massimo VCPU-->
+        <mat-form-field class="matForm">
+            <input [(ngModel)]="maxVcpu" class="input" type="number" placeholder="Massimo VCPU" formControlName="max_vcpu" matInput min="1" required>
+            <mat-error *ngIf="ModelVmForm.get('max_vcpu').hasError('required')">Inserisci un numero massimo di vcpu</mat-error>
+            <mat-error *ngIf="ModelVmForm.get('max_vcpu').hasError('min')">Inserire un valore maggiore di 0</mat-error>
+        </mat-form-field><br><br>
 
-                <!--Massimo disco-->
-                <mat-form-field class="matForm">
-                    <input [(ngModel)]="maxDisk" class="input" type="number" placeholder="Massimo disco (GB)" (keypress)="deselectDefault()"  formControlName="max_disco" matInput min="1" required>
-                    <mat-error *ngIf="ModelVmForm.get('max_disco').hasError('required')">Inserisci una dimensione massima del disco</mat-error>
-                    <mat-error *ngIf="ModelVmForm.get('max_disco').hasError('min')">Inserire un valore maggiore di 0</mat-error>
-                </mat-form-field><br><br>
+        <!--Massimo disco-->
+        <mat-form-field class="matForm">
+            <input [(ngModel)]="maxDisk" class="input" type="number" placeholder="Massimo disco (GB)" formControlName="max_disco" matInput min="1" required>
+            <mat-error *ngIf="ModelVmForm.get('max_disco').hasError('required')">Inserisci una dimensione massima del disco</mat-error>
+            <mat-error *ngIf="ModelVmForm.get('max_disco').hasError('min')">Inserire un valore maggiore di 0</mat-error>
+        </mat-form-field><br><br>
 
-                <!--Massima RAM-->
-                <mat-form-field class="matForm">
-                    <input [(ngModel)]="ram" class="input" type="number" placeholder="Massima RAM (GB)" (keypress)="deselectDefault()" formControlName="max_ram" matInput min="1" required>
-                    <mat-error *ngIf="ModelVmForm.get('max_ram').hasError('required')">Inserisci una dimensione massima della RAM</mat-error>
-                    <mat-error *ngIf="ModelVmForm.get('max_ram').hasError('min')">Inserire un valore maggiore di 0</mat-error>
-                </mat-form-field><br><br>
+        <!--Massima RAM-->
+        <mat-form-field class="matForm">
+            <input [(ngModel)]="ram" class="input" type="number" placeholder="Massima RAM (GB)" formControlName="max_ram" matInput min="1" required>
+            <mat-error *ngIf="ModelVmForm.get('max_ram').hasError('required')">Inserisci una dimensione massima della RAM</mat-error>
+            <mat-error *ngIf="ModelVmForm.get('max_ram').hasError('min')">Inserire un valore maggiore di 0</mat-error>
+        </mat-form-field><br><br>
 
-                <!--Massimo VM-->
-                <mat-form-field class="matForm">
-                    <input [(ngModel)]="totInstances" class="input" type="number" placeholder="Massimo VM" (keypress)="deselectDefault()" formControlName="max_vm" matInput min="1" required>
-                    <mat-error *ngIf="ModelVmForm.get('max_vm').hasError('required')">Inserisci un numero massimo di VM</mat-error>
-                    <mat-error *ngIf="ModelVmForm.get('max_vm').hasError('min')">Inserire un valore maggiore di 0</mat-error>
-                </mat-form-field><br><br>
+        <!--Massimo VM-->
+        <mat-form-field class="matForm">
+            <input [(ngModel)]="totInstances" class="input" type="number" placeholder="Massimo VM" formControlName="max_vm" matInput min="1" required>
+            <mat-error *ngIf="ModelVmForm.get('max_vm').hasError('required')">Inserisci un numero massimo di VM</mat-error>
+            <mat-error *ngIf="ModelVmForm.get('max_vm').hasError('min')">Inserire un valore maggiore di 0</mat-error>
+        </mat-form-field><br><br>
 
-                <!--Massimo VM attive-->
-                <mat-form-field class="matForm">
-                    <input [(ngModel)]="runningInstances" class="input" type="number" placeholder="Massimo VM attive" (keypress)="deselectDefault()" formControlName="max_vm_active" [errorStateMatcher]="matcher" matInput min="1" required>
-                    <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('required')">Inserisci un numero massimo di VM attive</mat-error>
-                    <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('min')">Inserire un valore maggiore di 0</mat-error>
-                    <mat-error *ngIf="ModelVmForm.hasError('ErrorVmActivated')"> Non puoi inserire un valore maggiore delle Vm disponibili</mat-error>
+        <!--Massimo VM attive-->
+        <mat-form-field class="matForm">
+            <input [(ngModel)]="runningInstances" class="input" type="number" placeholder="Massimo VM attive" formControlName="max_vm_active" [errorStateMatcher]="matcher" matInput min="1" required>
+            <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('required')">Inserisci un numero massimo di VM attive</mat-error>
+            <mat-error *ngIf="ModelVmForm.get('max_vm_active').hasError('min')">Inserire un valore maggiore di 0</mat-error>
+            <mat-error *ngIf="ModelVmForm.hasError('ErrorVmActivated')"> Non puoi inserire un valore maggiore delle Vm disponibili</mat-error>
 
-                </mat-form-field><br><br>
+        </mat-form-field><br><br>
+    </form>
 
-                 <!--Foto iniziale VM-->
-
-                  <strong>Seleziona foto iniziale VM </strong>
-                  <input class="inputfile" type="file" formControlName="imageVM" accept="image/*" (change)="addVMImage($event)" required>
-                  <mat-error *ngIf="ModelVmForm.get('imageVM').hasError('required')">Inserire la VM</mat-error><br>
-
-
-            </form>
+    <!--Foto iniziale VM-->
+    <strong>Seleziona foto iniziale VM </strong>
+    <input #fileInput class="inputfile" type="file" accept="image/*" (change)="addVMImage($event)" mat-input required>
+    <!--<mat-error *ngIf="ModelVmForm.get('imageVM').hasError('required')">Inserire la VM</mat-error><br>-->
     </div>
 
   </mat-dialog-content>

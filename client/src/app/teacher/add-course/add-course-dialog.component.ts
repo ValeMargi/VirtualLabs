@@ -24,7 +24,7 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
   private sort: MatSort;
   panelOpenState: boolean;
   ModelVmForm: FormGroup;
-  valueDefault: boolean;
+  valueDefault: boolean = false;
 
   courseName: string;
   acronym: string;
@@ -71,19 +71,12 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
       this.AddCourseForm = this.formBuilder.group({
         name : new FormControl('', [Validators.required]),
         acronym : new FormControl('', [Validators.required]),
-        max_iscrizioni : new FormControl('', [Validators.required, Validators.min(1)]),
-        min_iscrizioni : new FormControl('', [Validators.required, Validators.min(1)]),
+        max_iscrizioni : new FormControl({value: '4'}, [Validators.required, Validators.min(1)]),
+        min_iscrizioni : new FormControl({value: '1'}, [Validators.required, Validators.min(1)]),
       },{ validator: Validators.compose([CustomValidators.maxMemberValidator, CustomValidators.minMemberValidator])});
 
-      this.AddCourseForm.setValue({
-        name: "",
-        acronym: "",
-        max_iscrizioni : 4,
-        min_iscrizioni : 1
-      });
-
       this.ModelVmForm = this.formBuilder.group({
-        max_vcpu : new FormControl('', [Validators.required, Validators.min(1)]),
+        max_vcpu : new FormControl({value:'1', disabled: false}, [Validators.required, Validators.min(1)]),
         max_disco : new FormControl('', [Validators.required, Validators.min(1)]),
         max_ram : new FormControl('', [Validators.required, Validators.min(1)]),
         max_vm : new FormControl('', [Validators.required, Validators.min(1)]),
@@ -145,6 +138,11 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
     this.teacherSelected = teacher;
   }
 
+
+  deselectDefault(){
+    //console.log(event);
+    this.setDefaultValue(false);
+  }
   maxVmValidator(group: FormGroup) {
     let max_vm: number = group.controls.max_vm.value;
     let max_vm_active: number = group.controls.max_vm_active.value;
@@ -180,19 +178,6 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
         max_vm_active: 8,
         imageVM: ""
       });
-
-      console.log("checked");
-    }else{
-      this.ModelVmForm.setValue({
-        max_vcpu: "",
-        max_disco: "",
-        max_ram: "",
-        max_vm: "",
-        max_vm_active: "",
-        imageVM: ""
-      });
-
-      console.log("Un-checked");
     }
   }
 

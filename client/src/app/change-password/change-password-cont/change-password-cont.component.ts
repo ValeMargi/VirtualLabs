@@ -34,7 +34,7 @@ export class ChangePasswordContComponent implements OnInit, OnDestroy {
       }
       else if (msg) {
         //...altrimenti si deve mostrare il messaggio di errore
-        this.MSG = msg.replace("-", " ");
+        this.MSG = msg.split("-").join(" ");
       }
     });
   }

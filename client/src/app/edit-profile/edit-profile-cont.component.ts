@@ -29,9 +29,14 @@ export class EditProfileContComponent implements OnInit {
   ngOnInit() {
     this.CURRENT_USER = this.authService.getUserByRole();
 
+    if (this.authService.isLoggedOut()) {
+      return;
+    }
+
     const id = localStorage.getItem('currentId');
     const role = localStorage.getItem('role');
 
+    //in base al ruolo dell'utente, si recupera il suo avatar
     if (role == "student") {
       this.studentService.getOne(id).subscribe(
         (data) => {
@@ -55,7 +60,7 @@ export class EditProfileContComponent implements OnInit {
   }
 
   changeAvatar(avatar: File) {
-    this.QUERYING = true;
+    this.QUERYING = true; //si mostra una progess bar
     this.AVATAR_OK = false;
 
     this.authService.changeAvatar(avatar).subscribe(
@@ -64,8 +69,8 @@ export class EditProfileContComponent implements OnInit {
           window.alert("Errore nel cambio dell'avatar, si prega di riprovare");
         }
 
-        this.QUERYING = false;
-        this.AVATAR_OK = true;
+        this.QUERYING = false;  //si toglie la progress bar...
+        this.AVATAR_OK = true;  //... e si informa l'utente che l'avatar è aggiornato
         setTimeout(()=>{this.close()}, 3000);
       },
       (error) => {

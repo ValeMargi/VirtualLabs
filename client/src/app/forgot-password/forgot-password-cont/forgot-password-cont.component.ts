@@ -17,10 +17,11 @@ export class ForgotPasswordContComponent implements OnInit {
   }
 
   resetPassword(email: string) {
-    this.QUERYING = true;
+    this.QUERYING = true; //si mostra una progress bar
 
     this.authService.resetPassword(email).subscribe(
       (data) => {
+        //in base all'esito, si mostra un messaggio di errore o di conferma
         if (data == true) {
           this.OK = true;
           this.ERROR = false;
@@ -33,6 +34,8 @@ export class ForgotPasswordContComponent implements OnInit {
         this.QUERYING = false;
       },
       (error) => {
+        window.alert(error.error.message);
+        
         this.OK = false;
         this.ERROR = true;
         this.QUERYING = false;

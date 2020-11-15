@@ -19,13 +19,12 @@ export class ForgotPasswordComponent implements OnInit, OnChanges {
   @Input() ok: boolean;
   @Input() error: boolean;
   @Input() querying: boolean;
-  @Output('reset') reset = new EventEmitter<string>();
+  @Output('reset') reset = new EventEmitter<string>(); //event per triggerare il metodo nel componente smart
 
  constructor(
       public matDialog: MatDialog, 
       public authService: AuthService,
       private dialogRef: MatDialogRef<ForgotPasswordComponent>,
-      private router: Router,
       private formBuilder: FormBuilder) {
 
       this.ForgotPasswordForm = this.formBuilder.group({
@@ -54,7 +53,6 @@ export class ForgotPasswordComponent implements OnInit, OnChanges {
   resetPassword(id: string) {
     this.reset.emit(id);
   }
-
 
   openDialogRegister() {
     this.dialogRef.close();

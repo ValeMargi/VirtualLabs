@@ -15,11 +15,11 @@ import { PhotoHomeworkCorrection } from '../models/photo-homework-correction.mod
 })
 export class CourseService {
 
-  currentCourse = new BehaviorSubject<Course>(new Course("", "", -1, -1, 0, -1, -1, -1, -1, -1));
+  currentCourse = new BehaviorSubject<Course>(new Course("", "", -1, -1, 0, -1, -1, -1, -1, -1)); //corso corrente
   currentCourse$ = this.currentCourse.asObservable();
 
-  courseRemove: EventEmitter<string> = new EventEmitter<string>();
-  courseReload: EventEmitter<void> = new EventEmitter<void>();
+  courseRemove: EventEmitter<string> = new EventEmitter<string>();  //emitter per notificare la rimozione di un corso
+  courseReload: EventEmitter<void> = new EventEmitter<void>();  //emitter per richiedere all'app component il ricaricamento dei corsi 
 
   constructor(private http: HttpClient) {}
 

@@ -28,7 +28,7 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
 
   @Input() querying: boolean;
   @Input() ok: boolean;
-  @Output('register') reg = new EventEmitter<any>();
+  @Output('register') reg = new EventEmitter<any>();  //emitter per il container
 
   constructor(
     public matDialog: MatDialog,
@@ -48,6 +48,7 @@ export class RegisterDialogComponent implements OnInit, OnChanges {
 
 }
 
+//validazione email, il dominio deve essere del PoliTo
 emailDomainValidator(control: FormControl) {
   let email = control.value;
   if (email && email.indexOf("@") != -1) {
@@ -64,6 +65,7 @@ emailDomainValidator(control: FormControl) {
 
 }
 
+//validazione matricola
 idValidator(control: FormControl) {
   const id = control.value;
   const domain = id.toLowerCase();
@@ -78,17 +80,15 @@ idValidator(control: FormControl) {
   return null;
 }
 
+//le 2 password devono coincidere
 checkPasswords(group: FormGroup) {
     let pass: string = group.controls.password.value;
     let confirmPass: string = group.controls.confirmPassword.value;
 
-    if(pass === confirmPass){
-      console.log(pass+" "+confirmPass);
-      console.log("Uguali");
+    if (pass === confirmPass) {
       return null;
-    }else{
-      console.log(pass+" "+confirmPass);
-      console.log("Diverse");
+    }
+    else {
       return { notSame: true };
     }
   }
@@ -154,6 +154,7 @@ register(firstName: string, name: string, id: string, email: string, password: s
 
   this.md5 = new Md5();
 
+  //si crea qua il JSON per mandare mendo dati al container
   let userJson = { "firstName": firstName.charAt(0).toUpperCase() + firstName.toLowerCase().slice(1),
                   "name": name.charAt(0).toUpperCase() + name.toLowerCase().slice(1),
                   "id": id.toLowerCase(),
@@ -182,6 +183,7 @@ register(firstName: string, name: string, id: string, email: string, password: s
 onFileChanged(imageInput) {
   this.selectedPhoto = imageInput.target.files[0]
 
+  //si mostra la foto appena caricata
   const reader = new FileReader();
   reader.readAsDataURL(this.selectedPhoto);
   reader.onload = (_event) => {

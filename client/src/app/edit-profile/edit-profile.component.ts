@@ -35,10 +35,11 @@ export class EditProfileComponent implements OnInit, OnChanges {
 
     }
 
-    checkPasswords(group: FormGroup) { // here we have the 'passwords' group
+    checkPasswords(group: FormGroup) {
     let pass = group.controls.newPassword.value;
     let confirmPass = group.controls.repeatPassword.value;
 
+    //le 2 password devono coincidere
     return pass === confirmPass ? null : { notSame: true }
   }
 
@@ -78,6 +79,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
   onFileChanged(imageInput) {
     this.selectedPhoto = imageInput.target.files[0]
 
+    //si mostra il file appena preso in input
     const reader = new FileReader();
     reader.readAsDataURL(this.selectedPhoto);
     reader.onload = (_event) => {
@@ -86,6 +88,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
   }
 
   save(actualPwd: string, pwd: string, pwd2: string) {
+    //si verifica di aver modificato la password per aggiornarla...
     if (actualPwd.length > 0 && pwd.length > 0 && pwd2.length > 0) {
       if (actualPwd == pwd) {
         window.alert("La nuova password deve essere diversa");
@@ -104,8 +107,8 @@ export class EditProfileComponent implements OnInit, OnChanges {
       }
     }
 
+    //... idem per la foto profilo
     if (this.selectedPhoto != null) {
-
       let image = this.selectedPhoto;
 
       if (!image.type.match("image/jpg") && !image.type.match("image/jpeg") && !image.type.match("image/png")) {

@@ -45,6 +45,7 @@ export class LoginContComponent implements OnInit {
         this.authService.userLogged.emit(false);
 
         if (error.error.status == 401) {
+          //se si riceve 401, significa che si ha sbagliato user o pwd, quindi si mostra un messaggio nella dialog
           this.BAD_CREDENTIALS = true;
         }
         else {

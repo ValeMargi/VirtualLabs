@@ -20,9 +20,11 @@ export class RegisterSuccessComponent implements OnInit, OnDestroy {
   ngOnInit(): void {    
     this.route$ = this.route.queryParams.subscribe(param => {
       if (param['confirmToken']) {
+        //se nei query params c'è il token di conferma si mostra una scritta di successo...
         this.success = true;
       }
       else if (param['expToken']) {
+        //...altrimenti di errore
         this.success = false;
       }
     })

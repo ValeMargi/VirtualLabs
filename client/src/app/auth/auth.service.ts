@@ -18,6 +18,7 @@ import { Teacher } from '../models/teacher.model';
 export class AuthService {
   API_AUTH = 'http://localhost:8080/API';
 
+  //event emitter per segnalare avvenuto login/logout
   @Output('userLogged') userLogged = new EventEmitter<boolean>();
   user: Observable<User>;
 
@@ -35,6 +36,7 @@ export class AuthService {
     { "username": email, "password": password });
   }
 
+  //set dei parametri indispensabili per la sessione utente
   setSession(authResult) {
     const tkn = JSON.parse(atob(authResult.token.split('.')[1]));
     let token = jwt_decode(authResult.token);
@@ -75,6 +77,7 @@ export class AuthService {
   isLoggedOut() { return !this.isLoggedIn(); }
 
   storeUrl(url: string) {
+    //si salva la url da utilizzare per proseguire dopo una sessione scaduta
     this.storedUrl = url;
   }
 
@@ -108,6 +111,7 @@ export class AuthService {
   }
 
   setUserByRole(token: any) {
+    //in base al ruolo, viene definito l'oggetto nell'opportuno service
     if (token.role == "student") {
       this.studentService.currentStudent = new Student(token.id, token.firstname, token.name, token.id + "@studenti.polito.it");
     }

@@ -48,7 +48,7 @@ LoginForm: FormGroup;
     this.dialogRef.close();
   }
 
-
+  //validazione email, il dominio deve essere del PoliTo
   emailDomainValidator(control: FormControl) {
     let email = control.value;
     if (email && email.indexOf("@") != -1) {
@@ -65,20 +65,20 @@ LoginForm: FormGroup;
 
   }
 
-
-idValidator(control: FormControl) {
-  const id = control.value;
-  const domain = id.toLowerCase();
-  if (!domain.startsWith("s") && !domain.startsWith("d")) {
-    return {
-      idDomain: {
-        parsedDomain: domain
+  //validazione email, la matricola deve iniziare con "s" o con "d"
+  idValidator(control: FormControl) {
+    const id = control.value;
+    const domain = id.toLowerCase();
+    if (!domain.startsWith("s") && !domain.startsWith("d")) {
+      return {
+        idDomain: {
+          parsedDomain: domain
+        }
       }
     }
-  }
 
-  return null;
-}
+    return null;
+  }
 
 
   login(email: string, password:string) {
@@ -98,7 +98,7 @@ idValidator(control: FormControl) {
 
   routeForgotPass() {
     this.close();
-    this.router.navigate([], {queryParams: {forgotPass : "true"}});
+    this.router.navigate([], {queryParams: {forgotPass : "true"}}); //idem come sopra
   }
 
   ngOnDestroy() {

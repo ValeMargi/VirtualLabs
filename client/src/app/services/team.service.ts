@@ -17,7 +17,7 @@ export class TeamService {
 
   API_TEAMS = "http://localhost:8080/API/teams";
 
-  proposal: EventEmitter<Proposal> = new EventEmitter<Proposal>();
+  proposal: EventEmitter<Proposal> = new EventEmitter<Proposal>();  //emitter per notificare la creazione di una proposta team
 
   proposeTeam(courseName: string, nameTeam: string, timeout: string, membersId: string[]) {
     return this.http.post<Proposal>(`${this.API_TEAMS}/${courseName}/proposeTeam`,

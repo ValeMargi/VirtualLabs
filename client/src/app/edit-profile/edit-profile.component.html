@@ -2,33 +2,30 @@
 
       <!--Info Profilo-->
       <mat-dialog-content>
-          <div class="account">
+        <div class="account">
 
-            <div class="avatar">
+          <div class="avatar">
 
-              <div class="rounded-box">
-                <img class="img" [src]="avatar" />
-              </div>
-
-              <div class="camera-box">
-                <input class="inputfile" type="file" name="pic" accept="image/*"
-                  (change)="onFileChanged($event)">
-                <label><mat-icon class="camera">camera_alt</mat-icon></label>
-              </div>
-
+            <div class="rounded-box">
+              <img class="img" [src]="avatar" />
             </div>
 
-            <div class="info">
-              <h2 id="name">{{ currentUser.name }} {{ currentUser.firstName }}</h2>
-              <h3 id="enrollN">{{ currentUser.id }}</h3>
-              <h3 id="email">{{ currentUser.email }}</h3>
+            <div class="camera-box">
+              <input class="inputfile" type="file" name="pic" accept="image/*"
+                (change)="onFileChanged($event)">
+              <label><mat-icon class="camera">camera_alt</mat-icon></label>
             </div>
 
           </div>
-      </mat-dialog-content>
 
-      <!--Cambio Password-->
-      <mat-dialog-content>
+          <div class="info">
+            <h2 id="name">{{ currentUser.name }} {{ currentUser.firstName }}</h2>
+            <h3 id="enrollN">{{ currentUser.id }}</h3>
+            <h3 id="email">{{ currentUser.email }}</h3>
+          </div>
+        </div>
+
+        <!--Cambio Password-->
         <div class="changePassword">
             <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
 
@@ -72,8 +69,8 @@
 
       <!--Progress Bar-->
       <mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
-      <a *ngIf="avatar_ok">Avatar aggiornato con successo</a>
-      <a *ngIf="pwd_ok">Password aggiornata con successo</a>
+      <h4 *ngIf="avatar_ok">Avatar aggiornato con successo</h4>
+      <h4 *ngIf="pwd_ok">Password aggiornata con successo</h4>
 
       <!--Azioni delle Dialog-->
       <mat-dialog-actions>

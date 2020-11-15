@@ -48,6 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getUserName(loggedIn: boolean) {
     if (loggedIn == true) {
+      //se l'utente è loggato, si mostra una schermata di benvenuto con il nome...
       this.askLoginVisibility = false;
 
       if (this.studentService.currentStudent != null) {
@@ -60,6 +61,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     else {
+      //...altrimenti non si mostra il nome
       this.askLoginVisibility = true;
     }
   }

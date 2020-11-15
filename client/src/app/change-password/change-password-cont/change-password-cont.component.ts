@@ -29,9 +29,11 @@ export class ChangePasswordContComponent implements OnInit, OnDestroy {
       let msg = params['error'];
 
       if (token) {
+        //se nella url è presente il token lo si recupera...
         this.token = token;
       }
       else if (msg) {
+        //...altrimenti si deve mostrare il messaggio di errore
         this.MSG = msg;
       }
     });

@@ -24,12 +24,12 @@ export class StudentService {
 
   API_STUDENTS = "http://localhost:8080/API/students";
 
-  currentStudent: Student;
-  currentAvatar: File;
+  currentStudent: Student;  //studente loggato
+  currentAvatar: File;  //foto profilo dello studente loggato
 
-  vmCreation: EventEmitter<VMOwners> = new EventEmitter<VMOwners>();
-  vmDelete: EventEmitter<VMOwners> = new EventEmitter<VMOwners>();
-  verUpload: EventEmitter<HomeworkVersion> = new EventEmitter<HomeworkVersion>();
+  vmCreation: EventEmitter<VMOwners> = new EventEmitter<VMOwners>();  //emitter per notificare la creazione di una vm
+  vmDelete: EventEmitter<VMOwners> = new EventEmitter<VMOwners>();  //emitter per notificare l'eliminazione di una vm
+  verUpload: EventEmitter<HomeworkVersion> = new EventEmitter<HomeworkVersion>(); //emitter per notificare l'aggiunta di una versione homework
 
   all() {
     return this.http.get<Student[]>(`${this.API_STUDENTS}`).pipe(map(students => students || []));

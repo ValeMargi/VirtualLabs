@@ -23,10 +23,11 @@ export class ChangePasswordComponent implements OnInit, OnChanges {
     }, { validator: this.checkPasswords });
   }
 
-  checkPasswords(group: FormGroup) { // here we have the 'passwords' group
+  checkPasswords(group: FormGroup) {
     let pass = group.controls.password.value;
     let confirmPass = group.controls.confirmPassword.value;
 
+    //le 2 password devono coincidere
     return pass === confirmPass ? null : { notSame: true }
   }
 

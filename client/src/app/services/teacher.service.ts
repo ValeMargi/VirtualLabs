@@ -19,11 +19,11 @@ export class TeacherService {
 
   API_PROFESSORS = "http://localhost:8080/API/professors";
 
-  currentTeacher: Teacher;
-  currentAvatar: any;
+  currentTeacher: Teacher;  //professore loggato
+  currentAvatar: any;  //foto profilo del professore loggato
 
-  assCreation: EventEmitter<Assignment> = new EventEmitter<Assignment>();
-  corrUpload: EventEmitter<any> = new EventEmitter<any>();
+  assCreation: EventEmitter<Assignment> = new EventEmitter<Assignment>();  //emitter per notificare la creazione di una consegna
+  corrUpload: EventEmitter<any> = new EventEmitter<any>();  //emitter per notificare l'inserimento di una correzione howework
   
   constructor(private http: HttpClient) { }
 

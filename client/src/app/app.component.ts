@@ -401,6 +401,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
+    dialogConfig.minWidth = "30%";
 
     dialogConfig.data = {
         id: 1,

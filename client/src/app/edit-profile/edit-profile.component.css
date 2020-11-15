@@ -98,12 +98,17 @@ h3 {
     color: white;
 }
 
+.changePassword {
+    margin: auto;
+    max-width: 80%;
+}
+
 mat-dialog-actions {
     float: right;
 }
 
 mat-dialog-content {
-    display: flex;
     justify-content: center;
     margin-bottom: 2em;
+    height: auto;
 }

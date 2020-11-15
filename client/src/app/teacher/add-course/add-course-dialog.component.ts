@@ -65,7 +65,6 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
 
   constructor(private cont: AddCourseContComponent,
               private formBuilder: FormBuilder,
-              private matDialog: MatDialog,
               private router: Router,
               private route: ActivatedRoute) {
 
@@ -79,8 +78,8 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
       this.AddCourseForm.setValue({
         name: "",
         acronym: "",
-        max_membri : 4,
-        min_membri : 1
+        max_iscrizioni : 4,
+        min_iscrizioni : 1
       });
 
       this.ModelVmForm = this.formBuilder.group({
@@ -107,14 +106,6 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
 
   close() {
     this.cont.close();
-  }
-
-  checkFirstPage(){
-
-  }
-
-  saveElementPageOne(){
-
   }
 
   nextPage(){
@@ -205,7 +196,6 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
     }
   }
 
-
   deleteTeacher(teacher: Teacher) {
     if (teacher != null && this.teachersToAdd.includes(teacher)) {
       this.teachersToAdd.splice(this.teachersToAdd.indexOf(teacher));
@@ -245,22 +235,6 @@ export class AddCourseDialogComponent implements OnInit, OnChanges {
     this.add.emit({course: course, file: this.selectedPhoto, ids: this.teachersToAdd.map(t => t.id)});
   }
 
-  openDialogModelVM(){
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = false;
-
-    const dialogRef = this.matDialog.open(ManageModelContComponent, dialogConfig);
-
-    dialogRef.componentInstance.courseName = this.route.snapshot.params.courses;
-
-    dialogRef.afterClosed().subscribe(result => {
-      const queryParams = {}
-      this.router.navigate([], { queryParams, replaceUrl: true, relativeTo: this.route });
-    });
-  }
-
 }
 
 
@@ -273,7 +247,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
       control.parent.touched
       && control.parent.invalid
       && control.parent.hasError('ErrorVmActivated')
-      && control.parent.hasError('ErrorMembersMax')
       );
 
     const invalidParent2 = !!(

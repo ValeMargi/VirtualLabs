@@ -17,7 +17,7 @@
     <button #btRegister class="buttonS" mat-button *ngIf="loginVisibility" onclick="this.blur()" (click)="routeToRegister() "><mat-icon>portrait</mat-icon>Registrati</button>
   </mat-toolbar>
 
-  <mat-toolbar class="toolbarCourse" *ngIf="!homeVisibility && !notFoundVisibility && !registerSuccess && LoginSuccess" >
+  <mat-toolbar class="toolbarCourse" *ngIf="!homeVisibility && !notFoundVisibility && !registerSuccess && !passwordReset && LoginSuccess" >
     <mat-toolbar-row>
 
       <span class="NomeCorso" style="color:rgb(228, 18, 140)" >{{ courseName }}</span>
@@ -34,6 +34,7 @@
     <app-home *ngIf="homeVisibility"></app-home>
     <app-register-success *ngIf="registerSuccess"></app-register-success>
     <app-page-not-found *ngIf="notFoundVisibility"></app-page-not-found>
+    <app-change-password-cont *ngIf="passwordReset"></app-change-password-cont>
 
     <mat-sidenav #sidenav mode="side" closed class="sidenav">
       <div class="sidenavContainer">
@@ -60,7 +61,7 @@
 
     </mat-sidenav>
 
-    <mat-sidenav-content *ngIf="!homeVisibility && !registerSuccess && !notFoundVisibility">
+    <mat-sidenav-content *ngIf="!homeVisibility && !registerSuccess && !notFoundVisibility && !passwordReset">
       <nav mat-tab-nav-bar *ngIf="teacherVisibility && LoginSuccess">
         <a mat-tab-link [active]="activeTab == 0" [routerLink]="[getRoute(0)]">Studenti
 

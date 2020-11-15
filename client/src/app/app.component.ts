@@ -264,6 +264,15 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
+  get passwordReset() {
+    if (this.router.url.indexOf("user") == 1) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   setCourses() {
     if (this.role.match("student")) {
       this.studentService.getCourses(this.studentService.currentStudent.id).subscribe(

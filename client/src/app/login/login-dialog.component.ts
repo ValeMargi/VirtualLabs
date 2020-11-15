@@ -30,7 +30,7 @@ LoginForm: FormGroup;
       private router: Router) {
 
       this.LoginForm = this.formBuilder.group({
-        email: new FormControl('',[Validators.email, this.emailDomainValidator]),
+        email: new FormControl('',[Validators.email, this.emailDomainValidator, this.idValidator]),
         password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
       });
 
@@ -64,6 +64,22 @@ LoginForm: FormGroup;
     return null;
 
   }
+
+
+idValidator(control: FormControl) {
+  const id = control.value;
+  const domain = id.toLowerCase();
+  if (!domain.startsWith("s") && !domain.startsWith("d")) {
+    return {
+      idDomain: {
+        parsedDomain: domain
+      }
+    }
+  }
+
+  return null;
+}
+
 
   login(email: string, password:string) {
     if (!this.LoginForm.valid) {

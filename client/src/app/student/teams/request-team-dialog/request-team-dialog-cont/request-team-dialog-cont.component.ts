@@ -28,10 +28,11 @@ export class RequestTeamDialogContComponent implements OnInit {
     const course: Course = this.courseService.currentCourse.getValue();
 
     if (course.max == -1 || course.min == -1) {
+      //se non ci sono le informazioni, si vanno a reperire...
       this.courseService.getOne(course.name).subscribe(
         (data) => {
           this.COURSE = data;
-          this.courseService.currentCourse.next(data);
+          this.courseService.currentCourse.next(data);  //... e si aggiorna l'oggetto nel CourseService
           this.getStudents(this.COURSE.name);
         },
         (error) => {
@@ -47,6 +48,7 @@ export class RequestTeamDialogContComponent implements OnInit {
   }
 
   getStudents(courseName: string) {
+    //reperisco gli studenti disponibili a formare il team
     this.teamService.getAvailableStudents(courseName).subscribe(
       (data) => {
         this.AVAILABLE_STUDENTS = data;
@@ -65,6 +67,7 @@ export class RequestTeamDialogContComponent implements OnInit {
 
     this.teamService.proposeTeam(this.courseService.currentCourse.getValue().name, teamName, timeout, membersId).subscribe(
       (data) => {
+        //se va a buon fine, si torna alla schermata delle proposte e si notifica la creazione della proposta
         this.QUERYING = false;
         this.location.back();
         this.teamService.proposal.emit(data);

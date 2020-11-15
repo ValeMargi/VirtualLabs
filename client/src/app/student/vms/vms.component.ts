@@ -227,6 +227,7 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
     }
   }
 
+  //ritorna la string corrispondente allo stato
   getStatus(status: string) {
     if (status == "on") {
       return "Accesa";
@@ -234,19 +235,6 @@ export class VmsComponent implements AfterViewInit, OnInit, OnChanges {
     else {
       return "Spenta";
     }
-  }
-
-  getOwners(owners: Student[]) {
-    let str: string = "";
-
-    owners.forEach(s => {
-      str = str.concat(s.name + " " + s.firstName);
-
-      if (owners.indexOf(s) < owners.length - 1)
-        str = str.concat(", ");
-    });
-
-    return str;
   }
 
   openVM(vm: VM) {

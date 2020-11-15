@@ -75,6 +75,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
 
   getGrade(row: AssignmentGrade) {
     if (row.grade == null || row.grade == "-1") {
+      //l'elaborato non ha ancora una valutazione
       return "Da valutare";
     }
     else {
@@ -108,6 +109,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
 
   onRouterOutletDeactivate(event: any) {
     this.versionsVisibility = false;
+    //si forza un aggiornamento degli assignments quando si torna indietro dalle versioni
     this.update.emit();
   }
 
@@ -151,6 +153,7 @@ export class AssignmentsComponent implements AfterViewInit, OnInit, OnChanges, O
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
 
+    //dati necessari per la visualizzazione dell'immagine
     dialogConfig.data = {
         title: 'AssignmentText',
         isTeacher: false,

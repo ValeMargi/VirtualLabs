@@ -116,19 +116,22 @@ export class TeamsContComponent implements OnInit, OnDestroy {
     this.teamService.getProposals(courseName).subscribe(
       (data) => {
         const student: Student = this.studentService.currentStudent;
-        const studentInfo: string = student.name + " " + student.firstName + " (" + student.id + ")";
+        const studentInfo: string = student.name + " " + student.firstName + " (" + student.id + ")"; //formato stringa studente del JSON 
 
         let mine: Proposal[] = new Array();
         let accepted: Proposal[] = new Array();
         let pending: Proposal[] = new Array();
         let rejected: Proposal[] = new Array();
 
+        //per ciascuna proposal, si discrimina lo stato e si mette nell'array corrsipondente
         data.forEach(p => {
           if (p.creator == studentInfo) {
+            //il creatore sono io
             mine.push(p);
           }
           else {
             if (p.students.length == 0) {
+              //non ci sono altri studenti oltre a me
               p.students = new Array(1);
               p.students[0] = {student: "(Nessun altro partecipante)"}
             }
@@ -175,17 +178,17 @@ export class TeamsContComponent implements OnInit, OnDestroy {
           }
           case 1: {
             //richiesta accettata, in attesa
-            this.getProposals(this.route.snapshot.params.courses);
+            this.getProposals(this.route.snapshot.params.courses);  //ricarico le proposte
             this.QUERYING = false;
             break;
           }
           case 2: {
-            //team creato
+            //team creato, si cancellano le proposte...
             this.MY_PROPOSALS = new Array();
             this.PROPS_ACCEPTED = new Array();
             this.PROPS_PENDING = new Array();
             this.PROPS_REJECTED = new Array();
-            this.getTeam(this.route.snapshot.params.courses);
+            this.getTeam(this.route.snapshot.params.courses); //...e si carica il nuovo team
             this.QUERYING = false;
             break;
           }

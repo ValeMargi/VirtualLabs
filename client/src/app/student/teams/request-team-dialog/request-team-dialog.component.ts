@@ -102,6 +102,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
     }
   }
   
+  //seleziona tutti gli studenti nella pagina correnti della tabella
   selectStudentOnCurrenPage(isChecked) {
     let initIndex = this.pageSize*this.pageIndex;
 
@@ -117,6 +118,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
     }
   }
 
+  //seleziona/deseleziona un singolo studente
   selectStudent(isChecked, row) {
     if (isChecked) {
       this.selectedStudents.select(row);
@@ -126,10 +128,12 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
     }
   }
 
+  //seleziona tutti gli studenti di tutte le pagine
   selectAll(){
     this.dataSource.data.forEach(s => this.selectStudent(true, s));
   }
 
+  //ritorna true se tutti gli studenti della pagina corrente sono selezionati, false viceversa
   currentItemsAllSelected() {
     if (!this.selectedStudents.hasValue()) {
       return false;
@@ -158,6 +162,7 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
     return allChecked;
   }
 
+  //ritorna true se almeno uno studente della pagina corrente è selezionato, false se nessuno è selezionato
   currentItemsSelected() {
     if (this.currentItemsAllSelected() || this.selectedStudents.selected.length == this.availableStudents.length || !this.selectedStudents.hasValue() || this.selectedStudents.selected.length == 0) {
       return false;
@@ -182,18 +187,21 @@ export class RequestTeamDialogComponent implements OnInit, OnChanges {
     return checked;
   }
 
+  //aggiornamento informazioni relative al mat paginator
   onPageChanged(event) {
     this.previousPageIndex = event.previousPageIndex;
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
   }
 
+  //ritorna true se tutti gli studenti di tutte le pagine sono selezionati, false viceversa
   allSelected() {
     return this.dataSource.data.length == this.selectedStudents.selected.length;
   }
 
   proposeTeam(nameTeam: string, expire: string) {
     const studentsToAdd = this.selectedStudents.selected;
+    //gli studenti selezionati devono stare nel range min-max
     if (studentsToAdd.length + 1 < this.min || studentsToAdd.length + 1> this.max) {
       window.alert("Selezionare un numero di studenti compreso tra " + this.min + " e " + this.max);
     }

@@ -128,10 +128,6 @@ export class TeamsComponent implements OnInit, OnChanges {
 
     if (changes.myProposals != null) {
       this.myProposals = changes.myProposals.currentValue;
-
-      if (this.myProposals != null) {
-        //this.setMyProposals();
-      }
     }
 
     if (changes.propsAccepted != null) {
@@ -201,10 +197,13 @@ export class TeamsComponent implements OnInit, OnChanges {
     this.lengthRejected = this.propsRejected.length;
   }
 
+  //gestione della visibilità delle card
   manageVisibilities() {
     if (this.myProposals.length > 0) {
       this.myPropVisibility = true;
       let pending: number = 0;
+
+      //tra le mie proposte, si calcola quali sono in attesa
       this.myProposals.forEach(p => {
         if (p.teamStatus == "pending") {
           pending++;
@@ -212,6 +211,7 @@ export class TeamsComponent implements OnInit, OnChanges {
       });
 
       if (pending == 0) {
+        //se non ci sono proposte in attesa, o sono già in un team, o le altre sono state rifiutate
         this.doPropVisibility = true;
       }
       else {
@@ -220,6 +220,7 @@ export class TeamsComponent implements OnInit, OnChanges {
 
     }
     else {
+      //non ci sono mie proposte
       this.myPropVisibility = false;
 
       if (this.team == null) {

@@ -103,6 +103,12 @@ h3 {
     max-width: 80%;
 }
 
+.confirm {
+    text-align: center;
+    width: 100%;
+    margin: auto
+}
+
 mat-dialog-actions {
     float: right;
 }

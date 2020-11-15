@@ -52,6 +52,7 @@ export class VmsContComponent implements OnInit, OnDestroy {
                 let vms: VM[] = data;
                 let array: VMOwners[] = new Array();
 
+                //per ciascuna vm, si settano gli owners
                 vms.forEach(vm => {
                   this.studentService.getOwners(courseName, this.TEAM.id, vm.id).subscribe(
                     (data) => {
@@ -128,6 +129,7 @@ export class VmsContComponent implements OnInit, OnDestroy {
     this.route$.unsubscribe();
   }
 
+  //accensione VM
   activateVM(vmId: number) {
     this.studentService.activateVM(this.courseService.currentCourse.getValue().name, vmId).subscribe(
       (data) => {
@@ -151,6 +153,7 @@ export class VmsContComponent implements OnInit, OnDestroy {
     )
   }
 
+  //spegnimento VM
   disableVM(vmId: number) {
     this.studentService.disableVM(this.courseService.currentCourse.getValue().name, vmId).subscribe(
       (data) => {

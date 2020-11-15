@@ -38,6 +38,7 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
 
       let courseName: string = this.courseService.currentCourse.getValue().name;
 
+      //l'homework server per averne l'id
       this.studentService.getHomework(courseName, this.id).subscribe(
         (data) =>  {
           this.HOMEWORK = data;
@@ -47,6 +48,7 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
         }
       );
 
+      //caricamento versioni dello studente
       this.studentService.getVersionsHMForStudent(courseName, this.id).subscribe(
         (data) => {
           this.VERSIONS = data;
@@ -56,6 +58,7 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
         }
       );
 
+      //caricamento correzioni del professore
       this.studentService.getCorrectionsHMForStudent(courseName, this.id).subscribe(
         (data) => {
           this.CORRECTIONS = data;
@@ -69,9 +72,11 @@ export class VersionsContComponent implements OnInit, OnChanges, OnDestroy {
     this.studentService.verUpload.subscribe(
       (data) => {
         if (data == null) {
+          //null significa aggiornare lo stato dell'homework...
           this.HOMEWORK.permanent = true;
         }
         else {
+          //...altrimenti si aggiorna l'elenco delle versioni
           let array: HomeworkVersion[] = this.VERSIONS;
           this.VERSIONS = new Array();
           array.push(data);

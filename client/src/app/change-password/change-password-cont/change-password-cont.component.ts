@@ -26,7 +26,7 @@ export class ChangePasswordContComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route$ = this.route.queryParams.subscribe(params => {
       let token = params['token'];
-      let msg = params['error'];
+      let msg: string = params['error'];
 
       if (token) {
         //se nella url è presente il token lo si recupera...
@@ -34,7 +34,7 @@ export class ChangePasswordContComponent implements OnInit, OnDestroy {
       }
       else if (msg) {
         //...altrimenti si deve mostrare il messaggio di errore
-        this.MSG = msg;
+        this.MSG = msg.replace("-", " ");
       }
     });
   }

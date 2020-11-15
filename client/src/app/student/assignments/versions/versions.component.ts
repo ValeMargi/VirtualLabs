@@ -88,11 +88,13 @@ export class VersionsComponent implements OnInit, OnChanges {
 
   showCorrections(version: HomeworkVersion) {
     if (this.showedId == version.id) {
+      //se sto già mostrando le correzioni della versione in questione, le nascondo...
       this.corrVisibility = false;
       this.showedId = -1;
       this.corrsToShow = [];
     }
     else {
+      //...altrimenti mostro le correzioni della versione selezionata
       this.corrVisibility = true;
       this.showedId = version.id;
       this.corrsToShow = [];

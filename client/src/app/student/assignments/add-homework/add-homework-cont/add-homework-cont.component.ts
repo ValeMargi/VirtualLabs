@@ -30,6 +30,7 @@ export class AddHomeworkContComponent implements OnInit {
 
     this.studentService.uploadVersionHomework(this.courseService.currentCourse.getValue().name, this.assId, this.hwId, file).subscribe(
       (data) => {
+        //se il caricamento va a buon fine, si chiude la dialog e si notifica il componente
         this.QUERYING = false;
         this.matDialogRef.close();
         this.studentService.verUpload.emit(data);
@@ -39,7 +40,10 @@ export class AddHomeworkContComponent implements OnInit {
         this.QUERYING = false;
 
         if (error.error.status == 409) {
+          //se ricevo 409 Conflict, significa che l'homework è in stato "permanent" e non si possono caricare nuove versioni...
+          //...questo serve nel frattempo il professore ha dato una valutazione, o se è scaduto il tempo
           this.matDialogRef.close();
+          //si forza un aggiornamento a permanent dell'homework
           this.studentService.verUpload.emit(null);
         }
       }

@@ -34,9 +34,7 @@
               </mat-expansion-panel-header>
 
               <!--Form Cambio Password-->
-              <form [formGroup]="ChangePasswordForm">
-
-
+              <form [formGroup]="ChangePasswordForm" class="changePassword">
                 <mat-form-field>
                     <mat-label>Password attuale</mat-label>
                     <input #actualPassword type="password" matInput required formControlName="actualPassword" minlength="8">
@@ -69,8 +67,10 @@
 
       <!--Progress Bar-->
       <mat-progress-bar mode="query" *ngIf="querying"></mat-progress-bar>
-      <h4 *ngIf="avatar_ok">Avatar aggiornato con successo</h4>
-      <h4 *ngIf="pwd_ok">Password aggiornata con successo</h4>
+      <div class="confirm">
+        <h4 *ngIf="avatar_ok">Avatar aggiornato con successo</h4>
+        <h4 *ngIf="pwd_ok">Password aggiornata con successo</h4>
+      </div>
 
       <!--Azioni delle Dialog-->
       <mat-dialog-actions>

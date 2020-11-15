@@ -45,6 +45,7 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
         (data) =>  {
           let array: AssignmentGrade[] = new Array();
 
+          //il server ritorna una mappa con tutte le informazioni di assignment, più altro che va opportunamente trattato
           data.forEach(ass => {
             let assignment: Assignment = ass.assignment;
             let grade: string = ass.grade;
@@ -57,9 +58,11 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
 
           this.teamService.getTeamForStudent(this.courseName, currentId).subscribe(
             (data) => {
+              //se non c'è un team ricevo null
               if (data != null) {
                 this.HAS_TEAM = true;
     
+                //lo studente ha un team si caricano le vm, perché senza vm non è possibile accedere alle versioni elaborato
                 this.teamService.getAllVMTeam(this.courseName, data.id).subscribe(
                   (data) => {
                     if (data.length > 0) {
@@ -75,6 +78,7 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
                 )
               }
               else {
+                //senza un team non si può accedere alla sezione elaborato
                 this.HAS_TEAM = false;
                 this.HAS_VM = false;
               }
@@ -104,6 +108,7 @@ export class AssignmentsContComponent implements OnInit, OnDestroy {
   }
 
   updateAssignments() {
+    //controllo per evitare la query se mi sono sloggato, perché questo metodo è chiamato dal router outlet deactivate
     if (this.authService.isLoggedOut()) {
       return;
     }

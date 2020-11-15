@@ -170,6 +170,7 @@ public class VLServiceImpl implements VLService{
     public List<StudentDTO> getAllStudents() {
         return studentRepository.findAll()
                 .stream()
+                .filter(s-> s.getUserDAO().getActivate())
                 .map( s -> modelMapper.map(s, StudentDTO.class))
                 .collect(Collectors.toList());
     }
@@ -181,6 +182,7 @@ public class VLServiceImpl implements VLService{
     public List<ProfessorDTO> getAllProfessors() {
         return professorRepository.findAll()
                 .stream()
+                .filter(p-> p.getUserDAO().getActivate())
                 .map( p -> modelMapper.map(p, ProfessorDTO.class))
                 .collect(Collectors.toList());
     }

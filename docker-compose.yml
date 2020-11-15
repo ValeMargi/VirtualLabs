@@ -9,8 +9,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      virtuallabs-database:
-        condition: service_healthy
+      - virtuallabs-database
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://virtuallabs-database:3306/virtualLabs
 
@@ -31,12 +30,8 @@ services:
       - "3306:3306"
     volumes:
         - ./db_data:/var/lib/mysql
-        # - ./scripts:/docker-entrypoint-initdb.d:ro
     environment:
       MYSQL_ROOT_PASSWORD: pwd
       MYSQL_USER: root
       MYSQL_DATABASE: virtualLabs
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
+  

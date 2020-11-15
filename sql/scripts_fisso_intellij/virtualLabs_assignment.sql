@@ -1,5 +1,0 @@
-INSERT INTO virtualLabs.assignment (id, expiration, name_assignment, release_date, course_id, image_id) VALUES (28, '2020-11-09 23:59:59.999', 'Consegna1', '2020-11-02 16:09:32.44', 'applicazioni-internet', 29);
-INSERT INTO virtualLabs.assignment (id, expiration, name_assignment, release_date, course_id, image_id) VALUES (51, '2020-11-09 23:59:59.999', 'Consegna2', '2020-11-02 16:49:34.506', 'applicazioni-internet', 52);
-INSERT INTO virtualLabs.assignment (id, expiration, name_assignment, release_date, course_id, image_id) VALUES (72, '2020-11-09 23:59:59.999', 'Consegna3', '2020-11-02 17:06:40.001', 'applicazioni-internet', 73);
-INSERT INTO virtualLabs.assignment (id, expiration, name_assignment, release_date, course_id, image_id) VALUES (81, '2020-11-09 23:59:59.999', 'Consegna4', '2020-11-02 17:10:11.192', 'applicazioni-internet', 82);
-INSERT INTO virtualLabs.assignment (id, expiration, name_assignment, release_date, course_id, image_id) VALUES (90, '2020-11-09 23:59:59.999', 'Consegna5', '2020-11-02 17:25:41.503', 'applicazioni-internet', 91);

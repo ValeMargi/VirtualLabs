@@ -1,5 +1,0 @@
-INSERT INTO virtualLabs.course (name, acronym, disk_space, enabled, max, max_vcpu, min, ram, running_instances, tot_instances, image_id) VALUES ('algoritmi-e-programmazione-avanzata', 'APA', 100, true, 4, 4, 1, 8, 10, 10, 12);
-INSERT INTO virtualLabs.course (name, acronym, disk_space, enabled, max, max_vcpu, min, ram, running_instances, tot_instances, image_id) VALUES ('applicazioni-internet', 'AI', 100, true, 4, 4, 1, 8, 10, 10, 9);
-INSERT INTO virtualLabs.course (name, acronym, disk_space, enabled, max, max_vcpu, min, ram, running_instances, tot_instances, image_id) VALUES ('architetture-e-sistemi-di-elaborazione', 'ASE', 100, true, 6, 4, 1, 8, 10, 10, 19);
-INSERT INTO virtualLabs.course (name, acronym, disk_space, enabled, max, max_vcpu, min, ram, running_instances, tot_instances, image_id) VALUES ('mobile-applications', 'MA', 100, true, 4, 4, 1, 8, 10, 10, 11);
-INSERT INTO virtualLabs.course (name, acronym, disk_space, enabled, max, max_vcpu, min, ram, running_instances, tot_instances, image_id) VALUES ('programmazione-di-sistema', 'PDS', 100, true, 4, 4, 1, 8, 10, 10, 10);

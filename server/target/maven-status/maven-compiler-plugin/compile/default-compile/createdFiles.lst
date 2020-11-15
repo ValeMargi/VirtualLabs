@@ -70,8 +70,6 @@ it\polito\ai\virtualLabs\exceptions\TeamNotEnabledException.class
 it\polito\ai\virtualLabs\dtos\UserDTO.class
 it\polito\ai\virtualLabs\entities\AvatarStudent.class
 it\polito\ai\virtualLabs\repositories\PhotoModelVMRepository.class
-it\polito\ai\virtualLabs\services\NotificationService.class
-it\polito\ai\virtualLabs\controllers\NotificationController.class
 it\polito\ai\virtualLabs\security\JwtRequestFilter.class
 it\polito\ai\virtualLabs\dtos\PhotoCorrectionDTO.class
 it\polito\ai\virtualLabs\controllers\CourseController.class
@@ -112,6 +110,5 @@ it\polito\ai\virtualLabs\exceptions\InvalidInputVMresources.class
 it\polito\ai\virtualLabs\security\JwtAuthenticationController.class
 it\polito\ai\virtualLabs\exceptions\AssignmentAlreadyExistException.class
 it\polito\ai\virtualLabs\exceptions\CardinalityNotAccetableException.class
-it\polito\ai\virtualLabs\services\NotificationServiceImpl.class
 it\polito\ai\virtualLabs\dtos\AvatarProfessorDTO.class
 it\polito\ai\virtualLabs\exceptions\ProfessorAlreadyPresentInCourseException.class

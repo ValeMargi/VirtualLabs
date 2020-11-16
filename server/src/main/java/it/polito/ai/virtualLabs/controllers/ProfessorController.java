@@ -67,7 +67,6 @@ public class ProfessorController {
             return vlService.getProfileProfessor();
         }catch(ProfessorNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
-
         }
     }
 

@@ -228,7 +228,7 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, p.getMessage());
-        }catch( CourseDisabledException e){
+        }catch( CourseDisabledException | StudentAlreadyOwnerException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
@@ -419,7 +419,7 @@ public class StudentController {
     public HomeworkDTO getHomework(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlServiceStudent.getHomework( assignmentId);
-        }catch (HomeworkNotFoundException | AssignmentNotFoundException e) {
+        }catch (AssignmentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -443,7 +443,7 @@ public class StudentController {
     public List<Map<String, Object>> getVersionsHWForStudent(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlServiceStudent.getVersionsHWForStudent(assignmentId);
-        } catch (HomeworkNotFoundException | AssignmentNotFoundException e) {
+        } catch (AssignmentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -467,7 +467,7 @@ public class StudentController {
     public List<Map<String, Object>> getCorrectionsForStudent(@PathVariable String courseName, @PathVariable Long assignmentId) {
         try{
             return  vlServiceStudent.getCorrectionsForStudent(assignmentId);
-        } catch (HomeworkNotFoundException |  AssignmentNotFoundException e) {
+        } catch (AssignmentNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

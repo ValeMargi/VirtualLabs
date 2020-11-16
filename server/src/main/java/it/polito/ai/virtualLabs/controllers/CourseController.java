@@ -256,7 +256,6 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }catch(CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-
         }
     }
 
@@ -319,7 +318,7 @@ public class CourseController {
                                                 @PathVariable Long homeworkId, @PathVariable Long versionId) {
         try{
             return  vlService.getVersionHW(versionId);
-        } catch (  PhotoVersionHMNotFoundException e) {
+        } catch (PhotoVersionHMNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

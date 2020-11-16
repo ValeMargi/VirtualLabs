@@ -47,7 +47,7 @@ public class TeamController {
             List<String> membersId= (List<String>)object.get("membersId");
             membersId.forEach(member -> member = member.trim());
             return vlServiceStudent.proposeTeam(courseName, nameTeam, membersId, timeout);
-        } catch (CourseNotFoundException exception) {
+        } catch (CourseNotFoundException | StudentNotFoundException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -131,11 +131,12 @@ public class TeamController {
     public List<TeamDTO> getTeamsForStudent(@PathVariable String studentId) {
         try {
             return vlServiceStudent.getTeamsForStudent(studentId).stream().map(ModelHelper::enrich).collect(Collectors.toList());
-        } catch (StudentNotFoundException e) {
+        } catch (StudentNotFoundException | CourseNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (StudentNotEnrolledToCourseException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedDataAccessException p){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,  p.getMessage());
-
         }
     }
 

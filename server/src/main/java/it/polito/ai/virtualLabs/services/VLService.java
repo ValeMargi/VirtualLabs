@@ -24,10 +24,10 @@ public interface VLService {
     void activateTeam(Long id);
     void evictTeam(Long id);
     List<VMDTO> getAllVMTeam(  Long teamId);
-   PhotoVersionHomeworkDTO getVersionHW(Long versionId);
+    PhotoVersionHomeworkDTO getVersionHW(Long versionId);
     PhotoCorrectionDTO getCorrectionHW(Long correctionId);
-     byte[] compressZLib(byte[] data);
-     byte[] decompressZLib(byte[] data);
+    byte[] compressZLib(byte[] data);
+    byte[] decompressZLib(byte[] data);
     void assignmentExpiredSetPermanentHW(Assignment a);
     boolean sendMessage(String address, String subject, String body);
     void notifyTeam(TeamDTO dto, List<String> memberIds, String creator, String courseId, Timestamp timeout);

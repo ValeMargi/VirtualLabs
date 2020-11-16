@@ -17,7 +17,6 @@ import javax.transaction.Transactional;
 import java.io.Reader;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 @Service
@@ -64,7 +63,6 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
      */
       public List<Map<String, Object>> getEnrolledStudentsAllInfo(String courseName){
         List<Map<String, Object>> l = new ArrayList<>();
-
         List<String> students = vlService.getEnrolledStudents(courseName).stream().map(s->s.getId()).collect(Collectors.toList());
         for(Student s: studentRepository.findAllById(students)){
             Map<String, Object> map = new HashMap<>();
@@ -152,7 +150,6 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                     throw new StudentNotFoundException();
                 }
                 Student student = so.get();
-
                 if (course.get().removeStudent(student)) {
                     Optional<Team> ot = student.getTeams().stream().filter(t -> t.getCourse().getName().equals(courseName)).findAny();
                     if (ot.isPresent()) {
@@ -250,7 +247,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                 if(professors.size()!=professorsId.size())
                     throw new ProfessorNotFoundException();
                 else{
-                    if( course.getMin()>course.getMax()) throw new CardinalityNotAccetableException();
+                    if( course.getMin()>course.getMax()) throw new CardinalityNotAcceptableException();
                     if( course.getRunningInstances()>course.getTotInstances() || course.getMaxVcpu()<=0 ||
                         course.getDiskSpace()<=0 || course.getRam()<=0 ||
                         course.getTotInstances()<=0 || course.getRunningInstances()<=0)
@@ -276,7 +273,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                             });
                             photoModelVMRepository.save(photoModelVM);
                             return true;
-                        } else throw new ModelVMAlreadytPresentException();
+                        } else throw new ModelVMAlreadyPresentException();
                     }else throw new PermissionDeniedException();
                 }
             }else throw new ProfessorNotFoundException();
@@ -403,7 +400,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                         teamRepository.delete(tmpTeam);
 
                         List<Assignment> assignmentsCourse = c.getAssignments();
-                        for(Assignment assignment: assignmentsCourse){ //verificare se rimuove homework per assignment
+                        for(Assignment assignment: assignmentsCourse){
                             photoAssignmentRepository.delete(assignment.getPhotoAssignment());
                             assignment.getHomeworks().forEach(h->{
                                 h.getCorrections().forEach(cor -> photoCorrectionRepository.delete(cor));
@@ -435,14 +432,12 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                 if( c.getPhotoModelVM()!=null)
                     photoModelVMRepository.delete(c.getPhotoModelVM());
 
-                for(int i=students.size()-1; i>=0; i--){// s: stu){
+                for(int i=students.size()-1; i>=0; i--){
                     c.removeStudent(students.get(i));
-                    //log.severe("stu:"); debug
                 }
                 List<Professor> professors= c.getProfessors();
-                for(int i=professors.size()-1; i>=0; i--){// s: stu){
+                for(int i=professors.size()-1; i>=0; i--){
                     c.removeProfessor(professors.get(i));
-                    //log.severe("stu:"); ug
                 }
                 courseRepository.delete(c);
                 courseRepository.flush();
@@ -468,55 +463,12 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
             if(course.getMax() >= course.getMin()) {
                 c.setMax(course.getMax());
                 c.setMin(course.getMin());
-            }else throw  new CardinalityNotAccetableException();
+            }else throw  new CardinalityNotAcceptableException();
             c.setEnabled(course.isEnabled());
             courseRepository.saveAndFlush(c);
             return true;
         }else throw  new CourseNotFoundException();
     }
-
-    /*SERVICE MODELLO VM*/
-    /*professor può caricare solo un modello per corso e può modificare i parametri per ogni gruppo*/
-
-    /**
-     *
-     * @param courseDTO: contiene le informazioni del modello VM creato dal professor per il corso con courseId indicato
-     * @param courseId: nome del corso identificato
-     * @param photoModelVM: screenshot del modello VM creato
-     * @return
-     */
-    /*
-    @Override
-    public CourseDTO addModelVM(CourseDTO courseDTO, String courseId, PhotoModelVM photoModelVM) {
-        Optional<Course> oc = courseRepository.findById(courseId);
-        if( oc.isPresent()) {
-            Course c = oc.get();
-            if (c.getProfessors().stream().anyMatch(p -> p.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))) {
-                //Controllo per verificare che il professore setta il modello per il corso con courseId per la prima volta
-                if (c.getPhotoModelVM() == null) {
-                    List<Team> teams = teamRepository.findAllById(c.getTeams().stream().map(Team::getId).collect(Collectors.toList()));
-                    c.setPhotoModelVM(photoModelVM);
-                    c.setMaxVcpu(courseDTO.getMaxVcpu());
-                    c.setDiskSpace(courseDTO.getDiskSpace());
-                    c.setRam(courseDTO.getRam());
-                    c.setTotInstances(courseDTO.getTotInstances());
-                    c.setRunningInstances(courseDTO.getRunningInstances());
-
-                    teams.forEach(t-> {
-                        t.setDiskSpaceLeft(courseDTO.getDiskSpace());
-                        t.setRamLeft(courseDTO.getRam());
-                        t.setMaxVcpuLeft(courseDTO.getMaxVcpu());
-                        t.setTotInstancesLeft(courseDTO.getTotInstances());
-                        t.setRunningInstancesLeft(courseDTO.getRunningInstances());
-                    });
-                    photoModelVMRepository.save(photoModelVM);
-                    return modelMapper.map(c, CourseDTO.class);
-                } else throw new ModelVMAlreadytPresentException();
-            }else throw new PermissionDeniedException();
-        }else throw new CourseNotFoundException();
-
-    }
-*/
 
     /**
      * metodo per modificare le risorse associate al modello di VM di un dato corso
@@ -881,7 +833,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                     h.setPermanent(permanent);
                     if(permanent) {
                         if( photoVersionHMRepository.findLastByHomeworkId(homeworkId).getId()!=versionHMid)
-                            throw new NewVersionHMisPresentException();
+                            throw new NewVersionHWisPresentException();
                         if(grade==null || Integer.parseInt(grade) < 0 || Integer.parseInt(grade) > 30)
                             throw new GradeNotValidException();
 

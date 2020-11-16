@@ -52,7 +52,7 @@ public class TeamController {
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }catch(StudentNotEnrolledToCourseException | StudentAlreadyInTeamException
-                | CardinalityNotAccetableException
+                | CardinalityNotAcceptableException
                 | StudentDuplicateException
                 | CourseDisabledException
                 | TimeoutNotValidException

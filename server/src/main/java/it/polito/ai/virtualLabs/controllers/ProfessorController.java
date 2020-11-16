@@ -1,8 +1,6 @@
 package it.polito.ai.virtualLabs.controllers;
 
 import it.polito.ai.virtualLabs.dtos.*;
-import it.polito.ai.virtualLabs.entities.Image;
-import it.polito.ai.virtualLabs.entities.PhotoModelVM;
 import it.polito.ai.virtualLabs.exceptions.*;
 import it.polito.ai.virtualLabs.services.VLService;
 import it.polito.ai.virtualLabs.services.VLServiceProfessor;
@@ -390,7 +388,7 @@ public class ProfessorController {
             return vlServiceProfessor.uploadCorrection(homeworkId, versionHMid, photoCorrectionDTO, Boolean.parseBoolean(permanent), grade);
         }catch ( HomeworkNotFoundException | HomeworkVersionIdNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch(ImageSizeException  | GradeNotValidException | CourseDisabledException | NewVersionHMisPresentException e){
+        }catch(ImageSizeException  | GradeNotValidException | CourseDisabledException | NewVersionHWisPresentException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

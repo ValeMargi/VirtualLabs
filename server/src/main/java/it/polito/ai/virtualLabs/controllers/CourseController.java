@@ -86,8 +86,8 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, p.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }catch(ImageSizeException | ModelVMAlreadytPresentException |
-                CardinalityNotAccetableException | ResourcesVMNotRespectedException e){
+        }catch(ImageSizeException | ModelVMAlreadyPresentException |
+                CardinalityNotAcceptableException | ResourcesVMNotRespectedException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch(IOException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -148,7 +148,7 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }catch (CardinalityNotAccetableException | CourseDisabledException e){
+        }catch (CardinalityNotAcceptableException | CourseDisabledException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }

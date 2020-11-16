@@ -101,8 +101,10 @@ public class VLServiceImpl implements VLService{
      public void run(){
         Timestamp now = new Timestamp(System.currentTimeMillis());
 
+        /*Elimina tutti i token per il reset della password non utilizzati prima della scadenza*/
         passwordResetTokenRepository.deleteAllExpiredSince(now);
 
+        /*Imposta a "disabled" tutti i team non attivati prima della scadenza*/
         for(Token token: tokenRepository.findAll() )
         {
             if( token.getExpiryDate().compareTo(now)<0){
@@ -110,12 +112,10 @@ public class VLServiceImpl implements VLService{
                if(!oteam.isPresent()) throw new TeamNotFoundException();
                oteam.get().setStatus("disabled");
                oteam.get().setDisabledTimestamp(now.toString());
-              //  tokenRepository.deleteFromTokenByTeamId(token.getTeamId());
-                //if( teamRepository.findById(token.getTeamId()).isPresent())
-                  //  evictTeam(token.getTeamId());
             }
         }
 
+        /*Elimina tutti i team disabilitati da più di 5 minuti*/
         for(Team team: teamRepository.findAllByStatusEquals("disabled")){
             if( team.getDisabledTimestamp().compareTo(Timestamp.from(Instant.now().minus(5, ChronoUnit.MINUTES)).toString())<0){
                 tokenRepository.deleteFromTokenByTeamId(team.getId());
@@ -123,13 +123,14 @@ public class VLServiceImpl implements VLService{
             }
         }
 
-        /*Per controllare scadenza consegne*/
+        /*Rende "permanent", quindi non è più possibile caricare versioni, tutte le consegne scadute*/
         for(Assignment a: assignmentRepository.findAll()){
             if(a.getExpiration().compareTo(now.toString())<=0 && !a.getAlreadyExpired()){
                 assignmentExpiredSetPermanentHW(a);
             }
         }
 
+        /*Elimina tutti i token delle richieste di registrazione non confermate prima della scadenza*/
         for(TokenRegistration tokenR: tokenRegistrationRepository.findAll() )
         {
             if( tokenR.getExpiryDate().compareTo(now)<0){
@@ -150,7 +151,6 @@ public class VLServiceImpl implements VLService{
     public void assignmentExpiredSetPermanentHW(Assignment a){
         a.setAlreadyExpired(true);
         List<Homework> homeworks = a.getHomeworks();
-       // List<Homework> homeworks = homeworkRepository.findAllByAssignment_Id(a.getId());
         for(Homework h: homeworks){
             h.setPermanent(true);
             if(photoVersionHMRepository.findAllByHomework(h).isEmpty()) {

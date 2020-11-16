@@ -20,7 +20,6 @@ public interface VLServiceProfessor {
     boolean removeCourse(String courseId);
     boolean modifyCourse(CourseDTO course);
     List<CourseDTO> getCoursesForProfessor(String professorId);
-  //  CourseDTO addModelVM(CourseDTO courseDTO, String courseI, PhotoModelVM photoModelVM);
     CourseDTO updateModelVM(CourseDTO courseDTO, String courseName );
     Map<String, Object> getMaxResources(String courseId);
     List<StudentDTO> getOwnersForProfessor(Long VMid);

@@ -140,7 +140,7 @@ public class VLServiceStudentImpl implements VLServiceStudent{
 
         if ( memberIds.size()+1<vlService.getCourse(courseId).get().getMin()
                 || memberIds.size()+1> vlService.getCourse(courseId).get().getMax())
-            throw  new CardinalityNotAccetableException();
+            throw  new CardinalityNotAcceptableException();
 
         if( memberIds.stream().distinct().count() != memberIds.size())
             throw  new StudentDuplicateException();
@@ -360,7 +360,7 @@ public class VLServiceStudentImpl implements VLServiceStudent{
             VM vm = ovm.get();
             if (vm.getOwnersVM().stream().map(Student::getId).collect(Collectors.toList()).contains(SecurityContextHolder.getContext().getAuthentication().getName())) {
                 Team t = teamRepository.getOne(vm.getTeam().getId());
-                if(t.getRunningInstancesLeft()>0) { //se sono disponibili ancora delle VM da runnare
+                if(t.getRunningInstancesLeft()>0) { //controllo se è ancora possibile avviare delle VM
                     Course c = courseRepository.getOne(t.getCourse().getName());
                     if( c.isEnabled()){
                         t.setRunningInstancesLeft(t.getRunningInstancesLeft() - 1);

@@ -7,6 +7,7 @@ it\polito\ai\virtualLabs\exceptions\StudentDuplicateException.class
 it\polito\ai\virtualLabs\entities\PhotoCorrection.class
 it\polito\ai\virtualLabs\security\JwtResponse.class
 it\polito\ai\virtualLabs\exceptions\HomeworkVersionIdNotFoundException.class
+it\polito\ai\virtualLabs\exceptions\NewVersionHWisPresentException.class
 it\polito\ai\virtualLabs\repositories\PhotoVMRepository.class
 it\polito\ai\virtualLabs\repositories\PasswordResetTokenRepository.class
 it\polito\ai\virtualLabs\dtos\PasswordDTO.class
@@ -79,6 +80,7 @@ it\polito\ai\virtualLabs\entities\Token.class
 it\polito\ai\virtualLabs\exceptions\StudentAlreadyInTeamException.class
 it\polito\ai\virtualLabs\entities\Student.class
 it\polito\ai\virtualLabs\exceptions\AvatarNotPresentException.class
+it\polito\ai\virtualLabs\exceptions\CardinalityNotAcceptableException.class
 it\polito\ai\virtualLabs\exceptions\NameTeamIntoCourseAlreadyPresentException.class
 it\polito\ai\virtualLabs\VirtualLabsApplication.class
 it\polito\ai\virtualLabs\dtos\VMDTO.class
@@ -91,12 +93,12 @@ it\polito\ai\virtualLabs\controllers\StudentController.class
 it\polito\ai\virtualLabs\exceptions\PermissionDeniedException.class
 it\polito\ai\virtualLabs\entities\Assignment.class
 it\polito\ai\virtualLabs\entities\Course.class
-it\polito\ai\virtualLabs\exceptions\ModelVMAlreadytPresentException.class
 it\polito\ai\virtualLabs\repositories\CourseRepository.class
 it\polito\ai\virtualLabs\VirtualLabsApplication$1.class
 it\polito\ai\virtualLabs\repositories\StudentRepository.class
 it\polito\ai\virtualLabs\dtos\ImageDTO.class
 it\polito\ai\virtualLabs\exceptions\FormatFileNotValidException.class
+it\polito\ai\virtualLabs\exceptions\ModelVMAlreadyPresentException.class
 it\polito\ai\virtualLabs\entities\Professor.class
 it\polito\ai\virtualLabs\dtos\StudentDTO.class
 it\polito\ai\virtualLabs\entities\PhotoVM.class
@@ -109,6 +111,5 @@ it\polito\ai\virtualLabs\entities\PasswordResetToken.class
 it\polito\ai\virtualLabs\exceptions\InvalidInputVMresources.class
 it\polito\ai\virtualLabs\security\JwtAuthenticationController.class
 it\polito\ai\virtualLabs\exceptions\AssignmentAlreadyExistException.class
-it\polito\ai\virtualLabs\exceptions\CardinalityNotAccetableException.class
 it\polito\ai\virtualLabs\dtos\AvatarProfessorDTO.class
 it\polito\ai\virtualLabs\exceptions\ProfessorAlreadyPresentInCourseException.class

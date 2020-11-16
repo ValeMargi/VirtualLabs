@@ -228,7 +228,7 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }catch(PermissionDeniedException p){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, p.getMessage());
-        }catch( CourseDisabledException e){
+        }catch( CourseDisabledException | StudentAlreadyOwnerException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }

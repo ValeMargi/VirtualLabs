@@ -187,7 +187,8 @@ export const MY_FORMATS = {
     MatExpansionModule,
     MatDatepickerModule,
     MatMomentDateModule,
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'})
   ],
   entryComponents: [MatDialogModule, MatFormFieldModule],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

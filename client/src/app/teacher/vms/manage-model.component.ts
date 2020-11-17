@@ -70,34 +70,19 @@ export class ManageModelComponent implements OnInit, OnChanges {
     }
   }
 
-  /*maxVmValidator(form: FormGroup){
-    const condition = form.controls.max_vm_active.value > form.controls.max_vm.value;
-
-    console.log("condition: "+ condition);
-    console.log("Active: "+form.controls.max_vm_active.value);
-    console.log("Vm: "+form.controls.max_vm.value);
-
-    return condition ? null : {ErrorVmActivated: true};
-  }*/
-
   maxVmValidator(group: FormGroup) {
     let max_vm: number = group.controls.max_vm.value;
     let max_vm_active: number = group.controls.max_vm_active.value;
 
     if(max_vm_active <= max_vm){
-      console.log(max_vm_active+" "+max_vm);
-      console.log("Corretto");
       return null;
     }else{
-      console.log(max_vm_active+" "+max_vm)
-      console.log("Sbagliato");
       return { ErrorVmActivated: true };
     }
   }
 
   requiredValidator(group: FormGroup){
     let max_vm_active: number = group.controls.max_vm_active.value;
-    console.log("eseguo il controllo");
 
     if(max_vm_active != null){
       return {RequiredVmActivated: true};

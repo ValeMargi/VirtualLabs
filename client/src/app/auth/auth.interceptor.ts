@@ -14,7 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
       //console.log('AuthInterceptor accessToken found: ' + JSON.stringify(accessToken));
       return next.handle(cloned);
     } else {
-      console.log('AuthInterceptor accessToken not found');
+     // console.log('AuthInterceptor accessToken not found');
       return next.handle(request);
     }
   }

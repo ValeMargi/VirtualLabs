@@ -2,7 +2,7 @@
   <h2 mat-dialog-title>Modifica modello</h2>
   <mat-dialog-content>
 
-    <mat-card class="risorseDisponibili">
+    <mat-card class="risorseDisponibili" *ngIf="totRes!=null">
       <mat-card-subtitle>
         <strong>Massimo valore attualmente utilizzato per risorsa</strong>
       </mat-card-subtitle>

@@ -846,7 +846,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                     h.setStatus("RIVISTO");
                     h.setPermanent(permanent);
                     if(permanent) {
-                        if( photoVersionHMRepository.findLastByHomeworkId(homeworkId).getId()!=versionHMid)
+                        if( !photoVersionHMRepository.findLastByHomeworkId(homeworkId).getId().equals(versionHMid))
                             throw new NewVersionHWisPresentException();
                         if(grade==null || Integer.parseInt(grade) < 0 || Integer.parseInt(grade) > 30)
                             throw new GradeNotValidException();

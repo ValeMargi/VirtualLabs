@@ -12,7 +12,6 @@ public  class Image {
     @Column(name = "picByte", length = 16777215)
     private byte[] picByte;
 
-
     public Image( String originalFilename, String contentType, byte[] compressZLib) {
         this.nameFile = originalFilename;
         this.type = contentType;
@@ -27,9 +26,4 @@ public  class Image {
     }
 
     public Image(){}
-
-
-
-
-
 }

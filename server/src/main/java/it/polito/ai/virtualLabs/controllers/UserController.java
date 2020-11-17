@@ -12,12 +12,10 @@ import it.polito.ai.virtualLabs.services.JwtUserDetailsService;
 import it.polito.ai.virtualLabs.services.VLService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -48,8 +46,6 @@ public class UserController {
     VLService vlService;
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    private MessageSource messageSource;
     @Autowired
     PasswordResetTokenRepository passwordTokenRepository;
 
@@ -217,7 +213,6 @@ public class UserController {
      *              }
      * @return: ritorna un booleano a true se l'operazione ha avuto successo, altrimenti viene sollevata un'eccezione
      */
-    // change user password -> aggiornamento pass da utente loggato
     @PostMapping("/user/updatePassword")
     @ResponseBody
     public boolean changeUserPassword(final Locale locale, @RequestBody Map<String, String> input) {

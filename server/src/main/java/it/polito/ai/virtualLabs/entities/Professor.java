@@ -9,7 +9,6 @@ import javax.validation.constraints.Email;
 
 @Data
 @ToString(exclude = {"photoProfessor", "courses"})
-//@EqualsAndHashCode(exclude="courses")
 @Entity
 public class Professor {
     @Id
@@ -18,16 +17,12 @@ public class Professor {
     @Email
     private String email;
 
-    //@ToString.Exclude
-  //  @HashCodeExclude
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="professor_course",
             joinColumns = @JoinColumn(name="professor_id"),
             inverseJoinColumns = @JoinColumn(name="course_name"))
     private List<Course> courses = new ArrayList<>();
 
-    //@HashCodeExclude
-   // @ToString.Exclude
     @OneToOne
     @JoinColumn(name="image_id")
     AvatarProfessor photoProfessor;

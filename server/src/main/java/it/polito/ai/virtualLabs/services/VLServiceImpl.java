@@ -572,7 +572,6 @@ public class VLServiceImpl implements VLService{
                 tokenRepository.findAllByTeamId(t.get().getTeamId()).forEach(tk-> tokenRepository.delete(tk));
                 //settiamo a rejected i token dello studente dei team restanti
                 tokenRepository.findAllByStudent(t.get().getStudent()).stream().forEach(tk->tk.setStatus("rejected"));
-
                 activateTeam(t.get().getTeamId());
                 return 2;
             }else
@@ -647,7 +646,7 @@ public class VLServiceImpl implements VLService{
             Optional<Team> oteam = teamRepository.findById(t.get().getTeamId());
             if(!oteam.isPresent()) throw new TeamNotFoundException();
             if(oteam.get().getStatus().equals("disabled")) throw new TeamDisabledException();
-            // se è ancora valido
+            // se il team è ancora valido
             if( t.get().getExpiryDate().compareTo(Timestamp.from(Instant.now()))>0){
                 t.get().setStatus("accepted");
                 return t;

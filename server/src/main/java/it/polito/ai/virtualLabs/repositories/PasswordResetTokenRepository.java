@@ -11,7 +11,6 @@ import java.util.Date;
 
 @Repository
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
-
     PasswordResetToken findByToken(String token);
 
     @Transactional

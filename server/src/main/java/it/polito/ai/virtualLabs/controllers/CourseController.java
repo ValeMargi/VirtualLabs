@@ -59,6 +59,7 @@ public class CourseController {
 
     /**
      * Metodo: Post
+     * Authority: Professor
      * @param courseDTO: DTO del corso contenente i dati del corso e del modello VM
      * @param professorsId: lista degli ID dei professori da rendere gestori del corso
      * @param file: immagine del modello VM
@@ -135,7 +136,7 @@ public class CourseController {
 
     /**
      * Metodo: POST
-     * Authority: Profesor
+     * Authority: Professor
      * @param courseName: nome del Corso da modificare
      * @param courseDTO: DTO del corso da modificare contenente i nuovi parametri
      * @return: ritorna l'esito della modifica del corso indicato
@@ -223,6 +224,7 @@ public class CourseController {
 
     /**
      * Metodo: POST
+     * Authority: Professor
      * @param membersId: lista degli ID da iscrivere al corso
      * @param courseName: nome del corso al quale iscrivere gli studenti
      * @return: ritorna una lista di boolean per tenere traccia degli studenti aggiunti con successo
@@ -242,6 +244,7 @@ public class CourseController {
 
     /**
      * Metodo: POST
+     * Authority: Professor
      * @param courseName: nome del corso dal quale rimuovere studenti
      * @param studentsId: lista degli ID degli studenti da rimuovere dal corso
      * @return: ritorna la lista dei DTO degli studenti rimossi dal corso
@@ -275,6 +278,7 @@ public class CourseController {
 
     /**
      * Metodo: GET
+     * Authority: Professor
      * @param courseName: nome del corso dal quale ricavare le informazioni
      * @return: ritorna una lista di mappe composte dalla coppia
      *          {

@@ -31,12 +31,5 @@ public class UserDAO {
     @OneToOne
     @JoinColumn(name="professor")
     Professor professor;
-
-
-
-
-
-
-
 }
 

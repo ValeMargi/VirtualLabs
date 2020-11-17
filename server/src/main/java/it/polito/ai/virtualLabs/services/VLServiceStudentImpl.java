@@ -354,7 +354,7 @@ public class VLServiceStudentImpl implements VLServiceStudent{
      * Metodo per accendere una VM
      */
     @Override
-    public boolean activateVM(Long VMid ){ //CourseId preso dal pathVariable
+    public boolean activateVM(Long VMid ){
         Optional<VM> ovm = VMRepository.findById(VMid);
         if (ovm.isPresent()) {
             VM vm = ovm.get();

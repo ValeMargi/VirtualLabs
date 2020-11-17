@@ -136,12 +136,4 @@ public class Student{
               t.setStudentToken(this);
          }
     }
-
-    public void removeToken(Token t){
-        if(t!=null && tokens.contains(t))
-        {
-            tokens.remove(t);
-        }
-    }
-
 }

@@ -150,11 +150,11 @@ public class ProfessorController {
      *  "nomeRisorsa": inUso/MassimoUtilizzabili
      *
      *  {
-     *      Vcpu: ________
-     *      diskSpace: ______
-     *      ram: _____
-     *      runningInstances: _______
-     *      totalInstances: _____
+     *      "Vcpu": "...."
+     *      "diskSpace": "..."
+     *      "ram": "..."
+     *      "runningInstances": "..."
+     *      "totalInstances": "..."
      *  }
      */
     @GetMapping("/team/{teamId}/resources")

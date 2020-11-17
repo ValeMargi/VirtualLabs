@@ -7,9 +7,6 @@ import java.util.List;
 
 @Data
 @Entity
-//@ToString(exclude = {"homeworks", "photoAssignment"}) //l
-//@EqualsAndHashCode(exclude = {"homeworks","photoAssignment"})
-
 public class Assignment {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,7 +23,6 @@ public class Assignment {
     @JoinColumn(name="image_id")
     PhotoAssignment photoAssignment;
 
-    // AGGIUNTO 23/10 fetch = FetchType.EAGER,
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "assignment")
     private List<Homework> homeworks= new ArrayList<>();
 

@@ -34,5 +34,4 @@ public class Token {
             s.setTokenForStudent(this);
         }
     }
-
 }

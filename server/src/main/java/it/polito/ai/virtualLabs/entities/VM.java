@@ -30,7 +30,7 @@ public class VM{
             inverseJoinColumns = @JoinColumn(name="student_id"))
     List<Student> ownersVM = new ArrayList<>();
 
-    @ManyToOne //(fetch = FetchType.EAGER) default
+    @ManyToOne
     @JoinColumn(name="course_id")
     Course course;
 
@@ -85,7 +85,6 @@ public class VM{
         }
     }
 
-
     public void setCourse(Course c){
         if(c!=null && c!=course){
             course = c;
@@ -93,16 +92,10 @@ public class VM{
         }
     }
 
-
-
-
     public  void setTeam(Team t){
         if(t!=null && team!=t){
             team=t;
             t.addVM(this);
         }
     }
-
-
-
 }

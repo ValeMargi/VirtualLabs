@@ -8,6 +8,4 @@ import java.util.List;
 
 @Repository
 public interface HomeworkRepository extends JpaRepository<Homework, Long> {
-
-    List<Homework> findAllByAssignment_Id(Long assignmentId);
 }

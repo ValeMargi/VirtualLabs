@@ -1,5 +1,4 @@
 package it.polito.ai.virtualLabs.entities;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

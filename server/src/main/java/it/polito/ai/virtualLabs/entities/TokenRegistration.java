@@ -14,5 +14,4 @@ public class TokenRegistration {
         private String id;
         private String userId;
         private Timestamp expiryDate;
-
 }

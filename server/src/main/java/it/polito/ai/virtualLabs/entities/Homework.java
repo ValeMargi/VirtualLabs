@@ -1,11 +1,9 @@
 package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Data
 @Entity
@@ -13,7 +11,7 @@ public class Homework {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private  Long id;
     private  String status;
-    private Boolean permanent; //false può essere  ancora modificato
+    private Boolean permanent; //se false, l'homework può essere  ancora modificato
     private String grade;
     private String timestamp;
 

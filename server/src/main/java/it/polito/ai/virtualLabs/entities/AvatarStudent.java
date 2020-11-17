@@ -1,9 +1,6 @@
 package it.polito.ai.virtualLabs.entities;
-
 import lombok.*;
-
 import javax.persistence.*;
-
 
 @Data
 @NoArgsConstructor

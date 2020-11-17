@@ -27,8 +27,6 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private List<Team> teams = new ArrayList<>();
 
-   // @ToString.Exclude
-    //@HashCodeExclude
     @ManyToMany(mappedBy = "courses")
     List<Professor> professors = new ArrayList<>();
 
@@ -108,9 +106,4 @@ public class Course {
             vms.add(vm);
         }
     }
-
-
-
-
-
 }

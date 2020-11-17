@@ -151,11 +151,14 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                 }
                 Student student = so.get();
                 if (course.get().removeStudent(student)) {
+                    //Cerco il team a cui appartiene lo studente (da eliminare) per il corso "coursename"
                     Optional<Team> ot = student.getTeams().stream().filter(t -> t.getCourse().getName().equals(courseName)).findAny();
                     if (ot.isPresent()) {
-                        // rimuovo VM, homework, corrections, membro dal team
+                        // se il team è presente nel database, vengono rimossi VM, homework, corrections e membri dal team
                         Team team = ot.get();
+                        // se lo stato del team è active
                         if (team.getStatus().equals("active")) {
+                            //recupero tutte le VM dello studente per il corso indicato
                             List<VM> VMstudent = student.getStudentsVM().stream()
                                     .filter(v -> v.getCourse().getName().equals(courseName))
                                     .collect(Collectors.toList());
@@ -170,7 +173,8 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                                 course.get().removeTeam(team);
                                 student.removeTeamForStudent(team);
                                 teamRepository.delete(team);
-                            } else {
+                            } else { //se nel team sono presenti più studenti,
+                                    // questi vengono rimossi dalla lista membersVM e ownersVM delle VM associate al team
                                 List<VM> vmOwner = VMstudent.stream().filter(vm -> vm.getOwnersVM().contains(student)).collect(Collectors.toList());
                                 vmOwner.forEach(vm -> {
                                     vm.getMembersVM().forEach(vm::addStudentToOwnerList);
@@ -179,22 +183,32 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                                 });
                                 student.removeTeamForStudent(team);
                             }
+                            //vengono rimossi gli elaborati e le correzioni associate allo studente rimosso
                             List<Homework> homeworkStudent = student.getHomeworks().stream().filter(h -> h.getAssignment().getCourseAssignment().equals(course.get())).collect(Collectors.toList());
                             for (Homework h : homeworkStudent) {
                                 h.getCorrections().forEach(c -> photoCorrectionRepository.delete(c));
                                 h.getVersions().forEach(v -> photoVersionHMRepository.delete(v));
                             }
                             homeworkRepository.deleteAll(homeworkStudent);
-                        } else {
-                            // rimuovo token delle proposal
+                        }else{
                             List<Team> teamsStudent = teamRepository.findAllById(tokenRepository.findAllByStudent(student).stream().map(Token::getTeamId).collect(Collectors.toList()));
                             for (Team t : teamsStudent) {
-                                tokenRepository.deleteFromTokenByTeamId(t.getId());
-                                vlService.evictTeam(t.getId());
+                                if(t.getStatus().equals("pending")){
+                                    //se lo status è pending questo viene modificato a disabled e
+                                    // i token associati allo studente rimosso passano allo stato rejected
+                                    t.setStatus("disabled");
+                                    Timestamp now = new Timestamp(System.currentTimeMillis());
+                                    t.setDisabledTimestamp(now.toString());
+                                    tokenRepository.findAllByTeamId(t.getId()).stream()
+                                                                              .filter(to->to.getStudent().equals(student))
+                                                                              .forEach(to-> to.setStatus("rejected"));
+                                }
                             }
                         }
                     }else{
-                        List<Homework> homeworkStudent = student.getHomeworks().stream().filter(h -> h.getAssignment().getCourseAssignment().equals(course.get())).collect(Collectors.toList());
+                        List<Homework> homeworkStudent = student.getHomeworks().stream()
+                                                                               .filter(h -> h.getAssignment().getCourseAssignment().equals(course.get()))
+                                                                               .collect(Collectors.toList());
                         homeworkRepository.deleteAll(homeworkStudent);
                     }
                     ret.add(student);
@@ -585,7 +599,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
      * Metodo per ritornare la lista di DTO delle VM di un dato corso
      */
     @Override
-    public List<VMDTO> allVMforCourse(String courseId) { //CourseId preso dal pathVariable
+    public List<VMDTO> allVMforCourse(String courseId) {
         Optional<Course> oc= courseRepository.findById(courseId);
         if( oc.isPresent()){
             Course c= oc.get();
@@ -649,7 +663,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
      * Metodo per aggiungere una consegna al corso
      */
     @Override
-    public AssignmentDTO addAssignment( AssignmentDTO assignmentDTO,PhotoAssignmentDTO photoAssignmentDTO,  String courseId) { //CourseId preso dal pathVariable
+    public AssignmentDTO addAssignment( AssignmentDTO assignmentDTO,PhotoAssignmentDTO photoAssignmentDTO,  String courseId) {
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Course> oc = courseRepository.findById(courseId);
         if(oc.isPresent()){
@@ -689,7 +703,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
      * Metodo per ritornare la lista di DTO delle consegne presenti in un dato corso
      */
     @Override
-    public List<AssignmentDTO> allAssignment(  String courseId) { //CourseId preso dal pathVariable
+    public List<AssignmentDTO> allAssignment(  String courseId) {
         String professor =SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Professor> op = professorRepository.findById(professor);
         if(op.isPresent()){

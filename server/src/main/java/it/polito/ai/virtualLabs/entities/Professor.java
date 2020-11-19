@@ -17,7 +17,7 @@ public class Professor {
     @Email
     private String email;
 
-    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE}) //, fetch = FetchType.EAGER
     @JoinTable(name="professor_course",
             joinColumns = @JoinColumn(name="professor_id"),
             inverseJoinColumns = @JoinColumn(name="course_name"))

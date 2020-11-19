@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Data
-@ToString(exclude = {"professors", "students"})
+@ToString(exclude = {"professors", "students","photoModelVM"})
 public class Course {
     @Id
     private String name;

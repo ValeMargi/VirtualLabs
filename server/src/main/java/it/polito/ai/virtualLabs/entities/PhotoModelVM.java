@@ -2,10 +2,12 @@ package it.polito.ai.virtualLabs.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Data
+@ToString(exclude = {"course"})
 @NoArgsConstructor
 @Entity(name = "PhotoModelVM")
 public class PhotoModelVM extends Image {

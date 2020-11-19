@@ -21,7 +21,7 @@ public class Student{
     @CsvBindByName
     private String email;
 
-    @ManyToMany(mappedBy ="members")
+    @ManyToMany(mappedBy ="members", fetch = FetchType.EAGER)
     private List<Team> teams = new ArrayList<>();
 
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})

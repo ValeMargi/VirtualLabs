@@ -90,7 +90,7 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
             throw new CourseNotFoundException();
         }else if(!course.get().isEnabled()) {
             throw new CourseDisabledException();
-        }else if( ! student.isPresent()){
+        }else if( !student.isPresent()){
             throw new StudentNotFoundException();
         }else if(vlService.getProfessorsForCourse(courseName).stream()
                 .noneMatch(p ->p.getId()
@@ -267,28 +267,9 @@ public class VLServiceProfessorImpl implements VLServiceProfessor {
                         course.getTotInstances()<=0 || course.getRunningInstances()<=0)
                         throw new ResourcesVMNotRespectedException();
                     professors.forEach(c::setProfessor);
-                    if (c.getProfessors().stream().anyMatch(pr -> pr.getId().equals(SecurityContextHolder.getContext().getAuthentication().getName()))) {
-                        //Controllo per verificare che il professore setta il modello per il corso con courseId per la prima volta
-                        if (c.getPhotoModelVM() == null) {
-                            List<Team> teams = teamRepository.findAllById(c.getTeams().stream().map(Team::getId).collect(Collectors.toList()));
-                            c.setPhotoModelVM(photoModelVM);
-                            c.setMaxVcpu(course.getMaxVcpu());
-                            c.setDiskSpace(course.getDiskSpace());
-                            c.setRam(course.getRam());
-                            c.setTotInstances(course.getTotInstances());
-                            c.setRunningInstances(course.getRunningInstances());
-
-                            teams.forEach(t-> {
-                                t.setDiskSpaceLeft(course.getDiskSpace());
-                                t.setRamLeft(course.getRam());
-                                t.setMaxVcpuLeft(course.getMaxVcpu());
-                                t.setTotInstancesLeft(course.getTotInstances());
-                                t.setRunningInstancesLeft(course.getRunningInstances());
-                            });
-                            photoModelVMRepository.save(photoModelVM);
-                            return true;
-                        } else throw new ModelVMAlreadyPresentException();
-                    }else throw new PermissionDeniedException();
+                    c.setPhotoModelVM(photoModelVM);
+                    photoModelVMRepository.save(photoModelVM);
+                    return true;
                 }
             }else throw new ProfessorNotFoundException();
         }
